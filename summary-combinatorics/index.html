@@ -1,0 +1,931 @@
+<!DOCTYPE html>
+<html dir="ltr" lang="zh-CN">
+<head><meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1" name="viewport"/><meta content="总结笔记。组合算是一个比较重要的大头。不包看懂，前置知识可能有点多。
+如有错漏烦请指正，当感激不尽/kel。
+加乘原理 排列组合 定义 \(n\) 个有标号元素里面选 \(m\) 个排成一排的方案数：\(\mathrm A_n^m\)，称为排列数，有 \[ \mathrm A_n^m = \frac{n!}{(n - m)!} \] 平凡，不证。
+\(n\) 个有标号元素里面选 \(m\) 个的方案数：\(\mathrm C_n^m\)，或者记作 $n m $，称为组合数，有 \[ \binom n m = \frac{\mathrm A_n^m}{m!} = \frac{n!}{m!(n - m)!} \] 相当于去掉 \(m\) 的全排列的方案数。
+二项式定理 \[ (x + y)^n = \sum_{k = 0}^n\binom n kx^ky^{n - k} \]
+组合意义平凡。
+\(x\) 和 \(y\) 取到特殊值时会有奇怪的推广。 \[ \sum_{k = 0}^n\binom n k = 2^n \]" name="description"/><title>组合数学复习笔记</title>
+<link href="https://oi.imyangty.com/summary-combinatorics/" rel="canonical"/>
+<link href="/scss/style.min.a5821f3d3ab84ce5a0ac21477e347a2e0ca00292e398d16c5e8e36ded6e35a23.css" rel="stylesheet"/><meta content="组合数学复习笔记" property="og:title"/>
+<meta content="总结笔记。组合算是一个比较重要的大头。不包看懂，前置知识可能有点多。
+如有错漏烦请指正，当感激不尽/kel。
+加乘原理 排列组合 定义 \(n\) 个有标号元素里面选 \(m\) 个排成一排的方案数：\(\mathrm A_n^m\)，称为排列数，有 \[ \mathrm A_n^m = \frac{n!}{(n - m)!} \] 平凡，不证。
+\(n\) 个有标号元素里面选 \(m\) 个的方案数：\(\mathrm C_n^m\)，或者记作 $n m $，称为组合数，有 \[ \binom n m = \frac{\mathrm A_n^m}{m!} = \frac{n!}{m!(n - m)!} \] 相当于去掉 \(m\) 的全排列的方案数。
+二项式定理 \[ (x + y)^n = \sum_{k = 0}^n\binom n kx^ky^{n - k} \]
+组合意义平凡。
+\(x\) 和 \(y\) 取到特殊值时会有奇怪的推广。 \[ \sum_{k = 0}^n\binom n k = 2^n \]" property="og:description"/>
+<meta content="https://oi.imyangty.com/summary-combinatorics/" property="og:url"/>
+<meta content="清烛的博客" property="og:site_name"/>
+<meta content="article" property="og:type"/><meta content="Post" property="article:section"/><meta content="OI" property="article:tag"/><meta content="笔记" property="article:tag"/><meta content="组合数学" property="article:tag"/><meta content="2021-10-03T14:34:00+08:00" property="article:published_time"/><meta content="2021-10-03T14:34:00+08:00" property="article:modified_time"/><meta content="https://yangty-pic.oss-cn-beijing.aliyuncs.com/bg2.webp" property="og:image"/>
+<meta content="组合数学复习笔记" name="twitter:title"/>
+<meta content="总结笔记。组合算是一个比较重要的大头。不包看懂，前置知识可能有点多。
+如有错漏烦请指正，当感激不尽/kel。
+加乘原理 排列组合 定义 \(n\) 个有标号元素里面选 \(m\) 个排成一排的方案数：\(\mathrm A_n^m\)，称为排列数，有 \[ \mathrm A_n^m = \frac{n!}{(n - m)!} \] 平凡，不证。
+\(n\) 个有标号元素里面选 \(m\) 个的方案数：\(\mathrm C_n^m\)，或者记作 $n m $，称为组合数，有 \[ \binom n m = \frac{\mathrm A_n^m}{m!} = \frac{n!}{m!(n - m)!} \] 相当于去掉 \(m\) 的全排列的方案数。
+二项式定理 \[ (x + y)^n = \sum_{k = 0}^n\binom n kx^ky^{n - k} \]
+组合意义平凡。
+\(x\) 和 \(y\) 取到特殊值时会有奇怪的推广。 \[ \sum_{k = 0}^n\binom n k = 2^n \]" name="twitter:description"/><meta content="summary_large_image" name="twitter:card"/>
+<meta content="https://yangty-pic.oss-cn-beijing.aliyuncs.com/bg2.webp" name="twitter:image"/>
+<link href="https://q1.qlogo.cn/g?b=qq&amp;nk=375836877&amp;s=5" rel="shortcut icon"/>
+<link href="https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.5.1/build/styles/github-dark-dimmed.min.css" rel="stylesheet"/>
+<script src="https://cdn.jsdelivr.net/gh/highlightjs/cdn-release/build/highlight.min.js"></script>
+<script>hljs.highlightAll();</script>
+</head>
+<body class="article-page">
+<script>
+        (function() {
+            const colorSchemeKey = 'StackColorScheme';
+            if(!localStorage.getItem(colorSchemeKey)){
+                localStorage.setItem(colorSchemeKey, "auto");
+            }
+        })();
+    </script><script>
+    (function() {
+        const colorSchemeKey = 'StackColorScheme';
+        const colorSchemeItem = localStorage.getItem(colorSchemeKey);
+        const supportDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches === true;
+
+        if (colorSchemeItem == 'dark' || colorSchemeItem === 'auto' && supportDarkMode) {
+            
+
+            document.documentElement.dataset.scheme = 'dark';
+        } else {
+            document.documentElement.dataset.scheme = 'light';
+        }
+    })();
+</script>
+<div class="container main-container flex on-phone--column extended"><aside class="sidebar left-sidebar sticky">
+<button aria-label="切换菜单" class="hamburger hamburger--spin" id="toggle-menu" type="button">
+<span class="hamburger-box">
+<span class="hamburger-inner"></span>
+</span>
+</button>
+<header>
+<figure class="site-avatar">
+<a href="/">
+<img alt="Avatar" class="site-logo" height="300" loading="lazy" src="/img/avatar_huea3ce2119467b51fdd2a81393644a76d_51594_300x0_resize_q75_box.jpg" width="300"/>
+</a>
+<span class="emoji">😅</span>
+</figure>
+<div class="site-meta">
+<h1 class="site-name"><a href="/">清烛的博客</a></h1>
+<h2 class="site-description">烟火已谢，笙歌未停</h2>
+</div>
+</header><ol class="social-menu">
+<li>
+<a href="mailto:i@imyangty.com" target="_blank" title="email">
+<svg class="icon icon-tabler icon-tabler-mail" fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" viewbox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+<path d="M0 0h24v24H0z" fill="none" stroke="none"></path>
+<rect height="14" rx="2" width="18" x="3" y="5"></rect>
+<polyline points="3 7 12 13 21 7"></polyline>
+</svg>
+</a>
+</li>
+<li>
+<a href="https://github.com/Cgfyufsygsm" target="_blank" title="GitHub">
+<svg class="icon icon-tabler icon-tabler-brand-github" fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+<path d="M0 0h24v24H0z" fill="none" stroke="none"></path>
+<path d="M9 19c-4.3 1.4 -4.3 -2.5 -6 -3m12 5v-3.5c0 -1 .1 -1.4 -.5 -2c2.8 -.3 5.5 -1.4 5.5 -6a4.6 4.6 0 0 0 -1.3 -3.2a4.2 4.2 0 0 0 -.1 -3.2s-1.1 -.3 -3.5 1.3a12.3 12.3 0 0 0 -6.2 0c-2.4 -1.6 -3.5 -1.3 -3.5 -1.3a4.2 4.2 0 0 0 -.1 3.2a4.6 4.6 0 0 0 -1.3 3.2c0 4.6 2.7 5.7 5.5 6c-.6 .6 -.6 1.2 -.5 2v3.5"></path>
+</svg>
+</a>
+</li>
+<li>
+<a href="https://t.me/Cgfyufsygsm" target="_blank" title="Telegram">
+<svg class="icon icon-tabler icon-tabler-brand-telegram" fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" viewbox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+<path d="M0 0h24v24H0z" fill="none" stroke="none"></path>
+<path d="M15 10l-4 4l6 6l4 -16l-18 7l4 2l2 6l3 -4"></path>
+</svg>
+</a>
+</li>
+<li>
+<a href="https://twitter.com/Cgfyufsygsm" target="_blank" title="Twitter">
+<svg class="icon icon-tabler icon-tabler-brand-twitter" fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+<path d="M0 0h24v24H0z" fill="none" stroke="none"></path>
+<path d="M22 4.01c-1 .49 -1.98 .689 -3 .99c-1.121 -1.265 -2.783 -1.335 -4.38 -.737s-2.643 2.06 -2.62 3.737v1c-3.245 .083 -6.135 -1.395 -8 -4c0 0 -4.182 7.433 4 11c-1.872 1.247 -3.739 2.088 -6 2c3.308 1.803 6.913 2.423 10.034 1.517c3.58 -1.04 6.522 -3.723 7.651 -7.742a13.84 13.84 0 0 0 .497 -3.753c-.002 -.249 1.51 -2.772 1.818 -4.013z"></path>
+</svg>
+</a>
+</li>
+</ol><ol class="menu" id="main-menu">
+<li>
+<a href="/">
+<svg class="icon icon-tabler icon-tabler-home" fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+<path d="M0 0h24v24H0z" stroke="none"></path>
+<polyline points="5 12 3 12 12 3 21 12 19 12"></polyline>
+<path d="M5 12v7a2 2 0 0 0 2 2h10a2 2 0 0 0 2 -2v-7"></path>
+<path d="M9 21v-6a2 2 0 0 1 2 -2h2a2 2 0 0 1 2 2v6"></path>
+</svg>
+<span>主页</span>
+</a>
+</li>
+<li>
+<a href="/about/">
+<svg class="icon icon-tabler icon-tabler-user" fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+<path d="M0 0h24v24H0z" stroke="none"></path>
+<circle cx="12" cy="7" r="4"></circle>
+<path d="M6 21v-2a4 4 0 0 1 4 -4h4a4 4 0 0 1 4 4v2"></path>
+</svg>
+<span>关于</span>
+</a>
+</li>
+<li>
+<a href="/idx/">
+<svg class="icon icon-tabler icon-tabler-hash" fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+<path d="M0 0h24v24H0z" stroke="none"></path>
+<line x1="5" x2="19" y1="9" y2="9"></line>
+<line x1="5" x2="19" y1="15" y2="15"></line>
+<line x1="11" x2="7" y1="4" y2="20"></line>
+<line x1="17" x2="13" y1="4" y2="20"></line>
+</svg>
+<span>导航</span>
+</a>
+</li>
+<li>
+<a href="/archives/">
+<svg class="icon icon-tabler icon-tabler-archive" fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+<path d="M0 0h24v24H0z" stroke="none"></path>
+<rect height="4" rx="2" width="18" x="3" y="4"></rect>
+<path d="M5 8v10a2 2 0 0 0 2 2h10a2 2 0 0 0 2 -2v-10"></path>
+<line x1="10" x2="14" y1="12" y2="12"></line>
+</svg>
+<span>归档</span>
+</a>
+</li>
+<li>
+<a href="/search/">
+<svg class="icon icon-tabler icon-tabler-search" fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+<path d="M0 0h24v24H0z" stroke="none"></path>
+<circle cx="10" cy="10" r="7"></circle>
+<line x1="21" x2="15" y1="21" y2="15"></line>
+</svg>
+<span>搜索</span>
+</a>
+</li>
+<li>
+<a href="/friends/">
+<svg class="icon icon-tabler icon-tabler-link" fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+<path d="M0 0h24v24H0z" stroke="none"></path>
+<path d="M10 14a3.5 3.5 0 0 0 5 0l4 -4a3.5 3.5 0 0 0 -5 -5l-.5 .5"></path>
+<path d="M14 10a3.5 3.5 0 0 0 -5 0l-4 4a3.5 3.5 0 0 0 5 5l.5 -.5"></path>
+</svg>
+<span>友链</span>
+</a>
+</li>
+<li>
+<a href="https://blog.imyangty.com" target="_blank">
+<svg class="icon icon-tabler icon-tabler-home" fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+<path d="M0 0h24v24H0z" stroke="none"></path>
+<polyline points="5 12 3 12 12 3 21 12 19 12"></polyline>
+<path d="M5 12v7a2 2 0 0 0 2 2h10a2 2 0 0 0 2 -2v-7"></path>
+<path d="M9 21v-6a2 2 0 0 1 2 -2h2a2 2 0 0 1 2 2v6"></path>
+</svg>
+<span>主博客</span>
+</a>
+</li>
+<div class="menu-bottom-section">
+<li id="dark-mode-toggle">
+<svg class="icon icon-tabler icon-tabler-toggle-left" fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+<path d="M0 0h24v24H0z" stroke="none"></path>
+<circle cx="8" cy="12" r="2"></circle>
+<rect height="12" rx="6" width="20" x="2" y="6"></rect>
+</svg>
+<svg class="icon icon-tabler icon-tabler-toggle-right" fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+<path d="M0 0h24v24H0z" stroke="none"></path>
+<circle cx="16" cy="12" r="2"></circle>
+<rect height="12" rx="6" width="20" x="2" y="6"></rect>
+</svg>
+<span>暗色模式</span>
+</li>
+</div>
+</ol>
+</aside>
+<main class="main full-width">
+<article class="has-image main-article">
+<header class="article-header">
+<div class="article-image">
+<a href="/summary-combinatorics/">
+<img alt="Featured image of post 组合数学复习笔记" loading="lazy" src="https://yangty-pic.oss-cn-beijing.aliyuncs.com/bg2.webp"/>
+</a>
+</div>
+<div class="article-details">
+<header class="article-category">
+<a href="/categories/oi/">
+                OI
+            </a>
+<a href="/categories/summary/">
+                总结
+            </a>
+</header>
+<div class="article-title-wrapper">
+<h2 class="article-title">
+<a href="/summary-combinatorics/">组合数学复习笔记</a>
+</h2>
+</div>
+<footer class="article-time">
+<div>
+<svg class="icon icon-tabler icon-tabler-calendar-time" fill="none" height="56" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="56" xmlns="http://www.w3.org/2000/svg">
+<path d="M0 0h24v24H0z" stroke="none"></path>
+<path d="M11.795 21h-6.795a2 2 0 0 1 -2 -2v-12a2 2 0 0 1 2 -2h12a2 2 0 0 1 2 2v4"></path>
+<circle cx="18" cy="18" r="4"></circle>
+<path d="M15 3v4"></path>
+<path d="M7 3v4"></path>
+<path d="M3 11h16"></path>
+<path d="M18 16.496v1.504l1 1"></path>
+</svg>
+<time class="article-time--published">Oct 03, 2021</time>
+</div>
+<div>
+<svg class="icon icon-tabler icon-tabler-clock" fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+<path d="M0 0h24v24H0z" stroke="none"></path>
+<circle cx="12" cy="12" r="9"></circle>
+<polyline points="12 7 12 12 15 15"></polyline>
+</svg>
+<time class="article-time--reading">
+                    阅读时长: 12 分钟
+                </time>
+</div>
+</footer>
+</div>
+</header>
+<section class="article-content">
+<p>总结笔记。组合算是一个比较重要的大头。不包看懂，前置知识可能有点多。</p>
+<p>如有错漏烦请指正，当感激不尽/kel。</p>
+<h2 id="加乘原理">加乘原理</h2>
+<h2 id="排列组合">排列组合</h2>
+<h3 id="定义">定义</h3>
+<p><span class="math inline">\(n\)</span> 个有标号元素里面选 <span class="math inline">\(m\)</span> 个排成一排的方案数：<span class="math inline">\(\mathrm A_n^m\)</span>，称为排列数，有 <span class="math display">\[
+\mathrm A_n^m = \frac{n!}{(n - m)!}
+\]</span> 平凡，不证。</p>
+<p><span class="math inline">\(n\)</span> 个有标号元素里面选 <span class="math inline">\(m\)</span> 个的方案数：<span class="math inline">\(\mathrm C_n^m\)</span>，或者记作 $n m $，称为组合数，有 <span class="math display">\[
+\binom n m = \frac{\mathrm A_n^m}{m!} = \frac{n!}{m!(n - m)!}
+\]</span> 相当于去掉 <span class="math inline">\(m\)</span> 的全排列的方案数。</p>
+<h3 id="二项式定理">二项式定理</h3>
+<p><span class="math display">\[
+(x + y)^n = \sum_{k = 0}^n\binom n kx^ky^{n - k}
+\]</span></p>
+<p>组合意义平凡。</p>
+<p><span class="math inline">\(x\)</span> 和 <span class="math inline">\(y\)</span> 取到特殊值时会有奇怪的推广。 <span class="math display">\[
+\sum_{k = 0}^n\binom n k = 2^n
+\]</span></p>
+<p><span class="math display">\[
+\sum_{k = 0}^n(-1)^k\binom n k = [n = 0]
+\]</span></p>
+<h3 id="组合恒等式">组合恒等式</h3>
+<blockquote>
+<ol type="1">
+<li>对称恒等式 <span class="math display">\[
+\binom n k = \binom{n}{n - k}
+\]</span></li>
+</ol>
+</blockquote>
+<p>组合意义易得。</p>
+<blockquote>
+<ol start="2" type="1">
+<li>吸收恒等式 <span class="math display">\[
+\binom n k = \frac n k \binom {n - 1}{k - 1}
+\]</span></li>
+</ol>
+</blockquote>
+<p>拆成阶乘形式易得。</p>
+<blockquote>
+<ol start="3" type="1">
+<li>归纳恒等式 <span class="math display">\[
+\binom{n}{k} = \binom{n - 1}{k} + \binom{n - 1}{k - 1}
+\]</span></li>
+</ol>
+</blockquote>
+<p>考虑钦定一个元素，如果我们现在才选，那么就有 <span class="math inline">\(\dbinom{n - 1}{k - 1}\)</span> 种方案，如果我们没有选，那么就是 <span class="math inline">\(\dbinom{n -1}{k}\)</span>。</p>
+<blockquote>
+<ol start="4" type="1">
+<li><span class="math display">\[
+\sum_{k = 0}^nk\binom n k = n2^{n - 1}
+\]</span></li>
+</ol>
+</blockquote>
+<p>用吸收恒等式把 <span class="math inline">\(k\)</span> 提掉之后二项式定理可证。对二项展开式求导也可。</p>
+<blockquote>
+<ol start="5" type="1">
+<li><span class="math display">\[
+\binom n r \binom r k = \binom n k \binom{n - k}{r - k}
+\]</span></li>
+</ol>
+</blockquote>
+<p>证明：拆成阶乘的形式易证。组合意义也比较好想。</p>
+<blockquote>
+<ol start="6" type="1">
+<li>范德蒙德卷积的推论： <span class="math display">\[
+\sum_{k = 0}^r\binom n k \binom{m}{r - k} = \binom{n + m}{r}
+\]</span></li>
+</ol>
+</blockquote>
+<p>证明：考虑组合意义，<span class="math inline">\(n + m\)</span> 中选 <span class="math inline">\(r\)</span> 个可以钦定成在前 <span class="math inline">\(n\)</span> 个里面选 <span class="math inline">\(k\)</span> 个和在后 <span class="math inline">\(m\)</span> 里面选 <span class="math inline">\(r - k\)</span> 个。同时我们也有 <span class="math inline">\((1 + x)^{n + m} = (1 + x)^n(1 + x)^m\)</span>。考虑 <span class="math inline">\([x^r](1 + x)^{n + m}\)</span> 即可。</p>
+<blockquote>
+<ol start="7" type="1">
+<li>上指标求和 <span class="math display">\[
+\sum_{k = 0}^n\binom{k}{m} = \binom{n + 1}{m + 1}
+\]</span></li>
+</ol>
+</blockquote>
+<p>证明：组合意义：从 <span class="math inline">\(\{0, 1, \cdots, n\}\)</span> 中选出 <span class="math inline">\(m + 1\)</span> 个数，选中的最大数为 <span class="math inline">\(k\)</span> 的方案数为 <span class="math inline">\(\dbinom k m\)</span>。用 <span class="math inline">\(3\)</span> 式一步步推也可推得。</p>
+<blockquote>
+<ol start="8" type="1">
+<li>与斐波那契的关系 <span class="math display">\[
+\sum_{i=0}^n\binom{n-i}{i} = F_{n+1}
+\]</span> 其中 <span class="math inline">\(F_n\)</span> 表示斐波那契数列的第 <span class="math inline">\(n\)</span> 项。</li>
+</ol>
+</blockquote>
+<p>证明：可以观察一下杨辉三角。可以通过将式子用归纳恒等式展开证明。</p>
+<h3 id="多项式系数">多项式系数</h3>
+<p><span class="math display">\[
+\binom{n}{n_1, n_2,\cdots, n_t}
+\]</span></p>
+<p>其定义为多项式 <span class="math inline">\((x_1 + x_2 + \cdots + x_t)^n\)</span> 中 <span class="math inline">\(x_1^{n_1}x_2^{n_2}\cdots x_t^{n_t}\)</span> 的系数。</p>
+<p><span class="math inline">\(n\)</span> 个不同的球放进 <span class="math inline">\(t\)</span> 个不同盒子里使得第 <span class="math inline">\(i\)</span> 个盒子有 <span class="math inline">\(n_i\)</span> 个球的方案数。 <span class="math display">\[
+\binom{n}{n_1, n_2,\cdots, n_t} = \binom{n}{n_1}\binom{n - n_1}{n_2}\cdots\binom{n_t}{n_t}
+\]</span> 把组合数拆成阶乘的形式即可得到 <span class="math display">\[
+\binom{n}{n_1,\cdots, n_t} = \frac{n!}{n_1!n_2!\cdots n_t!}
+\]</span> 递推： <span class="math display">\[
+\binom{n}{n_1,\cdots,n_t} = \binom{n - 1}{n_1 - 1, n_2,\cdots, n_t} + \binom{n - 1}{n_1, n_2 - 1,\cdots, n_t} + \binom{n - 1}{n_1, \cdots,n_t - 1}
+\]</span> 和组合数的递推类似。</p>
+<h3 id="基本计数应用">基本计数应用</h3>
+<blockquote>
+<p>例题 1：<a href="https://www.luogu.com.cn/problem/P5824">P5824 十二重计数法</a>（部分）给定 <span class="math inline">\(n\)</span> 个球和 <span class="math inline">\(m\)</span> 个盒子。要将 <span class="math inline">\(n\)</span> 个球全部放入盒子中。</p>
+<ul>
+<li>I：球之间互不相同，盒子之间互不相同。</li>
+<li>II：球之间互不相同，盒子之间互不相同，每个盒子至多装一个球。</li>
+<li>III：球之间互不相同，盒子之间互不相同，每个盒子至少装一个球。</li>
+<li>VII：球全部相同，盒子之间互不相同。</li>
+<li>VIII：球全部相同，盒子之间互不相同，每个盒子至多装一个球。</li>
+<li>IX：球全部相同，盒子之间互不相同，每个盒子至少装一个球。</li>
+</ul>
+<p>剩余部分留至后文。</p>
+</blockquote>
+<ul>
+<li>I：显然为 <span class="math inline">\(m^n\)</span>。</li>
+<li>II：显然为 <span class="math inline">\(m^{\underline{n}}\)</span>。</li>
+<li>III：容斥一波，考虑空盒子的个数，得到 <span class="math inline">\(\displaystyle\sum_{i=0}^m(-1)^i\binom mi(m-i)^n\)</span>。</li>
+<li>IX：<strong>插板法</strong>，我们相当于是将 <span class="math inline">\(n\)</span> 个球划分到 <span class="math inline">\(m\)</span> 个连续段里面去，即相当于是 <span class="math inline">\(n - 1\)</span> 个空里面插 <span class="math inline">\(m-1\)</span> 个板，即 <span class="math inline">\(\displaystyle\binom {n -1}{m-1}\)</span>。</li>
+<li>VII：由于一段可以为空，所以不妨强行多塞 <span class="math inline">\(m\)</span> 个元素，再套用 VIII，所以就是 <span class="math inline">\(\displaystyle\binom{n + m - 1}{m-1}\)</span>。</li>
+<li>VIII：考虑是哪几个盒子装球，答案显然为 <span class="math inline">\(\displaystyle\binom mn\)</span>。</li>
+</ul>
+<blockquote>
+<p>由问题 IX 和问题 VII，我们可以知道：</p>
+<ul>
+<li>对于不定方程 <span class="math inline">\(a_1 + \cdots + a_n = X\)</span>，若要求 <span class="math inline">\(a_i\ge 1\)</span>，则方程的解有 <span class="math inline">\(\dbinom{X - 1}{n - 1}\)</span> 组。</li>
+<li>若要求 <span class="math inline">\(a_i\ge 0\)</span>，则方程的解有 <span class="math inline">\(\dbinom{X + n - 1}{n - 1}\)</span> 组。</li>
+</ul>
+<p>这是一类很经典的模型，需要仔细理解。</p>
+</blockquote>
+<p>上文是插板法的经典应用，下面来看一个经典问题——错位排列。</p>
+<blockquote>
+<p>例题 <span class="math inline">\(2\)</span>：<a href="https://www.luogu.com.cn/problem/P4071">P4071 [SDOI2016]排列计数</a></p>
+<p><span class="math inline">\(T\le 5\times 10^5\)</span> 次询问有多少种 <span class="math inline">\(1\sim n\)</span> 的排列 <span class="math inline">\(a\)</span> 满足恰有 <span class="math inline">\(m\)</span> 个位置满足 <span class="math inline">\(a_i = i\)</span>。<span class="math inline">\(n\le 10^6\)</span>，答案模 <span class="math inline">\(10^9 + 7\)</span>。</p>
+</blockquote>
+<p>我们很容易发现，另外的 <span class="math inline">\(n - m\)</span> 个位置必须要满足 <span class="math inline">\(a_i\ne i\)</span>。而这就是一个很典型的错位排列问题。最经典的错排问题指的是，对于一个排列，其满足 <span class="math inline">\(\forall i\)</span> 都有 <span class="math inline">\(a_i\ne i\)</span>，我们设长为 <span class="math inline">\(n\)</span> 的这样的排列有 <span class="math inline">\(D_n\)</span> 个。</p>
+<p>则本题的答案很显然为 <span class="math inline">\(\dbinom{n}{m}D_{n - m}\)</span>（考虑选择 <span class="math inline">\(m\)</span> 个位置满足 <span class="math inline">\(a_i = i\)</span>）。组合数可以阶乘预处理，压力现在给到 <span class="math inline">\(D_i\)</span> 这边，由于需要多次询问，所以考虑预处理。</p>
+<p>首先我们一定知道 <span class="math inline">\(D_1 = 0, D_2 = 1\)</span>。然后对于 <span class="math inline">\(D_i\)</span>，假设 <span class="math inline">\(1\)</span> 放在了 <span class="math inline">\(2\)</span> 位置上，那么对于数字 <span class="math inline">\(2\)</span>，若其放在了位置 <span class="math inline">\(1\)</span> 上，则问题转化为 <span class="math inline">\(3\sim i\)</span> 的错排数，有 <span class="math inline">\(D_{i - 2}\)</span> 种方案；若其没有放在位置 <span class="math inline">\(1\)</span> 上，则问题转化为 <span class="math inline">\(2\sim i\)</span> 的错排数，有 <span class="math inline">\(D_{i - 1}\)</span> 种方案。而 <span class="math inline">\(1\)</span> 一共可以放在 <span class="math inline">\(n - 1\)</span> 个位置上，所以是 <span class="math inline">\((n-1)(D_{n-2} + D_{n-1})\)</span>。</p>
+<p>综上， <span class="math display">\[
+D_n =\begin{cases}
+0&amp;n=1\\
+1&amp;n=2\\
+(n - 1)(D_{n-2} + D_{n-1})&amp;n\ge3
+\end{cases}
+\]</span> 同时，错排的通项公式也可以使用容斥来推导，见下文二项式反演处。</p>
+<p>下面提供一个经典的“操作序列”形问题。</p>
+<blockquote>
+<p>例题 <span class="math inline">\(3\)</span>：<a href="https://www.luogu.com.cn/problem/P6475">P6475 [NOI Online #2 入门组] 建设城市</a></p>
+<p>问满足以下条件的正整数序列 <span class="math inline">\(a_{1,\cdots, 2n}\)</span> 的数量，答案对 <span class="math inline">\(998244353\)</span> 取模。<span class="math inline">\(1\le n,m\le 10^5\)</span>。</p>
+<ul>
+<li><span class="math inline">\(\forall i\in[1, 2n], a_i\in[1,m]\)</span>。</li>
+<li>前 <span class="math inline">\(n\)</span> 个元素不降，后 <span class="math inline">\(n\)</span> 个元素不增。</li>
+<li><span class="math inline">\(a_x = a_y\)</span>。</li>
+</ul>
+</blockquote>
+<p>本题的关键是考虑长度为 <span class="math inline">\(n\)</span>，值域 <span class="math inline">\([1, m]\)</span> 的不降序列的方案数 <span class="math inline">\(f(n,m)\)</span>，剩余部分是简单的分类讨论。下面用两种方法推导 <span class="math inline">\(f(n,m)\)</span>：</p>
+<ul>
+<li>考虑即为将 <span class="math inline">\(n\)</span> 个小球（高楼）放入 <span class="math inline">\(m\)</span> 个盒子（值域）里，可以有空盒，于是由例题 1，答案显然为 <span class="math inline">\(\dbinom{n + m - 1}{m - 1}\)</span>。</li>
+<li>考虑长度为 <span class="math inline">\(n + m - 1\)</span> 的操作序列，其中包含给 <span class="math inline">\(v\)</span> 加一和将 <span class="math inline">\(v\)</span> 加到当前序列末尾两个操作。不难发现一个操作序列唯一对应一个不降数列，然后随便想一下发现操作序列的总数为 <span class="math inline">\(f(n,m) = \dbinom{n + m - 1}{n}\)</span>。</li>
+</ul>
+<p>操作序列的思想很有用。下面来看一道很经典的<strong>棋盘路径计数问题</strong>。</p>
+<blockquote>
+<p>例题 <span class="math inline">\(4\)</span>：BZOJ#4767. 两双手</p>
+<p>从 <span class="math inline">\((0, 0)\)</span> 要走到 <span class="math inline">\((E_x, E_y)\)</span>，每次能从 <span class="math inline">\((x, y)\)</span> 走到 <span class="math inline">\((x + A_x, y + A_y)\)</span> 或 <span class="math inline">\((x + B_x, y + B_y)\)</span>。中间有 <span class="math inline">\(k\)</span> 个不能走的点，问方案数。保证 <span class="math inline">\(A_xB_y - A_yB_x\ne 0\)</span>。</p>
+<p><span class="math inline">\(0\le n,m,k, |A_x|,|A_y|,|B_x|,|B_y|\le 500\)</span>。</p>
+</blockquote>
+<p>首先有一步转化：注意到这两个向量构成平面内的一组基，所以任意的点 <span class="math inline">\((x, y)\)</span> 都可以被表示为 <span class="math inline">\(cA + dB\)</span>，将所有点 <span class="math inline">\((x,y)\)</span> 转为 <span class="math inline">\((c, d)\)</span>。问题于是转化为带障碍的网格路径计数（每步可以向右或者向上走一步）。</p>
+<p>设换了坐标系后终点为 <span class="math inline">\((n, m)\)</span>。问题现在转化为从 <span class="math inline">\((0, 0)\)</span> 走到 <span class="math inline">\((n, m)\)</span> 的带障碍路径计数。</p>
+<p>先不考虑障碍，则我们一共是要走 <span class="math inline">\(n + m\)</span> 步，而其中 <span class="math inline">\(n\)</span> 步往右走，<span class="math inline">\(m\)</span> 步往上走。同样用<strong>操作序列</strong>的想法来看的话，本质上就是长度为 <span class="math inline">\(n + m\)</span> 的操作序列里面选出 <span class="math inline">\(n\)</span> 步来向右走（剩余 <span class="math inline">\(m\)</span> 步自然是向上走），所以方案数是 <span class="math inline">\(\dbinom{n + m}{n}\)</span>。</p>
+<p>有障碍则需要考虑容斥。</p>
+<p>将所有的障碍点以及 <span class="math inline">\((n, m)\)</span> 视为关键点，排个序，然后便令 <span class="math inline">\(f_i\)</span> 为从 <span class="math inline">\((0, 0)\)</span> 出发，不经过障碍点，走到第 <span class="math inline">\(i\)</span> 个关键点的方案数，则 <span class="math display">\[
+f_i = \binom{x_i + y_i}{x_i}- \sum_{x_j\le x_i\land y_j\le y_i}f_j\times\binom{(x_i - x_j) + (y_i - y_j)}{x_i - x_j}
+\]</span> 于是时间复杂度为 <span class="math inline">\(O(k^2)\)</span>。</p>
+<blockquote>
+<p>例题 <span class="math inline">\(5\)</span>：AGC001E - BBQ Hard</p>
+<p>给定 <span class="math inline">\(a_{1,\cdots, n}\)</span> 和 <span class="math inline">\(b_{1,\cdots n}\)</span>，求 <span class="math display">\[
+\sum_{i=1}^n\sum_{j=i+1}^n\binom{a_i + b_i + a_j + b_j}{a_i + a_j}
+\]</span> 答案对 <span class="math inline">\(10^9 + 7\)</span> 取模。<span class="math inline">\(n\le 2\times 10^5\)</span>，<span class="math inline">\(a_i,b_i\le 2000\)</span>。</p>
+</blockquote>
+<p>回忆 <span class="math inline">\(\dbinom{n + m}{n}\)</span> 的组合意义：棋盘上从 <span class="math inline">\((0, 0)\)</span> 走到 <span class="math inline">\((n, m)\)</span> 的路径方案数。那么 <span class="math inline">\(\dbinom{a_i + b_i + a_j + b_j}{a_i + a_j}\)</span> 的组合意义即为从 <span class="math inline">\((-a_i,-b_i)\)</span> 走到 <span class="math inline">\((a_j, b_j)\)</span> 的路径方案数。</p>
+<p>然后现在要求出每一对 <span class="math inline">\((i,j)\)</span> 从 <span class="math inline">\((-a_i, -b_i)\)</span> 到 <span class="math inline">\((a_j, b_j)\)</span> 的路径方案数。发现这个东西可以放在棋盘上一起 dp，时间复杂度 <span class="math inline">\(O(\max^2 v)\)</span>。</p>
+<p>注意最后要把所有的从 <span class="math inline">\((-a_i,-b_i)\)</span> 走到 <span class="math inline">\((a_i, b_i)\)</span> 的方案数去重掉，减去 <span class="math inline">\(\dbinom{2a_i+2b_i}{2a_i}\)</span> 即可。然后因为题目里面钦定 <span class="math inline">\(j &gt; i\)</span>，所以最后要除以二。</p>
+<h2 id="容斥原理">容斥原理</h2>
+<h3 id="引入">引入</h3>
+<p>考虑班上有 <span class="math inline">\(10\)</span> 个同学选了 A 项目，<span class="math inline">\(15\)</span> 个选了 B 项目，<span class="math inline">\(12\)</span> 个选了 C 项目。问班上有多少同学至少选了一个项目。</p>
+<p>朴素的 <span class="math inline">\(|A| + |B| + |C|\)</span> 会重复计数，因为需要考虑重复选项目的同学。所以需要减去同时选了 AB、BC 或 AC 的，但是减去之后，同时选了 ABC 的又会被多减，要加回来。</p>
+<p>直观的表示就是 <span class="math inline">\(|A\cup B\cup C| = |A| + |B| + |C| - |A\cap B| - |B\cap C| - |A\cap C| + |A\cap B \cap C|\)</span>。</p>
+<p>其基本思路就是，<strong>将重复计算的“斥”掉，再将重复“斥”掉的“容”回来</strong>，所以叫做容斥原理。</p>
+<p>一般地，设 <span class="math inline">\(U\)</span> 中元素有 <span class="math inline">\(n\)</span> 种不同属性，第 <span class="math inline">\(i\)</span> 种称为 <span class="math inline">\(P_i\)</span>，具有 <span class="math inline">\(P_i\)</span> 属性的元素构成集合 <span class="math inline">\(S_i\)</span>，那么 <span class="math display">\[
+\begin{aligned}
+\left| \bigcup_{i=1}^n S_i \right| &amp;= \sum_i|S_i| - \sum_{i&lt;j}|S_i\cap S_j| + \sum_{i&lt;j&lt;k}|S_i\cap S_j\cap S_k| - \\&amp;\cdots + (-1)^{m - 1}\sum_{a_i&lt;a_{i + 1}}\left|\bigcap_{i=1}^mS_{a_i}\right| + \cdots + (-1)^{n - 1}|S_1\cap\cdots\cap S_n|
+\end{aligned}
+\]</span> 全部缩起来写就是 <span class="math display">\[
+\left| \bigcup_{i=1}^n S_i \right| = \sum_{m=1}^n(-1)^{m - 1}\sum_{a_i&lt;a_{i + 1}}\left|\bigcap_{i=1}^mS_{a_i}\right|
+\]</span> 浅证明一下：考虑二项式定理，对于每个元素计算其出现的次数。设元素 <span class="math inline">\(x\)</span> 出现在 <span class="math inline">\(m\ge 1\)</span> 个集合 <span class="math inline">\(S_i\)</span> 中，则</p>
+<ul>
+<li>选了 <span class="math inline">\(1\)</span> 个集合时，被加上了 <span class="math inline">\(\dbinom m 1\)</span> 次。</li>
+<li>选了 <span class="math inline">\(2\)</span> 个集合时，被减去了 <span class="math inline">\(\dbinom m 2\)</span> 次。</li>
+<li>……</li>
+<li>选了 <span class="math inline">\(m\)</span> 个集合时，被加上了 <span class="math inline">\((-1)^{m + 1}\dbinom{m}{m}\)</span> 次。</li>
+<li>选择的集合多于 <span class="math inline">\(m\)</span> 个时，他们的交一定不包含 <span class="math inline">\(x\)</span>，不予考虑。</li>
+</ul>
+<p>所以 <span class="math display">\[
+\begin{aligned}
+&amp;\sum_{i=1}^m(-1)^{i +1}\binom mi\\
+=&amp;\binom m0 - \sum_{i=0}^m(-1)^i\binom mi\\
+=&amp;1 - (1 - 1)^m\\
+=&amp;1
+\end{aligned}
+\]</span> 综上，每个元素都一定被计算了恰好 <span class="math inline">\(1\)</span> 次。</p>
+<h3 id="简单应用">简单应用</h3>
+<blockquote>
+<p>例题 <span class="math inline">\(1\)</span>：<a href="https://www.luogu.com.cn/problem/P3301">P3301 [SDOI2013]方程</a></p>
+<p>给定不定方程 <span class="math inline">\(x_1 + x_2 + \cdots + x_n = m\)</span>，对于 <span class="math inline">\(i\in[1, n_1]\)</span>，有限制 <span class="math inline">\(x_i\le A_i\)</span>；对于 <span class="math inline">\(i\in (n_1,n_2]\)</span>，有限制 <span class="math inline">\(x_i\ge A_i\)</span>，求该方程正整数解的组数。答案对 <span class="math inline">\(p\)</span> 取模，<span class="math inline">\(p\in\{10007,262203414,437367875\}\)</span>，<span class="math inline">\(n_1,n_2\le 8\)</span>。</p>
+</blockquote>
+<p>考虑 <span class="math inline">\(x_i\ge A_i\)</span> 的限制，显然，我们把 <span class="math inline">\(m\)</span> 减去 <span class="math inline">\(\displaystyle \sum_{i = n_1 + 1}^{n_2}(A_i - 1)\)</span>，然后就把问题转化为了直接插板。</p>
+<p>然后考虑到 <span class="math inline">\(x_i\le A_i\)</span> 的限制不好处理，既然限制数最大为 <span class="math inline">\(8\)</span>，不如考虑容斥，将其转化为 <span class="math inline">\(x_i\ge A_i + 1\)</span> 的形式来处理。</p>
+<p>这样子每次计算的答案为 <span class="math display">\[
+\binom{m' - 1}{n - 1}\bmod p
+\]</span> 然后这一坨式子是可以使用扩展 Lucas 来算的（见数论复习笔记）。</p>
+<blockquote>
+<p>例题 <span class="math inline">\(2\)</span>：<a href="https://www.luogu.com.cn/problem/P1450">P1450 [HAOI2008]硬币购物</a></p>
+<p>给定 <span class="math inline">\(c_1,\cdots, c_4\)</span>，<span class="math inline">\(n\)</span> 次询问不定方程 <span class="math inline">\(c_1x_1 + c_2x_2 + c_3x_3 + c_4x_4 = s\)</span> 的满足 <span class="math inline">\(x_i\le d_i\)</span> 的非负整数解个数。<span class="math inline">\(n\le 1000\)</span>，<span class="math inline">\(1\le c_i,d_i,s\le 10^5\)</span>。</p>
+</blockquote>
+<p>对于一次询问，我们可以 <span class="math inline">\(O(s)\)</span> 背包。但是 <span class="math inline">\(O(ns)\)</span> 显然无法通过本题。</p>
+<p>按照上面的转化，我们先一步容斥，变成 <span class="math inline">\(|U| - \displaystyle\left|\bigcup_{i=1}^4\overline{S_i}\right|\)</span>。<span class="math inline">\(|U|\)</span> 可以直接背包求出（无任何限制），后者使用容斥进行展开。考虑到 <span class="math inline">\(\overline{S_i}\)</span> 的意义即为 <span class="math inline">\(x_i\ge d_i + 1\)</span>，那么直接将 <span class="math inline">\(s\)</span> 减去 <span class="math inline">\(d_i + 1\)</span> 问题就变成没有下界的了，可以背包预处理。</p>
+<h3 id="子集反演">子集反演</h3>
+<p>容斥的一般形式，实际上下文的二项式反演/min-max 容斥（乃至数论中的莫比乌斯反演）的本质也就是子集反演，只不过是加以变形和特殊化。</p>
+<p>对于两个集合的函数 <span class="math inline">\(f(S)\)</span> 和 <span class="math inline">\(g(S)\)</span>，若 <span class="math display">\[f(S) = \sum_{T\subseteq S} g(T)\]</span> 则</p>
+<p><span class="math display">\[
+g(S) = \sum_{T\subseteq S}(-1)^{|S| - |T|} f(T)
+\]</span></p>
+<p>证明：</p>
+<p>先考虑将上式代入下式，则</p>
+<p><span class="math display">\[
+\sum_{T\subseteq S}(-1)^{|S| - |T|}\sum_{Q\subseteq T}g(Q)
+\]</span></p>
+<p>然后调换求和顺序改为枚举 <span class="math inline">\(Q\)</span>，变为</p>
+<p><span class="math display">\[
+\sum_{Q\subseteq S}g(Q)\sum_{Q\subseteq T\subseteq S}(-1)^{|S| - |T|}
+\]</span></p>
+<p>后半部分与 <span class="math inline">\(Q\)</span> 无关，去掉 <span class="math inline">\(Q\)</span>：</p>
+<p><span class="math display">\[
+\sum_{Q}g(Q)\sum_{T\subseteq (S\setminus Q)}(-1)^{|S\setminus Q| - |T|}
+\]</span></p>
+<p>不妨记函数 <span class="math inline">\(F(S) = \sum_{T\subseteq S}(-1)^{|S| - |T|}\)</span> 并尝试对其化简：</p>
+<p><span class="math display">\[
+\begin{aligned}
+F(S) &amp;= \sum_{T\subseteq S}(-1)^{|S| - |T|}\\
+&amp;= \sum_{i = 0}^{|S|} (-1)^{|S| - i}\binom{|S|}{i}\\
+&amp;= \sum_{i=0}^{|S|} \binom{|S|}{i} 1^i (-1)^{|S| - i}\\
+&amp;= (1-1)^{|S|}\\
+&amp;= [|S| = 0]
+\end{aligned}
+\]</span></p>
+<p>所以原式化成 <span class="math inline">\(\displaystyle\sum_Q g(Q) F(S\setminus Q)\)</span> 而只有当 <span class="math inline">\(|S\setminus Q| = 0\)</span> 即 <span class="math inline">\(Q = S\)</span> 的时候 <span class="math inline">\(F(S\setminus Q)\ne 0\)</span>，所以 <span class="math inline">\(g(Q)\)</span> 只会在 <span class="math inline">\(S = Q\)</span> 的时候产生贡献，故等式右边等于左边。<span class="math inline">\(\square\)</span></p>
+<h3 id="二项式反演">二项式反演</h3>
+<p>一种奇形怪状的容斥，常用于转换“恰好”“至少”“至多”等字眼。</p>
+<h4 id="形式一">形式一</h4>
+<p><span class="math display">\[
+f_n = \sum_{i = 0}^n\binom n i g_i \iff g_n = \sum_{i = 0}^n(-1)^{n - i}\binom n i f_i
+\]</span></p>
+<p>证明考虑将右式回代入左式： <span class="math display">\[
+\begin{aligned}
+f_n &amp;= \sum_{i = 0}^n\binom n i g_i\\
+&amp;= \sum_{i = 0}^n\binom n i\sum_{j = 0}^i(-1)^{i - j}\binom i jf_j\\
+&amp;= \sum_{i = 0}^n\sum_{j = 0}^i(-1)^{i - j}\binom n i \binom i j f_j\\
+&amp;= \sum_{i = 0}^n\sum_{j = 0}^i(-1)^{i - j}\binom n j\binom{n - j}{i - j}f_j\\
+&amp;= \sum_{j = 0}^nf_j\binom n j \sum_{i = j}^n(-1)^{i - j}\binom{n - j}{i - j}\\
+&amp;= \sum_{j = 0}^nf_j\binom n j \sum_{k = 0}^{n - j}(-1)^k\binom {n - j}{k}\\
+&amp;= \sum_{j = 0}^nf_j\binom n j[n = j]\\
+&amp;= f_n
+\end{aligned}
+\]</span> 其中用到了交换求和顺序以及将式子化为卷积形式的 trick。</p>
+<p>还有一种使用 EGF 的证明：</p>
+<p><span class="math display">\[
+\begin{aligned}
+f_n &amp;= \sum_{i = 0}^n\binom n i g_i\\
+\frac{f_n}{n!} &amp;= \sum_{i = 0}^n\frac{1}{(n - i)!}\frac{g_i}{i!}\\
+\end{aligned}
+\]</span></p>
+<p>这是一个卷积的形式，考虑到 <span class="math inline">\(\exp(x) = \displaystyle\sum_{i = 0}\frac{x^i}{i!}\)</span>，故有</p>
+<p><span class="math display">\[
+F(x) = G(x)\exp(x)\iff G(x) = F(x)\exp(-x)
+\]</span></p>
+<p><span class="math display">\[
+\begin{aligned}
+\frac{g_n}{n!} &amp;= \sum_{i = 0}^n\frac{f_i}{i!}(-1)^{n - i}(n - i)!\\
+g_n &amp;= \sum_{i = 0}^n(-1)^{n - i}\binom n i f_i
+\end{aligned}
+\]</span></p>
+<p>根据组合意义可以知道 <span class="math inline">\(f_n\)</span> 表示“至多 <span class="math inline">\(n\)</span> 个”，<span class="math inline">\(g_n\)</span> 表示“恰好 <span class="math inline">\(n\)</span> 个”。</p>
+<h4 id="形式二">形式二</h4>
+<p><span class="math display">\[
+f_i = \sum_{j = i}^n\binom j ig_j\iff g_i = \sum_{j = i}^n(-1)^{j - i}\binom j if_{j}
+\]</span></p>
+<p>根据组合意义可以知道 <span class="math inline">\(f_n\)</span> 表示“至少 <span class="math inline">\(n\)</span> 个”，<span class="math inline">\(g_n\)</span> 表示“恰好 <span class="math inline">\(n\)</span> 个”。</p>
+<h4 id="应用">应用</h4>
+<p>可以用于优化容斥，也可以进行奇怪的式子转化。</p>
+<ul>
+<li>应用 <span class="math inline">\(1\)</span>：错排问题。</li>
+</ul>
+<p>设 <span class="math inline">\(D_i\)</span> 为恰好 <span class="math inline">\(i\)</span> 排错个的方案数，则我们知道 <span class="math display">\[
+n! = \sum_{i = 0}^n\binom n i D_i
+\]</span> 这明显是二项式反演的形式，反演一下就知道 <span class="math inline">\(\displaystyle D_i = \sum_{i = 0}^n(-1)^{n - i}\binom n i i!\)</span>。</p>
+<ul>
+<li><p>应用 <span class="math inline">\(2\)</span>：染色问题。</p>
+<p>一列 <span class="math inline">\(n\)</span> 个球，<span class="math inline">\(m\)</span> 种颜色，给每个球染色，要求相邻球颜色不同，且每种颜色至少用 <span class="math inline">\(1\)</span> 次。问方案数。</p></li>
+</ul>
+<p>不考虑至少用 <span class="math inline">\(1\)</span> 次的限制的话就是 <span class="math inline">\(m(m - 1)^{n - 1}\)</span>，现在我们考虑进去。设 <span class="math inline">\(f_k\)</span> 为至多用 <span class="math inline">\(k\)</span> 种颜色的方案数，即 <span class="math inline">\(k(k - 1)^{n - 1}\)</span>，<span class="math inline">\(g_k\)</span> 为恰好用 <span class="math inline">\(k\)</span> 种颜色的方案数，则 <span class="math display">\[
+f_k = \sum_{i = 0}^k\binom k ig_i\iff g_k = \sum_{i = 0}^k(-1)^{k - i}\binom k ii(i - 1)^{n - 1}
+\]</span></p>
+<ul>
+<li>应用 <span class="math inline">\(3\)</span>：斯特林数。</li>
+</ul>
+<p>见下文。</p>
+<ul>
+<li><p>例题 <span class="math inline">\(1\)</span>：<strong><a href="https://www.luogu.com.cn/problem/P4859">P4859 已经没有什么好害怕的了</a></strong></p>
+<blockquote>
+<p>给定两个长度为 <span class="math inline">\(n\)</span> 的序列 <span class="math inline">\(\{a\}\)</span> 和 <span class="math inline">\(\{b\}\)</span>，将其两两配对，问 <span class="math inline">\(a_i &gt; b_i\)</span> 比 <span class="math inline">\(a_i &lt; b_i\)</span> 的情况恰好多 <span class="math inline">\(k\)</span> 组的方案数。</p>
+</blockquote></li>
+</ul>
+<p>直接令 <span class="math inline">\(k = \dfrac{n + k}{2}\)</span>，即转化为 <span class="math inline">\(a_i &gt; b_i\)</span> 有 <span class="math inline">\(k\)</span> 组。这样会好想一点。</p>
+<p>如果不考虑恰好 <span class="math inline">\(k\)</span> 组这个条件而是将其变为至少 <span class="math inline">\(k\)</span> 组，则我们可以考虑一个 dp。首先先分别排好序，然后我们设 <span class="math inline">\(dp_{i, j}\)</span> 表示前 <span class="math inline">\(i\)</span> 个 <span class="math inline">\(a\)</span> 里选了 <span class="math inline">\(j\)</span> 组比 <span class="math inline">\(b\)</span> 大的，则有转移 <span class="math display">\[
+dp_{i, j} = dp_{i - 1, j} + (l_i - (j - 1))dp_{i - 1, j - 1}
+\]</span> <span class="math inline">\(l_i\)</span> 表示比 <span class="math inline">\(a_i\)</span> 小的 <span class="math inline">\(b_i\)</span> 的个数。因为已经选了 <span class="math inline">\(j - 1\)</span> 个所以要扣去 <span class="math inline">\(j - 1\)</span>。</p>
+<p>dp 完了之后还没完，设 <span class="math inline">\(f_i\)</span> 为至少有 <span class="math inline">\(i\)</span> 组的答案，则 <span class="math inline">\(f_i = (n - i)!dp_{n, i}\)</span>，令 <span class="math inline">\(g_i\)</span> 为恰好为 <span class="math inline">\(i\)</span> 组的答案，然后快乐二项式反演就可以得到 <span class="math display">\[
+g_k = \sum_{i = k}^n(-1)^{i - k} \binom i kf_i
+\]</span> <span class="math inline">\(O(n^2)\)</span> 算一下即可。</p>
+<ul>
+<li><p>例题 <span class="math inline">\(2\)</span>：<strong><a href="https://www.luogu.com.cn/problem/P6478">P6478 [NOI Online #2 提高组] 游戏</a></strong></p>
+<blockquote>
+<p>有一棵 <span class="math inline">\(n = 2m\)</span> 个点的有根树，两人初始各有 <span class="math inline">\(m\)</span> 个点。一共 <span class="math inline">\(m\)</span> 轮游戏，每轮游戏两人各选一个点，若两人选的点间构成祖先关系，则这轮会决出胜负。对于 <span class="math inline">\(k = 0, 1, 2,\cdots, m\)</span> 求出有 <span class="math inline">\(k\)</span> 轮决出胜负的方案数。<span class="math inline">\(n\le 5000\)</span>。</p>
+</blockquote></li>
+</ul>
+<p>题解见<a href="/sol-noiol/">此处</a>。本题就是上题的上树版本。</p>
+<h3 id="min-max-容斥">min-max 容斥</h3>
+<h4 id="一般形式">一般形式</h4>
+<p>假设我们能很容易的求出所有子集的 <span class="math inline">\(\min\)</span> 但很难求 <span class="math inline">\(\max\)</span>，有一种容斥是可以这样做的： <span class="math display">\[
+\max(S) = \sum_{T\subseteq S} (-1)^{|T| + 1}\min(T)
+\]</span> 证明：不妨给元素从小到大标号为 <span class="math inline">\(a_1, a_2,\cdots,a_n\)</span>。</p>
+<p>首先，<span class="math inline">\(\max(S) = a_n\)</span>，而 <span class="math inline">\(\min(T) = a_n\)</span> 的情况只有 <span class="math inline">\(T = \{a_n\}\)</span>。贡献为 <span class="math inline">\((-1)^{1 + 1}a_n = a_n\)</span>。</p>
+<p>而对于剩下的 <span class="math inline">\(T\)</span>，假设 <span class="math inline">\(\min(T) = a_k\)</span>，则 <span class="math inline">\(T\)</span> 一定只能包含 <span class="math inline">\(a_k,\cdots, a_n\)</span> 等元素，一共有 <span class="math inline">\(2^{n - k + 1}\)</span> 个这样的 <span class="math inline">\(T\)</span>，而 <span class="math inline">\(T\)</span> 中元素奇偶性又是对半分的，故这些贡献是 <span class="math inline">\(0\)</span>。<span class="math inline">\(\blacksquare\)</span></p>
+<p>同样的还有一种形式： <span class="math display">\[
+\min(S) = \sum_{T\subseteq S}(-1)^{|T| + 1}\max(T)
+\]</span> 注意 min-max 容斥在期望下也成立，所以经常可以把“最后出现的期望”一类转化为“第一次出现的期望”等问题，见例题 <strong><a href="https://www.luogu.com.cn/problem/P3175">P3175 [HAOI2015]按位或</a></strong>，<a href="/sol-luogu-p3175/">题解链接</a>。</p>
+<p>相关题目：</p>
+<ul>
+<li><strong><a href="https://www.51nod.com/Challenge/Problem.html#problemId=1355">51nod1355 斐波那契的最小公倍数</a></strong></li>
+<li><strong><a href="https://www.luogu.com.cn/problem/P5643">P5643 [PKUWC2018]随机游走</a></strong></li>
+</ul>
+<p>当然，min-max 容斥还可以被推广到第 <span class="math inline">\(k\)</span> 大/小，咕。</p>
+<h4 id="kth-minmax-容斥">kth-minmax 容斥</h4>
+<p>咕咕咕。</p>
+<h2 id="群计数相关">群计数相关</h2>
+<p>紧急营业，模拟赛做到了考到群计数的题。</p>
+<p>下面的定理全部没有证明，新学的请移步别处。</p>
+<h3 id="群论基础">群论基础</h3>
+<p>一个集合 <span class="math inline">\(G\)</span> 和一个运算 <span class="math inline">\(\times\)</span>，若满足满足如下四个性质，则称二元组 <span class="math inline">\((G, \times)\)</span> 为一个群：</p>
+<ul>
+<li>封闭性：<span class="math inline">\(\forall a, b\in G, a\times b\in G\)</span>。</li>
+<li>结合律：<span class="math inline">\(\forall a, b, c\in G, (a\times b)\times c = a\times(b\times c)\)</span>。</li>
+<li>单位元：<span class="math inline">\(\exist e\in G, a\times e = e\times a = a\)</span>，并且 <span class="math inline">\(e\)</span> 唯一。</li>
+<li>逆元：<span class="math inline">\(\forall a\in G, \exists a'\in G, a\times a' = a'\times a = e\)</span>，并且 <span class="math inline">\(a'\)</span> 唯一。</li>
+</ul>
+<p>集合 <span class="math inline">\(G\)</span> 的大小 <span class="math inline">\(|G|\)</span> 称为这个群的阶。</p>
+<p>子群：<span class="math inline">\(H\)</span> 为 <span class="math inline">\(G\)</span> 的子集，并且 <span class="math inline">\((H, \times)\)</span> 为群，则称 <span class="math inline">\((H,\times)\)</span> 为 <span class="math inline">\((G,\times)\)</span> 的子群，记为 <span class="math inline">\(H\le G\)</span>​。</p>
+<p>置换： <span class="math display">\[
+\sigma = \begin{pmatrix}
+1 &amp; 2 &amp; 3 &amp; 4 &amp; 5\\
+2 &amp; 5 &amp; 4 &amp; 3 &amp; 1
+\end{pmatrix}
+\]</span></p>
+<p>就是把上一行的排列变成下一行。</p>
+<p><span class="math inline">\(\sigma = (a_1, a_2, \cdots, a_n)\)</span> 表示一个置换。两个置换可以合成。</p>
+<p><span class="math inline">\(\sigma\times a = \sigma(a) = (\sigma_{a_1}, \sigma_{a_2},\cdots,\sigma_{a_n})\)</span>。</p>
+<p><span class="math inline">\(N = \{1, \cdots, n\}\)</span>，令 <span class="math inline">\(M\)</span> 为所有排列的集合，令 <span class="math inline">\(G = (M, \times)\)</span>，则 <span class="math inline">\(G\)</span> 为一置换群。</p>
+<p>封闭性显然，结合律显然，单位元为 <span class="math inline">\((1, 2,\cdots, n)\)</span>，逆元显然。</p>
+<p>轮换：将置换用一张有向图表示，由于每个点的入度/出度都为 <span class="math inline">\(1\)</span>，所以一定可以形成若干个环，例如置换： <span class="math display">\[
+\begin{pmatrix}
+1 &amp; 2 &amp; 3 &amp; 4 &amp; 5\\
+2 &amp; 5 &amp; 4 &amp; 3 &amp; 1
+\end{pmatrix}
+\]</span> 就可以表示为 <span class="math inline">\((1, 2, 5)(3, 4)\)</span>。置换用这些表示一定是一一对应的。</p>
+<p>群作用：对于一个集合 <span class="math inline">\(M\)</span> 和群 <span class="math inline">\(G\)</span>，若给定一二元函数 <span class="math inline">\(\varphi(v, k)\)</span>，其中 <span class="math inline">\(k\in M\)</span>，<span class="math inline">\(v\in G\)</span>，且 <span class="math display">\[
+\begin{aligned}
+\varphi(e, k) &amp;= k\\
+\varphi(g, \varphi(s, k)) &amp;= \varphi(g\times s, k)
+\end{aligned}
+\]</span> 则称 <span class="math inline">\(G\)</span> 作用于 <span class="math inline">\(M\)</span>。</p>
+<h3 id="burnside-引理">Burnside 引理</h3>
+<p>令 <span class="math inline">\(G\)</span> 为一置换群，作用于 <span class="math inline">\(X\)</span>。若 <span class="math inline">\(x, y\in X\)</span> 在 <span class="math inline">\(G\)</span> 作用下可以相等即 <span class="math inline">\(\exists f\in G,f(x) = y\)</span>，则定义 <span class="math inline">\(x\)</span> 和 <span class="math inline">\(y\)</span> 属于一个等价类，不同的等价类数量为 <span class="math display">\[
+|X / G| = \frac{1}{|G|}\sum_{g\in G}X^g
+\]</span> <span class="math inline">\(X^g\)</span> 为 <span class="math inline">\(X\)</span> 在 <span class="math inline">\(g\)</span> 的作用下不动点的数量，即 <span class="math inline">\(|\{x\in X \mid g(x) = x\}|\)</span>。</p>
+<p><strong><span class="math inline">\(X\)</span> 在群 <span class="math inline">\(G\)</span> 作用下的等价类总数等于每个 <span class="math inline">\(g\)</span> 作用于 <span class="math inline">\(X\)</span> 的不动点数量的算术平均值。</strong></p>
+<blockquote>
+<p>答案等于每个置换的不动点的平均数。</p>
+</blockquote>
+<h3 id="应用-1">应用</h3>
+<blockquote>
+<p>例题 1：<a href="https://www.luogu.com.cn/problem/P1446">P1446 [HNOI2008]Cards</a></p>
+<p>要给 <span class="math inline">\(n\)</span> 张牌染色，<span class="math inline">\(S_r\)</span> 张红，<span class="math inline">\(S_g\)</span> 张绿，<span class="math inline">\(S_b\)</span> 张蓝。同时给定若干种洗牌法，保证为置换群，问本质不同的染色方案数。</p>
+</blockquote>
+<p>Burnside 引理告诉我们要求出每个置换的不动点个数。我们注意到这里每个置换都可以分解为若干个轮换环，既然是不动点那么每个环内染的颜色必然就相同，我们用一个 <span class="math inline">\(f_{r, g,b}\)</span> 类似背包的 dp 就可以轻松求出不动点个数。</p>
+<p>然而一定要考虑单位置换的影响。</p>
+<blockquote>
+<p>例题 2：<a href="https://www.luogu.com.cn/problem/UVA10601">UVA10601 Cubes</a></p>
+<p>给定 <span class="math inline">\(12\)</span> 根等长，着色的木棒。问能构成的本质不同的正方体数量。颜色最多有 <span class="math inline">\(6\)</span> 种。正方体 <span class="math inline">\(A\)</span> 和 <span class="math inline">\(B\)</span> 本质不同，当 <span class="math inline">\(A\)</span> 不能通过旋转得到 <span class="math inline">\(B\)</span>。</p>
+</blockquote>
+<p>分析正方体的所有置换并拆成若干个轮换：</p>
+<ul>
+<li>恒等变换：即不动。分解为 <span class="math inline">\((1)^{12}\)</span>。</li>
+<li>以两个相对面中心连线为轴的 <span class="math inline">\(90^\circ\)</span> 旋转：共有 <span class="math inline">\(3\times 2 = 6\)</span> 种这样的置换。分解为 <span class="math inline">\((4)^3\)</span>。</li>
+<li>以两个相对面中心连线为轴的 <span class="math inline">\(180^\circ\)</span> 旋转：共有 <span class="math inline">\(3\times 1 = 3\)</span> 种这样的置换。分解为 <span class="math inline">\((2)^6\)</span>。</li>
+<li>以两个相对棱中心连线为轴的 <span class="math inline">\(180^\circ\)</span> 旋转：共有 <span class="math inline">\(6\)</span> 种这样的置换。分解为 <span class="math inline">\((1)^2(2)^5\)</span>。</li>
+<li>以两个相对顶点连线为轴的 <span class="math inline">\(120^\circ\)</span> 旋转：共有 <span class="math inline">\(4\times 2 = 8\)</span> 种这样的置换。分解为 <span class="math inline">\((3)^4\)</span>。</li>
+</ul>
+<p>一共有 <span class="math inline">\(24\)</span> 种这样的置换。</p>
+<p>找不动点就是给这些环填上一样颜色的方案数。不难发现就是多重组合数，套公式算就行了。</p>
+<blockquote>
+<p>P4727 [HNOI2009]图的同构计数`</p>
+</blockquote>
+<h2 id="生成函数">生成函数</h2>
+<p>咕咕咕。</p>
+<h2 id="特殊数列">特殊数列</h2>
+<h3 id="卡特兰数">卡特兰数</h3>
+<p>感觉应用也就那几种。</p>
+<p>递推公式 <span class="math inline">\(1\)</span>： <span class="math display">\[
+C_n = \sum_{i = 0}^{n - 1}C_iC_{n - 1 - i}
+\]</span> 这个式子是由一个树形 dp 推出来的。</p>
+<p>通项公式： <span class="math display">\[
+C_n = \frac{\binom{2n}{n}}{n + 1} = \binom{2n}{n} - \binom{2n}{n - 1}
+\]</span> 大多数时候通过观察 dp 式子可以直接看出卡特兰，敲一个通项上去就 ok 了。</p>
+<h3 id="斯特林数">斯特林数</h3>
+<h4 id="第二类斯特林数">第二类斯特林数</h4>
+<p>第二类斯特林数（斯特林子集数）：<span class="math inline">\(\begin{Bmatrix}n\\k\end{Bmatrix}\)</span> 或 <span class="math inline">\(S(n, k)\)</span>，表示将<strong>两两不同的元素，划分为 <span class="math inline">\(k\)</span> 个互不区分的非空子集的方案数</strong>。</p>
+<p><span class="math display">\[
+\begin{Bmatrix}n\\k\end{Bmatrix} = \begin{Bmatrix}n - 1\\k - 1\end{Bmatrix} + k\begin{Bmatrix}n - 1\\k\end{Bmatrix}
+\]</span></p>
+<p>边界为 <span class="math inline">\(\begin{Bmatrix}n\\0\end{Bmatrix} = [n = 0]\)</span>。证明考虑组合意义：最后一个数是单独放一个子集还是选一个已经放了的子集放。</p>
+<p>我们考虑 <span class="math display">\[
+m^n = \sum_{i = 0}^m\binom m i\begin{Bmatrix}n\\ i\end{Bmatrix}i!
+\]</span> 这个式子的组合意义是：将 <span class="math inline">\(n\)</span> 个元素随意放入 <span class="math inline">\(m\)</span> 个有标号集合的方案数。右边是枚举非空的集合，<span class="math inline">\(i!\)</span> 赋予集合标号。</p>
+<p>然后就可以愉快二项式反演： <span class="math display">\[
+m!\begin{Bmatrix}n\\m\end{Bmatrix} = \sum_{i = 0}^m(-1)^{m - i}\binom m ii^n
+\]</span> 化简即可得到卷积形式： <span class="math display">\[
+\begin{Bmatrix}n\\m\end{Bmatrix} = \sum_{i=0}^m\frac{(-1)^{m - i}}{(m - i)!}\times \frac{i^n}{i!}
+\]</span> 然后就可以做 <strong><a href="https://www.luogu.com.cn/problem/P5395">P5395 第二类斯特林数·行</a></strong> 了，直接 NTT 碾过去就行了。</p>
+<blockquote>
+<p>例题：<a href="https://www.luogu.com.cn/problem/P5824">P5824 十二重计数法</a>（部分）给定 <span class="math inline">\(n\)</span> 个球和 <span class="math inline">\(m\)</span> 个盒子。</p>
+<ul>
+<li>IV：球之间互不相同，盒子全部相同。</li>
+<li>V：球之间互不相同，盒子全部相同，每个盒子至多装一个球。</li>
+<li>VI：球之间互不相同，盒子全部相同，每个盒子至少装一个球。</li>
+</ul>
+</blockquote>
+<p>VI 显然就为 <span class="math inline">\(S(n, m)\)</span>，V 则是 <span class="math inline">\([n\le m]\)</span>，而 IV 则考虑枚举放了球的盒子个数，不难发现其为 <span class="math inline">\(\displaystyle\sum_{i=1}^mS(n, i)\)</span>。用 P5395 的代码碾过去就可以了。</p>
+<h4 id="第一类斯特林数">第一类斯特林数</h4>
+<h4 id="上升幂与下降幂">上升幂与下降幂</h4>
+<h4 id="斯特林反演">斯特林反演</h4>
+<h3 id="分拆数">分拆数</h3>
+<p>令自然数的分拆为递降正整数的和： <span class="math display">\[
+n= r_1+r_2+\cdots+r_k\quad r_1\ge r_2\ge\cdots\ge r_k\ge 1
+\]</span> 定义分拆数 <span class="math inline">\(p_n\)</span> 为自然数 <span class="math inline">\(n\)</span> 的分拆方式数。</p>
+<h4 id="k-部分拆数"><span class="math inline">\(k\)</span> 部分拆数</h4>
+<p>在研究 <span class="math inline">\(p_n\)</span> 之前先考虑研究 <span class="math inline">\(k\)</span> 部分拆数 <span class="math inline">\(p(n,k)\)</span>，即将 <span class="math inline">\(n\)</span> 拆分为恰好 <span class="math inline">\(k\)</span> 个部分的方案数。</p>
+<blockquote>
+<p>例题 1：<a href="https://www.luogu.com.cn/problem/P5824">P5824 十二重计数法</a>（部分）给定 <span class="math inline">\(n\)</span> 个球和 <span class="math inline">\(m\)</span> 个盒子。</p>
+<ul>
+<li>X：球全部相同，盒子全部相同。</li>
+<li>XI：球全部相同，盒子全部相同，每个盒子至多装一个球。</li>
+<li>XII：球全部相同，盒子全部相同，每个盒子至少装一个球。</li>
+</ul>
+</blockquote>
+<p>先考虑问题 XII，我们可以随便想出一个经典的 dp： <span class="math display">\[
+p(n,k) = p(n - k, k) + p(n - 1, k - 1)
+\]</span> 其组合意义为：考虑最后一个部分放 <span class="math inline">\(1\)</span>，或者选择把上一个分拆里面的数字全部加 <span class="math inline">\(1\)</span>。于是这个东西就可以 <span class="math inline">\(O(n^2)\)</span> dp。</p>
+<p>接下来我们考虑一下其生成函数 <span class="math inline">\(F_j(x) = p(0, j) + p(1, j)x + p(2, j)x^2 + p(3, j)x^3+\cdots\)</span>，根据上面的递推式我们可以得到 <span class="math display">\[
+F_j(x) = x^jF_j(x) + xF_{j - 1}(x)
+\]</span> 然后化简一下式子：<span class="math inline">\(\displaystyle F_j(x) = \frac{xF_{j - 1}(x)}{1 - x^j} = x^j\prod_{k=1}^j\frac{1}{1 - x^k}\)</span>。不妨令 <span class="math inline">\(\displaystyle G_k(x) = \frac{1}{1 - x^k}\)</span>，则 <span class="math display">\[
+F_j(x) = x^j\prod_{k = 1}^jG_k(x) = x^jH_j(x)
+\]</span> 求 <span class="math inline">\(\prod G_k(x)\)</span> 貌似是一个经典问题，这里再推导一遍。 <span class="math display">\[
+\begin{aligned}
+H_j(x) &amp;= \prod_{k=1}^jG_k(x)\\
+\ln H_j(x) &amp;= \sum_{k=1}^j\ln G_k(x)\\
+&amp;= -\sum_{k=1}^j\ln(1 - x^k)\\
+&amp;= \sum_{k=1}^j\sum_{i=1}^{+\infty}\frac{x^{ki}}{i}
+\end{aligned}
+\]</span> 可以暴力 <span class="math inline">\(O(n\log n)\)</span> 求出来，然后做 exp 即可。</p>
+<p>这里不难发现，问题 XII 的答案为 <span class="math inline">\([x^{n - m}]H_m(x)\)</span>，问题 X 的答案为 <span class="math inline">\([x^n]H_m(x)\)</span>，问题 XI 的答案为 <span class="math inline">\([n\le m]\)</span>。</p>
+<p>事实上，若我们定义的 <span class="math inline">\(k\)</span> 部分拆数中可以有 <span class="math inline">\(0\)</span>，则其生成函数就是 <span class="math inline">\(H_m(x)\)</span>。</p>
+<h4 id="五边形数定理">五边形数定理</h4>
+<p>定义五边形数 <span class="math inline">\(P_n = \dfrac{n(3n - 1)}{2}\)</span>，将下标扩展后得到广义五边形数 <span class="math inline">\(P_n = \dfrac{n(3n\pm 1)}{2}\)</span>。</p>
+<p>定义欧拉函数（区别数论中的欧拉函数) <span class="math display">\[
+\phi(x) = \prod_{i=1}^{+\infty}(1 - x^i)
+\]</span> 则五边形数定理说的就是 <span class="math display">\[
+\phi(x) = \prod_{i=-\infty}^{+\infty}(-1)^ix^{\frac{i(3i-1)}{2}} = 1 + \prod_{i=0}^{+\infty}(-1)^ix^{\frac{i(3i \pm 1)}{2}}
+\]</span> 这部分证明全部咕掉。</p>
+<h4 id="求分拆数">求分拆数</h4>
+<p>注意到，根据上面的 <span class="math inline">\(k\)</span> 部分拆数，我们可以轻松推出分拆数的生成函数为 <span class="math display">\[
+F(x) = \prod_{i=1}^{+\infty}\frac{1}{1 - x^i}
+\]</span> 发现其满足 <span class="math display">\[
+F(x)\phi(x) = 1
+\]</span> 我们考虑展开 <span class="math inline">\([x^n]F(x)\phi(x)\)</span>，有： <span class="math display">\[
+p_n - p_{n - 1} - p_{n - 2} + p_{n - 5} + p_{n - 7} - \cdots = 0
+\]</span> 于是我们就得到了分拆数的递推公式（考虑对于 <span class="math inline">\(i&lt;0\)</span>，<span class="math inline">\(p_i = 0\)</span>）： <span class="math display">\[
+p_n = p_{n - 1} - p_{n - 2} + p_{n - 5} + p_{n - 7} - \cdots
+\]</span> 由于广义五边形数的增长速度是 <span class="math inline">\(O(n^2)\)</span> 的，所以求分拆数可以在 <span class="math inline">\(O(n\sqrt n)\)</span> 的时间内进行。</p>
+<blockquote>
+<p>例题 2：<a href="https://www.luogu.com.cn/problem/P6189">P6189 [NOI Online #1 入门组] 跑步</a></p>
+<p>单次询问任意模数拆分数，<span class="math inline">\(n = 10^5\)</span>。</p>
+</blockquote>
+<p>可以用上面的方法直接做。</p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode cpp"><code class="sourceCode cpp"><span id="cb1-1"><a aria-hidden="true" href="#cb1-1"></a><span class="at">const</span> <span class="dt">int</span> maxn = <span class="fl">1e5</span> + <span class="dv">5</span>;</span>
+<span id="cb1-2"><a aria-hidden="true" href="#cb1-2"></a><span class="dt">int</span> mod, n, p[maxn], g[maxn], m;</span>
+<span id="cb1-3"><a aria-hidden="true" href="#cb1-3"></a></span>
+<span id="cb1-4"><a aria-hidden="true" href="#cb1-4"></a><span class="dt">int</span> main() {</span>
+<span id="cb1-5"><a aria-hidden="true" href="#cb1-5"></a>    read(n, mod);</span>
+<span id="cb1-6"><a aria-hidden="true" href="#cb1-6"></a>    p[<span class="dv">0</span>] = <span class="dv">1</span>;</span>
+<span id="cb1-7"><a aria-hidden="true" href="#cb1-7"></a>    <span class="cf">for</span> (<span class="dt">int</span> i = <span class="dv">1</span>; i * (<span class="dv">3</span> * i - <span class="dv">1</span>) / <span class="dv">2</span> &lt;= n; ++i) g[m++] = i * (<span class="dv">3</span> * i - <span class="dv">1</span>) / <span class="dv">2</span>, g[m++] = i * (<span class="dv">3</span> * i + <span class="dv">1</span>) / <span class="dv">2</span>;</span>
+<span id="cb1-8"><a aria-hidden="true" href="#cb1-8"></a>    FOR(i, <span class="dv">1</span>, n) <span class="cf">for</span> (<span class="dt">int</span> j = <span class="dv">0</span>; j &lt; m &amp;&amp; g[j] &lt;= i; ++j) p[i] = (p[i] + (((j &gt;&gt; <span class="dv">1</span>) &amp; <span class="dv">1</span>) ? -<span class="dv">1</span><span class="bu">ll</span> : <span class="dv">1</span><span class="bu">ll</span>) * p[i - g[j]]) % mod;</span>
+<span id="cb1-9"><a aria-hidden="true" href="#cb1-9"></a>    print((p[n] + mod) % mod);</span>
+<span id="cb1-10"><a aria-hidden="true" href="#cb1-10"></a>    <span class="cf">return</span> output(), <span class="dv">0</span>;</span>
+<span id="cb1-11"><a aria-hidden="true" href="#cb1-11"></a>}</span></code></pre></div>
+<p>当然也可以根号分治，对于 <span class="math inline">\(\le\sqrt n\)</span> 的考虑直接完全背包，然后设 <span class="math inline">\(g_{i, j}\)</span> 为使用 <span class="math inline">\(i\)</span> 个大于等于 <span class="math inline">\(\sqrt n\)</span> 的数加出 <span class="math inline">\(j\)</span> 的方案数，发现 <span class="math inline">\(i\le \sqrt n\)</span>，最后合并两个 dp 的答案即可。</p>
+<h3 id="斐波那契">斐波那契</h3>
+</section>
+<footer class="article-footer">
+<section class="article-tags">
+<a href="/tags/OI/">OI</a>
+<a href="/tags/note/">笔记</a>
+<a href="/tags/combinatorics/">组合数学</a>
+</section>
+<section class="article-copyright">
+<svg class="icon icon-tabler icon-tabler-copyright" fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+<path d="M0 0h24v24H0z" stroke="none"></path>
+<circle cx="12" cy="12" r="9"></circle>
+<path d="M14.5 9a3.5 4 0 1 0 0 6"></path>
+</svg>
+<span>Licensed under CC BY-NC-SA 4.0</span>
+</section>
+</footer>
+<link crossorigin="anonymous" href="https://cdn.jsdelivr.net/npm/katex@0.13.13/dist/katex.min.css" integrity="sha384-RZU/ijkSsFbcmivfdRBQDtwuwVqK7GMOw6IMvKyeWL2K5UAlyp6WonmB8m7Jd0Hn" rel="stylesheet"/><script crossorigin="anonymous" defer="" integrity="sha384-pK1WpvzWVBQiP0/GjnvRxV4mOb0oxFuyRxJlk6vVw146n3egcN5C925NCP7a7BY8" src="https://cdn.jsdelivr.net/npm/katex@0.13.13/dist/katex.min.js">
+</script><script crossorigin="anonymous" defer="" integrity="sha384-vZTG03m+2yp6N6BNi5iM4rW4oIwk5DfcNdFfxkk9ZWpDriOkXX8voJBFrAO7MpVl" src="https://cdn.jsdelivr.net/npm/katex@0.13.13/dist/contrib/auto-render.min.js">
+</script><script>
+    window.addEventListener("DOMContentLoaded", () => {
+        renderMathInElement(document.querySelector(`.article-content`), {
+            delimiters: [
+                { left: "$$", right: "$$", display: true },
+                { left: "$", right: "$", display: false },
+                { left: "\\(", right: "\\)", display: false },
+                { left: "\\[", right: "\\]", display: true }
+            ]
+        });})
+</script>
+</article>
+<aside class="related-contents--wrapper">
+<h2 class="section-title">相关文章</h2>
+<div class="related-contents">
+<div class="flex article-list--tile">
+<article class="has-image">
+<a href="/note-comb-number/">
+<div class="article-image">
+<img data-hash="https://yangty-pic.oss-cn-beijing.aliyuncs.com/bg10.webp" data-key="" loading="lazy" src="https://yangty-pic.oss-cn-beijing.aliyuncs.com/bg10.webp"/>
+</div>
+<div class="article-details">
+<h2 class="article-title">组合数求法小记</h2>
+</div>
+</a>
+</article>
+<article class="has-image">
+<a href="/note-gf/">
+<div class="article-image">
+<img data-hash="https://yangty-pic.oss-cn-beijing.aliyuncs.com/bg28.webp" data-key="" loading="lazy" src="https://yangty-pic.oss-cn-beijing.aliyuncs.com/bg28.webp"/>
+</div>
+<div class="article-details">
+<h2 class="article-title">生成函数胡扯</h2>
+</div>
+</a>
+</article>
+<article class="has-image">
+<a href="/note-set-power-series/">
+<div class="article-image">
+<img data-hash="https://yangty-pic.oss-cn-beijing.aliyuncs.com/bg39.webp" data-key="" loading="lazy" src="https://yangty-pic.oss-cn-beijing.aliyuncs.com/bg39.webp"/>
+</div>
+<div class="article-details">
+<h2 class="article-title">集合幂级数胡扯</h2>
+</div>
+</a>
+</article>
+<article class="has-image">
+<a href="/sol-agc002f/">
+<div class="article-image">
+<img data-hash="https://yangty-pic.oss-cn-beijing.aliyuncs.com/bg44.webp" data-key="" loading="lazy" src="https://yangty-pic.oss-cn-beijing.aliyuncs.com/bg44.webp"/>
+</div>
+<div class="article-details">
+<h2 class="article-title">AGC002F - Leftmost Ball</h2>
+</div>
+</a>
+</article>
+<article class="has-image">
+<a href="/note-linear-basis/">
+<div class="article-image">
+<img data-hash="https://yangty-pic.oss-cn-beijing.aliyuncs.com/bg19.webp" data-key="" loading="lazy" src="https://yangty-pic.oss-cn-beijing.aliyuncs.com/bg19.webp"/>
+</div>
+<div class="article-details">
+<h2 class="article-title">线性基学习笔记</h2>
+</div>
+</a>
+</article>
+</div>
+</div>
+</aside>
+<footer class="site-footer">
+<section class="copyright">
+        © 
+        
+            2019 - 
+        
+        2024 清烛的博客
+    </section>
+<section class="powerby">
+        Built with <a href="https://gohugo.io/" rel="noopener" target="_blank">Hugo</a> <br/>
+        主题 <b><a data-version="3.11.0" href="https://github.com/CaiJimmy/hugo-theme-stack" rel="noopener" target="_blank">Stack</a></b> 由 <a href="https://jimmycai.com" rel="noopener" target="_blank">Jimmy</a> 设计
+    </section>
+</footer>
+<div aria-hidden="true" class="pswp" role="dialog" tabindex="-1">
+<div class="pswp__bg"></div>
+<div class="pswp__scroll-wrap">
+<div class="pswp__container">
+<div class="pswp__item"></div>
+<div class="pswp__item"></div>
+<div class="pswp__item"></div>
+</div>
+<div class="pswp__ui pswp__ui--hidden">
+<div class="pswp__top-bar">
+<div class="pswp__counter"></div>
+<button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+<button class="pswp__button pswp__button--share" title="Share"></button>
+<button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+<button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+<div class="pswp__preloader">
+<div class="pswp__preloader__icn">
+<div class="pswp__preloader__cut">
+<div class="pswp__preloader__donut"></div>
+</div>
+</div>
+</div>
+</div>
+<div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+<div class="pswp__share-tooltip"></div>
+</div>
+<button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+</button>
+<button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+</button>
+<div class="pswp__caption">
+<div class="pswp__caption__center"></div>
+</div>
+</div>
+</div>
+</div><script crossorigin="anonymous" defer="" integrity="sha256-ePwmChbbvXbsO02lbM3HoHbSHTHFAeChekF1xKJdleo=" src="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe.min.js">
+</script><script crossorigin="anonymous" defer="" integrity="sha256-UKkzOn/w1mBxRmLLGrSeyB4e1xbrp4xylgAWb3M42pU=" src="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe-ui-default.min.js">
+</script><link crossorigin="anonymous" href="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/default-skin/default-skin.css" integrity="sha256-c0uckgykQ9v5k+IqViZOZKc47Jn7KQil4/MP3ySA3F8=" rel="stylesheet"/><link crossorigin="anonymous" href="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe.css" integrity="sha256-SBLU4vv6CA6lHsZ1XyTdhyjJxCjPif/TRkjnsyGAGnE=" rel="stylesheet"/>
+</main>
+</div>
+<script crossorigin="anonymous" integrity="sha256-5NovOZc4iwiAWTYIFiIM7DxKUXKWvpVEuMEPLzcm5/g=" src="https://cdn.jsdelivr.net/npm/node-vibrant@3.1.5/dist/vibrant.min.js">
+</script><script defer="" src="/ts/main.js" type="text/javascript"></script>
+<script>
+    (function () {
+        const customFont = document.createElement('link');
+        customFont.href = "https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&display=swap";
+
+        customFont.type = "text/css";
+        customFont.rel = "stylesheet";
+
+        document.head.appendChild(customFont);
+    }());
+</script>
+</body>
+</html>

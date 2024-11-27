@@ -1,0 +1,891 @@
+<!DOCTYPE html>
+<html dir="ltr" lang="zh-CN">
+<head><meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1" name="viewport"/><meta content="前言 省选/NOI（如果能进省队）的个人复习资料。
+全凭个人喜好来搞。
+不会写的很严谨，实战导向型。
+本文内容概览：
+树套树 CDQ 分治 整体二分 线段树分治 实际解决问题的时候，这几种方法是可以相互替代的，一个题目可能有很多种方法解决。
+树套树 cdq 分治 简介 一类分治方法，不是特定的某种算法。由 IOI2008 金牌得主陈丹琦提出。可以顶替树套树等复杂的数据结构。其可以给问题“降维”。树套树与 cdq 分治完全等价。
+一般流程 递归的进行，一开始先将操作（修改，询问）序列/点对建立出来，按照第一维排序，随后开始递归：
+递归 \([l, mid]\)； 处理 \([l, mid]\) 中的元素与 \([mid + 1, r]\) 中元素的贡献，即计算跨中点的贡献； 递归 \([mid + 1, r]\)。 其中最重要的，就是处理跨中点贡献这一部分。第二步和第三步有些时候是可以颠倒的。需要具体问题具体分析。
+需要特别注意偏序型的问题，排序是否能保证 \(a &amp;lt; b\) 和 \(b &amp;lt; a\) 不同时为 \(0/1\)，很容易 RE。
+偏序问题（数点问题） 二维偏序 。二维偏序问题说的是：给定 \(n\) 个有序对 \((a, b)\)，问对于每个有序对 \((a, b)\)，有多少个有序对 \((a_0, b_0)\) 满足 \(a &amp;gt; a_0\land b &amp;gt; b_0\)。这个问题可以怎么做呢？
+我们不妨先将第一维排好序，即按照 \(a_i\) 升序排序，然后开始递归处理。然后问题便转化为对于 \([mid + 1, r]\) 中的每个 \((a, b)\) 里求 \([l, mid]\) 中有多少个 \((a_0, b_0)\) 满足 \(b &amp;gt; b_0\)。因为 \(a\) 排好序了所以我们不需要管。这个东西类似归并排序求逆序对，只要两个子区间里面的 \(b_i\) 有序那么是可以很快解决的。所以相当于魔改一下归并排序就可以过了。复杂度 \(T(n) = 2T(n / 2) + O(n) = O(n\log n)\)。事实上，求逆序对也是一个二维偏序问题，只不过是把下标看作第一维。" name="description"/><title>数据结构复习 2 （高维问题）</title>
+<link href="https://oi.imyangty.com/summary-ds2/" rel="canonical"/>
+<link href="/scss/style.min.a5821f3d3ab84ce5a0ac21477e347a2e0ca00292e398d16c5e8e36ded6e35a23.css" rel="stylesheet"/><meta content="数据结构复习 2 （高维问题）" property="og:title"/>
+<meta content="前言 省选/NOI（如果能进省队）的个人复习资料。
+全凭个人喜好来搞。
+不会写的很严谨，实战导向型。
+本文内容概览：
+树套树 CDQ 分治 整体二分 线段树分治 实际解决问题的时候，这几种方法是可以相互替代的，一个题目可能有很多种方法解决。
+树套树 cdq 分治 简介 一类分治方法，不是特定的某种算法。由 IOI2008 金牌得主陈丹琦提出。可以顶替树套树等复杂的数据结构。其可以给问题“降维”。树套树与 cdq 分治完全等价。
+一般流程 递归的进行，一开始先将操作（修改，询问）序列/点对建立出来，按照第一维排序，随后开始递归：
+递归 \([l, mid]\)； 处理 \([l, mid]\) 中的元素与 \([mid + 1, r]\) 中元素的贡献，即计算跨中点的贡献； 递归 \([mid + 1, r]\)。 其中最重要的，就是处理跨中点贡献这一部分。第二步和第三步有些时候是可以颠倒的。需要具体问题具体分析。
+需要特别注意偏序型的问题，排序是否能保证 \(a &amp;lt; b\) 和 \(b &amp;lt; a\) 不同时为 \(0/1\)，很容易 RE。
+偏序问题（数点问题） 二维偏序 。二维偏序问题说的是：给定 \(n\) 个有序对 \((a, b)\)，问对于每个有序对 \((a, b)\)，有多少个有序对 \((a_0, b_0)\) 满足 \(a &amp;gt; a_0\land b &amp;gt; b_0\)。这个问题可以怎么做呢？
+我们不妨先将第一维排好序，即按照 \(a_i\) 升序排序，然后开始递归处理。然后问题便转化为对于 \([mid + 1, r]\) 中的每个 \((a, b)\) 里求 \([l, mid]\) 中有多少个 \((a_0, b_0)\) 满足 \(b &amp;gt; b_0\)。因为 \(a\) 排好序了所以我们不需要管。这个东西类似归并排序求逆序对，只要两个子区间里面的 \(b_i\) 有序那么是可以很快解决的。所以相当于魔改一下归并排序就可以过了。复杂度 \(T(n) = 2T(n / 2) + O(n) = O(n\log n)\)。事实上，求逆序对也是一个二维偏序问题，只不过是把下标看作第一维。" property="og:description"/>
+<meta content="https://oi.imyangty.com/summary-ds2/" property="og:url"/>
+<meta content="清烛的博客" property="og:site_name"/>
+<meta content="article" property="og:type"/><meta content="Post" property="article:section"/><meta content="OI" property="article:tag"/><meta content="笔记" property="article:tag"/><meta content="cdq分治" property="article:tag"/><meta content="整体二分" property="article:tag"/><meta content="线段树分治" property="article:tag"/><meta content="树套树" property="article:tag"/><meta content="2022-02-08T23:31:11+08:00" property="article:published_time"/><meta content="2022-02-08T23:31:11+08:00" property="article:modified_time"/><meta content="https://yangty-pic.oss-cn-beijing.aliyuncs.com/bg6.webp" property="og:image"/>
+<meta content="数据结构复习 2 （高维问题）" name="twitter:title"/>
+<meta content="前言 省选/NOI（如果能进省队）的个人复习资料。
+全凭个人喜好来搞。
+不会写的很严谨，实战导向型。
+本文内容概览：
+树套树 CDQ 分治 整体二分 线段树分治 实际解决问题的时候，这几种方法是可以相互替代的，一个题目可能有很多种方法解决。
+树套树 cdq 分治 简介 一类分治方法，不是特定的某种算法。由 IOI2008 金牌得主陈丹琦提出。可以顶替树套树等复杂的数据结构。其可以给问题“降维”。树套树与 cdq 分治完全等价。
+一般流程 递归的进行，一开始先将操作（修改，询问）序列/点对建立出来，按照第一维排序，随后开始递归：
+递归 \([l, mid]\)； 处理 \([l, mid]\) 中的元素与 \([mid + 1, r]\) 中元素的贡献，即计算跨中点的贡献； 递归 \([mid + 1, r]\)。 其中最重要的，就是处理跨中点贡献这一部分。第二步和第三步有些时候是可以颠倒的。需要具体问题具体分析。
+需要特别注意偏序型的问题，排序是否能保证 \(a &amp;lt; b\) 和 \(b &amp;lt; a\) 不同时为 \(0/1\)，很容易 RE。
+偏序问题（数点问题） 二维偏序 。二维偏序问题说的是：给定 \(n\) 个有序对 \((a, b)\)，问对于每个有序对 \((a, b)\)，有多少个有序对 \((a_0, b_0)\) 满足 \(a &amp;gt; a_0\land b &amp;gt; b_0\)。这个问题可以怎么做呢？
+我们不妨先将第一维排好序，即按照 \(a_i\) 升序排序，然后开始递归处理。然后问题便转化为对于 \([mid + 1, r]\) 中的每个 \((a, b)\) 里求 \([l, mid]\) 中有多少个 \((a_0, b_0)\) 满足 \(b &amp;gt; b_0\)。因为 \(a\) 排好序了所以我们不需要管。这个东西类似归并排序求逆序对，只要两个子区间里面的 \(b_i\) 有序那么是可以很快解决的。所以相当于魔改一下归并排序就可以过了。复杂度 \(T(n) = 2T(n / 2) + O(n) = O(n\log n)\)。事实上，求逆序对也是一个二维偏序问题，只不过是把下标看作第一维。" name="twitter:description"/><meta content="summary_large_image" name="twitter:card"/>
+<meta content="https://yangty-pic.oss-cn-beijing.aliyuncs.com/bg6.webp" name="twitter:image"/>
+<link href="https://q1.qlogo.cn/g?b=qq&amp;nk=375836877&amp;s=5" rel="shortcut icon"/>
+<link href="https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.5.1/build/styles/github-dark-dimmed.min.css" rel="stylesheet"/>
+<script src="https://cdn.jsdelivr.net/gh/highlightjs/cdn-release/build/highlight.min.js"></script>
+<script>hljs.highlightAll();</script>
+</head>
+<body class="article-page">
+<script>
+        (function() {
+            const colorSchemeKey = 'StackColorScheme';
+            if(!localStorage.getItem(colorSchemeKey)){
+                localStorage.setItem(colorSchemeKey, "auto");
+            }
+        })();
+    </script><script>
+    (function() {
+        const colorSchemeKey = 'StackColorScheme';
+        const colorSchemeItem = localStorage.getItem(colorSchemeKey);
+        const supportDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches === true;
+
+        if (colorSchemeItem == 'dark' || colorSchemeItem === 'auto' && supportDarkMode) {
+            
+
+            document.documentElement.dataset.scheme = 'dark';
+        } else {
+            document.documentElement.dataset.scheme = 'light';
+        }
+    })();
+</script>
+<div class="container main-container flex on-phone--column extended"><aside class="sidebar left-sidebar sticky">
+<button aria-label="切换菜单" class="hamburger hamburger--spin" id="toggle-menu" type="button">
+<span class="hamburger-box">
+<span class="hamburger-inner"></span>
+</span>
+</button>
+<header>
+<figure class="site-avatar">
+<a href="/">
+<img alt="Avatar" class="site-logo" height="300" loading="lazy" src="/img/avatar_huea3ce2119467b51fdd2a81393644a76d_51594_300x0_resize_q75_box.jpg" width="300"/>
+</a>
+<span class="emoji">😅</span>
+</figure>
+<div class="site-meta">
+<h1 class="site-name"><a href="/">清烛的博客</a></h1>
+<h2 class="site-description">烟火已谢，笙歌未停</h2>
+</div>
+</header><ol class="social-menu">
+<li>
+<a href="mailto:i@imyangty.com" target="_blank" title="email">
+<svg class="icon icon-tabler icon-tabler-mail" fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" viewbox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+<path d="M0 0h24v24H0z" fill="none" stroke="none"></path>
+<rect height="14" rx="2" width="18" x="3" y="5"></rect>
+<polyline points="3 7 12 13 21 7"></polyline>
+</svg>
+</a>
+</li>
+<li>
+<a href="https://github.com/Cgfyufsygsm" target="_blank" title="GitHub">
+<svg class="icon icon-tabler icon-tabler-brand-github" fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+<path d="M0 0h24v24H0z" fill="none" stroke="none"></path>
+<path d="M9 19c-4.3 1.4 -4.3 -2.5 -6 -3m12 5v-3.5c0 -1 .1 -1.4 -.5 -2c2.8 -.3 5.5 -1.4 5.5 -6a4.6 4.6 0 0 0 -1.3 -3.2a4.2 4.2 0 0 0 -.1 -3.2s-1.1 -.3 -3.5 1.3a12.3 12.3 0 0 0 -6.2 0c-2.4 -1.6 -3.5 -1.3 -3.5 -1.3a4.2 4.2 0 0 0 -.1 3.2a4.6 4.6 0 0 0 -1.3 3.2c0 4.6 2.7 5.7 5.5 6c-.6 .6 -.6 1.2 -.5 2v3.5"></path>
+</svg>
+</a>
+</li>
+<li>
+<a href="https://t.me/Cgfyufsygsm" target="_blank" title="Telegram">
+<svg class="icon icon-tabler icon-tabler-brand-telegram" fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" viewbox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+<path d="M0 0h24v24H0z" fill="none" stroke="none"></path>
+<path d="M15 10l-4 4l6 6l4 -16l-18 7l4 2l2 6l3 -4"></path>
+</svg>
+</a>
+</li>
+<li>
+<a href="https://twitter.com/Cgfyufsygsm" target="_blank" title="Twitter">
+<svg class="icon icon-tabler icon-tabler-brand-twitter" fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+<path d="M0 0h24v24H0z" fill="none" stroke="none"></path>
+<path d="M22 4.01c-1 .49 -1.98 .689 -3 .99c-1.121 -1.265 -2.783 -1.335 -4.38 -.737s-2.643 2.06 -2.62 3.737v1c-3.245 .083 -6.135 -1.395 -8 -4c0 0 -4.182 7.433 4 11c-1.872 1.247 -3.739 2.088 -6 2c3.308 1.803 6.913 2.423 10.034 1.517c3.58 -1.04 6.522 -3.723 7.651 -7.742a13.84 13.84 0 0 0 .497 -3.753c-.002 -.249 1.51 -2.772 1.818 -4.013z"></path>
+</svg>
+</a>
+</li>
+</ol><ol class="menu" id="main-menu">
+<li>
+<a href="/">
+<svg class="icon icon-tabler icon-tabler-home" fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+<path d="M0 0h24v24H0z" stroke="none"></path>
+<polyline points="5 12 3 12 12 3 21 12 19 12"></polyline>
+<path d="M5 12v7a2 2 0 0 0 2 2h10a2 2 0 0 0 2 -2v-7"></path>
+<path d="M9 21v-6a2 2 0 0 1 2 -2h2a2 2 0 0 1 2 2v6"></path>
+</svg>
+<span>主页</span>
+</a>
+</li>
+<li>
+<a href="/about/">
+<svg class="icon icon-tabler icon-tabler-user" fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+<path d="M0 0h24v24H0z" stroke="none"></path>
+<circle cx="12" cy="7" r="4"></circle>
+<path d="M6 21v-2a4 4 0 0 1 4 -4h4a4 4 0 0 1 4 4v2"></path>
+</svg>
+<span>关于</span>
+</a>
+</li>
+<li>
+<a href="/idx/">
+<svg class="icon icon-tabler icon-tabler-hash" fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+<path d="M0 0h24v24H0z" stroke="none"></path>
+<line x1="5" x2="19" y1="9" y2="9"></line>
+<line x1="5" x2="19" y1="15" y2="15"></line>
+<line x1="11" x2="7" y1="4" y2="20"></line>
+<line x1="17" x2="13" y1="4" y2="20"></line>
+</svg>
+<span>导航</span>
+</a>
+</li>
+<li>
+<a href="/archives/">
+<svg class="icon icon-tabler icon-tabler-archive" fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+<path d="M0 0h24v24H0z" stroke="none"></path>
+<rect height="4" rx="2" width="18" x="3" y="4"></rect>
+<path d="M5 8v10a2 2 0 0 0 2 2h10a2 2 0 0 0 2 -2v-10"></path>
+<line x1="10" x2="14" y1="12" y2="12"></line>
+</svg>
+<span>归档</span>
+</a>
+</li>
+<li>
+<a href="/search/">
+<svg class="icon icon-tabler icon-tabler-search" fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+<path d="M0 0h24v24H0z" stroke="none"></path>
+<circle cx="10" cy="10" r="7"></circle>
+<line x1="21" x2="15" y1="21" y2="15"></line>
+</svg>
+<span>搜索</span>
+</a>
+</li>
+<li>
+<a href="/friends/">
+<svg class="icon icon-tabler icon-tabler-link" fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+<path d="M0 0h24v24H0z" stroke="none"></path>
+<path d="M10 14a3.5 3.5 0 0 0 5 0l4 -4a3.5 3.5 0 0 0 -5 -5l-.5 .5"></path>
+<path d="M14 10a3.5 3.5 0 0 0 -5 0l-4 4a3.5 3.5 0 0 0 5 5l.5 -.5"></path>
+</svg>
+<span>友链</span>
+</a>
+</li>
+<li>
+<a href="https://blog.imyangty.com" target="_blank">
+<svg class="icon icon-tabler icon-tabler-home" fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+<path d="M0 0h24v24H0z" stroke="none"></path>
+<polyline points="5 12 3 12 12 3 21 12 19 12"></polyline>
+<path d="M5 12v7a2 2 0 0 0 2 2h10a2 2 0 0 0 2 -2v-7"></path>
+<path d="M9 21v-6a2 2 0 0 1 2 -2h2a2 2 0 0 1 2 2v6"></path>
+</svg>
+<span>主博客</span>
+</a>
+</li>
+<div class="menu-bottom-section">
+<li id="dark-mode-toggle">
+<svg class="icon icon-tabler icon-tabler-toggle-left" fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+<path d="M0 0h24v24H0z" stroke="none"></path>
+<circle cx="8" cy="12" r="2"></circle>
+<rect height="12" rx="6" width="20" x="2" y="6"></rect>
+</svg>
+<svg class="icon icon-tabler icon-tabler-toggle-right" fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+<path d="M0 0h24v24H0z" stroke="none"></path>
+<circle cx="16" cy="12" r="2"></circle>
+<rect height="12" rx="6" width="20" x="2" y="6"></rect>
+</svg>
+<span>暗色模式</span>
+</li>
+</div>
+</ol>
+</aside>
+<main class="main full-width">
+<article class="has-image main-article">
+<header class="article-header">
+<div class="article-image">
+<a href="/summary-ds2/">
+<img alt="Featured image of post 数据结构复习 2 （高维问题）" loading="lazy" src="https://yangty-pic.oss-cn-beijing.aliyuncs.com/bg6.webp"/>
+</a>
+</div>
+<div class="article-details">
+<header class="article-category">
+<a href="/categories/oi/">
+                OI
+            </a>
+<a href="/categories/summary/">
+                总结
+            </a>
+</header>
+<div class="article-title-wrapper">
+<h2 class="article-title">
+<a href="/summary-ds2/">数据结构复习 2 （高维问题）</a>
+</h2>
+</div>
+<footer class="article-time">
+<div>
+<svg class="icon icon-tabler icon-tabler-calendar-time" fill="none" height="56" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="56" xmlns="http://www.w3.org/2000/svg">
+<path d="M0 0h24v24H0z" stroke="none"></path>
+<path d="M11.795 21h-6.795a2 2 0 0 1 -2 -2v-12a2 2 0 0 1 2 -2h12a2 2 0 0 1 2 2v4"></path>
+<circle cx="18" cy="18" r="4"></circle>
+<path d="M15 3v4"></path>
+<path d="M7 3v4"></path>
+<path d="M3 11h16"></path>
+<path d="M18 16.496v1.504l1 1"></path>
+</svg>
+<time class="article-time--published">Feb 08, 2022</time>
+</div>
+<div>
+<svg class="icon icon-tabler icon-tabler-clock" fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+<path d="M0 0h24v24H0z" stroke="none"></path>
+<circle cx="12" cy="12" r="9"></circle>
+<polyline points="12 7 12 12 15 15"></polyline>
+</svg>
+<time class="article-time--reading">
+                    阅读时长: 10 分钟
+                </time>
+</div>
+</footer>
+</div>
+</header>
+<section class="article-content">
+<h2 id="前言">前言</h2>
+<p>省选/NOI（如果能进省队）的个人复习资料。</p>
+<p>全凭个人喜好来搞。</p>
+<p>不会写的很严谨，实战导向型。</p>
+<p>本文内容概览：</p>
+<ul>
+<li>树套树</li>
+<li>CDQ 分治</li>
+<li>整体二分</li>
+<li>线段树分治</li>
+</ul>
+<p>实际解决问题的时候，这几种方法是可以相互替代的，一个题目可能有很多种方法解决。</p>
+<h2 id="树套树">树套树</h2>
+<h2 id="cdq-分治">cdq 分治</h2>
+<h3 id="简介">简介</h3>
+<p>一类分治方法，不是特定的某种算法。由 IOI2008 金牌得主陈丹琦提出。可以顶替树套树等复杂的数据结构。其可以给问题“降维”。<strong>树套树与 cdq 分治完全等价</strong>。</p>
+<h3 id="一般流程">一般流程</h3>
+<p>递归的进行，一开始先将操作（修改，询问）序列/点对建立出来，按照第一维排序，随后开始递归：</p>
+<ul>
+<li>递归 <span class="math inline">\([l, mid]\)</span>；</li>
+<li>处理 <span class="math inline">\([l, mid]\)</span> 中的元素与 <span class="math inline">\([mid + 1, r]\)</span> 中元素的贡献，即计算跨中点的贡献；</li>
+<li>递归 <span class="math inline">\([mid + 1, r]\)</span>。</li>
+</ul>
+<p>其中最重要的，就是处理跨中点贡献这一部分。第二步和第三步有些时候是可以颠倒的。需要具体问题具体分析。</p>
+<p><strong>需要特别注意偏序型的问题，排序是否能保证 <span class="math inline">\(a &lt; b\)</span> 和 <span class="math inline">\(b &lt; a\)</span> 不同时为 <span class="math inline">\(0/1\)</span>，很容易 RE</strong>。</p>
+<h3 id="偏序问题数点问题">偏序问题（数点问题）</h3>
+<h4 id="二维偏序">二维偏序</h4>
+<p>。二维偏序问题说的是：给定 <span class="math inline">\(n\)</span> 个有序对 <span class="math inline">\((a, b)\)</span>，问对于每个有序对 <span class="math inline">\((a, b)\)</span>，有多少个有序对 <span class="math inline">\((a_0, b_0)\)</span> 满足 <span class="math inline">\(a &gt; a_0\land b &gt; b_0\)</span>。这个问题可以怎么做呢？</p>
+<p>我们不妨先将第一维排好序，即按照 <span class="math inline">\(a_i\)</span> 升序排序，然后开始递归处理。然后问题便转化为对于 <span class="math inline">\([mid + 1, r]\)</span> 中的每个 <span class="math inline">\((a, b)\)</span> 里求 <span class="math inline">\([l, mid]\)</span> 中有多少个 <span class="math inline">\((a_0, b_0)\)</span> 满足 <span class="math inline">\(b &gt; b_0\)</span>。因为 <span class="math inline">\(a\)</span> 排好序了所以我们不需要管。这个东西类似归并排序求逆序对，只要两个子区间里面的 <span class="math inline">\(b_i\)</span> 有序那么是可以很快解决的。所以相当于魔改一下归并排序就可以过了。复杂度 <span class="math inline">\(T(n) = 2T(n / 2) + O(n) = O(n\log n)\)</span>。事实上，求逆序对也是一个二维偏序问题，只不过是把下标看作第一维。</p>
+<p>再来看一个奇怪的问题：<a href="https://www.luogu.com.cn/problem/P3374">P3374 【模板】树状数组 1</a>。这个问题可以拆解成 <span class="math inline">\(3\)</span> 种操作：</p>
+<ul>
+<li>修改操作 <code>1 x k</code>；</li>
+<li>查询前缀和操作 <code>2 y 1</code> 和 <code>3 x-1 -1</code>。</li>
+</ul>
+<p>其实际上也是一个二维偏序问题，怎么说？时间看成第一维，操作的位置看成第二维。第一维默认是有序的， 所以我们关于第二维做一个“归并排序”就可以了。具体地，cdq 的时候，我们考虑左半边的<strong>修改</strong>对右半边的<strong>查询</strong>的贡献。因为左半边时间小于右半边，同时他们各自的位置都是有序的，所以可以很方便的统计贡献。</p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode cpp"><code class="sourceCode cpp"><span id="cb1-1"><a aria-hidden="true" href="#cb1-1"></a><span class="at">const</span> <span class="dt">int</span> maxn = <span class="fl">5e6</span> + <span class="dv">5</span>;</span>
+<span id="cb1-2"><a aria-hidden="true" href="#cb1-2"></a></span>
+<span id="cb1-3"><a aria-hidden="true" href="#cb1-3"></a><span class="kw">struct</span> node {</span>
+<span id="cb1-4"><a aria-hidden="true" href="#cb1-4"></a>    <span class="dt">int</span> type, id;</span>
+<span id="cb1-5"><a aria-hidden="true" href="#cb1-5"></a>    ll val;</span>
+<span id="cb1-6"><a aria-hidden="true" href="#cb1-6"></a>    il <span class="dt">bool</span> <span class="kw">operator</span>&lt;(<span class="at">const</span> node &amp;b) {<span class="cf">return</span> id == b.id ? type &lt; b.type : id &lt; b.id;}</span>
+<span id="cb1-7"><a aria-hidden="true" href="#cb1-7"></a>} A[maxn], B[maxn];</span>
+<span id="cb1-8"><a aria-hidden="true" href="#cb1-8"></a>ll ans[maxn];</span>
+<span id="cb1-9"><a aria-hidden="true" href="#cb1-9"></a></span>
+<span id="cb1-10"><a aria-hidden="true" href="#cb1-10"></a><span class="dt">int</span> n, m, tot, totx;</span>
+<span id="cb1-11"><a aria-hidden="true" href="#cb1-11"></a></span>
+<span id="cb1-12"><a aria-hidden="true" href="#cb1-12"></a><span class="dt">void</span> cdq(<span class="dt">int</span> l, <span class="dt">int</span> r) {</span>
+<span id="cb1-13"><a aria-hidden="true" href="#cb1-13"></a>    <span class="cf">if</span> (l == r) <span class="cf">return</span>;</span>
+<span id="cb1-14"><a aria-hidden="true" href="#cb1-14"></a>    <span class="dt">int</span> m = (l + r) &gt;&gt; <span class="dv">1</span>;</span>
+<span id="cb1-15"><a aria-hidden="true" href="#cb1-15"></a>    cdq(l, m), cdq(m + <span class="dv">1</span>, r);</span>
+<span id="cb1-16"><a aria-hidden="true" href="#cb1-16"></a>    <span class="dt">int</span> t1 = l, t2 = m + <span class="dv">1</span>;</span>
+<span id="cb1-17"><a aria-hidden="true" href="#cb1-17"></a>    ll sum = <span class="dv">0</span>;</span>
+<span id="cb1-18"><a aria-hidden="true" href="#cb1-18"></a>    FOR(i, l, r) {</span>
+<span id="cb1-19"><a aria-hidden="true" href="#cb1-19"></a>        <span class="cf">if</span> ((t1 &lt;= m &amp;&amp; A[t1] &lt; A[t2]) || t2 &gt; r) {</span>
+<span id="cb1-20"><a aria-hidden="true" href="#cb1-20"></a>            <span class="cf">if</span> (A[t1].type == <span class="dv">1</span>) sum += A[t1].val;</span>
+<span id="cb1-21"><a aria-hidden="true" href="#cb1-21"></a>            B[i] = A[t1++];</span>
+<span id="cb1-22"><a aria-hidden="true" href="#cb1-22"></a>        } <span class="cf">else</span> {</span>
+<span id="cb1-23"><a aria-hidden="true" href="#cb1-23"></a>            <span class="cf">if</span> (A[t2].type == <span class="dv">3</span>) ans[A[t2].val] += sum;</span>
+<span id="cb1-24"><a aria-hidden="true" href="#cb1-24"></a>            <span class="cf">else</span> <span class="cf">if</span> (A[t2].type == <span class="dv">2</span>) ans[A[t2].val] -= sum;</span>
+<span id="cb1-25"><a aria-hidden="true" href="#cb1-25"></a>            B[i] = A[t2++];</span>
+<span id="cb1-26"><a aria-hidden="true" href="#cb1-26"></a>        }</span>
+<span id="cb1-27"><a aria-hidden="true" href="#cb1-27"></a>    }</span>
+<span id="cb1-28"><a aria-hidden="true" href="#cb1-28"></a>    FOR(i, l, r) A[i] = B[i];</span>
+<span id="cb1-29"><a aria-hidden="true" href="#cb1-29"></a>    <span class="cf">return</span>;</span>
+<span id="cb1-30"><a aria-hidden="true" href="#cb1-30"></a>}</span>
+<span id="cb1-31"><a aria-hidden="true" href="#cb1-31"></a></span>
+<span id="cb1-32"><a aria-hidden="true" href="#cb1-32"></a><span class="dt">int</span> main() {</span>
+<span id="cb1-33"><a aria-hidden="true" href="#cb1-33"></a>    n = read(), m = read();</span>
+<span id="cb1-34"><a aria-hidden="true" href="#cb1-34"></a>    FOR(i, <span class="dv">1</span>, n) {</span>
+<span id="cb1-35"><a aria-hidden="true" href="#cb1-35"></a>        ++tot;</span>
+<span id="cb1-36"><a aria-hidden="true" href="#cb1-36"></a>        A[tot].type = <span class="dv">1</span>, A[tot].id = i, A[tot].val = read();</span>
+<span id="cb1-37"><a aria-hidden="true" href="#cb1-37"></a>    }</span>
+<span id="cb1-38"><a aria-hidden="true" href="#cb1-38"></a>    FOR(i, <span class="dv">1</span>, m) {</span>
+<span id="cb1-39"><a aria-hidden="true" href="#cb1-39"></a>        <span class="dt">int</span> t = read();</span>
+<span id="cb1-40"><a aria-hidden="true" href="#cb1-40"></a>        A[++tot].type = t;</span>
+<span id="cb1-41"><a aria-hidden="true" href="#cb1-41"></a>        <span class="cf">if</span> (t == <span class="dv">1</span>) A[tot].id = read(), A[tot].val = read();</span>
+<span id="cb1-42"><a aria-hidden="true" href="#cb1-42"></a>        <span class="cf">else</span> {</span>
+<span id="cb1-43"><a aria-hidden="true" href="#cb1-43"></a>            <span class="dt">int</span> l = read(), r = read();</span>
+<span id="cb1-44"><a aria-hidden="true" href="#cb1-44"></a>            ++totx;</span>
+<span id="cb1-45"><a aria-hidden="true" href="#cb1-45"></a>            A[tot].val = totx, A[tot].id = l - <span class="dv">1</span>;</span>
+<span id="cb1-46"><a aria-hidden="true" href="#cb1-46"></a>            ++tot;</span>
+<span id="cb1-47"><a aria-hidden="true" href="#cb1-47"></a>            A[tot].type = <span class="dv">3</span>, A[tot].val = totx, A[tot].id = r;</span>
+<span id="cb1-48"><a aria-hidden="true" href="#cb1-48"></a>        }</span>
+<span id="cb1-49"><a aria-hidden="true" href="#cb1-49"></a>    }</span>
+<span id="cb1-50"><a aria-hidden="true" href="#cb1-50"></a>    cdq(<span class="dv">1</span>, tot);</span>
+<span id="cb1-51"><a aria-hidden="true" href="#cb1-51"></a>    FOR(i, <span class="dv">1</span>, totx) printf(<span class="st">"</span><span class="sc">%lld\n</span><span class="st">"</span>, ans[i]);</span>
+<span id="cb1-52"><a aria-hidden="true" href="#cb1-52"></a>    <span class="cf">return</span> <span class="dv">0</span>;</span>
+<span id="cb1-53"><a aria-hidden="true" href="#cb1-53"></a>}</span></code></pre></div>
+<ul>
+<li><strong><a href="https://www.luogu.com.cn/problem/P2717">P2717 寒假作业</a></strong>：转化一下就变成了傻逼题，<a href="/sol-luogu-p2717/">题解</a>。</li>
+</ul>
+<h4 id="三维偏序">三维偏序</h4>
+<p><a href="https://www.luogu.com.cn/problem/P3810">P3810 【模板】三维偏序（陌上花开）</a>。题意大概是：有 <span class="math inline">\(n\)</span> 个元素，每种元素有 <span class="math inline">\(a_i\)</span>，<span class="math inline">\(b_i\)</span>，<span class="math inline">\(c_i\)</span> 三个属性，设 <span class="math inline">\(f_i\)</span> 表示满足 <span class="math inline">\(a_j \le a_i\land b_j \le b_i\land c_j \le c_i\)</span> 的 <span class="math inline">\(j\)</span> 的数量。对于 <span class="math inline">\(d\in [0, n)\)</span>，求 <span class="math inline">\(f_i = d\)</span> 的 <span class="math inline">\(i\)</span> 的数量。</p>
+<p>这个题 KDT 和树套树都是可以做的，但是 cdq <em>可以顶替复杂的数据结构</em>，所以来看看怎么解决这个问题。</p>
+<p>可以先按照第一维排序，然后对第二维 cdq，用树状数组解决第三维。具体地，我们先合并相同元素，然后按 <span class="math inline">\(a_i\)</span> 为第一关键字排序。分治完 <span class="math inline">\([l, mid]\)</span> 和 <span class="math inline">\([mid + 1, r]\)</span>，双指针去扫，计算贡献就用树状数组统计一下 <span class="math inline">\(c_i\)</span> 的个数，按 <span class="math inline">\(b_i\)</span> 归并排序。最后记得清空即可。</p>
+<div class="sourceCode" id="cb2"><pre class="sourceCode cpp"><code class="sourceCode cpp"><span id="cb2-1"><a aria-hidden="true" href="#cb2-1"></a><span class="at">const</span> <span class="dt">int</span> maxn = <span class="fl">1e5</span> + <span class="dv">5</span>, maxk = <span class="fl">2e5</span> + <span class="dv">5</span>;</span>
+<span id="cb2-2"><a aria-hidden="true" href="#cb2-2"></a></span>
+<span id="cb2-3"><a aria-hidden="true" href="#cb2-3"></a><span class="kw">struct</span> node {</span>
+<span id="cb2-4"><a aria-hidden="true" href="#cb2-4"></a>    <span class="dt">int</span> a, b, c;</span>
+<span id="cb2-5"><a aria-hidden="true" href="#cb2-5"></a>    <span class="dt">int</span> cnt, ans;</span>
+<span id="cb2-6"><a aria-hidden="true" href="#cb2-6"></a>    il <span class="kw">friend</span> <span class="dt">bool</span> <span class="kw">operator</span>!=(<span class="at">const</span> node &amp;a, <span class="at">const</span> node &amp;b) {</span>
+<span id="cb2-7"><a aria-hidden="true" href="#cb2-7"></a>        <span class="cf">return</span> a.a != b.a || a.b != b.b || a.c != b.c;</span>
+<span id="cb2-8"><a aria-hidden="true" href="#cb2-8"></a>    }</span>
+<span id="cb2-9"><a aria-hidden="true" href="#cb2-9"></a>} a0[maxn], a[maxn], tmp[maxn];</span>
+<span id="cb2-10"><a aria-hidden="true" href="#cb2-10"></a></span>
+<span id="cb2-11"><a aria-hidden="true" href="#cb2-11"></a>il <span class="dt">bool</span> cmp1(<span class="at">const</span> node &amp;a, <span class="at">const</span> node &amp;b) {</span>
+<span id="cb2-12"><a aria-hidden="true" href="#cb2-12"></a>    <span class="cf">return</span> a.a == b.a ? (a.b == b.b ? a.c &lt; b.c : a.b &lt; b.b) : a.a &lt; b.a;</span>
+<span id="cb2-13"><a aria-hidden="true" href="#cb2-13"></a>}</span>
+<span id="cb2-14"><a aria-hidden="true" href="#cb2-14"></a></span>
+<span id="cb2-15"><a aria-hidden="true" href="#cb2-15"></a>il <span class="dt">bool</span> cmp2(<span class="at">const</span> node &amp;a, <span class="at">const</span> node &amp;b) {</span>
+<span id="cb2-16"><a aria-hidden="true" href="#cb2-16"></a>    <span class="cf">return</span> a.b == b.b ? a.c &lt; b.c : a.b &lt; b.b;</span>
+<span id="cb2-17"><a aria-hidden="true" href="#cb2-17"></a>}</span>
+<span id="cb2-18"><a aria-hidden="true" href="#cb2-18"></a></span>
+<span id="cb2-19"><a aria-hidden="true" href="#cb2-19"></a><span class="dt">int</span> n, m, k, t[maxk], ans[maxn];</span>
+<span id="cb2-20"><a aria-hidden="true" href="#cb2-20"></a></span>
+<span id="cb2-21"><a aria-hidden="true" href="#cb2-21"></a><span class="dt">void</span> add(<span class="dt">int</span> x, <span class="dt">int</span> v) {</span>
+<span id="cb2-22"><a aria-hidden="true" href="#cb2-22"></a>    <span class="cf">for</span> (; x &lt;= k; x += lowbit(x)) t[x] += v;</span>
+<span id="cb2-23"><a aria-hidden="true" href="#cb2-23"></a>    <span class="cf">return</span>;</span>
+<span id="cb2-24"><a aria-hidden="true" href="#cb2-24"></a>}</span>
+<span id="cb2-25"><a aria-hidden="true" href="#cb2-25"></a></span>
+<span id="cb2-26"><a aria-hidden="true" href="#cb2-26"></a><span class="dt">int</span> query(<span class="dt">int</span> x) {</span>
+<span id="cb2-27"><a aria-hidden="true" href="#cb2-27"></a>    <span class="dt">int</span> ret = <span class="dv">0</span>;</span>
+<span id="cb2-28"><a aria-hidden="true" href="#cb2-28"></a>    <span class="cf">for</span> (; x; x -= lowbit(x)) ret += t[x];</span>
+<span id="cb2-29"><a aria-hidden="true" href="#cb2-29"></a>    <span class="cf">return</span> ret;</span>
+<span id="cb2-30"><a aria-hidden="true" href="#cb2-30"></a>}</span>
+<span id="cb2-31"><a aria-hidden="true" href="#cb2-31"></a></span>
+<span id="cb2-32"><a aria-hidden="true" href="#cb2-32"></a><span class="dt">void</span> solve(<span class="dt">int</span> l, <span class="dt">int</span> r) {</span>
+<span id="cb2-33"><a aria-hidden="true" href="#cb2-33"></a>    <span class="cf">if</span> (l == r) <span class="cf">return</span>;</span>
+<span id="cb2-34"><a aria-hidden="true" href="#cb2-34"></a>    <span class="dt">int</span> mid = (l + r) &gt;&gt; <span class="dv">1</span>;</span>
+<span id="cb2-35"><a aria-hidden="true" href="#cb2-35"></a>    solve(l, mid), solve(mid + <span class="dv">1</span>, r);</span>
+<span id="cb2-36"><a aria-hidden="true" href="#cb2-36"></a>    <span class="dt">int</span> i, j, k = l;</span>
+<span id="cb2-37"><a aria-hidden="true" href="#cb2-37"></a>    <span class="cf">for</span> (i = l, j = mid + <span class="dv">1</span>; j &lt;= r;) {</span>
+<span id="cb2-38"><a aria-hidden="true" href="#cb2-38"></a>        <span class="cf">while</span> (a[j].b &gt;= a[i].b &amp;&amp; i &lt;= mid) {</span>
+<span id="cb2-39"><a aria-hidden="true" href="#cb2-39"></a>            add(a[i].c, a[i].cnt);</span>
+<span id="cb2-40"><a aria-hidden="true" href="#cb2-40"></a>            tmp[k++] = a[i++];</span>
+<span id="cb2-41"><a aria-hidden="true" href="#cb2-41"></a>        }</span>
+<span id="cb2-42"><a aria-hidden="true" href="#cb2-42"></a>        a[j].ans += query(a[j].c), tmp[k++] = a[j++];</span>
+<span id="cb2-43"><a aria-hidden="true" href="#cb2-43"></a>    }</span>
+<span id="cb2-44"><a aria-hidden="true" href="#cb2-44"></a>    <span class="cf">for</span> (j = l; j &lt; i; ++j) add(a[j].c, -a[j].cnt);</span>
+<span id="cb2-45"><a aria-hidden="true" href="#cb2-45"></a>    <span class="cf">while</span> (i &lt;= mid) tmp[k++] = a[i++];</span>
+<span id="cb2-46"><a aria-hidden="true" href="#cb2-46"></a>    FOR(i, l, r) a[i] = tmp[i];</span>
+<span id="cb2-47"><a aria-hidden="true" href="#cb2-47"></a>    <span class="cf">return</span>;</span>
+<span id="cb2-48"><a aria-hidden="true" href="#cb2-48"></a>}</span>
+<span id="cb2-49"><a aria-hidden="true" href="#cb2-49"></a></span>
+<span id="cb2-50"><a aria-hidden="true" href="#cb2-50"></a><span class="dt">int</span> main() {</span>
+<span id="cb2-51"><a aria-hidden="true" href="#cb2-51"></a>    read(n), read(k);</span>
+<span id="cb2-52"><a aria-hidden="true" href="#cb2-52"></a>    FOR(i, <span class="dv">1</span>, n) read(a0[i].a), read(a0[i].b), read(a0[i].c);</span>
+<span id="cb2-53"><a aria-hidden="true" href="#cb2-53"></a>    <span class="bu">std::</span>sort(a0 + <span class="dv">1</span>, a0 + n + <span class="dv">1</span>, cmp1);</span>
+<span id="cb2-54"><a aria-hidden="true" href="#cb2-54"></a>    <span class="dt">int</span> same = <span class="dv">0</span>;</span>
+<span id="cb2-55"><a aria-hidden="true" href="#cb2-55"></a>    FOR(i, <span class="dv">1</span>, n) {</span>
+<span id="cb2-56"><a aria-hidden="true" href="#cb2-56"></a>        ++same;</span>
+<span id="cb2-57"><a aria-hidden="true" href="#cb2-57"></a>        <span class="cf">if</span> (a0[i] != a0[i + <span class="dv">1</span>]) {</span>
+<span id="cb2-58"><a aria-hidden="true" href="#cb2-58"></a>            a[++m] = a0[i];</span>
+<span id="cb2-59"><a aria-hidden="true" href="#cb2-59"></a>            a[m].cnt = same;</span>
+<span id="cb2-60"><a aria-hidden="true" href="#cb2-60"></a>            a[m].ans = <span class="dv">0</span>;</span>
+<span id="cb2-61"><a aria-hidden="true" href="#cb2-61"></a>            same = <span class="dv">0</span>;</span>
+<span id="cb2-62"><a aria-hidden="true" href="#cb2-62"></a>        }</span>
+<span id="cb2-63"><a aria-hidden="true" href="#cb2-63"></a>    }</span>
+<span id="cb2-64"><a aria-hidden="true" href="#cb2-64"></a>    solve(<span class="dv">1</span>, m);</span>
+<span id="cb2-65"><a aria-hidden="true" href="#cb2-65"></a>    FOR(i, <span class="dv">1</span>, m) ans[a[i].ans + a[i].cnt - <span class="dv">1</span>] += a[i].cnt;</span>
+<span id="cb2-66"><a aria-hidden="true" href="#cb2-66"></a>    FOR(i, <span class="dv">0</span>, n - <span class="dv">1</span>) print(ans[i], <span class="ch">'</span><span class="sc">\n</span><span class="ch">'</span>);</span>
+<span id="cb2-67"><a aria-hidden="true" href="#cb2-67"></a>    <span class="cf">return</span> output(), <span class="dv">0</span>;</span>
+<span id="cb2-68"><a aria-hidden="true" href="#cb2-68"></a>}</span></code></pre></div>
+<p>不妨来看几道三维偏序的例题：</p>
+<ul>
+<li><a href="https://www.luogu.com.cn/problem/P4169"><strong>P4169 [Violet]天使玩偶/SJY摆棋子</strong></a>：很简单的卡常题。<a href="/sol-luogu-p4169/">题解</a>。</li>
+<li><a href="https://www.luogu.com.cn/problem/P4390"><strong>P4390 [BOI2007]Mokia 摩基亚</strong></a>：容斥转化一下，变为二维数点，上三维偏序。</li>
+</ul>
+<h4 id="四维偏序">四维偏序</h4>
+<p>KDT 和 cdq 套 cdq 都可以。</p>
+<p>我们回忆一下之前学的：</p>
+<ul>
+<li>二维偏序：首先排序去掉一维，然后在<strong>按照第二维归并</strong>，就可以进行 <span class="math inline">\((L, a)\)</span> 对 <span class="math inline">\((R, b)\)</span> 的贡献统计。</li>
+<li>三维偏序：首先排序去掉第一维，按照<strong>第二维归并</strong>，使用树状数组维护就可以进行 <span class="math inline">\((L, b, c)\)</span> 对 <span class="math inline">\((R, b_2, c_2)\)</span> 的贡献统计。</li>
+<li>四维偏序：首先排序去掉第一维，分治下去之后我们就需要处理 <span class="math inline">\((L, b, c, d)\)</span> 对 <span class="math inline">\((R, b_2, c_2, d_2)\)</span> 的贡献。这个时候我们把第一维打上 <span class="math inline">\(L/R\)</span> 的标记，然后按照 <span class="math inline">\(b\)</span> 归并。此时 <span class="math inline">\(b\)</span> 是有序的，之后复制一遍序列再使用一次 cdq，处理 <span class="math inline">\((L, L, c, d)\)</span> 对 <span class="math inline">\((R, R, c, d)\)</span> 的影响。</li>
+</ul>
+<p>下面会提到的 <a href="https://www.luogu.com.cn/problem/P3769"><strong>P3769 [CH弱省胡策R2]TATT</strong></a> 的代码：</p>
+<div class="sourceCode" id="cb3"><pre class="sourceCode cpp"><code class="sourceCode cpp"><span id="cb3-1"><a aria-hidden="true" href="#cb3-1"></a><span class="at">const</span> <span class="dt">int</span> maxn = <span class="fl">2e5</span> + <span class="dv">5</span>;</span>
+<span id="cb3-2"><a aria-hidden="true" href="#cb3-2"></a><span class="dt">int</span> n;</span>
+<span id="cb3-3"><a aria-hidden="true" href="#cb3-3"></a><span class="kw">struct</span> node {</span>
+<span id="cb3-4"><a aria-hidden="true" href="#cb3-4"></a>    <span class="dt">int</span> x, y, z, w, cnt, id, ans, ok;</span>
+<span id="cb3-5"><a aria-hidden="true" href="#cb3-5"></a>    il <span class="dt">bool</span> <span class="kw">operator</span>==(<span class="at">const</span> node &amp;b) {<span class="cf">return</span> x == b.x &amp;&amp; y == b.y &amp;&amp; z == b.z &amp;&amp; w == b.w;}</span>
+<span id="cb3-6"><a aria-hidden="true" href="#cb3-6"></a>} a[maxn], tmp[maxn];</span>
+<span id="cb3-7"><a aria-hidden="true" href="#cb3-7"></a><span class="dt">int</span> w0[maxn], pos2[maxn], pos1[maxn];</span>
+<span id="cb3-8"><a aria-hidden="true" href="#cb3-8"></a></span>
+<span id="cb3-9"><a aria-hidden="true" href="#cb3-9"></a><span class="kw">auto</span> cmpx = [](<span class="at">const</span> node &amp;a, <span class="at">const</span> node &amp;b) {<span class="cf">return</span> a.x == b.x ? (a.y == b.y ? (a.z == b.z ? a.w &lt; b.w : a.z &lt; b.z) : a.y &lt; b.y) : a.x &lt; b.x;};</span>
+<span id="cb3-10"><a aria-hidden="true" href="#cb3-10"></a><span class="kw">auto</span> cmpy = [](<span class="at">const</span> node &amp;a, <span class="at">const</span> node &amp;b) {<span class="cf">return</span> a.y == b.y ? (a.x == b.x ? (a.z == b.z ? a.w &lt; b.w : a.z &lt; b.z) : a.x &lt; b.x) : a.y &lt; b.y;};</span>
+<span id="cb3-11"><a aria-hidden="true" href="#cb3-11"></a><span class="kw">auto</span> cmpz = [](<span class="at">const</span> node &amp;a, <span class="at">const</span> node &amp;b) {<span class="cf">return</span> a.z &lt; b.z;};</span>
+<span id="cb3-12"><a aria-hidden="true" href="#cb3-12"></a></span>
+<span id="cb3-13"><a aria-hidden="true" href="#cb3-13"></a><span class="dt">int</span> t[maxn];</span>
+<span id="cb3-14"><a aria-hidden="true" href="#cb3-14"></a></span>
+<span id="cb3-15"><a aria-hidden="true" href="#cb3-15"></a><span class="dt">void</span> add(<span class="dt">int</span> x, <span class="dt">int</span> v) {</span>
+<span id="cb3-16"><a aria-hidden="true" href="#cb3-16"></a>    <span class="cf">for</span> (; x &lt;= n; x += lowbit(x))</span>
+<span id="cb3-17"><a aria-hidden="true" href="#cb3-17"></a>        chkmax(t[x], v);</span>
+<span id="cb3-18"><a aria-hidden="true" href="#cb3-18"></a>    <span class="cf">return</span>;</span>
+<span id="cb3-19"><a aria-hidden="true" href="#cb3-19"></a>}</span>
+<span id="cb3-20"><a aria-hidden="true" href="#cb3-20"></a></span>
+<span id="cb3-21"><a aria-hidden="true" href="#cb3-21"></a><span class="dt">int</span> query(<span class="dt">int</span> x) {</span>
+<span id="cb3-22"><a aria-hidden="true" href="#cb3-22"></a>    <span class="dt">int</span> ans = <span class="dv">0</span>;</span>
+<span id="cb3-23"><a aria-hidden="true" href="#cb3-23"></a>    <span class="cf">for</span> (; x; x -= lowbit(x))</span>
+<span id="cb3-24"><a aria-hidden="true" href="#cb3-24"></a>        chkmax(ans, t[x]);</span>
+<span id="cb3-25"><a aria-hidden="true" href="#cb3-25"></a>    <span class="cf">return</span> ans;</span>
+<span id="cb3-26"><a aria-hidden="true" href="#cb3-26"></a>}</span>
+<span id="cb3-27"><a aria-hidden="true" href="#cb3-27"></a></span>
+<span id="cb3-28"><a aria-hidden="true" href="#cb3-28"></a><span class="dt">void</span> del(<span class="dt">int</span> x) {</span>
+<span id="cb3-29"><a aria-hidden="true" href="#cb3-29"></a>    <span class="cf">for</span> (; x &lt;= n; x += lowbit(x))</span>
+<span id="cb3-30"><a aria-hidden="true" href="#cb3-30"></a>        t[x] = <span class="dv">0</span>;</span>
+<span id="cb3-31"><a aria-hidden="true" href="#cb3-31"></a>    <span class="cf">return</span>;</span>
+<span id="cb3-32"><a aria-hidden="true" href="#cb3-32"></a>}</span>
+<span id="cb3-33"><a aria-hidden="true" href="#cb3-33"></a></span>
+<span id="cb3-34"><a aria-hidden="true" href="#cb3-34"></a><span class="dt">void</span> solve2(<span class="dt">int</span> l, <span class="dt">int</span> r) {</span>
+<span id="cb3-35"><a aria-hidden="true" href="#cb3-35"></a>    <span class="cf">if</span> (l == r) <span class="cf">return</span>;</span>
+<span id="cb3-36"><a aria-hidden="true" href="#cb3-36"></a>    <span class="dt">int</span> mid = (l + r) &gt;&gt; <span class="dv">1</span>;</span>
+<span id="cb3-37"><a aria-hidden="true" href="#cb3-37"></a>    solve2(l, mid);</span>
+<span id="cb3-38"><a aria-hidden="true" href="#cb3-38"></a>    sort(a + l, a + mid + <span class="dv">1</span>, cmpz);</span>
+<span id="cb3-39"><a aria-hidden="true" href="#cb3-39"></a>    sort(a + mid + <span class="dv">1</span>, a + r + <span class="dv">1</span>, cmpz);</span>
+<span id="cb3-40"><a aria-hidden="true" href="#cb3-40"></a>    <span class="dt">int</span> i, j;</span>
+<span id="cb3-41"><a aria-hidden="true" href="#cb3-41"></a>    <span class="cf">for</span> (i = l, j = mid + <span class="dv">1</span>; j &lt;= r; ++j) {</span>
+<span id="cb3-42"><a aria-hidden="true" href="#cb3-42"></a>        <span class="cf">while</span> (a[i].z &lt;= a[j].z &amp;&amp; i &lt;= mid) {</span>
+<span id="cb3-43"><a aria-hidden="true" href="#cb3-43"></a>            <span class="cf">if</span> (a[i].ok) add(a[i].w, a[i].ans);</span>
+<span id="cb3-44"><a aria-hidden="true" href="#cb3-44"></a>            ++i;</span>
+<span id="cb3-45"><a aria-hidden="true" href="#cb3-45"></a>        }</span>
+<span id="cb3-46"><a aria-hidden="true" href="#cb3-46"></a>        <span class="cf">if</span> (!a[j].ok) chkmax(a[j].ans, query(a[j].w) + a[j].cnt);</span>
+<span id="cb3-47"><a aria-hidden="true" href="#cb3-47"></a>    }</span>
+<span id="cb3-48"><a aria-hidden="true" href="#cb3-48"></a>    <span class="cf">for</span> (; i &gt;= l; --i) <span class="cf">if</span> (a[i].ok) del(a[i].w);</span>
+<span id="cb3-49"><a aria-hidden="true" href="#cb3-49"></a>    FOR(i, l, r) tmp[pos2[a[i].id]] = a[i];</span>
+<span id="cb3-50"><a aria-hidden="true" href="#cb3-50"></a>    FOR(i, l, r) a[i] = tmp[i];</span>
+<span id="cb3-51"><a aria-hidden="true" href="#cb3-51"></a>    solve2(mid + <span class="dv">1</span>, r);</span>
+<span id="cb3-52"><a aria-hidden="true" href="#cb3-52"></a>    <span class="cf">return</span>;</span>
+<span id="cb3-53"><a aria-hidden="true" href="#cb3-53"></a>}</span>
+<span id="cb3-54"><a aria-hidden="true" href="#cb3-54"></a></span>
+<span id="cb3-55"><a aria-hidden="true" href="#cb3-55"></a><span class="dt">void</span> solve1(<span class="dt">int</span> l, <span class="dt">int</span> r) {<span class="co">//第一层 cdq 分治</span></span>
+<span id="cb3-56"><a aria-hidden="true" href="#cb3-56"></a>    <span class="cf">if</span> (l == r) <span class="cf">return</span>;</span>
+<span id="cb3-57"><a aria-hidden="true" href="#cb3-57"></a>    <span class="dt">int</span> mid = (l + r) &gt;&gt; <span class="dv">1</span>;</span>
+<span id="cb3-58"><a aria-hidden="true" href="#cb3-58"></a>    solve1(l, mid);</span>
+<span id="cb3-59"><a aria-hidden="true" href="#cb3-59"></a>    FOR(i, l, mid) a[i].ok = <span class="dv">1</span>;<span class="co">//很重要的打标记过程。</span></span>
+<span id="cb3-60"><a aria-hidden="true" href="#cb3-60"></a>    FOR(i, mid + <span class="dv">1</span>, r) a[i].ok = <span class="dv">0</span>;</span>
+<span id="cb3-61"><a aria-hidden="true" href="#cb3-61"></a>    sort(a + l, a + r + <span class="dv">1</span>, cmpy);</span>
+<span id="cb3-62"><a aria-hidden="true" href="#cb3-62"></a>    FOR(i, l, r) pos2[a[i].id] = i;<span class="co">//记录一下第二层序列</span></span>
+<span id="cb3-63"><a aria-hidden="true" href="#cb3-63"></a>    solve2(l, r);</span>
+<span id="cb3-64"><a aria-hidden="true" href="#cb3-64"></a>    FOR(i, l, r) tmp[pos1[a[i].id]] = a[i];</span>
+<span id="cb3-65"><a aria-hidden="true" href="#cb3-65"></a>    FOR(i, l, r) a[i] = tmp[i];</span>
+<span id="cb3-66"><a aria-hidden="true" href="#cb3-66"></a>    solve1(mid + <span class="dv">1</span>, r);</span>
+<span id="cb3-67"><a aria-hidden="true" href="#cb3-67"></a>    <span class="cf">return</span>;</span>
+<span id="cb3-68"><a aria-hidden="true" href="#cb3-68"></a>}</span>
+<span id="cb3-69"><a aria-hidden="true" href="#cb3-69"></a></span>
+<span id="cb3-70"><a aria-hidden="true" href="#cb3-70"></a><span class="dt">int</span> main() {</span>
+<span id="cb3-71"><a aria-hidden="true" href="#cb3-71"></a>    read(n);</span>
+<span id="cb3-72"><a aria-hidden="true" href="#cb3-72"></a>    FOR(i, <span class="dv">1</span>, n) read(a[i].x, a[i].y, a[i].z, a[i].w), w0[i] = a[i].w, a[i].cnt = <span class="dv">1</span>;</span>
+<span id="cb3-73"><a aria-hidden="true" href="#cb3-73"></a>    sort(w0 + <span class="dv">1</span>, w0 + n + <span class="dv">1</span>);</span>
+<span id="cb3-74"><a aria-hidden="true" href="#cb3-74"></a>    <span class="dt">int</span> tot = unique(w0 + <span class="dv">1</span>, w0 + n + <span class="dv">1</span>) - w0 - <span class="dv">1</span>;</span>
+<span id="cb3-75"><a aria-hidden="true" href="#cb3-75"></a>    FOR(i, <span class="dv">1</span>, n) a[i].w = lower_bound(w0 + <span class="dv">1</span>, w0 + tot + <span class="dv">1</span>, a[i].w) - w0;</span>
+<span id="cb3-76"><a aria-hidden="true" href="#cb3-76"></a>    <span class="dt">int</span> n0 = n; n = <span class="dv">1</span>;</span>
+<span id="cb3-77"><a aria-hidden="true" href="#cb3-77"></a>    sort(a + <span class="dv">1</span>, a + n0 + <span class="dv">1</span>, cmpx);</span>
+<span id="cb3-78"><a aria-hidden="true" href="#cb3-78"></a>    FOR(i, <span class="dv">2</span>, n0) {</span>
+<span id="cb3-79"><a aria-hidden="true" href="#cb3-79"></a>        <span class="cf">if</span> (a[i].x != a[n].x || a[i].y != a[n].y || a[i].z != a[n].z || a[i].w != a[n].w)</span>
+<span id="cb3-80"><a aria-hidden="true" href="#cb3-80"></a>            a[++n] = a[i];</span>
+<span id="cb3-81"><a aria-hidden="true" href="#cb3-81"></a>        <span class="cf">else</span> a[n].cnt += a[i].cnt;</span>
+<span id="cb3-82"><a aria-hidden="true" href="#cb3-82"></a>    }</span>
+<span id="cb3-83"><a aria-hidden="true" href="#cb3-83"></a>    FOR(i, <span class="dv">1</span>, n) a[i].id = i, a[i].ans = a[i].cnt, pos1[a[i].id] = i;</span>
+<span id="cb3-84"><a aria-hidden="true" href="#cb3-84"></a>    solve1(<span class="dv">1</span>, n);</span>
+<span id="cb3-85"><a aria-hidden="true" href="#cb3-85"></a>    <span class="dt">int</span> ans = <span class="dv">0</span>;</span>
+<span id="cb3-86"><a aria-hidden="true" href="#cb3-86"></a>    FOR(i, <span class="dv">1</span>, n) chkmax(ans, a[i].ans);</span>
+<span id="cb3-87"><a aria-hidden="true" href="#cb3-87"></a>    print(ans);</span>
+<span id="cb3-88"><a aria-hidden="true" href="#cb3-88"></a>    <span class="cf">return</span> output(), <span class="dv">0</span>;</span>
+<span id="cb3-89"><a aria-hidden="true" href="#cb3-89"></a>}</span></code></pre></div>
+<h3 id="优化-dp">优化 dp</h3>
+<p>有些时候，一些 1D1D 朴素的转移的复杂度可能比较高（<span class="math inline">\(O(n^2)\)</span> 或者更高），而若其满足特殊性质，则我们可以使用 cdq 分治，用类似处理点对关系的方法处理 dp 数组间的转移，一般来说可以优化至 <span class="math inline">\(O(n\log^2n)\)</span>。</p>
+<p><strong><a href="https://www.luogu.com.cn/problem/P2487">P2487 [SDOI2011]拦截导弹</a></strong>。题意：求二元不降子序列的长度。以及一个元素被选入最长子序列的概率。</p>
+<p>首先考虑解决第一问：可以设 <span class="math inline">\(f_{i}\)</span> 为以 <span class="math inline">\(i\)</span> 结尾的最长不降子序列的长度，则我们有 dp： <span class="math display">\[
+f_i = f_j + 1\quad(j &lt; i\land v_j\ge v_i\land h_j\ge h_i)
+\]</span> 然后很自然的就有了一个三维偏序的形式。（<span class="math inline">\(t_j &lt; t_i, v_j\ge v_i, h_j\ge h_i\)</span>），所以我们考虑进行 cdq 分治。</p>
+<p>具体地，我们将 <span class="math inline">\(v_i\)</span> 离散化。然后递归在每一层上考虑左半边对于右半边的贡献。这时我们发现一定要算好左半边才能算右半边，所以我们在分治树上是<strong>中序遍历</strong>的。</p>
+<p>具体地，每次先将分治区间按照 <span class="math inline">\(t\)</span> 排序，然后解决左半边的 dp 值，然后将两边分别按照 <span class="math inline">\(h_i\)</span> 排序，这样就相当于是一个归并的过程。扫到一个左边的 <span class="math inline">\(i\)</span> 就将其 dp 值插入线段树的 <span class="math inline">\(v_i\)</span> 下标，查询一个右边的 <span class="math inline">\(j\)</span> 就查询线段树上 <span class="math inline">\([v_j, n]\)</span> 中最优的 dp 值。</p>
+<p>然后我们需要处理第二问的话，不妨令 <span class="math inline">\(g_i\)</span> 为以 <span class="math inline">\(i\)</span> 结尾的最长不降子序列的条数，则转移如下： <span class="math display">\[
+g_i = \sum_{j &lt; i\land v_j \ge v_i\land h_j\ge h_i\land f_j + 1 = f_i}g_j 
+\]</span> 我们从头到尾 dp 一下，再倒着 dp 一下， 就可以轻松解决第二问了，其不是重点。</p>
+<p>cdq 分治也可以用于斜率/横坐标不单调的斜率优化的转移，但是笔者一般选择使用更好理解的李超树，这里不展开。</p>
+<p>来看例题：</p>
+<ul>
+<li><p><a href="https://www.luogu.com.cn/problem/P3769"><strong>P3769 [CH弱省胡策R2]TATT</strong></a></p>
+<p>变成四维的不降子序列了。cdq 套 cdq，四维偏序。</p></li>
+</ul>
+<h3 id="以静化动">以静化动</h3>
+<p>有一类<strong>可以离线</strong>的数据结构问题要求你进行的操作是形如【做 xxx 的修改然后回答 xxx 的询问】之类的问题，并且有些时候难以使用某种数据结构进行维护。</p>
+<p>我们将其离线下来，会变成如下的情况：</p>
+<ul>
+<li>所有的操作（修改，询问）会按照时间顺序排成一个序列。</li>
+<li>前面的操作会对后面的询问产生贡献。这样的贡献对数是 <span class="math inline">\(O(n^2)\)</span> 的。<em>可以发现这种关系跟之前的偏序问题很像</em>。</li>
+</ul>
+<p>这个时候，我们可以考虑使用 cdq 分治来优化这个过程。先递归处理 <span class="math inline">\([l, m]\)</span> 和 <span class="math inline">\([m + 1, r]\)</span> 内部的修改-询问关系，然后处理所有的 <span class="math inline">\(i\in[l, m], j\in[m + 1, j]\)</span> 的修改-询问关系，其中 <span class="math inline">\(i\)</span> 为修改，<span class="math inline">\(j\)</span> 为询问。</p>
+<p><strong>有时如果各个修改不独立，我们就需要中序遍历分治树，理由同优化 1D/1D 的 dp</strong>。</p>
+<ul>
+<li><strong>P3157 [CQOI2011]动态逆序对</strong>：这题是较为简单的三维偏序。</li>
+</ul>
+<h3 id="分治-fft">分治 FFT</h3>
+<p>半在线卷积，<strong><a href="https://www.luogu.com.cn/problem/P4721">P4721 【模板】分治 FFT</a></strong>。</p>
+<p>题意：给定 <span class="math inline">\(g_{1,\cdots,n - 1}\)</span>，求 <span class="math inline">\(f_{0,\cdots,n - 1}\)</span>，其中 <span class="math display">\[
+\begin{cases}
+f_0 = 1\\
+f_i = \displaystyle\sum_{j = 1}^if_{i - j}g_j
+\end{cases}
+\]</span> 分析这个式子，发现是个卷积，考虑上 NTT，但是会发现这个东西依赖前面算好的，没法直接 NTT，只能 <span class="math inline">\(O(n^2)\)</span>？</p>
+<p>考虑分治一手：假设求出了 <span class="math inline">\([l, mid]\)</span> 的答案，现在要算 <span class="math inline">\([l, mid]\to[mid + 1, r]\)</span> 的影响，不难发现这里是可以直接卷的。此处的思想就是典型的 cdq 分治：考虑跨越中点的贡献。</p>
+<p>时间复杂度 <span class="math inline">\(O(n\log^2n)\)</span>，可以用于优化多项式 exp（牛迭跑的比这个慢）。 <span class="math display">\[
+G(x) = \exp(F(x))
+\]</span> 求导有 <span class="math display">\[
+G'(x) = G(x)F'(x)
+\]</span> 提取第 <span class="math inline">\(n\)</span> 项系数， <span class="math display">\[
+(n + 1)g_{n + 1} = \sum_{i = 0}^n(i + 1)f_{i + 1}g_{n - i}
+\]</span> 故 <span class="math display">\[
+g_n = \frac{1}{n}\sum_{i = 1}^nif_ig_{n - i}
+\]</span> 故可以半在线卷积。</p>
+<h2 id="整体二分">整体二分</h2>
+<h3 id="简介-1">简介</h3>
+<p>来填坑 on 22/05/27。</p>
+<p>能解决一部分离线且满足可二分性的问题。主要思想是将所有的询问一起进行二分。</p>
+<blockquote>
+<p>可以使用整体二分解决的题目需要满足以下性质：</p>
+<ol type="1">
+<li><p>询问的答案具有可二分性；</p></li>
+<li><p><strong>修改对判定答案的贡献互相独立</strong>，修改之间互不影响效果；</p></li>
+<li><p>修改如果对判定答案有贡献，则贡献为一确定的与判定标准无关的值；</p></li>
+<li><p>贡献满足交换律，结合律，具有可加性；</p></li>
+<li><p>题目允许使用离线算法</p>
+<p>——许昊然《浅谈数据结构题几个非经典解法》</p></li>
+</ol>
+</blockquote>
+<h3 id="流程">流程</h3>
+<p>一般而言，我们令 <span class="math inline">\([l,r]\)</span> 为答案值域，<span class="math inline">\([L,R]\)</span> 为答案定义域，</p>
+<ul>
+<li>先将所有操作（包含修改和询问）<strong>按时间顺序</strong>存储，然后分治。</li>
+<li>在每层分治中，利用数据结构（一般为 BIT）统计当前查询的答案和 <span class="math inline">\(mid\)</span> 之间的关系。</li>
+<li>根据查询出的答案与 <span class="math inline">\(mid\)</span> 之间的关系将操作序列分为 <span class="math inline">\(q_1\)</span> 和 <span class="math inline">\(q_2\)</span> 两部分并递归处理。</li>
+<li>当 <span class="math inline">\(l=r\)</span> 的时候找到答案，返回。</li>
+</ul>
+<p>此处用一个例题来说明。</p>
+<blockquote>
+<p>例题 <span class="math inline">\(1\)</span>：<a href="https://www.luogu.com.cn/problem/P3834">P3834 【模板】可持久化线段树 2</a></p>
+<p>静态区间第 <span class="math inline">\(k\)</span> 小，允许离线。</p>
+</blockquote>
+<p>首先对于单次询问，我们可以考虑二分解决。但是对于二分的判定，我们就不能每次都 <span class="math inline">\(O(n\log n)\)</span> 来判了。</p>
+<p>不妨将数字看作“操作”（保证这些“操作”在询问之前），每层分治只考虑会对答案 <span class="math inline">\(\le mid\)</span> 的询问产生影响的数，将他们插入以数组位置为下标的树状数组进行维护，然后便可很方便的判断当前区间内的每个区间的答案是否 <span class="math inline">\(\le mid\)</span>，依此分治。详见代码：</p>
+<div class="sourceCode" id="cb4"><pre class="sourceCode cpp"><code class="sourceCode cpp"><span id="cb4-1"><a aria-hidden="true" href="#cb4-1"></a><span class="at">const</span> <span class="dt">int</span> maxn = <span class="fl">2e5</span> + <span class="dv">5</span>;</span>
+<span id="cb4-2"><a aria-hidden="true" href="#cb4-2"></a><span class="at">const</span> <span class="dt">int</span> INF = <span class="fl">1e9</span>;</span>
+<span id="cb4-3"><a aria-hidden="true" href="#cb4-3"></a><span class="dt">int</span> n, m, totv, totq, a0[maxn], a[maxn], ans[maxn];</span>
+<span id="cb4-4"><a aria-hidden="true" href="#cb4-4"></a><span class="kw">using</span> fastIO::is;</span>
+<span id="cb4-5"><a aria-hidden="true" href="#cb4-5"></a><span class="kw">using</span> fastIO::os;</span>
+<span id="cb4-6"><a aria-hidden="true" href="#cb4-6"></a></span>
+<span id="cb4-7"><a aria-hidden="true" href="#cb4-7"></a><span class="kw">struct</span> Query {</span>
+<span id="cb4-8"><a aria-hidden="true" href="#cb4-8"></a>    <span class="dt">int</span> l, r, k, id, type;</span>
+<span id="cb4-9"><a aria-hidden="true" href="#cb4-9"></a>} q[maxn &lt;&lt; <span class="dv">1</span>], q1[maxn &lt;&lt; <span class="dv">1</span>], q2[maxn &lt;&lt; <span class="dv">1</span>];</span>
+<span id="cb4-10"><a aria-hidden="true" href="#cb4-10"></a></span>
+<span id="cb4-11"><a aria-hidden="true" href="#cb4-11"></a><span class="dt">int</span> t[maxn];</span>
+<span id="cb4-12"><a aria-hidden="true" href="#cb4-12"></a></span>
+<span id="cb4-13"><a aria-hidden="true" href="#cb4-13"></a><span class="dt">void</span> add(<span class="dt">int</span> x, <span class="dt">int</span> v) {</span>
+<span id="cb4-14"><a aria-hidden="true" href="#cb4-14"></a>    <span class="cf">for</span> (; x &lt;= n; x += lowbit(x)) t[x] += v;</span>
+<span id="cb4-15"><a aria-hidden="true" href="#cb4-15"></a>    <span class="cf">return</span>;</span>
+<span id="cb4-16"><a aria-hidden="true" href="#cb4-16"></a>}</span>
+<span id="cb4-17"><a aria-hidden="true" href="#cb4-17"></a></span>
+<span id="cb4-18"><a aria-hidden="true" href="#cb4-18"></a><span class="dt">int</span> sum(<span class="dt">int</span> x) {</span>
+<span id="cb4-19"><a aria-hidden="true" href="#cb4-19"></a>    <span class="dt">int</span> res = <span class="dv">0</span>;</span>
+<span id="cb4-20"><a aria-hidden="true" href="#cb4-20"></a>    <span class="cf">for</span> (; x; x  -= lowbit(x)) res += t[x];</span>
+<span id="cb4-21"><a aria-hidden="true" href="#cb4-21"></a>    <span class="cf">return</span> res;</span>
+<span id="cb4-22"><a aria-hidden="true" href="#cb4-22"></a>}</span>
+<span id="cb4-23"><a aria-hidden="true" href="#cb4-23"></a></span>
+<span id="cb4-24"><a aria-hidden="true" href="#cb4-24"></a><span class="dt">void</span> solve(<span class="dt">int</span> l, <span class="dt">int</span> r, <span class="dt">int</span> ql, <span class="dt">int</span> qr) {</span>
+<span id="cb4-25"><a aria-hidden="true" href="#cb4-25"></a>    <span class="cf">if</span> (ql &gt; qr) <span class="cf">return</span>;</span>
+<span id="cb4-26"><a aria-hidden="true" href="#cb4-26"></a>    <span class="cf">if</span> (l == r) {</span>
+<span id="cb4-27"><a aria-hidden="true" href="#cb4-27"></a>        FOR(i, ql, qr) <span class="cf">if</span> (q[i].type == <span class="dv">2</span>) ans[q[i].id] = l; <span class="co">// 更新答案</span></span>
+<span id="cb4-28"><a aria-hidden="true" href="#cb4-28"></a>        <span class="cf">return</span>;</span>
+<span id="cb4-29"><a aria-hidden="true" href="#cb4-29"></a>    }</span>
+<span id="cb4-30"><a aria-hidden="true" href="#cb4-30"></a>    <span class="dt">int</span> mid = (l + r) &gt;&gt; <span class="dv">1</span>;</span>
+<span id="cb4-31"><a aria-hidden="true" href="#cb4-31"></a>    <span class="dt">int</span> p1 = <span class="dv">0</span>, p2 = <span class="dv">0</span>;</span>
+<span id="cb4-32"><a aria-hidden="true" href="#cb4-32"></a>    FOR(i, ql, qr) {</span>
+<span id="cb4-33"><a aria-hidden="true" href="#cb4-33"></a>        <span class="cf">if</span> (q[i].type == <span class="dv">1</span>) {</span>
+<span id="cb4-34"><a aria-hidden="true" href="#cb4-34"></a>            <span class="cf">if</span> (q[i].l &lt;= mid) { <span class="co">// 只有 &lt;= mid 的数字才会产生影响</span></span>
+<span id="cb4-35"><a aria-hidden="true" href="#cb4-35"></a>                add(q[i].id, <span class="dv">1</span>); <span class="co">// 加入树状数组</span></span>
+<span id="cb4-36"><a aria-hidden="true" href="#cb4-36"></a>                q1[++p1] = q[i];</span>
+<span id="cb4-37"><a aria-hidden="true" href="#cb4-37"></a>            } <span class="cf">else</span> q2[++p2] = q[i];</span>
+<span id="cb4-38"><a aria-hidden="true" href="#cb4-38"></a>        } <span class="cf">else</span> {</span>
+<span id="cb4-39"><a aria-hidden="true" href="#cb4-39"></a>            <span class="dt">int</span> res = sum(q[i].r) - sum(q[i].l - <span class="dv">1</span>);</span>
+<span id="cb4-40"><a aria-hidden="true" href="#cb4-40"></a>            <span class="cf">if</span> (res &gt;= q[i].k) q1[++p1] = q[i]; <span class="co">// 判断</span></span>
+<span id="cb4-41"><a aria-hidden="true" href="#cb4-41"></a>            <span class="cf">else</span> {</span>
+<span id="cb4-42"><a aria-hidden="true" href="#cb4-42"></a>                q[i].k -= res; <span class="co">// 将左半边的影响去除</span></span>
+<span id="cb4-43"><a aria-hidden="true" href="#cb4-43"></a>                q2[++p2] = q[i];</span>
+<span id="cb4-44"><a aria-hidden="true" href="#cb4-44"></a>            }</span>
+<span id="cb4-45"><a aria-hidden="true" href="#cb4-45"></a>        }</span>
+<span id="cb4-46"><a aria-hidden="true" href="#cb4-46"></a>    }</span>
+<span id="cb4-47"><a aria-hidden="true" href="#cb4-47"></a>    FOR(i, <span class="dv">1</span>, p1) <span class="cf">if</span> (q1[i].type == <span class="dv">1</span>) add(q1[i].id, -<span class="dv">1</span>); <span class="co">// 清空树状数组</span></span>
+<span id="cb4-48"><a aria-hidden="true" href="#cb4-48"></a>    FOR(i, <span class="dv">1</span>, p1) q[ql + i - <span class="dv">1</span>] = q1[i]; <span class="co">// 将操作重新划分</span></span>
+<span id="cb4-49"><a aria-hidden="true" href="#cb4-49"></a>    FOR(i, <span class="dv">1</span>, p2) q[ql + p1 + i - <span class="dv">1</span>] = q2[i]; <span class="co">// 将操作重新划分</span></span>
+<span id="cb4-50"><a aria-hidden="true" href="#cb4-50"></a>    solve(l, mid, ql, ql + p1 - <span class="dv">1</span>); <span class="co">// 继续分治</span></span>
+<span id="cb4-51"><a aria-hidden="true" href="#cb4-51"></a>    solve(mid + <span class="dv">1</span>, r, ql + p1, qr); <span class="co">// 继续分治</span></span>
+<span id="cb4-52"><a aria-hidden="true" href="#cb4-52"></a>    <span class="cf">return</span>;</span>
+<span id="cb4-53"><a aria-hidden="true" href="#cb4-53"></a>}</span>
+<span id="cb4-54"><a aria-hidden="true" href="#cb4-54"></a></span>
+<span id="cb4-55"><a aria-hidden="true" href="#cb4-55"></a><span class="dt">int</span> main() {</span>
+<span id="cb4-56"><a aria-hidden="true" href="#cb4-56"></a>    is &gt;&gt; n &gt;&gt; m;</span>
+<span id="cb4-57"><a aria-hidden="true" href="#cb4-57"></a>    FOR(i, <span class="dv">1</span>, n) is &gt;&gt; a0[i], a[i] = a0[i];</span>
+<span id="cb4-58"><a aria-hidden="true" href="#cb4-58"></a>    sort(a0 + <span class="dv">1</span>, a0 + n + <span class="dv">1</span>);</span>
+<span id="cb4-59"><a aria-hidden="true" href="#cb4-59"></a>    totv = unique(a0 + <span class="dv">1</span>, a0 + n + <span class="dv">1</span>) - a0 - <span class="dv">1</span>;</span>
+<span id="cb4-60"><a aria-hidden="true" href="#cb4-60"></a>    FOR(i, <span class="dv">1</span>, n) a[i] = lower_bound(a0 + <span class="dv">1</span>, a0 + totv + <span class="dv">1</span>, a[i]) - a0, q[++totq] = {a[i], -<span class="dv">1</span>, -<span class="dv">1</span>, i, <span class="dv">1</span>};</span>
+<span id="cb4-61"><a aria-hidden="true" href="#cb4-61"></a>    FOR(i, <span class="dv">1</span>, m) {</span>
+<span id="cb4-62"><a aria-hidden="true" href="#cb4-62"></a>        <span class="dt">int</span> x, y, k; is &gt;&gt; x &gt;&gt; y &gt;&gt; k;</span>
+<span id="cb4-63"><a aria-hidden="true" href="#cb4-63"></a>        q[++totq] = {x, y, k, i, <span class="dv">2</span>};</span>
+<span id="cb4-64"><a aria-hidden="true" href="#cb4-64"></a>    }</span>
+<span id="cb4-65"><a aria-hidden="true" href="#cb4-65"></a>    solve(<span class="dv">1</span>, totv, <span class="dv">1</span>, totq);</span>
+<span id="cb4-66"><a aria-hidden="true" href="#cb4-66"></a>    FOR(i, <span class="dv">1</span>, m) os &lt;&lt; a0[ans[i]] &lt;&lt; <span class="ch">'</span><span class="sc">\n</span><span class="ch">'</span>;</span>
+<span id="cb4-67"><a aria-hidden="true" href="#cb4-67"></a>    <span class="cf">return</span> <span class="dv">0</span>;</span>
+<span id="cb4-68"><a aria-hidden="true" href="#cb4-68"></a>}</span></code></pre></div>
+<p>稍加分析即知其复杂度为 <span class="math inline">\(O(n\log^2n)\)</span>。</p>
+<h3 id="应用">应用</h3>
+<blockquote>
+<p>例题 <span class="math inline">\(2\)</span>：<a href="https://www.luogu.com.cn/problem/P2617">P2617 Dynamic Rankings</a></p>
+<p>给定一个含有 <span class="math inline">\(n\)</span> 个数的序列 <span class="math inline">\(a_1,a_2 \dots a_n\)</span>，需要支持两种操作：</p>
+<ul>
+<li><code>Q l r k</code> 表示查询下标在区间 <span class="math inline">\([l,r]\)</span> 中的第 <span class="math inline">\(k\)</span> 小的数；</li>
+<li><code>C x y</code> 表示将 <span class="math inline">\(a_x\)</span> 改为 <span class="math inline">\(y\)</span>。</li>
+</ul>
+<p><span class="math inline">\(n,m\le 10^5\)</span>。</p>
+</blockquote>
+<p>和上题基本是一个道理。<em>修改操作可以看成先删除，后添加</em>。将赋值操作进行拆分是很常见的方法。</p>
+<blockquote>
+<p>例题 <span class="math inline">\(3\)</span>：<a href="https://www.luogu.com.cn/problem/P3332">P3332 [ZJOI2013]K大数查询</a></p>
+<p>维护 <span class="math inline">\(n\)</span> 个可重整数集，初始为空，集合的编号从 <span class="math inline">\(1\)</span> 到 <span class="math inline">\(n\)</span>，有 <span class="math inline">\(m\)</span> 个操作：</p>
+<ul>
+<li><code>1 l r c</code>：表示将 <span class="math inline">\(c\)</span> 加入到编号在 <span class="math inline">\([l,r]\)</span> 内的集合中<br/>
+</li>
+<li><code>2 l r c</code>：表示查询编号在 <span class="math inline">\([l,r]\)</span> 内的集合的并集中，第 <span class="math inline">\(c\)</span> 大的数是多少。</li>
+</ul>
+<p>注意可重集的并是不去除重复元素的，如 <span class="math inline">\(\{1,1,4\}\cup\{5,1,4\}=\{1,1,4,5,1,4\}\)</span>。<span class="math inline">\(1 \le n,m \le 5\times 10^4\)</span>，<span class="math inline">\(1\le l,r \le n\)</span>，<span class="math inline">\(1\)</span> 操作中 <span class="math inline">\(|c|\le n\)</span>，<span class="math inline">\(2\)</span> 操作中 <span class="math inline">\(1\le c &lt; 2^{63}\)</span>。</p>
+</blockquote>
+<p>我们进行二分会发现问题变成了区间加区间求和，所以可以使用线段树来进行维护，整体二分之后本题即得解。</p>
+<h2 id="线段树分治">线段树分治</h2>
+<p>线段树分治，可以处理一类需要支持撤销操作的问题，由于是在时间轴上建立线段树，所以又称此技巧为“时间线段树”。</p>
+<p>具体地，考虑一个操作影响的时间区间。一个简单的暴力就是对于每个时间点开一个桶，把对应操作扔进去，然后对每个桶回答一下询问即可。这个暴力以每个修改操作多做 <span class="math inline">\(O(n)\)</span> 次的代价规避了删除操作。</p>
+<p>那么我们将线段树建立在时间轴上后，一个操作影响的区间就可以被分为 <span class="math inline">\(O(\log n)\)</span> 段区间，将修改操作放上去后就能影响到其中的每个叶子节点。然后在线段树上 dfs，回溯的时候撤销一下操作即可。</p>
+<p>说着很抽象，以例题引入一下。</p>
+<blockquote>
+<p>例题 1：<a href="https://loj.ac/problem/121">LOJ#121. 「离线可过」动态图连通性</a>、</p>
+<p>要求维护加边删边，询问两点连通性。</p>
+</blockquote>
+<p>若<strong>没有删除操作</strong>，本题就是很简单的并查集。</p>
+<p>然后套上线段树分治就真的变成了很简单的并查集（？）</p>
+<p>但是需要注意，本题的并查集不能进行路径压缩，需要使用不基于均摊分析的按秩合并并查集，才能支持撤销操作。</p>
+<p>至于可撤销并查集，拿个栈来维护一下就好，注意细节。<a href="https://loj.ac/s/1376251">代码链接</a>。</p>
+<blockquote>
+<p>例题 2：<a href="https://www.luogu.com.cn/problem/P5787">P5787 二分图 /【模板】线段树分治</a></p>
+<p>每条边有存在的时间区间，输出每个时间段内图是否为二分图。<span class="math inline">\(2\times 10^5\)</span></p>
+</blockquote>
+<p>和上题类似，拿个<a href="/summary-ds0/">带权并查集</a>维护一下就好了。</p>
+<blockquote>
+<p>例题 3：<a href="https://www.luogu.com.cn/problem/P4585">P4585 [FJOI2015]火星商店问题</a></p>
+<p>有一排 <span class="math inline">\(n\)</span> 个商店，某个商店会在某个时刻进货权值为 <span class="math inline">\(v\)</span> 的商品。</p>
+<p>每个人有一个参数 <span class="math inline">\(x\)</span>，询问在 <span class="math inline">\([l, r]\)</span> 商店内进货时间在 <span class="math inline">\([t_l, t_r]\)</span> 的商品中，<span class="math inline">\(x\oplus v\)</span> 的最大值。</p>
+<p><span class="math inline">\(10^5\)</span>，2s</p>
+</blockquote>
+<p><del>看着就很树套树 + 0-1 Trie 是吧</del>，感觉复杂度很高，放弃。</p>
+<p>发现，商品是时间轴上的若干个点，而询问是若干个区间。所以考虑用线段树分治来维护，将商品挂在从叶子到根的节点上，使用一个可持久化 0-1 Trie 维护，然后将询问拆成区间来回答。</p>
+<p>时间复杂度 <span class="math inline">\(O(n\log^2n)\)</span>，代码写起来有点毒瘤（但是一发 A 了我很感动）。本题也可以使用整体二分。</p>
+<h2 id="总结">总结</h2>
+<h2 id="references">References</h2>
+<p>感谢以下参考资料的作者们：</p>
+<ul>
+<li>__stdcall：<a href="https://www.cnblogs.com/mlystdcall/p/6219421.html">【教程】简易CDQ分治教程&amp;学习笔记</a></li>
+<li>foreverlasting：<a href="https://foreverlasting1202.github.io/2019/07/19/%E7%BA%BF%E6%AE%B5%E6%A0%91%E5%88%86%E6%B2%BB%E6%80%BB%E7%BB%93/">线段树分治总结</a></li>
+<li>command_block：<a href="https://www.luogu.com.cn/blog/command-block/yi-suo-chang-yong-di-shuo-ju-jie-gou-wei-hu-shou-fa">一些常用的数据结构维护手法</a></li>
+</ul>
+</section>
+<footer class="article-footer">
+<section class="article-tags">
+<a href="/tags/OI/">OI</a>
+<a href="/tags/note/">笔记</a>
+<a href="/tags/cdq/">cdq分治</a>
+<a href="/tags/parallel-binary-search/">整体二分</a>
+<a href="/tags/segtree-division/">线段树分治</a>
+<a href="/tags/ds-in-tree-nodes/">树套树</a>
+</section>
+<section class="article-copyright">
+<svg class="icon icon-tabler icon-tabler-copyright" fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+<path d="M0 0h24v24H0z" stroke="none"></path>
+<circle cx="12" cy="12" r="9"></circle>
+<path d="M14.5 9a3.5 4 0 1 0 0 6"></path>
+</svg>
+<span>Licensed under CC BY-NC-SA 4.0</span>
+</section>
+</footer>
+<link crossorigin="anonymous" href="https://cdn.jsdelivr.net/npm/katex@0.13.13/dist/katex.min.css" integrity="sha384-RZU/ijkSsFbcmivfdRBQDtwuwVqK7GMOw6IMvKyeWL2K5UAlyp6WonmB8m7Jd0Hn" rel="stylesheet"/><script crossorigin="anonymous" defer="" integrity="sha384-pK1WpvzWVBQiP0/GjnvRxV4mOb0oxFuyRxJlk6vVw146n3egcN5C925NCP7a7BY8" src="https://cdn.jsdelivr.net/npm/katex@0.13.13/dist/katex.min.js">
+</script><script crossorigin="anonymous" defer="" integrity="sha384-vZTG03m+2yp6N6BNi5iM4rW4oIwk5DfcNdFfxkk9ZWpDriOkXX8voJBFrAO7MpVl" src="https://cdn.jsdelivr.net/npm/katex@0.13.13/dist/contrib/auto-render.min.js">
+</script><script>
+    window.addEventListener("DOMContentLoaded", () => {
+        renderMathInElement(document.querySelector(`.article-content`), {
+            delimiters: [
+                { left: "$$", right: "$$", display: true },
+                { left: "$", right: "$", display: false },
+                { left: "\\(", right: "\\)", display: false },
+                { left: "\\[", right: "\\]", display: true }
+            ]
+        });})
+</script>
+</article>
+<aside class="related-contents--wrapper">
+<h2 class="section-title">相关文章</h2>
+<div class="related-contents">
+<div class="flex article-list--tile">
+<article class="has-image">
+<a href="/sol-luogu-p3242/">
+<div class="article-image">
+<img data-hash="https://yangty-pic.oss-cn-beijing.aliyuncs.com/bg5.webp" data-key="" loading="lazy" src="https://yangty-pic.oss-cn-beijing.aliyuncs.com/bg5.webp"/>
+</div>
+<div class="article-details">
+<h2 class="article-title">P3242 [HNOI2015] 接水果</h2>
+</div>
+</a>
+</article>
+<article class="has-image">
+<a href="/note-gf/">
+<div class="article-image">
+<img data-hash="https://yangty-pic.oss-cn-beijing.aliyuncs.com/bg28.webp" data-key="" loading="lazy" src="https://yangty-pic.oss-cn-beijing.aliyuncs.com/bg28.webp"/>
+</div>
+<div class="article-details">
+<h2 class="article-title">生成函数胡扯</h2>
+</div>
+</a>
+</article>
+<article class="has-image">
+<a href="/note-set-power-series/">
+<div class="article-image">
+<img data-hash="https://yangty-pic.oss-cn-beijing.aliyuncs.com/bg39.webp" data-key="" loading="lazy" src="https://yangty-pic.oss-cn-beijing.aliyuncs.com/bg39.webp"/>
+</div>
+<div class="article-details">
+<h2 class="article-title">集合幂级数胡扯</h2>
+</div>
+</a>
+</article>
+<article class="has-image">
+<a href="/sol-agc002d/">
+<div class="article-image">
+<img data-hash="https://yangty-pic.oss-cn-beijing.aliyuncs.com/bg3.webp" data-key="" loading="lazy" src="https://yangty-pic.oss-cn-beijing.aliyuncs.com/bg3.webp"/>
+</div>
+<div class="article-details">
+<h2 class="article-title">AGC002D - Stamp Rally</h2>
+</div>
+</a>
+</article>
+<article class="has-image">
+<a href="/note-linear-basis/">
+<div class="article-image">
+<img data-hash="https://yangty-pic.oss-cn-beijing.aliyuncs.com/bg19.webp" data-key="" loading="lazy" src="https://yangty-pic.oss-cn-beijing.aliyuncs.com/bg19.webp"/>
+</div>
+<div class="article-details">
+<h2 class="article-title">线性基学习笔记</h2>
+</div>
+</a>
+</article>
+</div>
+</div>
+</aside>
+<footer class="site-footer">
+<section class="copyright">
+        © 
+        
+            2019 - 
+        
+        2024 清烛的博客
+    </section>
+<section class="powerby">
+        Built with <a href="https://gohugo.io/" rel="noopener" target="_blank">Hugo</a> <br/>
+        主题 <b><a data-version="3.11.0" href="https://github.com/CaiJimmy/hugo-theme-stack" rel="noopener" target="_blank">Stack</a></b> 由 <a href="https://jimmycai.com" rel="noopener" target="_blank">Jimmy</a> 设计
+    </section>
+</footer>
+<div aria-hidden="true" class="pswp" role="dialog" tabindex="-1">
+<div class="pswp__bg"></div>
+<div class="pswp__scroll-wrap">
+<div class="pswp__container">
+<div class="pswp__item"></div>
+<div class="pswp__item"></div>
+<div class="pswp__item"></div>
+</div>
+<div class="pswp__ui pswp__ui--hidden">
+<div class="pswp__top-bar">
+<div class="pswp__counter"></div>
+<button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+<button class="pswp__button pswp__button--share" title="Share"></button>
+<button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+<button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+<div class="pswp__preloader">
+<div class="pswp__preloader__icn">
+<div class="pswp__preloader__cut">
+<div class="pswp__preloader__donut"></div>
+</div>
+</div>
+</div>
+</div>
+<div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+<div class="pswp__share-tooltip"></div>
+</div>
+<button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+</button>
+<button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+</button>
+<div class="pswp__caption">
+<div class="pswp__caption__center"></div>
+</div>
+</div>
+</div>
+</div><script crossorigin="anonymous" defer="" integrity="sha256-ePwmChbbvXbsO02lbM3HoHbSHTHFAeChekF1xKJdleo=" src="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe.min.js">
+</script><script crossorigin="anonymous" defer="" integrity="sha256-UKkzOn/w1mBxRmLLGrSeyB4e1xbrp4xylgAWb3M42pU=" src="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe-ui-default.min.js">
+</script><link crossorigin="anonymous" href="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/default-skin/default-skin.css" integrity="sha256-c0uckgykQ9v5k+IqViZOZKc47Jn7KQil4/MP3ySA3F8=" rel="stylesheet"/><link crossorigin="anonymous" href="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe.css" integrity="sha256-SBLU4vv6CA6lHsZ1XyTdhyjJxCjPif/TRkjnsyGAGnE=" rel="stylesheet"/>
+</main>
+</div>
+<script crossorigin="anonymous" integrity="sha256-5NovOZc4iwiAWTYIFiIM7DxKUXKWvpVEuMEPLzcm5/g=" src="https://cdn.jsdelivr.net/npm/node-vibrant@3.1.5/dist/vibrant.min.js">
+</script><script defer="" src="/ts/main.js" type="text/javascript"></script>
+<script>
+    (function () {
+        const customFont = document.createElement('link');
+        customFont.href = "https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&display=swap";
+
+        customFont.type = "text/css";
+        customFont.rel = "stylesheet";
+
+        document.head.appendChild(customFont);
+    }());
+</script>
+</body>
+</html>

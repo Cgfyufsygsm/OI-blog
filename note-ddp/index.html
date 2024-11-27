@@ -1,0 +1,1132 @@
+<!DOCTYPE html>
+<html dir="ltr" lang="zh-CN">
+<head><meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1" name="viewport"/><meta content="前言 动态 dp 一般用来解决树上的 dp 问题，同时需要支持修改点权/边权的操作。
+前置知识：矩阵乘法，树链剖分
+模板题 题意 洛谷 P4719 【模板】动态 DP
+带修改点权的树上最大独立集，\(n\) 点，\(m\) 次操作
+不带修改操作 没有上司的舞会嘛不就是。令 \(f_{i,0}\) 表示 \(i\) 子树内不选 \(i\) 点所构成的最大独立集点权之和，\(f_{i, 1}\) 表示 \(i\) 子树选 \(i\) 点构成的最大独立集点权之和。则易得转移： \[ \begin{cases} f_{u, 0} = \sum_{v\in\operatorname{son}(u)} \max\{f_{v, 0}, f_{v, 1}\}\\ f_{u, 1} = \operatorname{val}_u + \sum_{v\in\operatorname{son}(u) f_{v, 0}} \end{cases} \] 答案即为 \(\max\{f_{\mathrm{root}, 0}, f_{\mathrm{root}, 1}\}\)。这是普及组的内容。
+朴素的暴力 我们注意到，如果带上了修改点权的操作，则只会有从根到该节点的一条链上会产生 dp 值的变化。这是相当重要的一个思考过程。这样的暴力的时间复杂度为 \(O(nm)\)（最坏情况下一次操作 \(O(n)\)）
+思考一下这个过程：对链进行操作，无非就是树剖。所以我们考虑使用树链剖分解决这个问题。
+树链剖分 树剖的原理是使用线段树或者其他的数据结构来维护一条重链。故其维护的信息必须满足结合律。什么是结合律呢？加法显然就是满足结合律的： \[ (A + B) + C = A + (B + C) \] 然而这个 dp 值一看就不是很好维护出什么结合律的样子。。。" name="description"/><title>动态 DP 学习笔记</title>
+<link href="https://oi.imyangty.com/note-ddp/" rel="canonical"/>
+<link href="/scss/style.min.a5821f3d3ab84ce5a0ac21477e347a2e0ca00292e398d16c5e8e36ded6e35a23.css" rel="stylesheet"/><meta content="动态 DP 学习笔记" property="og:title"/>
+<meta content="前言 动态 dp 一般用来解决树上的 dp 问题，同时需要支持修改点权/边权的操作。
+前置知识：矩阵乘法，树链剖分
+模板题 题意 洛谷 P4719 【模板】动态 DP
+带修改点权的树上最大独立集，\(n\) 点，\(m\) 次操作
+不带修改操作 没有上司的舞会嘛不就是。令 \(f_{i,0}\) 表示 \(i\) 子树内不选 \(i\) 点所构成的最大独立集点权之和，\(f_{i, 1}\) 表示 \(i\) 子树选 \(i\) 点构成的最大独立集点权之和。则易得转移： \[ \begin{cases} f_{u, 0} = \sum_{v\in\operatorname{son}(u)} \max\{f_{v, 0}, f_{v, 1}\}\\ f_{u, 1} = \operatorname{val}_u + \sum_{v\in\operatorname{son}(u) f_{v, 0}} \end{cases} \] 答案即为 \(\max\{f_{\mathrm{root}, 0}, f_{\mathrm{root}, 1}\}\)。这是普及组的内容。
+朴素的暴力 我们注意到，如果带上了修改点权的操作，则只会有从根到该节点的一条链上会产生 dp 值的变化。这是相当重要的一个思考过程。这样的暴力的时间复杂度为 \(O(nm)\)（最坏情况下一次操作 \(O(n)\)）
+思考一下这个过程：对链进行操作，无非就是树剖。所以我们考虑使用树链剖分解决这个问题。
+树链剖分 树剖的原理是使用线段树或者其他的数据结构来维护一条重链。故其维护的信息必须满足结合律。什么是结合律呢？加法显然就是满足结合律的： \[ (A + B) + C = A + (B + C) \] 然而这个 dp 值一看就不是很好维护出什么结合律的样子。。。" property="og:description"/>
+<meta content="https://oi.imyangty.com/note-ddp/" property="og:url"/>
+<meta content="清烛的博客" property="og:site_name"/>
+<meta content="article" property="og:type"/><meta content="Post" property="article:section"/><meta content="OI" property="article:tag"/><meta content="笔记" property="article:tag"/><meta content="动态dp" property="article:tag"/><meta content="线段树" property="article:tag"/><meta content="树链剖分" property="article:tag"/><meta content="矩阵乘法" property="article:tag"/><meta content="2021-06-05T17:52:20+08:00" property="article:published_time"/><meta content="2021-06-05T17:52:20+08:00" property="article:modified_time"/><meta content="https://yangty-pic.oss-cn-beijing.aliyuncs.com/bg12.webp" property="og:image"/>
+<meta content="动态 DP 学习笔记" name="twitter:title"/>
+<meta content="前言 动态 dp 一般用来解决树上的 dp 问题，同时需要支持修改点权/边权的操作。
+前置知识：矩阵乘法，树链剖分
+模板题 题意 洛谷 P4719 【模板】动态 DP
+带修改点权的树上最大独立集，\(n\) 点，\(m\) 次操作
+不带修改操作 没有上司的舞会嘛不就是。令 \(f_{i,0}\) 表示 \(i\) 子树内不选 \(i\) 点所构成的最大独立集点权之和，\(f_{i, 1}\) 表示 \(i\) 子树选 \(i\) 点构成的最大独立集点权之和。则易得转移： \[ \begin{cases} f_{u, 0} = \sum_{v\in\operatorname{son}(u)} \max\{f_{v, 0}, f_{v, 1}\}\\ f_{u, 1} = \operatorname{val}_u + \sum_{v\in\operatorname{son}(u) f_{v, 0}} \end{cases} \] 答案即为 \(\max\{f_{\mathrm{root}, 0}, f_{\mathrm{root}, 1}\}\)。这是普及组的内容。
+朴素的暴力 我们注意到，如果带上了修改点权的操作，则只会有从根到该节点的一条链上会产生 dp 值的变化。这是相当重要的一个思考过程。这样的暴力的时间复杂度为 \(O(nm)\)（最坏情况下一次操作 \(O(n)\)）
+思考一下这个过程：对链进行操作，无非就是树剖。所以我们考虑使用树链剖分解决这个问题。
+树链剖分 树剖的原理是使用线段树或者其他的数据结构来维护一条重链。故其维护的信息必须满足结合律。什么是结合律呢？加法显然就是满足结合律的： \[ (A + B) + C = A + (B + C) \] 然而这个 dp 值一看就不是很好维护出什么结合律的样子。。。" name="twitter:description"/><meta content="summary_large_image" name="twitter:card"/>
+<meta content="https://yangty-pic.oss-cn-beijing.aliyuncs.com/bg12.webp" name="twitter:image"/>
+<link href="https://q1.qlogo.cn/g?b=qq&amp;nk=375836877&amp;s=5" rel="shortcut icon"/>
+<link href="https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.5.1/build/styles/github-dark-dimmed.min.css" rel="stylesheet"/>
+<script src="https://cdn.jsdelivr.net/gh/highlightjs/cdn-release/build/highlight.min.js"></script>
+<script>hljs.highlightAll();</script>
+</head>
+<body class="article-page">
+<script>
+        (function() {
+            const colorSchemeKey = 'StackColorScheme';
+            if(!localStorage.getItem(colorSchemeKey)){
+                localStorage.setItem(colorSchemeKey, "auto");
+            }
+        })();
+    </script><script>
+    (function() {
+        const colorSchemeKey = 'StackColorScheme';
+        const colorSchemeItem = localStorage.getItem(colorSchemeKey);
+        const supportDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches === true;
+
+        if (colorSchemeItem == 'dark' || colorSchemeItem === 'auto' && supportDarkMode) {
+            
+
+            document.documentElement.dataset.scheme = 'dark';
+        } else {
+            document.documentElement.dataset.scheme = 'light';
+        }
+    })();
+</script>
+<div class="container main-container flex on-phone--column extended"><aside class="sidebar left-sidebar sticky">
+<button aria-label="切换菜单" class="hamburger hamburger--spin" id="toggle-menu" type="button">
+<span class="hamburger-box">
+<span class="hamburger-inner"></span>
+</span>
+</button>
+<header>
+<figure class="site-avatar">
+<a href="/">
+<img alt="Avatar" class="site-logo" height="300" loading="lazy" src="/img/avatar_huea3ce2119467b51fdd2a81393644a76d_51594_300x0_resize_q75_box.jpg" width="300"/>
+</a>
+<span class="emoji">😅</span>
+</figure>
+<div class="site-meta">
+<h1 class="site-name"><a href="/">清烛的博客</a></h1>
+<h2 class="site-description">烟火已谢，笙歌未停</h2>
+</div>
+</header><ol class="social-menu">
+<li>
+<a href="mailto:i@imyangty.com" target="_blank" title="email">
+<svg class="icon icon-tabler icon-tabler-mail" fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" viewbox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+<path d="M0 0h24v24H0z" fill="none" stroke="none"></path>
+<rect height="14" rx="2" width="18" x="3" y="5"></rect>
+<polyline points="3 7 12 13 21 7"></polyline>
+</svg>
+</a>
+</li>
+<li>
+<a href="https://github.com/Cgfyufsygsm" target="_blank" title="GitHub">
+<svg class="icon icon-tabler icon-tabler-brand-github" fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+<path d="M0 0h24v24H0z" fill="none" stroke="none"></path>
+<path d="M9 19c-4.3 1.4 -4.3 -2.5 -6 -3m12 5v-3.5c0 -1 .1 -1.4 -.5 -2c2.8 -.3 5.5 -1.4 5.5 -6a4.6 4.6 0 0 0 -1.3 -3.2a4.2 4.2 0 0 0 -.1 -3.2s-1.1 -.3 -3.5 1.3a12.3 12.3 0 0 0 -6.2 0c-2.4 -1.6 -3.5 -1.3 -3.5 -1.3a4.2 4.2 0 0 0 -.1 3.2a4.6 4.6 0 0 0 -1.3 3.2c0 4.6 2.7 5.7 5.5 6c-.6 .6 -.6 1.2 -.5 2v3.5"></path>
+</svg>
+</a>
+</li>
+<li>
+<a href="https://t.me/Cgfyufsygsm" target="_blank" title="Telegram">
+<svg class="icon icon-tabler icon-tabler-brand-telegram" fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" viewbox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+<path d="M0 0h24v24H0z" fill="none" stroke="none"></path>
+<path d="M15 10l-4 4l6 6l4 -16l-18 7l4 2l2 6l3 -4"></path>
+</svg>
+</a>
+</li>
+<li>
+<a href="https://twitter.com/Cgfyufsygsm" target="_blank" title="Twitter">
+<svg class="icon icon-tabler icon-tabler-brand-twitter" fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+<path d="M0 0h24v24H0z" fill="none" stroke="none"></path>
+<path d="M22 4.01c-1 .49 -1.98 .689 -3 .99c-1.121 -1.265 -2.783 -1.335 -4.38 -.737s-2.643 2.06 -2.62 3.737v1c-3.245 .083 -6.135 -1.395 -8 -4c0 0 -4.182 7.433 4 11c-1.872 1.247 -3.739 2.088 -6 2c3.308 1.803 6.913 2.423 10.034 1.517c3.58 -1.04 6.522 -3.723 7.651 -7.742a13.84 13.84 0 0 0 .497 -3.753c-.002 -.249 1.51 -2.772 1.818 -4.013z"></path>
+</svg>
+</a>
+</li>
+</ol><ol class="menu" id="main-menu">
+<li>
+<a href="/">
+<svg class="icon icon-tabler icon-tabler-home" fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+<path d="M0 0h24v24H0z" stroke="none"></path>
+<polyline points="5 12 3 12 12 3 21 12 19 12"></polyline>
+<path d="M5 12v7a2 2 0 0 0 2 2h10a2 2 0 0 0 2 -2v-7"></path>
+<path d="M9 21v-6a2 2 0 0 1 2 -2h2a2 2 0 0 1 2 2v6"></path>
+</svg>
+<span>主页</span>
+</a>
+</li>
+<li>
+<a href="/about/">
+<svg class="icon icon-tabler icon-tabler-user" fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+<path d="M0 0h24v24H0z" stroke="none"></path>
+<circle cx="12" cy="7" r="4"></circle>
+<path d="M6 21v-2a4 4 0 0 1 4 -4h4a4 4 0 0 1 4 4v2"></path>
+</svg>
+<span>关于</span>
+</a>
+</li>
+<li>
+<a href="/idx/">
+<svg class="icon icon-tabler icon-tabler-hash" fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+<path d="M0 0h24v24H0z" stroke="none"></path>
+<line x1="5" x2="19" y1="9" y2="9"></line>
+<line x1="5" x2="19" y1="15" y2="15"></line>
+<line x1="11" x2="7" y1="4" y2="20"></line>
+<line x1="17" x2="13" y1="4" y2="20"></line>
+</svg>
+<span>导航</span>
+</a>
+</li>
+<li>
+<a href="/archives/">
+<svg class="icon icon-tabler icon-tabler-archive" fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+<path d="M0 0h24v24H0z" stroke="none"></path>
+<rect height="4" rx="2" width="18" x="3" y="4"></rect>
+<path d="M5 8v10a2 2 0 0 0 2 2h10a2 2 0 0 0 2 -2v-10"></path>
+<line x1="10" x2="14" y1="12" y2="12"></line>
+</svg>
+<span>归档</span>
+</a>
+</li>
+<li>
+<a href="/search/">
+<svg class="icon icon-tabler icon-tabler-search" fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+<path d="M0 0h24v24H0z" stroke="none"></path>
+<circle cx="10" cy="10" r="7"></circle>
+<line x1="21" x2="15" y1="21" y2="15"></line>
+</svg>
+<span>搜索</span>
+</a>
+</li>
+<li>
+<a href="/friends/">
+<svg class="icon icon-tabler icon-tabler-link" fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+<path d="M0 0h24v24H0z" stroke="none"></path>
+<path d="M10 14a3.5 3.5 0 0 0 5 0l4 -4a3.5 3.5 0 0 0 -5 -5l-.5 .5"></path>
+<path d="M14 10a3.5 3.5 0 0 0 -5 0l-4 4a3.5 3.5 0 0 0 5 5l.5 -.5"></path>
+</svg>
+<span>友链</span>
+</a>
+</li>
+<li>
+<a href="https://blog.imyangty.com" target="_blank">
+<svg class="icon icon-tabler icon-tabler-home" fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+<path d="M0 0h24v24H0z" stroke="none"></path>
+<polyline points="5 12 3 12 12 3 21 12 19 12"></polyline>
+<path d="M5 12v7a2 2 0 0 0 2 2h10a2 2 0 0 0 2 -2v-7"></path>
+<path d="M9 21v-6a2 2 0 0 1 2 -2h2a2 2 0 0 1 2 2v6"></path>
+</svg>
+<span>主博客</span>
+</a>
+</li>
+<div class="menu-bottom-section">
+<li id="dark-mode-toggle">
+<svg class="icon icon-tabler icon-tabler-toggle-left" fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+<path d="M0 0h24v24H0z" stroke="none"></path>
+<circle cx="8" cy="12" r="2"></circle>
+<rect height="12" rx="6" width="20" x="2" y="6"></rect>
+</svg>
+<svg class="icon icon-tabler icon-tabler-toggle-right" fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+<path d="M0 0h24v24H0z" stroke="none"></path>
+<circle cx="16" cy="12" r="2"></circle>
+<rect height="12" rx="6" width="20" x="2" y="6"></rect>
+</svg>
+<span>暗色模式</span>
+</li>
+</div>
+</ol>
+</aside>
+<main class="main full-width">
+<article class="has-image main-article">
+<header class="article-header">
+<div class="article-image">
+<a href="/note-ddp/">
+<img alt="Featured image of post 动态 DP 学习笔记" loading="lazy" src="https://yangty-pic.oss-cn-beijing.aliyuncs.com/bg12.webp"/>
+</a>
+</div>
+<div class="article-details">
+<header class="article-category">
+<a href="/categories/oi/">
+                OI
+            </a>
+<a href="/categories/note/">
+                笔记
+            </a>
+</header>
+<div class="article-title-wrapper">
+<h2 class="article-title">
+<a href="/note-ddp/">动态 DP 学习笔记</a>
+</h2>
+</div>
+<footer class="article-time">
+<div>
+<svg class="icon icon-tabler icon-tabler-calendar-time" fill="none" height="56" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="56" xmlns="http://www.w3.org/2000/svg">
+<path d="M0 0h24v24H0z" stroke="none"></path>
+<path d="M11.795 21h-6.795a2 2 0 0 1 -2 -2v-12a2 2 0 0 1 2 -2h12a2 2 0 0 1 2 2v4"></path>
+<circle cx="18" cy="18" r="4"></circle>
+<path d="M15 3v4"></path>
+<path d="M7 3v4"></path>
+<path d="M3 11h16"></path>
+<path d="M18 16.496v1.504l1 1"></path>
+</svg>
+<time class="article-time--published">Jun 05, 2021</time>
+</div>
+<div>
+<svg class="icon icon-tabler icon-tabler-clock" fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+<path d="M0 0h24v24H0z" stroke="none"></path>
+<circle cx="12" cy="12" r="9"></circle>
+<polyline points="12 7 12 12 15 15"></polyline>
+</svg>
+<time class="article-time--reading">
+                    阅读时长: 12 分钟
+                </time>
+</div>
+</footer>
+</div>
+</header>
+<section class="article-content">
+<h2 id="前言">前言</h2>
+<p>动态 dp 一般用来解决树上的 dp 问题，同时需要支持修改点权/边权的操作。</p>
+<p>前置知识：矩阵乘法，树链剖分</p>
+<h2 id="模板题">模板题</h2>
+<h3 id="题意">题意</h3>
+<p><a href="https://www.luogu.com.cn/problem/P4719">洛谷 P4719 【模板】动态 DP</a></p>
+<p>带修改点权的树上最大独立集，<span class="math inline">\(n\)</span> 点，<span class="math inline">\(m\)</span> 次操作</p>
+<h3 id="不带修改操作">不带修改操作</h3>
+<p>没有上司的舞会嘛不就是。令 <span class="math inline">\(f_{i,0}\)</span> 表示 <span class="math inline">\(i\)</span> 子树内不选 <span class="math inline">\(i\)</span> 点所构成的最大独立集点权之和，<span class="math inline">\(f_{i, 1}\)</span> 表示 <span class="math inline">\(i\)</span> 子树选 <span class="math inline">\(i\)</span> 点构成的最大独立集点权之和。则易得转移： <span class="math display">\[
+\begin{cases}
+f_{u, 0} = \sum_{v\in\operatorname{son}(u)} \max\{f_{v, 0}, f_{v, 1}\}\\
+f_{u, 1} = \operatorname{val}_u + \sum_{v\in\operatorname{son}(u) f_{v, 0}}
+\end{cases}
+\]</span> 答案即为 <span class="math inline">\(\max\{f_{\mathrm{root}, 0}, f_{\mathrm{root}, 1}\}\)</span>。这是普及组的内容。</p>
+<h3 id="朴素的暴力">朴素的暴力</h3>
+<p>我们注意到，如果带上了修改点权的操作，则只会有从根到该节点的一条链上会产生 dp 值的变化。这是相当重要的一个思考过程。这样的暴力的时间复杂度为 <span class="math inline">\(O(nm)\)</span>（最坏情况下一次操作 <span class="math inline">\(O(n)\)</span>）</p>
+<p>思考一下这个过程：对链进行操作，无非就是树剖。所以我们考虑使用树链剖分解决这个问题。</p>
+<h3 id="树链剖分">树链剖分</h3>
+<p>树剖的原理是使用线段树或者其他的数据结构来维护一条重链。故其维护的信息必须满足结合律。什么是结合律呢？加法显然就是满足结合律的： <span class="math display">\[
+(A + B) + C = A + (B + C)
+\]</span> 然而这个 dp 值一看就不是很好维护出什么结合律的样子。。。</p>
+<p>怎么办？<strong>矩阵</strong>。矩阵乘法是满足结合律的。所以我们来看看如何利用矩阵来解决这个问题。</p>
+<h3 id="矩阵乘法">矩阵乘法</h3>
+<p>首先对这个 dp 式子进行一下修改。由于每次都要对所有儿子求个和太慢了，所以定义一个 <span class="math inline">\(g_{i, 0/1}\)</span> 来简化 dp 的式子。具体地，<span class="math inline">\(g_{i, 0}\)</span> 表示不选 <span class="math inline">\(i\)</span> 且只可以选 <span class="math inline">\(i\)</span> 的轻儿子所在子树的答案，<span class="math inline">\(g_{i, 1}\)</span> 表示选 <span class="math inline">\(i\)</span> 的最大答案。令 <span class="math inline">\(x\)</span> 表示 <span class="math inline">\(u\)</span> 点的重儿子，则 <span class="math display">\[
+\begin{cases}
+f_{u, 0} = g_{u, 0} + \max\{f_{x, 0}, f_{x, 1}\}\\
+f_{u, 1} = g_{u, 1} + f_{x, 0}
+\end{cases}
+\]</span> 统一一下形式，则 <span class="math display">\[
+\begin{cases}
+f_{u, 0} = \max\{g_{u, 0} + f_{x, 0}, g_{u, 0} + f_{x, 1}\}\\
+f_{u, 1} = \max\{g_{u, 1} + f_{x, 0}, g_{u, 1} -\infty \}
+\end{cases}
+\]</span> 如是，我们可构造矩阵 <span class="math inline">\(\begin{bmatrix}f_{u, 0}\\ f_{u, 1}\end{bmatrix}\)</span>。然后定义广义矩阵乘法，使得 <span class="math display">\[
+\begin{bmatrix}
+g_{u, 0} &amp; g_{u, 0}\\
+g_{u, 1} &amp; -\infty
+\end{bmatrix}
+\otimes
+\begin{bmatrix}
+f_{x, 0}\\
+f_{x, 1}
+\end{bmatrix}
+ = 
+\begin{bmatrix}
+f_{u, 0}\\
+f_{u, 1}
+\end{bmatrix}
+\]</span> 这里的广义矩阵乘法实际就是 <span class="math display">\[
+C_{i, j} = \max_{k = 1}^n(A_{i,k} + B_{k, j})
+\]</span> 不难发现这样的矩阵乘法也是满足结合律的。</p>
+<p>于是我们的矩阵乘法就定义好了。这里将矩阵封装起来就是下面这个样子：</p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode cpp"><code class="sourceCode cpp"><span id="cb1-1"><a aria-hidden="true" href="#cb1-1"></a><span class="kw">template</span>&lt;<span class="dt">int</span> row, <span class="dt">int</span> col&gt;</span>
+<span id="cb1-2"><a aria-hidden="true" href="#cb1-2"></a><span class="kw">struct</span> Matrix</span>
+<span id="cb1-3"><a aria-hidden="true" href="#cb1-3"></a>{</span>
+<span id="cb1-4"><a aria-hidden="true" href="#cb1-4"></a>    <span class="dt">int</span> ele[row][col];</span>
+<span id="cb1-5"><a aria-hidden="true" href="#cb1-5"></a>    Matrix(<span class="dt">int</span> _r = <span class="dv">0</span>, <span class="dt">int</span> _c = <span class="dv">0</span>) : r(_r), c(_c) {}</span>
+<span id="cb1-6"><a aria-hidden="true" href="#cb1-6"></a>};</span>
+<span id="cb1-7"><a aria-hidden="true" href="#cb1-7"></a></span>
+<span id="cb1-8"><a aria-hidden="true" href="#cb1-8"></a><span class="kw">template</span>&lt;<span class="dt">int</span> m, <span class="dt">int</span> n, <span class="dt">int</span> p&gt; Matrix&lt;m, p&gt; <span class="kw">operator</span>*(Matrix&lt;m, n&gt; m1, Matrix&lt;n, p&gt; m2)</span>
+<span id="cb1-9"><a aria-hidden="true" href="#cb1-9"></a>{</span>
+<span id="cb1-10"><a aria-hidden="true" href="#cb1-10"></a>    Matrix&lt;m, p&gt; ret;</span>
+<span id="cb1-11"><a aria-hidden="true" href="#cb1-11"></a><span class="pp">#define RET </span>ret.ele</span>
+<span id="cb1-12"><a aria-hidden="true" href="#cb1-12"></a><span class="pp">#define M1 </span>m1.ele</span>
+<span id="cb1-13"><a aria-hidden="true" href="#cb1-13"></a><span class="pp">#define M2 </span>m2.ele</span>
+<span id="cb1-14"><a aria-hidden="true" href="#cb1-14"></a>    memset(ret.ele, <span class="bn">0xcf</span>, <span class="kw">sizeof</span> ret.ele);</span>
+<span id="cb1-15"><a aria-hidden="true" href="#cb1-15"></a>    FOR(i, <span class="dv">0</span>, m - <span class="dv">1</span>)</span>
+<span id="cb1-16"><a aria-hidden="true" href="#cb1-16"></a>        FOR(k, <span class="dv">0</span>, n - <span class="dv">1</span>)</span>
+<span id="cb1-17"><a aria-hidden="true" href="#cb1-17"></a>            FOR(j, <span class="dv">0</span>, p - <span class="dv">1</span>)</span>
+<span id="cb1-18"><a aria-hidden="true" href="#cb1-18"></a>                RET[i][j] = max(RET[i][j], M1[i][k] + M2[k][j]);</span>
+<span id="cb1-19"><a aria-hidden="true" href="#cb1-19"></a>    <span class="cf">return</span> ret;</span>
+<span id="cb1-20"><a aria-hidden="true" href="#cb1-20"></a><span class="pp">#undef RET</span></span>
+<span id="cb1-21"><a aria-hidden="true" href="#cb1-21"></a><span class="pp">#undef m1</span></span>
+<span id="cb1-22"><a aria-hidden="true" href="#cb1-22"></a><span class="pp">#undef m2</span></span>
+<span id="cb1-23"><a aria-hidden="true" href="#cb1-23"></a>}</span></code></pre></div>
+<p>注意到这样子的单位矩阵应为 <span class="math display">\[
+\begin{bmatrix}
+0 &amp; -\infty\\
+-\infty &amp; 0
+\end{bmatrix}
+\]</span></p>
+<h3 id="查询节点的-dp-值">查询节点的 dp 值</h3>
+<p>现在回顾一下处理流程。</p>
+<p>假设现在要求出 <span class="math inline">\(x\)</span> 节点的 dp 值，怎么办呢？</p>
+<p>明确一点：每个节点的 <span class="math inline">\(f\)</span> 值根本就不重要，完全可以现算现用。我们需要记录的是每个节点的转移矩阵，并用线段树维护转移矩阵的乘积。</p>
+<p>于是乎，只需要知道 <span class="math inline">\(x\)</span> 所在重链的底部叶子节点 <span class="math inline">\(\operatorname{end}(x)\)</span> 的编号，然后获取 <span class="math inline">\(f_{\operatorname{end}(x)} = \begin{bmatrix}0\\ \operatorname{val}_{\operatorname{end}(x)}\end{bmatrix}\)</span>，然后连乘上转移矩阵到 <span class="math inline">\(x\)</span> 处就可以了。也就是 <code>query(dfn[x], dfn[end[x]]) * Matrix</code> 就可以了。</p>
+<h3 id="修改点权">修改点权</h3>
+<p>首先对于转移矩阵，只需要把含 <span class="math inline">\(g_{u, 1}\)</span> 的地方加上 <span class="math inline">\(\Delta\mathrm{val}_u\)</span> 就可以了。</p>
+<p>但是，这样一来，祖先的 dp 值就会发生改变，而对于 <span class="math inline">\(u\)</span> 的链顶节点，其一定为另一节点的轻儿子，所以 <code>fa[top[u]]</code> 的 <span class="math inline">\(g\)</span> 值是会发生变化的。</p>
+<p><code>fa[top[u]]</code> 的 <span class="math inline">\(g\)</span> 值由链顶节点的 <span class="math inline">\(f\)</span> 值产生，所以就需要查询出链顶的 <span class="math inline">\(f\)</span> 值。</p>
+<p>但这样一来，就又需要一条条链往上的一直修改了。。。</p>
+<p>总结一下流程吧：</p>
+<ol type="1">
+<li>把矩阵 <span class="math inline">\(\begin{bmatrix}g_{u, 0} &amp; g_{u, 0}\\ g_{u, 1} &amp; -\infty\end{bmatrix}\)</span> 的左下角加上 <span class="math inline">\(\Delta\mathrm{val}_u\)</span>，记录到矩阵 <span class="math inline">\(T\)</span> 中。</li>
+<li>在修改之前，查询一个 <span class="math inline">\(F = \begin{bmatrix}f_{\operatorname{top}(u), 0}\\f_{\operatorname{top}(u), 1}\end{bmatrix}\)</span></li>
+<li>线段树上修改 <span class="math inline">\(u\)</span> 节点的矩阵为 <span class="math inline">\(T\)</span>，然后查询 <span class="math inline">\(F' = \begin{bmatrix}f_{\operatorname{top}(u), 0}\\f_{\operatorname{top}(u), 1}\end{bmatrix}\)</span></li>
+<li><span class="math inline">\(u\leftarrow \mathrm{fa}(\mathrm{top}(u))\)</span>，若 <span class="math inline">\(u = 0\)</span>，结束流程</li>
+<li>把 <span class="math inline">\(u\)</span> 的矩阵第一行减去 <span class="math inline">\(\max\{F\}\)</span> 加上 <span class="math inline">\(\max\{F'\}\)</span>，左下角减去 <span class="math inline">\(F\)</span> 的 <span class="math inline">\(f_{\mathrm{top}(u), 1}\)</span> 加上 <span class="math inline">\(F'\)</span> 的 <span class="math inline">\(f_{\mathrm{top}(u), 1}\)</span></li>
+<li>回到第二步</li>
+</ol>
+<h3 id="具体实现">具体实现</h3>
+<p>遇到的坑点：</p>
+<ul>
+<li>线段树的查询函数可能会遇到查询 <span class="math inline">\([0, 0]\)</span> 的情况，故需要在线段树结构体中记录下一个节点对应的区间，避免死循环。</li>
+<li>单位矩阵的初始化不要弄错或者忘记。</li>
+</ul>
+<p>代码还是相当长的，内含注释。</p>
+<p><strong>注意，这段代码里面使用了重载了 <code>operator()</code> 运算符来访问矩阵内部元素的封装，请在自己编写时老老实实写宏定义或者不要偷懒。这种写法在不开 <code>-O2</code> 的情况下常数极大。</strong></p>
+<div class="sourceCode" id="cb2"><pre class="sourceCode cpp"><code class="sourceCode cpp"><span id="cb2-1"><a aria-hidden="true" href="#cb2-1"></a><span class="pp">#include </span><span class="im">&lt;cstdio&gt;</span></span>
+<span id="cb2-2"><a aria-hidden="true" href="#cb2-2"></a><span class="pp">#include </span><span class="im">&lt;cctype&gt;</span></span>
+<span id="cb2-3"><a aria-hidden="true" href="#cb2-3"></a><span class="pp">#include </span><span class="im">&lt;cstring&gt;</span></span>
+<span id="cb2-4"><a aria-hidden="true" href="#cb2-4"></a><span class="pp">#define il </span><span class="kw">inline</span></span>
+<span id="cb2-5"><a aria-hidden="true" href="#cb2-5"></a><span class="pp">#define FOR</span>(i,<span class="pp"> </span>a,<span class="pp"> </span>b)<span class="pp"> </span><span class="cf">for</span><span class="pp"> </span>(<span class="dt">int</span><span class="pp"> </span>i<span class="pp"> </span>=<span class="pp"> </span>a;<span class="pp"> </span>i<span class="pp"> </span>&lt;=<span class="pp"> </span>b;<span class="pp"> </span>++i)</span>
+<span id="cb2-6"><a aria-hidden="true" href="#cb2-6"></a><span class="pp">#define GO</span>(u)<span class="pp"> </span><span class="cf">for</span><span class="pp"> </span>(<span class="dt">int</span><span class="pp"> </span>i<span class="pp"> </span>=<span class="pp"> </span>head[u],<span class="pp"> </span>v<span class="pp"> </span>=<span class="pp"> </span>to[i];<span class="pp"> </span>i;<span class="pp"> </span>i<span class="pp"> </span>=<span class="pp"> </span>nxt[i],<span class="pp"> </span>v<span class="pp"> </span>=<span class="pp"> </span>to[i])</span>
+<span id="cb2-7"><a aria-hidden="true" href="#cb2-7"></a></span>
+<span id="cb2-8"><a aria-hidden="true" href="#cb2-8"></a><span class="at">const</span> <span class="dt">int</span> maxn = <span class="fl">1e5</span> + <span class="dv">5</span>, INF = <span class="bn">0x3f3f3f3f</span>;</span>
+<span id="cb2-9"><a aria-hidden="true" href="#cb2-9"></a></span>
+<span id="cb2-10"><a aria-hidden="true" href="#cb2-10"></a><span class="dt">int</span> head[maxn], to[maxn &lt;&lt; <span class="dv">1</span>], nxt[maxn &lt;&lt; <span class="dv">1</span>], cnte;</span>
+<span id="cb2-11"><a aria-hidden="true" href="#cb2-11"></a></span>
+<span id="cb2-12"><a aria-hidden="true" href="#cb2-12"></a>il <span class="dt">void</span> add(<span class="dt">int</span> u, <span class="dt">int</span> v)</span>
+<span id="cb2-13"><a aria-hidden="true" href="#cb2-13"></a>{</span>
+<span id="cb2-14"><a aria-hidden="true" href="#cb2-14"></a>    to[++cnte] = v;</span>
+<span id="cb2-15"><a aria-hidden="true" href="#cb2-15"></a>    nxt[cnte] = head[u];</span>
+<span id="cb2-16"><a aria-hidden="true" href="#cb2-16"></a>    head[u] = cnte;</span>
+<span id="cb2-17"><a aria-hidden="true" href="#cb2-17"></a>    <span class="cf">return</span>;</span>
+<span id="cb2-18"><a aria-hidden="true" href="#cb2-18"></a>}</span>
+<span id="cb2-19"><a aria-hidden="true" href="#cb2-19"></a></span>
+<span id="cb2-20"><a aria-hidden="true" href="#cb2-20"></a><span class="dt">int</span> read()</span>
+<span id="cb2-21"><a aria-hidden="true" href="#cb2-21"></a>{</span>
+<span id="cb2-22"><a aria-hidden="true" href="#cb2-22"></a>    <span class="dt">int</span> s = <span class="dv">0</span>, x = <span class="dv">0</span>;</span>
+<span id="cb2-23"><a aria-hidden="true" href="#cb2-23"></a>    <span class="dt">char</span> c = getchar();</span>
+<span id="cb2-24"><a aria-hidden="true" href="#cb2-24"></a>    <span class="cf">while</span> (!isdigit(c))</span>
+<span id="cb2-25"><a aria-hidden="true" href="#cb2-25"></a>        x |= (c == <span class="ch">'-'</span>), c = getchar();</span>
+<span id="cb2-26"><a aria-hidden="true" href="#cb2-26"></a>    <span class="cf">while</span> (isdigit(c))</span>
+<span id="cb2-27"><a aria-hidden="true" href="#cb2-27"></a>        s = s * <span class="dv">10</span> + c - <span class="ch">'0'</span>, c = getchar();</span>
+<span id="cb2-28"><a aria-hidden="true" href="#cb2-28"></a>    <span class="cf">return</span> x ? -s : s;</span>
+<span id="cb2-29"><a aria-hidden="true" href="#cb2-29"></a>}</span>
+<span id="cb2-30"><a aria-hidden="true" href="#cb2-30"></a></span>
+<span id="cb2-31"><a aria-hidden="true" href="#cb2-31"></a>il <span class="dt">int</span> max(<span class="dt">int</span> a, <span class="dt">int</span> b) {<span class="cf">return</span> a &gt; b ? a : b;}</span>
+<span id="cb2-32"><a aria-hidden="true" href="#cb2-32"></a></span>
+<span id="cb2-33"><a aria-hidden="true" href="#cb2-33"></a><span class="kw">template</span>&lt;<span class="dt">int</span> row, <span class="dt">int</span> col&gt;</span>
+<span id="cb2-34"><a aria-hidden="true" href="#cb2-34"></a><span class="kw">struct</span> Matrix</span>
+<span id="cb2-35"><a aria-hidden="true" href="#cb2-35"></a>{</span>
+<span id="cb2-36"><a aria-hidden="true" href="#cb2-36"></a>    <span class="dt">int</span> ele[row][col];</span>
+<span id="cb2-37"><a aria-hidden="true" href="#cb2-37"></a>    il <span class="dt">int</span> &amp;<span class="kw">operator</span>()(<span class="dt">int</span> a, <span class="dt">int</span> b) {<span class="cf">return</span> ele[a][b];}</span>
+<span id="cb2-38"><a aria-hidden="true" href="#cb2-38"></a>};</span>
+<span id="cb2-39"><a aria-hidden="true" href="#cb2-39"></a></span>
+<span id="cb2-40"><a aria-hidden="true" href="#cb2-40"></a><span class="kw">template</span>&lt;<span class="dt">int</span> m, <span class="dt">int</span> n, <span class="dt">int</span> p&gt; Matrix&lt;m, p&gt; <span class="kw">operator</span>*(Matrix&lt;m, n&gt; m1, Matrix&lt;n, p&gt; m2)</span>
+<span id="cb2-41"><a aria-hidden="true" href="#cb2-41"></a>{</span>
+<span id="cb2-42"><a aria-hidden="true" href="#cb2-42"></a>    Matrix&lt;m, p&gt; ret;</span>
+<span id="cb2-43"><a aria-hidden="true" href="#cb2-43"></a>    memset(ret.ele, <span class="bn">0xcf</span>, <span class="kw">sizeof</span> ret.ele);</span>
+<span id="cb2-44"><a aria-hidden="true" href="#cb2-44"></a>    FOR(i, <span class="dv">0</span>, m - <span class="dv">1</span>)</span>
+<span id="cb2-45"><a aria-hidden="true" href="#cb2-45"></a>        FOR(k, <span class="dv">0</span>, n - <span class="dv">1</span>)</span>
+<span id="cb2-46"><a aria-hidden="true" href="#cb2-46"></a>            FOR(j, <span class="dv">0</span>, p - <span class="dv">1</span>)</span>
+<span id="cb2-47"><a aria-hidden="true" href="#cb2-47"></a>                ret(i, j) = max(ret(i, j), m1(i, k) + m2(k, j));</span>
+<span id="cb2-48"><a aria-hidden="true" href="#cb2-48"></a>    <span class="cf">return</span> ret;</span>
+<span id="cb2-49"><a aria-hidden="true" href="#cb2-49"></a>}</span>
+<span id="cb2-50"><a aria-hidden="true" href="#cb2-50"></a></span>
+<span id="cb2-51"><a aria-hidden="true" href="#cb2-51"></a>Matrix&lt;<span class="dv">2</span>, <span class="dv">2</span>&gt; ID, g[maxn];</span>
+<span id="cb2-52"><a aria-hidden="true" href="#cb2-52"></a></span>
+<span id="cb2-53"><a aria-hidden="true" href="#cb2-53"></a><span class="dt">int</span> n, m, val[maxn];</span>
+<span id="cb2-54"><a aria-hidden="true" href="#cb2-54"></a></span>
+<span id="cb2-55"><a aria-hidden="true" href="#cb2-55"></a><span class="dt">int</span> fa[maxn], dep[maxn], size[maxn], son[maxn];</span>
+<span id="cb2-56"><a aria-hidden="true" href="#cb2-56"></a></span>
+<span id="cb2-57"><a aria-hidden="true" href="#cb2-57"></a><span class="dt">void</span> dfs1(<span class="dt">int</span> u, <span class="dt">int</span> f)</span>
+<span id="cb2-58"><a aria-hidden="true" href="#cb2-58"></a>{</span>
+<span id="cb2-59"><a aria-hidden="true" href="#cb2-59"></a>    fa[u] = f, size[u] = <span class="dv">1</span>, dep[u] = dep[f] + <span class="dv">1</span>;</span>
+<span id="cb2-60"><a aria-hidden="true" href="#cb2-60"></a>    GO(u)</span>
+<span id="cb2-61"><a aria-hidden="true" href="#cb2-61"></a>    {</span>
+<span id="cb2-62"><a aria-hidden="true" href="#cb2-62"></a>        <span class="cf">if</span> (v == f) <span class="cf">continue</span>;</span>
+<span id="cb2-63"><a aria-hidden="true" href="#cb2-63"></a>        dfs1(v, u);</span>
+<span id="cb2-64"><a aria-hidden="true" href="#cb2-64"></a>        size[u] += size[v];</span>
+<span id="cb2-65"><a aria-hidden="true" href="#cb2-65"></a>        <span class="cf">if</span> (size[v] &gt; size[son[u]]) son[u] = v;</span>
+<span id="cb2-66"><a aria-hidden="true" href="#cb2-66"></a>    }</span>
+<span id="cb2-67"><a aria-hidden="true" href="#cb2-67"></a>    <span class="cf">return</span>;</span>
+<span id="cb2-68"><a aria-hidden="true" href="#cb2-68"></a>}</span>
+<span id="cb2-69"><a aria-hidden="true" href="#cb2-69"></a></span>
+<span id="cb2-70"><a aria-hidden="true" href="#cb2-70"></a><span class="co">//正常的树剖dfs1</span></span>
+<span id="cb2-71"><a aria-hidden="true" href="#cb2-71"></a></span>
+<span id="cb2-72"><a aria-hidden="true" href="#cb2-72"></a><span class="dt">int</span> dfnClock, dfn[maxn], nfd[maxn], top[maxn], end[maxn];</span>
+<span id="cb2-73"><a aria-hidden="true" href="#cb2-73"></a><span class="dt">int</span> f[maxn][<span class="dv">2</span>];</span>
+<span id="cb2-74"><a aria-hidden="true" href="#cb2-74"></a></span>
+<span id="cb2-75"><a aria-hidden="true" href="#cb2-75"></a><span class="dt">void</span> dfs2(<span class="dt">int</span> u, <span class="dt">int</span> topf)</span>
+<span id="cb2-76"><a aria-hidden="true" href="#cb2-76"></a>{</span>
+<span id="cb2-77"><a aria-hidden="true" href="#cb2-77"></a>    top[u] = topf, dfn[u] = ++dfnClock, nfd[dfnClock] = u;<span class="co">//记录nfd是方便下面的线段树操作</span></span>
+<span id="cb2-78"><a aria-hidden="true" href="#cb2-78"></a>    <span class="cf">if</span> (!son[u])<span class="co">//叶子节点</span></span>
+<span id="cb2-79"><a aria-hidden="true" href="#cb2-79"></a>    {</span>
+<span id="cb2-80"><a aria-hidden="true" href="#cb2-80"></a>        f[u][<span class="dv">1</span>] = val[u];<span class="co">//f值很容易得到</span></span>
+<span id="cb2-81"><a aria-hidden="true" href="#cb2-81"></a>        g[u] = ID;<span class="co">//g矩阵赋为单位矩阵</span></span>
+<span id="cb2-82"><a aria-hidden="true" href="#cb2-82"></a>        end[u] = u;<span class="co">//记录链底部</span></span>
+<span id="cb2-83"><a aria-hidden="true" href="#cb2-83"></a>        <span class="cf">return</span>;</span>
+<span id="cb2-84"><a aria-hidden="true" href="#cb2-84"></a>    }</span>
+<span id="cb2-85"><a aria-hidden="true" href="#cb2-85"></a>    g[u](<span class="dv">1</span>, <span class="dv">0</span>) = val[u], g[u](<span class="dv">1</span>, <span class="dv">1</span>) = -INF;<span class="co">//初始化g矩阵</span></span>
+<span id="cb2-86"><a aria-hidden="true" href="#cb2-86"></a>    dfs2(son[u], topf);</span>
+<span id="cb2-87"><a aria-hidden="true" href="#cb2-87"></a>    end[u] = end[son[u]];<span class="co">//更新链底</span></span>
+<span id="cb2-88"><a aria-hidden="true" href="#cb2-88"></a>    GO(u)</span>
+<span id="cb2-89"><a aria-hidden="true" href="#cb2-89"></a>    {</span>
+<span id="cb2-90"><a aria-hidden="true" href="#cb2-90"></a>        <span class="cf">if</span> (v == fa[u] || v == son[u]) <span class="cf">continue</span>;</span>
+<span id="cb2-91"><a aria-hidden="true" href="#cb2-91"></a>        dfs2(v, v);</span>
+<span id="cb2-92"><a aria-hidden="true" href="#cb2-92"></a>        g[u](<span class="dv">0</span>, <span class="dv">0</span>) = g[u](<span class="dv">0</span>, <span class="dv">1</span>) += max(f[v][<span class="dv">0</span>], f[v][<span class="dv">1</span>]);<span class="co">//更新g</span></span>
+<span id="cb2-93"><a aria-hidden="true" href="#cb2-93"></a>        g[u](<span class="dv">1</span>, <span class="dv">0</span>) += f[v][<span class="dv">0</span>];<span class="co">//更新g</span></span>
+<span id="cb2-94"><a aria-hidden="true" href="#cb2-94"></a>    }</span>
+<span id="cb2-95"><a aria-hidden="true" href="#cb2-95"></a>    f[u][<span class="dv">0</span>] = g[u](<span class="dv">0</span>, <span class="dv">0</span>) + max(f[son[u]][<span class="dv">0</span>], f[son[u]][<span class="dv">1</span>]);<span class="co">//利用g更新f，以计算父亲的g和f</span></span>
+<span id="cb2-96"><a aria-hidden="true" href="#cb2-96"></a>    f[u][<span class="dv">1</span>] = g[u](<span class="dv">1</span>, <span class="dv">0</span>) + f[son[u]][<span class="dv">0</span>];</span>
+<span id="cb2-97"><a aria-hidden="true" href="#cb2-97"></a>    <span class="cf">return</span>;</span>
+<span id="cb2-98"><a aria-hidden="true" href="#cb2-98"></a>}</span>
+<span id="cb2-99"><a aria-hidden="true" href="#cb2-99"></a></span>
+<span id="cb2-100"><a aria-hidden="true" href="#cb2-100"></a><span class="kw">struct</span> node</span>
+<span id="cb2-101"><a aria-hidden="true" href="#cb2-101"></a>{</span>
+<span id="cb2-102"><a aria-hidden="true" href="#cb2-102"></a>    <span class="dt">int</span> l, r;<span class="co">//不记录l和r的话对于查询区间为[0,0] 的情况会死循环</span></span>
+<span id="cb2-103"><a aria-hidden="true" href="#cb2-103"></a>    Matrix&lt;<span class="dv">2</span>, <span class="dv">2</span>&gt; val;</span>
+<span id="cb2-104"><a aria-hidden="true" href="#cb2-104"></a>} tree[maxn &lt;&lt; <span class="dv">2</span>];</span>
+<span id="cb2-105"><a aria-hidden="true" href="#cb2-105"></a></span>
+<span id="cb2-106"><a aria-hidden="true" href="#cb2-106"></a><span class="pp">#define L </span>(k<span class="pp"> </span>&lt;&lt;<span class="pp"> </span><span class="dv">1</span>)</span>
+<span id="cb2-107"><a aria-hidden="true" href="#cb2-107"></a><span class="pp">#define R </span>(L<span class="pp"> </span>|<span class="pp"> </span><span class="dv">1</span>)</span>
+<span id="cb2-108"><a aria-hidden="true" href="#cb2-108"></a><span class="pp">#define M </span>((i<span class="pp"> </span>+<span class="pp"> </span>j)<span class="pp"> </span>&gt;&gt;<span class="pp"> </span><span class="dv">1</span>)</span>
+<span id="cb2-109"><a aria-hidden="true" href="#cb2-109"></a></span>
+<span id="cb2-110"><a aria-hidden="true" href="#cb2-110"></a>il <span class="dt">void</span> pushup(<span class="dt">int</span> k)</span>
+<span id="cb2-111"><a aria-hidden="true" href="#cb2-111"></a>{</span>
+<span id="cb2-112"><a aria-hidden="true" href="#cb2-112"></a>    tree[k].val = tree[L].val * tree[R].val;</span>
+<span id="cb2-113"><a aria-hidden="true" href="#cb2-113"></a>    <span class="cf">return</span>;</span>
+<span id="cb2-114"><a aria-hidden="true" href="#cb2-114"></a>}</span>
+<span id="cb2-115"><a aria-hidden="true" href="#cb2-115"></a></span>
+<span id="cb2-116"><a aria-hidden="true" href="#cb2-116"></a><span class="dt">void</span> build(<span class="dt">int</span> i, <span class="dt">int</span> j, <span class="dt">int</span> k)</span>
+<span id="cb2-117"><a aria-hidden="true" href="#cb2-117"></a>{</span>
+<span id="cb2-118"><a aria-hidden="true" href="#cb2-118"></a>    tree[k].l = i, tree[k].r = j;</span>
+<span id="cb2-119"><a aria-hidden="true" href="#cb2-119"></a>    <span class="cf">if</span> (i == j)</span>
+<span id="cb2-120"><a aria-hidden="true" href="#cb2-120"></a>    {</span>
+<span id="cb2-121"><a aria-hidden="true" href="#cb2-121"></a>        tree[k].val = g[nfd[i]];<span class="co">//此处即为nfd的作用</span></span>
+<span id="cb2-122"><a aria-hidden="true" href="#cb2-122"></a>        <span class="cf">return</span>;</span>
+<span id="cb2-123"><a aria-hidden="true" href="#cb2-123"></a>    }</span>
+<span id="cb2-124"><a aria-hidden="true" href="#cb2-124"></a>    build(i, M, L);</span>
+<span id="cb2-125"><a aria-hidden="true" href="#cb2-125"></a>    build(M + <span class="dv">1</span>, j, R);</span>
+<span id="cb2-126"><a aria-hidden="true" href="#cb2-126"></a>    pushup(k);</span>
+<span id="cb2-127"><a aria-hidden="true" href="#cb2-127"></a>    <span class="cf">return</span>;</span>
+<span id="cb2-128"><a aria-hidden="true" href="#cb2-128"></a>}</span>
+<span id="cb2-129"><a aria-hidden="true" href="#cb2-129"></a></span>
+<span id="cb2-130"><a aria-hidden="true" href="#cb2-130"></a>Matrix&lt;<span class="dv">2</span>, <span class="dv">2</span>&gt; query(<span class="dt">int</span> k, <span class="dt">int</span> x, <span class="dt">int</span> y)<span class="co">//查询操作，查询[x, y] 的矩阵连乘积</span></span>
+<span id="cb2-131"><a aria-hidden="true" href="#cb2-131"></a>{</span>
+<span id="cb2-132"><a aria-hidden="true" href="#cb2-132"></a>    <span class="dt">int</span> i = tree[k].l, j = tree[k].r;</span>
+<span id="cb2-133"><a aria-hidden="true" href="#cb2-133"></a>    <span class="cf">if</span> (x &lt;= i &amp;&amp; y &gt;= j) <span class="cf">return</span> tree[k].val;</span>
+<span id="cb2-134"><a aria-hidden="true" href="#cb2-134"></a>    Matrix&lt;<span class="dv">2</span>, <span class="dv">2</span>&gt; ret = ID;</span>
+<span id="cb2-135"><a aria-hidden="true" href="#cb2-135"></a>    <span class="cf">if</span> (x &lt;= M) ret = query(L, x, y);</span>
+<span id="cb2-136"><a aria-hidden="true" href="#cb2-136"></a>    <span class="cf">if</span> (y &gt; M) ret = ret * query(R, x, y);<span class="co">//注意乘的先后</span></span>
+<span id="cb2-137"><a aria-hidden="true" href="#cb2-137"></a>    <span class="cf">return</span> ret;</span>
+<span id="cb2-138"><a aria-hidden="true" href="#cb2-138"></a>}</span>
+<span id="cb2-139"><a aria-hidden="true" href="#cb2-139"></a></span>
+<span id="cb2-140"><a aria-hidden="true" href="#cb2-140"></a><span class="dt">void</span> modify(<span class="dt">int</span> k, <span class="dt">int</span> x, <span class="dt">int</span> p)<span class="co">//把线段树 x 点上的值赋为 p 的矩阵</span></span>
+<span id="cb2-141"><a aria-hidden="true" href="#cb2-141"></a>{</span>
+<span id="cb2-142"><a aria-hidden="true" href="#cb2-142"></a>    <span class="dt">int</span> i = tree[k].l, j = tree[k].r;</span>
+<span id="cb2-143"><a aria-hidden="true" href="#cb2-143"></a>    <span class="cf">if</span> (i == j)</span>
+<span id="cb2-144"><a aria-hidden="true" href="#cb2-144"></a>    {</span>
+<span id="cb2-145"><a aria-hidden="true" href="#cb2-145"></a>        tree[k].val = g[p];</span>
+<span id="cb2-146"><a aria-hidden="true" href="#cb2-146"></a>        <span class="cf">return</span>;</span>
+<span id="cb2-147"><a aria-hidden="true" href="#cb2-147"></a>    }</span>
+<span id="cb2-148"><a aria-hidden="true" href="#cb2-148"></a>    <span class="cf">if</span> (x &lt;= M) modify(L, x, p);</span>
+<span id="cb2-149"><a aria-hidden="true" href="#cb2-149"></a>    <span class="cf">else</span> modify(R, x, p);</span>
+<span id="cb2-150"><a aria-hidden="true" href="#cb2-150"></a>    pushup(k);</span>
+<span id="cb2-151"><a aria-hidden="true" href="#cb2-151"></a>    <span class="cf">return</span>;</span>
+<span id="cb2-152"><a aria-hidden="true" href="#cb2-152"></a>}</span>
+<span id="cb2-153"><a aria-hidden="true" href="#cb2-153"></a></span>
+<span id="cb2-154"><a aria-hidden="true" href="#cb2-154"></a>Matrix&lt;<span class="dv">2</span>, <span class="dv">1</span>&gt; query(<span class="dt">int</span> x)<span class="co">//查询 x 点的 dp 值</span></span>
+<span id="cb2-155"><a aria-hidden="true" href="#cb2-155"></a>{</span>
+<span id="cb2-156"><a aria-hidden="true" href="#cb2-156"></a>    Matrix&lt;<span class="dv">2</span>, <span class="dv">1</span>&gt; tmp;</span>
+<span id="cb2-157"><a aria-hidden="true" href="#cb2-157"></a>    tmp(<span class="dv">0</span>, <span class="dv">0</span>) = <span class="dv">0</span>, tmp(<span class="dv">1</span>, <span class="dv">0</span>) = val[end[x]];<span class="co">//最右边，初始化</span></span>
+<span id="cb2-158"><a aria-hidden="true" href="#cb2-158"></a>    <span class="cf">return</span> query(<span class="dv">1</span>, dfn[x], dfn[end[x]]) * tmp;<span class="co">//连乘给上去</span></span>
+<span id="cb2-159"><a aria-hidden="true" href="#cb2-159"></a>}</span>
+<span id="cb2-160"><a aria-hidden="true" href="#cb2-160"></a></span>
+<span id="cb2-161"><a aria-hidden="true" href="#cb2-161"></a><span class="dt">void</span> modify(<span class="dt">int</span> x, <span class="dt">int</span> y)<span class="co">//将 x 的点权修改为 y</span></span>
+<span id="cb2-162"><a aria-hidden="true" href="#cb2-162"></a>{</span>
+<span id="cb2-163"><a aria-hidden="true" href="#cb2-163"></a>    Matrix&lt;<span class="dv">2</span>, <span class="dv">1</span>&gt; F0, F1;</span>
+<span id="cb2-164"><a aria-hidden="true" href="#cb2-164"></a>    g[x](<span class="dv">1</span>, <span class="dv">0</span>) += y - val[x];</span>
+<span id="cb2-165"><a aria-hidden="true" href="#cb2-165"></a>    F0 = query(top[x]);</span>
+<span id="cb2-166"><a aria-hidden="true" href="#cb2-166"></a>    val[x] = y;</span>
+<span id="cb2-167"><a aria-hidden="true" href="#cb2-167"></a>    <span class="cf">while</span> (x)</span>
+<span id="cb2-168"><a aria-hidden="true" href="#cb2-168"></a>    {</span>
+<span id="cb2-169"><a aria-hidden="true" href="#cb2-169"></a>        modify(<span class="dv">1</span>, dfn[x], x);<span class="co">//把线段树上修改了</span></span>
+<span id="cb2-170"><a aria-hidden="true" href="#cb2-170"></a>        F1 = query(top[x]);</span>
+<span id="cb2-171"><a aria-hidden="true" href="#cb2-171"></a>        x = fa[top[x]];</span>
+<span id="cb2-172"><a aria-hidden="true" href="#cb2-172"></a>        g[x](<span class="dv">0</span>, <span class="dv">0</span>) = g[x](<span class="dv">0</span>, <span class="dv">1</span>) += max(F1(<span class="dv">0</span>, <span class="dv">0</span>), F1(<span class="dv">1</span>, <span class="dv">0</span>)) - max(F0(<span class="dv">0</span>, <span class="dv">0</span>), F0(<span class="dv">1</span>, <span class="dv">0</span>));</span>
+<span id="cb2-173"><a aria-hidden="true" href="#cb2-173"></a>        g[x](<span class="dv">1</span>, <span class="dv">0</span>) += F1(<span class="dv">0</span>, <span class="dv">0</span>) - F0(<span class="dv">0</span>, <span class="dv">0</span>);</span>
+<span id="cb2-174"><a aria-hidden="true" href="#cb2-174"></a>        F0 = query(top[x]);</span>
+<span id="cb2-175"><a aria-hidden="true" href="#cb2-175"></a>    }</span>
+<span id="cb2-176"><a aria-hidden="true" href="#cb2-176"></a>    <span class="cf">return</span>;</span>
+<span id="cb2-177"><a aria-hidden="true" href="#cb2-177"></a>}</span>
+<span id="cb2-178"><a aria-hidden="true" href="#cb2-178"></a></span>
+<span id="cb2-179"><a aria-hidden="true" href="#cb2-179"></a><span class="dt">int</span> main()</span>
+<span id="cb2-180"><a aria-hidden="true" href="#cb2-180"></a>{</span>
+<span id="cb2-181"><a aria-hidden="true" href="#cb2-181"></a>    ID(<span class="dv">1</span>, <span class="dv">0</span>) = ID(<span class="dv">0</span>, <span class="dv">1</span>) = -INF;<span class="co">//单位矩阵</span></span>
+<span id="cb2-182"><a aria-hidden="true" href="#cb2-182"></a>    n = read(), m = read();</span>
+<span id="cb2-183"><a aria-hidden="true" href="#cb2-183"></a>    FOR(i, <span class="dv">1</span>, n) val[i] = read();</span>
+<span id="cb2-184"><a aria-hidden="true" href="#cb2-184"></a>    FOR(i, <span class="dv">1</span>, n - <span class="dv">1</span>)</span>
+<span id="cb2-185"><a aria-hidden="true" href="#cb2-185"></a>    {</span>
+<span id="cb2-186"><a aria-hidden="true" href="#cb2-186"></a>        <span class="dt">int</span> u = read(), v = read();</span>
+<span id="cb2-187"><a aria-hidden="true" href="#cb2-187"></a>        add(u, v), add(v, u);</span>
+<span id="cb2-188"><a aria-hidden="true" href="#cb2-188"></a>    }</span>
+<span id="cb2-189"><a aria-hidden="true" href="#cb2-189"></a>    dfs1(<span class="dv">1</span>, <span class="dv">0</span>);</span>
+<span id="cb2-190"><a aria-hidden="true" href="#cb2-190"></a>    dfs2(<span class="dv">1</span>, <span class="dv">1</span>);</span>
+<span id="cb2-191"><a aria-hidden="true" href="#cb2-191"></a>    build(<span class="dv">1</span>, n, <span class="dv">1</span>);</span>
+<span id="cb2-192"><a aria-hidden="true" href="#cb2-192"></a>    <span class="cf">while</span> (m--)</span>
+<span id="cb2-193"><a aria-hidden="true" href="#cb2-193"></a>    {</span>
+<span id="cb2-194"><a aria-hidden="true" href="#cb2-194"></a>        <span class="dt">int</span> x = read(), y = read();</span>
+<span id="cb2-195"><a aria-hidden="true" href="#cb2-195"></a>        modify(x, y);</span>
+<span id="cb2-196"><a aria-hidden="true" href="#cb2-196"></a>        Matrix&lt;<span class="dv">2</span>, <span class="dv">1</span>&gt; ans = query(<span class="dv">1</span>);</span>
+<span id="cb2-197"><a aria-hidden="true" href="#cb2-197"></a>        printf(<span class="st">"</span><span class="sc">%d\n</span><span class="st">"</span>, max(ans(<span class="dv">0</span>, <span class="dv">0</span>), ans(<span class="dv">0</span>, <span class="dv">1</span>)));</span>
+<span id="cb2-198"><a aria-hidden="true" href="#cb2-198"></a>    }</span>
+<span id="cb2-199"><a aria-hidden="true" href="#cb2-199"></a>    <span class="cf">return</span> <span class="dv">0</span>;</span>
+<span id="cb2-200"><a aria-hidden="true" href="#cb2-200"></a>}</span></code></pre></div>
+<h2 id="序列上的动态-dp">序列上的动态 dp</h2>
+<h3 id="题意-1">题意</h3>
+<p><a href="https://www.luogu.com.cn/problem/SP1716">SPOJ GSS3</a></p>
+<p><span class="math inline">\(n\)</span> 个数，<span class="math inline">\(m\)</span> 次操作，<span class="math inline">\(n,m\le 50000\)</span>。每次操作要么修改 <span class="math inline">\(A_x\)</span> 为 <span class="math inline">\(y\)</span>，要么询问 <span class="math inline">\([l,r]\)</span> 的最大连续子段和。<span class="math inline">\(|A_i|\le 10000\)</span>。</p>
+<h3 id="其他的解法">其他的解法</h3>
+<p>使用线段树来记录区间和，区间最大子段和，区间最大前/后缀和，然后直接做。</p>
+<p>其实这确实是一道线段树的好题，可以和 GSS1 一起食用。</p>
+<p>这里不考虑这些做法。</p>
+<h3 id="从-dp-方程说起">从 dp 方程说起</h3>
+<p>众所周知，我们可以这样定义 dp 的状态：设 <span class="math inline">\(f_i\)</span> 为以 <span class="math inline">\(i\)</span> 结尾的最大子段和，<span class="math inline">\(g_i\)</span> 为 <span class="math inline">\([1,i]\)</span> 的最大子段和，则方程易得： <span class="math display">\[
+\begin{cases}
+f_i = \max\{f_{i - 1} + a_i, a_i\}\\
+g_i = \max\{f_i, g_{i - 1}\}
+\end{cases}
+\]</span> 然后我们尝试构造一下矩阵 <span class="math inline">\(\begin{bmatrix}f_i\\g_i\end{bmatrix}\)</span>，但是发现转移写不出来，故加一行：<span class="math inline">\(\begin{bmatrix}f_i\\g_i\\0\end{bmatrix}\)</span>则转移就有了： <span class="math display">\[
+\begin{bmatrix}
+a_i &amp; -\infty &amp; a_i\\
+a_i &amp; 0 &amp; a_i\\
+-\infty &amp; -\infty &amp; 0 &amp;
+\end{bmatrix}
+\otimes
+\begin{bmatrix}
+f_{i - 1}\\
+g_{i - 1}\\
+0
+\end{bmatrix}
+=
+\begin{bmatrix}
+f_{i}\\
+g_i\\
+0
+\end{bmatrix}
+\]</span> 这里的 <span class="math inline">\(\otimes\)</span> 和上文是一样的，都表示 <span class="math inline">\(C_{i,j} = \max_{k = 1}^n\{A_{i, k} + B_{k, j}\}\)</span>。具体的构造其实不难，自己手玩一下就可以构造出来。</p>
+<p>于是我们就用线段树来维护转移矩阵 <span class="math inline">\(\begin{bmatrix}a_i &amp; -\infty &amp; a_i\\a_i &amp; 0 &amp; a_i\\-\infty &amp; -\infty &amp; 0 &amp;\end{bmatrix}\)</span> 的连乘积（但是一定要注意是从右往左乘），每次修改操作就修改矩阵就可以了。查询操作就初始化一下 ，最右边的矩阵肯定是 <span class="math inline">\(\begin{bmatrix}a_l\\a_l\\0\end{bmatrix}\)</span>，查询出 <span class="math inline">\([l + 1, r]\)</span> 的连乘积再左乘给初始矩阵就得解了。</p>
+<p>单位矩阵易构造为 <span class="math display">\[
+\begin{bmatrix}
+0 &amp; -\infty &amp; -\infty\\
+-\infty &amp; 0 &amp; -\infty\\
+-\infty &amp; -\infty &amp; 0
+\end{bmatrix}
+\]</span></p>
+<h3 id="实现">实现</h3>
+<p><strong>注意，这段代码里面使用了重载了 <code>operator()</code> 运算符来访问矩阵内部元素的封装，请在自己编写时老老实实写宏定义或者不要偷懒。这种写法在不开 <code>-O2</code> 的情况下常数极大。</strong></p>
+<div class="sourceCode" id="cb3"><pre class="sourceCode cpp"><code class="sourceCode cpp"><span id="cb3-1"><a aria-hidden="true" href="#cb3-1"></a><span class="pp">#include </span><span class="im">&lt;cstdio&gt;</span></span>
+<span id="cb3-2"><a aria-hidden="true" href="#cb3-2"></a><span class="pp">#include </span><span class="im">&lt;cctype&gt;</span></span>
+<span id="cb3-3"><a aria-hidden="true" href="#cb3-3"></a><span class="pp">#include </span><span class="im">&lt;cstring&gt;</span></span>
+<span id="cb3-4"><a aria-hidden="true" href="#cb3-4"></a><span class="pp">#define FOR</span>(i,<span class="pp"> </span>a,<span class="pp"> </span>b)<span class="pp"> </span><span class="cf">for</span><span class="pp"> </span>(<span class="dt">int</span><span class="pp"> </span>i<span class="pp"> </span>=<span class="pp"> </span>a;<span class="pp"> </span>i<span class="pp"> </span>&lt;=<span class="pp"> </span>b;<span class="pp"> </span>++i)</span>
+<span id="cb3-5"><a aria-hidden="true" href="#cb3-5"></a><span class="pp">#define DEC</span>(i,<span class="pp"> </span>a,<span class="pp"> </span>b)<span class="pp"> </span><span class="cf">for</span><span class="pp"> </span>(<span class="dt">int</span><span class="pp"> </span>i<span class="pp"> </span>=<span class="pp"> </span>a;<span class="pp"> </span>i<span class="pp"> </span>&gt;=<span class="pp"> </span>b;<span class="pp"> </span>--i)</span>
+<span id="cb3-6"><a aria-hidden="true" href="#cb3-6"></a></span>
+<span id="cb3-7"><a aria-hidden="true" href="#cb3-7"></a><span class="at">const</span> <span class="dt">int</span> maxn = <span class="fl">1e5</span> + <span class="dv">5</span>, INF = <span class="bn">0x3f3f3f3f</span>;</span>
+<span id="cb3-8"><a aria-hidden="true" href="#cb3-8"></a></span>
+<span id="cb3-9"><a aria-hidden="true" href="#cb3-9"></a><span class="dt">int</span> read()</span>
+<span id="cb3-10"><a aria-hidden="true" href="#cb3-10"></a>{</span>
+<span id="cb3-11"><a aria-hidden="true" href="#cb3-11"></a>    <span class="dt">int</span> s = <span class="dv">0</span>, x = <span class="dv">0</span>;</span>
+<span id="cb3-12"><a aria-hidden="true" href="#cb3-12"></a>    <span class="dt">char</span> c = getchar();</span>
+<span id="cb3-13"><a aria-hidden="true" href="#cb3-13"></a>    <span class="cf">while</span> (!isdigit(c))</span>
+<span id="cb3-14"><a aria-hidden="true" href="#cb3-14"></a>        x |= (c == <span class="ch">'-'</span>), c = getchar();</span>
+<span id="cb3-15"><a aria-hidden="true" href="#cb3-15"></a>    <span class="cf">while</span> (isdigit(c))</span>
+<span id="cb3-16"><a aria-hidden="true" href="#cb3-16"></a>        s = s * <span class="dv">10</span> + c - <span class="ch">'0'</span>, c = getchar();</span>
+<span id="cb3-17"><a aria-hidden="true" href="#cb3-17"></a>    <span class="cf">return</span> x ? -s : s;</span>
+<span id="cb3-18"><a aria-hidden="true" href="#cb3-18"></a>}</span>
+<span id="cb3-19"><a aria-hidden="true" href="#cb3-19"></a></span>
+<span id="cb3-20"><a aria-hidden="true" href="#cb3-20"></a><span class="kw">inline</span> <span class="dt">int</span> max(<span class="dt">int</span> a, <span class="dt">int</span> b) {<span class="cf">return</span> a &gt; b ? a : b;}</span>
+<span id="cb3-21"><a aria-hidden="true" href="#cb3-21"></a></span>
+<span id="cb3-22"><a aria-hidden="true" href="#cb3-22"></a><span class="kw">template</span>&lt;<span class="dt">int</span> row, <span class="dt">int</span> col&gt;</span>
+<span id="cb3-23"><a aria-hidden="true" href="#cb3-23"></a><span class="kw">struct</span> Matrix</span>
+<span id="cb3-24"><a aria-hidden="true" href="#cb3-24"></a>{</span>
+<span id="cb3-25"><a aria-hidden="true" href="#cb3-25"></a>    <span class="dt">int</span> ele[row][col];</span>
+<span id="cb3-26"><a aria-hidden="true" href="#cb3-26"></a>    Matrix() {}</span>
+<span id="cb3-27"><a aria-hidden="true" href="#cb3-27"></a>    <span class="dt">int</span> &amp;<span class="kw">operator</span>()(<span class="dt">int</span> a, <span class="dt">int</span> b) {<span class="cf">return</span> ele[a][b];}</span>
+<span id="cb3-28"><a aria-hidden="true" href="#cb3-28"></a>};</span>
+<span id="cb3-29"><a aria-hidden="true" href="#cb3-29"></a></span>
+<span id="cb3-30"><a aria-hidden="true" href="#cb3-30"></a><span class="kw">template</span>&lt;<span class="dt">int</span> m, <span class="dt">int</span> n, <span class="dt">int</span> p&gt; Matrix&lt;m, p&gt; <span class="kw">operator</span>*(Matrix&lt;m, n&gt; m1, Matrix&lt;n, p&gt; m2)</span>
+<span id="cb3-31"><a aria-hidden="true" href="#cb3-31"></a>{</span>
+<span id="cb3-32"><a aria-hidden="true" href="#cb3-32"></a>    Matrix&lt;m, p&gt; ret;</span>
+<span id="cb3-33"><a aria-hidden="true" href="#cb3-33"></a>    memset(ret.ele, <span class="bn">0xcf</span>, <span class="kw">sizeof</span> ret.ele);</span>
+<span id="cb3-34"><a aria-hidden="true" href="#cb3-34"></a>    FOR(i, <span class="dv">0</span>, m - <span class="dv">1</span>)</span>
+<span id="cb3-35"><a aria-hidden="true" href="#cb3-35"></a>        FOR(k, <span class="dv">0</span>, n - <span class="dv">1</span>)</span>
+<span id="cb3-36"><a aria-hidden="true" href="#cb3-36"></a>            FOR(j, <span class="dv">0</span>, p - <span class="dv">1</span>)</span>
+<span id="cb3-37"><a aria-hidden="true" href="#cb3-37"></a>                ret(i, j) = max(ret(i, j), m1(i, k) + m2(k, j));</span>
+<span id="cb3-38"><a aria-hidden="true" href="#cb3-38"></a>    <span class="cf">return</span> ret;</span>
+<span id="cb3-39"><a aria-hidden="true" href="#cb3-39"></a>}</span>
+<span id="cb3-40"><a aria-hidden="true" href="#cb3-40"></a></span>
+<span id="cb3-41"><a aria-hidden="true" href="#cb3-41"></a><span class="kw">struct</span> node</span>
+<span id="cb3-42"><a aria-hidden="true" href="#cb3-42"></a>{</span>
+<span id="cb3-43"><a aria-hidden="true" href="#cb3-43"></a>    <span class="dt">int</span> l, r;</span>
+<span id="cb3-44"><a aria-hidden="true" href="#cb3-44"></a>    Matrix&lt;<span class="dv">3</span>, <span class="dv">3</span>&gt; val;</span>
+<span id="cb3-45"><a aria-hidden="true" href="#cb3-45"></a>} tree[maxn &lt;&lt; <span class="dv">2</span>];</span>
+<span id="cb3-46"><a aria-hidden="true" href="#cb3-46"></a></span>
+<span id="cb3-47"><a aria-hidden="true" href="#cb3-47"></a><span class="dt">int</span> n, a[maxn];</span>
+<span id="cb3-48"><a aria-hidden="true" href="#cb3-48"></a>Matrix&lt;<span class="dv">3</span>, <span class="dv">3</span>&gt; ID;</span>
+<span id="cb3-49"><a aria-hidden="true" href="#cb3-49"></a></span>
+<span id="cb3-50"><a aria-hidden="true" href="#cb3-50"></a><span class="pp">#define L </span>(k<span class="pp"> </span>&lt;&lt;<span class="pp"> </span><span class="dv">1</span>)</span>
+<span id="cb3-51"><a aria-hidden="true" href="#cb3-51"></a><span class="pp">#define R </span>(L<span class="pp"> </span>|<span class="pp"> </span><span class="dv">1</span>)</span>
+<span id="cb3-52"><a aria-hidden="true" href="#cb3-52"></a><span class="pp">#define M </span>((i<span class="pp"> </span>+<span class="pp"> </span>j)<span class="pp"> </span>&gt;&gt;<span class="pp"> </span><span class="dv">1</span>)</span>
+<span id="cb3-53"><a aria-hidden="true" href="#cb3-53"></a></span>
+<span id="cb3-54"><a aria-hidden="true" href="#cb3-54"></a><span class="dt">void</span> pushup(<span class="dt">int</span> k)</span>
+<span id="cb3-55"><a aria-hidden="true" href="#cb3-55"></a>{</span>
+<span id="cb3-56"><a aria-hidden="true" href="#cb3-56"></a>    tree[k].val = tree[R].val * tree[L].val;</span>
+<span id="cb3-57"><a aria-hidden="true" href="#cb3-57"></a>    <span class="cf">return</span>;</span>
+<span id="cb3-58"><a aria-hidden="true" href="#cb3-58"></a>}</span>
+<span id="cb3-59"><a aria-hidden="true" href="#cb3-59"></a></span>
+<span id="cb3-60"><a aria-hidden="true" href="#cb3-60"></a>Matrix&lt;<span class="dv">3</span>, <span class="dv">3</span>&gt; makeMat(<span class="dt">int</span> x)</span>
+<span id="cb3-61"><a aria-hidden="true" href="#cb3-61"></a>{</span>
+<span id="cb3-62"><a aria-hidden="true" href="#cb3-62"></a>    Matrix&lt;<span class="dv">3</span>, <span class="dv">3</span>&gt; ret;</span>
+<span id="cb3-63"><a aria-hidden="true" href="#cb3-63"></a>    ret(<span class="dv">0</span>, <span class="dv">0</span>) = ret(<span class="dv">0</span>, <span class="dv">2</span>) = ret(<span class="dv">1</span>, <span class="dv">0</span>) = ret(<span class="dv">1</span>, <span class="dv">2</span>) = x;</span>
+<span id="cb3-64"><a aria-hidden="true" href="#cb3-64"></a>    ret(<span class="dv">0</span>, <span class="dv">1</span>) = ret(<span class="dv">2</span>, <span class="dv">0</span>) = ret(<span class="dv">2</span>, <span class="dv">1</span>) = -INF;</span>
+<span id="cb3-65"><a aria-hidden="true" href="#cb3-65"></a>    ret(<span class="dv">1</span>, <span class="dv">1</span>) = ret(<span class="dv">2</span>, <span class="dv">2</span>) = <span class="dv">0</span>;</span>
+<span id="cb3-66"><a aria-hidden="true" href="#cb3-66"></a>    <span class="cf">return</span> ret;</span>
+<span id="cb3-67"><a aria-hidden="true" href="#cb3-67"></a>}</span>
+<span id="cb3-68"><a aria-hidden="true" href="#cb3-68"></a></span>
+<span id="cb3-69"><a aria-hidden="true" href="#cb3-69"></a><span class="dt">void</span> build(<span class="dt">int</span> i, <span class="dt">int</span> j, <span class="dt">int</span> k)</span>
+<span id="cb3-70"><a aria-hidden="true" href="#cb3-70"></a>{</span>
+<span id="cb3-71"><a aria-hidden="true" href="#cb3-71"></a>    tree[k].l = i, tree[k].r = j;</span>
+<span id="cb3-72"><a aria-hidden="true" href="#cb3-72"></a>    <span class="cf">if</span> (i == j)</span>
+<span id="cb3-73"><a aria-hidden="true" href="#cb3-73"></a>    {</span>
+<span id="cb3-74"><a aria-hidden="true" href="#cb3-74"></a>        tree[k].val = makeMat(a[i] = read());</span>
+<span id="cb3-75"><a aria-hidden="true" href="#cb3-75"></a>        <span class="cf">return</span>;</span>
+<span id="cb3-76"><a aria-hidden="true" href="#cb3-76"></a>    }</span>
+<span id="cb3-77"><a aria-hidden="true" href="#cb3-77"></a>    build(i, M, L);</span>
+<span id="cb3-78"><a aria-hidden="true" href="#cb3-78"></a>    build(M + <span class="dv">1</span>, j, R);</span>
+<span id="cb3-79"><a aria-hidden="true" href="#cb3-79"></a>    pushup(k);</span>
+<span id="cb3-80"><a aria-hidden="true" href="#cb3-80"></a>    <span class="cf">return</span>;</span>
+<span id="cb3-81"><a aria-hidden="true" href="#cb3-81"></a>}</span>
+<span id="cb3-82"><a aria-hidden="true" href="#cb3-82"></a></span>
+<span id="cb3-83"><a aria-hidden="true" href="#cb3-83"></a>Matrix&lt;<span class="dv">3</span>, <span class="dv">3</span>&gt; query(<span class="dt">int</span> k, <span class="dt">int</span> x, <span class="dt">int</span> y)</span>
+<span id="cb3-84"><a aria-hidden="true" href="#cb3-84"></a>{</span>
+<span id="cb3-85"><a aria-hidden="true" href="#cb3-85"></a>    <span class="cf">if</span> (x &gt; y) <span class="cf">return</span> ID;</span>
+<span id="cb3-86"><a aria-hidden="true" href="#cb3-86"></a>    <span class="dt">int</span> i = tree[k].l, j = tree[k].r;</span>
+<span id="cb3-87"><a aria-hidden="true" href="#cb3-87"></a>    <span class="cf">if</span> (x &lt;= i &amp;&amp; y &gt;= j) <span class="cf">return</span> tree[k].val;</span>
+<span id="cb3-88"><a aria-hidden="true" href="#cb3-88"></a>    Matrix&lt;<span class="dv">3</span>, <span class="dv">3</span>&gt; ret = ID;</span>
+<span id="cb3-89"><a aria-hidden="true" href="#cb3-89"></a>    <span class="cf">if</span> (x &lt;= M) ret = query(L, x, y);</span>
+<span id="cb3-90"><a aria-hidden="true" href="#cb3-90"></a>    <span class="cf">if</span> (y &gt; M) ret = query(R, x, y) * ret;</span>
+<span id="cb3-91"><a aria-hidden="true" href="#cb3-91"></a>    <span class="cf">return</span> ret;</span>
+<span id="cb3-92"><a aria-hidden="true" href="#cb3-92"></a>}</span>
+<span id="cb3-93"><a aria-hidden="true" href="#cb3-93"></a></span>
+<span id="cb3-94"><a aria-hidden="true" href="#cb3-94"></a><span class="dt">void</span> modify(<span class="dt">int</span> k, <span class="dt">int</span> x, <span class="dt">int</span> z)</span>
+<span id="cb3-95"><a aria-hidden="true" href="#cb3-95"></a>{</span>
+<span id="cb3-96"><a aria-hidden="true" href="#cb3-96"></a>    <span class="dt">int</span> i = tree[k].l, j = tree[k].r;</span>
+<span id="cb3-97"><a aria-hidden="true" href="#cb3-97"></a>    <span class="cf">if</span> (i == j)</span>
+<span id="cb3-98"><a aria-hidden="true" href="#cb3-98"></a>    {</span>
+<span id="cb3-99"><a aria-hidden="true" href="#cb3-99"></a>        tree[k].val = makeMat(a[i] = z);</span>
+<span id="cb3-100"><a aria-hidden="true" href="#cb3-100"></a>        <span class="cf">return</span>;</span>
+<span id="cb3-101"><a aria-hidden="true" href="#cb3-101"></a>    }</span>
+<span id="cb3-102"><a aria-hidden="true" href="#cb3-102"></a>    <span class="cf">if</span> (x &lt;= M) modify(L, x, z);</span>
+<span id="cb3-103"><a aria-hidden="true" href="#cb3-103"></a>    <span class="cf">else</span> modify(R, x, z);</span>
+<span id="cb3-104"><a aria-hidden="true" href="#cb3-104"></a>    pushup(k);</span>
+<span id="cb3-105"><a aria-hidden="true" href="#cb3-105"></a>    <span class="cf">return</span>;</span>
+<span id="cb3-106"><a aria-hidden="true" href="#cb3-106"></a>}</span>
+<span id="cb3-107"><a aria-hidden="true" href="#cb3-107"></a></span>
+<span id="cb3-108"><a aria-hidden="true" href="#cb3-108"></a><span class="dt">int</span> main()</span>
+<span id="cb3-109"><a aria-hidden="true" href="#cb3-109"></a>{</span>
+<span id="cb3-110"><a aria-hidden="true" href="#cb3-110"></a>    ID(<span class="dv">0</span>, <span class="dv">1</span>) = ID(<span class="dv">0</span>, <span class="dv">2</span>) = ID(<span class="dv">1</span>, <span class="dv">0</span>) = ID(<span class="dv">1</span>, <span class="dv">2</span>) = ID(<span class="dv">2</span>, <span class="dv">0</span>) = ID(<span class="dv">2</span>, <span class="dv">1</span>) = -INF;</span>
+<span id="cb3-111"><a aria-hidden="true" href="#cb3-111"></a>    n = read();</span>
+<span id="cb3-112"><a aria-hidden="true" href="#cb3-112"></a>    build(<span class="dv">1</span>, n, <span class="dv">1</span>);</span>
+<span id="cb3-113"><a aria-hidden="true" href="#cb3-113"></a>    <span class="dt">int</span> q = read();</span>
+<span id="cb3-114"><a aria-hidden="true" href="#cb3-114"></a>    <span class="cf">while</span> (q--)</span>
+<span id="cb3-115"><a aria-hidden="true" href="#cb3-115"></a>    {</span>
+<span id="cb3-116"><a aria-hidden="true" href="#cb3-116"></a>        <span class="dt">int</span> op = read(), x = read(), y = read();</span>
+<span id="cb3-117"><a aria-hidden="true" href="#cb3-117"></a>        <span class="cf">if</span> (!op) modify(<span class="dv">1</span>, x, y);</span>
+<span id="cb3-118"><a aria-hidden="true" href="#cb3-118"></a>        <span class="cf">else</span></span>
+<span id="cb3-119"><a aria-hidden="true" href="#cb3-119"></a>        {</span>
+<span id="cb3-120"><a aria-hidden="true" href="#cb3-120"></a>            Matrix&lt;<span class="dv">3</span>, <span class="dv">1</span>&gt; ret;</span>
+<span id="cb3-121"><a aria-hidden="true" href="#cb3-121"></a>            ret(<span class="dv">0</span>, <span class="dv">0</span>) = ret(<span class="dv">1</span>, <span class="dv">0</span>) = a[x], ret(<span class="dv">2</span>, <span class="dv">0</span>) = <span class="dv">0</span>;</span>
+<span id="cb3-122"><a aria-hidden="true" href="#cb3-122"></a>            ret = query(<span class="dv">1</span>, x + <span class="dv">1</span>, y) * ret;</span>
+<span id="cb3-123"><a aria-hidden="true" href="#cb3-123"></a>            printf(<span class="st">"</span><span class="sc">%d\n</span><span class="st">"</span>, ret(<span class="dv">1</span>, <span class="dv">0</span>));</span>
+<span id="cb3-124"><a aria-hidden="true" href="#cb3-124"></a>        }</span>
+<span id="cb3-125"><a aria-hidden="true" href="#cb3-125"></a>    }</span>
+<span id="cb3-126"><a aria-hidden="true" href="#cb3-126"></a>    <span class="cf">return</span> <span class="dv">0</span>;</span>
+<span id="cb3-127"><a aria-hidden="true" href="#cb3-127"></a>}</span></code></pre></div>
+<p>当然也有另一种实现，就是只获取所有矩阵的连乘积，然后取 <span class="math inline">\((1, 2)\)</span> 位置上的元素，不难发现 <span class="math inline">\((1, 2)\)</span> 上的元素就是 <span class="math inline">\(g\)</span>。实际上都可以 AC。</p>
+<h2 id="noip2018-d2t3-保卫王国">NOIP2018 D2T3 保卫王国</h2>
+<h3 id="题意-2">题意</h3>
+<p><a href="https://www.luogu.com.cn/problem/P5024">题面</a>。给定一棵有点权的树，每次操作选定两个点强制选或不选，问这次操作下整棵树的最小点覆盖。</p>
+<h3 id="动态-dp-的思路">动态 DP 的思路</h3>
+<p>总点权 = 最大独立集 + 最小点覆盖。直接用求最大独立集的方法做就行了。</p>
+<p>强制选一个点即为这个点不能在最大独立集中出现，将点权设为 <span class="math inline">\(-\infty\)</span> 即可。</p>
+<p>强制不选某个点即为这个点必须在最大独立集中出现，将点权设为 <span class="math inline">\(+\infty\)</span> 并让总点权也加上 <span class="math inline">\(+\infty\)</span> 即可。</p>
+<p>剩下的就是注意常数了。</p>
+<div class="sourceCode" id="cb4"><pre class="sourceCode cpp"><code class="sourceCode cpp"><span id="cb4-1"><a aria-hidden="true" href="#cb4-1"></a><span class="pp">#include </span><span class="im">&lt;cstdio&gt;</span></span>
+<span id="cb4-2"><a aria-hidden="true" href="#cb4-2"></a><span class="pp">#include </span><span class="im">&lt;cctype&gt;</span></span>
+<span id="cb4-3"><a aria-hidden="true" href="#cb4-3"></a><span class="pp">#include </span><span class="im">&lt;cstring&gt;</span></span>
+<span id="cb4-4"><a aria-hidden="true" href="#cb4-4"></a><span class="pp">#define il </span><span class="kw">inline</span></span>
+<span id="cb4-5"><a aria-hidden="true" href="#cb4-5"></a><span class="pp">#define FOR</span>(i,<span class="pp"> </span>a,<span class="pp"> </span>b)<span class="pp"> </span><span class="cf">for</span><span class="pp"> </span>(<span class="dt">int</span><span class="pp"> </span>i<span class="pp"> </span>=<span class="pp"> </span>a;<span class="pp"> </span>i<span class="pp"> </span>&lt;=<span class="pp"> </span>b;<span class="pp"> </span>++i)</span>
+<span id="cb4-6"><a aria-hidden="true" href="#cb4-6"></a><span class="pp">#define DEC</span>(i,<span class="pp"> </span>a,<span class="pp"> </span>b)<span class="pp"> </span><span class="cf">for</span><span class="pp"> </span>(<span class="dt">int</span><span class="pp"> </span>i<span class="pp"> </span>=<span class="pp"> </span>a;<span class="pp"> </span>i<span class="pp"> </span>&gt;=<span class="pp"> </span>b;<span class="pp"> </span>--i)</span>
+<span id="cb4-7"><a aria-hidden="true" href="#cb4-7"></a><span class="pp">#define GO</span>(u)<span class="pp"> </span><span class="cf">for</span><span class="pp"> </span>(<span class="dt">int</span><span class="pp"> </span>i<span class="pp"> </span>=<span class="pp"> </span>head[u],<span class="pp"> </span>v<span class="pp"> </span>=<span class="pp"> </span>to[i];<span class="pp"> </span>i;<span class="pp"> </span>i<span class="pp"> </span>=<span class="pp"> </span>nxt[i],<span class="pp"> </span>v<span class="pp"> </span>=<span class="pp"> </span>to[i])</span>
+<span id="cb4-8"><a aria-hidden="true" href="#cb4-8"></a></span>
+<span id="cb4-9"><a aria-hidden="true" href="#cb4-9"></a><span class="at">const</span> <span class="dt">int</span> maxn = <span class="fl">1e5</span> + <span class="dv">5</span>;</span>
+<span id="cb4-10"><a aria-hidden="true" href="#cb4-10"></a></span>
+<span id="cb4-11"><a aria-hidden="true" href="#cb4-11"></a><span class="dt">int</span> read()</span>
+<span id="cb4-12"><a aria-hidden="true" href="#cb4-12"></a>{</span>
+<span id="cb4-13"><a aria-hidden="true" href="#cb4-13"></a>    <span class="dt">int</span> s = <span class="dv">0</span>, x = <span class="dv">0</span>;</span>
+<span id="cb4-14"><a aria-hidden="true" href="#cb4-14"></a>    <span class="dt">char</span> c = getchar();</span>
+<span id="cb4-15"><a aria-hidden="true" href="#cb4-15"></a>    <span class="cf">while</span> (!isdigit(c))</span>
+<span id="cb4-16"><a aria-hidden="true" href="#cb4-16"></a>        x |= (c == <span class="ch">'-'</span>), c = getchar();</span>
+<span id="cb4-17"><a aria-hidden="true" href="#cb4-17"></a>    <span class="cf">while</span> (isdigit(c))</span>
+<span id="cb4-18"><a aria-hidden="true" href="#cb4-18"></a>        s = s * <span class="dv">10</span> + c - <span class="ch">'0'</span>, c = getchar();</span>
+<span id="cb4-19"><a aria-hidden="true" href="#cb4-19"></a>    <span class="cf">return</span> x ? -s : s;</span>
+<span id="cb4-20"><a aria-hidden="true" href="#cb4-20"></a>}</span>
+<span id="cb4-21"><a aria-hidden="true" href="#cb4-21"></a></span>
+<span id="cb4-22"><a aria-hidden="true" href="#cb4-22"></a><span class="dt">int</span> head[maxn], to[maxn &lt;&lt; <span class="dv">1</span>], nxt[maxn &lt;&lt; <span class="dv">1</span>], cnte;</span>
+<span id="cb4-23"><a aria-hidden="true" href="#cb4-23"></a></span>
+<span id="cb4-24"><a aria-hidden="true" href="#cb4-24"></a>il <span class="dt">void</span> add(<span class="dt">int</span> u, <span class="dt">int</span> v)</span>
+<span id="cb4-25"><a aria-hidden="true" href="#cb4-25"></a>{</span>
+<span id="cb4-26"><a aria-hidden="true" href="#cb4-26"></a>    to[++cnte] = v;</span>
+<span id="cb4-27"><a aria-hidden="true" href="#cb4-27"></a>    nxt[cnte] = head[u];</span>
+<span id="cb4-28"><a aria-hidden="true" href="#cb4-28"></a>    head[u] = cnte;</span>
+<span id="cb4-29"><a aria-hidden="true" href="#cb4-29"></a>    <span class="cf">return</span>;</span>
+<span id="cb4-30"><a aria-hidden="true" href="#cb4-30"></a>}</span>
+<span id="cb4-31"><a aria-hidden="true" href="#cb4-31"></a></span>
+<span id="cb4-32"><a aria-hidden="true" href="#cb4-32"></a><span class="kw">typedef</span> <span class="dt">long</span> <span class="dt">long</span> ll;</span>
+<span id="cb4-33"><a aria-hidden="true" href="#cb4-33"></a></span>
+<span id="cb4-34"><a aria-hidden="true" href="#cb4-34"></a><span class="at">const</span> ll INF = <span class="fl">1e15</span>;</span>
+<span id="cb4-35"><a aria-hidden="true" href="#cb4-35"></a></span>
+<span id="cb4-36"><a aria-hidden="true" href="#cb4-36"></a>il ll max(ll a, ll b) {<span class="cf">return</span> a &gt; b ? a : b;}</span>
+<span id="cb4-37"><a aria-hidden="true" href="#cb4-37"></a></span>
+<span id="cb4-38"><a aria-hidden="true" href="#cb4-38"></a><span class="kw">template</span>&lt;<span class="dt">int</span> row, <span class="dt">int</span> col&gt;</span>
+<span id="cb4-39"><a aria-hidden="true" href="#cb4-39"></a><span class="kw">struct</span> Matrix</span>
+<span id="cb4-40"><a aria-hidden="true" href="#cb4-40"></a>{</span>
+<span id="cb4-41"><a aria-hidden="true" href="#cb4-41"></a>    ll ele[row][col];</span>
+<span id="cb4-42"><a aria-hidden="true" href="#cb4-42"></a>    Matrix() {}</span>
+<span id="cb4-43"><a aria-hidden="true" href="#cb4-43"></a>};</span>
+<span id="cb4-44"><a aria-hidden="true" href="#cb4-44"></a></span>
+<span id="cb4-45"><a aria-hidden="true" href="#cb4-45"></a><span class="kw">template</span>&lt;<span class="dt">int</span> m, <span class="dt">int</span> n, <span class="dt">int</span> p&gt; Matrix&lt;m, p&gt; <span class="kw">operator</span>*(Matrix&lt;m, n&gt; m1, Matrix&lt;n, p&gt; m2)</span>
+<span id="cb4-46"><a aria-hidden="true" href="#cb4-46"></a>{</span>
+<span id="cb4-47"><a aria-hidden="true" href="#cb4-47"></a>    Matrix&lt;m, p&gt; ret;</span>
+<span id="cb4-48"><a aria-hidden="true" href="#cb4-48"></a><span class="pp">#define RET </span>ret.ele</span>
+<span id="cb4-49"><a aria-hidden="true" href="#cb4-49"></a><span class="pp">#define M1 </span>m1.ele</span>
+<span id="cb4-50"><a aria-hidden="true" href="#cb4-50"></a><span class="pp">#define M2 </span>m2.ele</span>
+<span id="cb4-51"><a aria-hidden="true" href="#cb4-51"></a>    memset(ret.ele, <span class="bn">0xcf</span>, <span class="kw">sizeof</span> ret.ele);</span>
+<span id="cb4-52"><a aria-hidden="true" href="#cb4-52"></a>    FOR(i, <span class="dv">0</span>, m - <span class="dv">1</span>)</span>
+<span id="cb4-53"><a aria-hidden="true" href="#cb4-53"></a>        FOR(k, <span class="dv">0</span>, n - <span class="dv">1</span>)</span>
+<span id="cb4-54"><a aria-hidden="true" href="#cb4-54"></a>            FOR(j, <span class="dv">0</span>, p - <span class="dv">1</span>)</span>
+<span id="cb4-55"><a aria-hidden="true" href="#cb4-55"></a>                RET[i][j] = max(RET[i][j], M1[i][k] + M2[k][j]);</span>
+<span id="cb4-56"><a aria-hidden="true" href="#cb4-56"></a>    <span class="cf">return</span> ret;</span>
+<span id="cb4-57"><a aria-hidden="true" href="#cb4-57"></a><span class="pp">#undef RET</span></span>
+<span id="cb4-58"><a aria-hidden="true" href="#cb4-58"></a><span class="pp">#undef m1</span></span>
+<span id="cb4-59"><a aria-hidden="true" href="#cb4-59"></a><span class="pp">#undef m2</span></span>
+<span id="cb4-60"><a aria-hidden="true" href="#cb4-60"></a>}</span>
+<span id="cb4-61"><a aria-hidden="true" href="#cb4-61"></a></span>
+<span id="cb4-62"><a aria-hidden="true" href="#cb4-62"></a>Matrix&lt;<span class="dv">2</span>, <span class="dv">2</span>&gt; ID, g[maxn];</span>
+<span id="cb4-63"><a aria-hidden="true" href="#cb4-63"></a></span>
+<span id="cb4-64"><a aria-hidden="true" href="#cb4-64"></a><span class="dt">int</span> n, m;</span>
+<span id="cb4-65"><a aria-hidden="true" href="#cb4-65"></a>ll p[maxn], sump;</span>
+<span id="cb4-66"><a aria-hidden="true" href="#cb4-66"></a></span>
+<span id="cb4-67"><a aria-hidden="true" href="#cb4-67"></a><span class="dt">int</span> dep[maxn], fa[maxn], size[maxn], son[maxn]; </span>
+<span id="cb4-68"><a aria-hidden="true" href="#cb4-68"></a></span>
+<span id="cb4-69"><a aria-hidden="true" href="#cb4-69"></a><span class="dt">void</span> dfs1(<span class="dt">int</span> u, <span class="dt">int</span> f)</span>
+<span id="cb4-70"><a aria-hidden="true" href="#cb4-70"></a>{</span>
+<span id="cb4-71"><a aria-hidden="true" href="#cb4-71"></a>    dep[u] = dep[f] + <span class="dv">1</span>, fa[u] = f, size[u] = <span class="dv">1</span>;</span>
+<span id="cb4-72"><a aria-hidden="true" href="#cb4-72"></a>    GO(u)</span>
+<span id="cb4-73"><a aria-hidden="true" href="#cb4-73"></a>    {</span>
+<span id="cb4-74"><a aria-hidden="true" href="#cb4-74"></a>        <span class="cf">if</span> (v == f) <span class="cf">continue</span>;</span>
+<span id="cb4-75"><a aria-hidden="true" href="#cb4-75"></a>        dfs1(v, u);</span>
+<span id="cb4-76"><a aria-hidden="true" href="#cb4-76"></a>        size[u] += size[v];</span>
+<span id="cb4-77"><a aria-hidden="true" href="#cb4-77"></a>        <span class="cf">if</span> (size[v] &gt; size[son[u]]) son[u] = v;</span>
+<span id="cb4-78"><a aria-hidden="true" href="#cb4-78"></a>    }</span>
+<span id="cb4-79"><a aria-hidden="true" href="#cb4-79"></a>    <span class="cf">return</span>;</span>
+<span id="cb4-80"><a aria-hidden="true" href="#cb4-80"></a>}</span>
+<span id="cb4-81"><a aria-hidden="true" href="#cb4-81"></a></span>
+<span id="cb4-82"><a aria-hidden="true" href="#cb4-82"></a><span class="dt">int</span> top[maxn], end[maxn], dfn[maxn], nfd[maxn], dfnClock;</span>
+<span id="cb4-83"><a aria-hidden="true" href="#cb4-83"></a>ll f[maxn][<span class="dv">2</span>];</span>
+<span id="cb4-84"><a aria-hidden="true" href="#cb4-84"></a></span>
+<span id="cb4-85"><a aria-hidden="true" href="#cb4-85"></a><span class="dt">void</span> dfs2(<span class="dt">int</span> u, <span class="dt">int</span> topf)</span>
+<span id="cb4-86"><a aria-hidden="true" href="#cb4-86"></a>{</span>
+<span id="cb4-87"><a aria-hidden="true" href="#cb4-87"></a>    top[u] = topf, dfn[u] = ++dfnClock, nfd[dfnClock] = u;<span class="co">//记录nfd是方便下面的线段树操作</span></span>
+<span id="cb4-88"><a aria-hidden="true" href="#cb4-88"></a>    <span class="cf">if</span> (!son[u])<span class="co">//叶子节点</span></span>
+<span id="cb4-89"><a aria-hidden="true" href="#cb4-89"></a>    {</span>
+<span id="cb4-90"><a aria-hidden="true" href="#cb4-90"></a>        f[u][<span class="dv">1</span>] = p[u];<span class="co">//f值很容易得到</span></span>
+<span id="cb4-91"><a aria-hidden="true" href="#cb4-91"></a>        g[u] = ID;<span class="co">//g矩阵赋为单位矩阵</span></span>
+<span id="cb4-92"><a aria-hidden="true" href="#cb4-92"></a>        end[u] = u;<span class="co">//记录链底部</span></span>
+<span id="cb4-93"><a aria-hidden="true" href="#cb4-93"></a>        <span class="cf">return</span>;</span>
+<span id="cb4-94"><a aria-hidden="true" href="#cb4-94"></a>    }</span>
+<span id="cb4-95"><a aria-hidden="true" href="#cb4-95"></a><span class="pp">#define G </span>g[u].ele</span>
+<span id="cb4-96"><a aria-hidden="true" href="#cb4-96"></a>    G[<span class="dv">1</span>][<span class="dv">0</span>] = p[u], G[<span class="dv">1</span>][<span class="dv">1</span>] = -INF;<span class="co">//初始化g矩阵</span></span>
+<span id="cb4-97"><a aria-hidden="true" href="#cb4-97"></a>    dfs2(son[u], topf);</span>
+<span id="cb4-98"><a aria-hidden="true" href="#cb4-98"></a>    end[u] = end[son[u]];<span class="co">//更新链底</span></span>
+<span id="cb4-99"><a aria-hidden="true" href="#cb4-99"></a>    GO(u)</span>
+<span id="cb4-100"><a aria-hidden="true" href="#cb4-100"></a>    {</span>
+<span id="cb4-101"><a aria-hidden="true" href="#cb4-101"></a>        <span class="cf">if</span> (v == fa[u] || v == son[u]) <span class="cf">continue</span>;</span>
+<span id="cb4-102"><a aria-hidden="true" href="#cb4-102"></a>        dfs2(v, v);</span>
+<span id="cb4-103"><a aria-hidden="true" href="#cb4-103"></a>        G[<span class="dv">0</span>][<span class="dv">0</span>] = G[<span class="dv">0</span>][<span class="dv">1</span>] += max(f[v][<span class="dv">0</span>], f[v][<span class="dv">1</span>]);<span class="co">//更新g</span></span>
+<span id="cb4-104"><a aria-hidden="true" href="#cb4-104"></a>        G[<span class="dv">1</span>][<span class="dv">0</span>] += f[v][<span class="dv">0</span>];<span class="co">//更新g</span></span>
+<span id="cb4-105"><a aria-hidden="true" href="#cb4-105"></a>    }</span>
+<span id="cb4-106"><a aria-hidden="true" href="#cb4-106"></a>    f[u][<span class="dv">0</span>] = G[<span class="dv">0</span>][<span class="dv">0</span>] + max(f[son[u]][<span class="dv">0</span>], f[son[u]][<span class="dv">1</span>]);<span class="co">//利用g更新f，以计算父亲的g和f</span></span>
+<span id="cb4-107"><a aria-hidden="true" href="#cb4-107"></a>    f[u][<span class="dv">1</span>] = G[<span class="dv">1</span>][<span class="dv">0</span>] + f[son[u]][<span class="dv">0</span>];</span>
+<span id="cb4-108"><a aria-hidden="true" href="#cb4-108"></a>    <span class="cf">return</span>;</span>
+<span id="cb4-109"><a aria-hidden="true" href="#cb4-109"></a><span class="pp">#undef G</span></span>
+<span id="cb4-110"><a aria-hidden="true" href="#cb4-110"></a>}</span>
+<span id="cb4-111"><a aria-hidden="true" href="#cb4-111"></a></span>
+<span id="cb4-112"><a aria-hidden="true" href="#cb4-112"></a><span class="kw">struct</span> node</span>
+<span id="cb4-113"><a aria-hidden="true" href="#cb4-113"></a>{</span>
+<span id="cb4-114"><a aria-hidden="true" href="#cb4-114"></a>    <span class="dt">int</span> l, r;</span>
+<span id="cb4-115"><a aria-hidden="true" href="#cb4-115"></a>    Matrix&lt;<span class="dv">2</span>, <span class="dv">2</span>&gt; val;</span>
+<span id="cb4-116"><a aria-hidden="true" href="#cb4-116"></a>} tree[maxn &lt;&lt; <span class="dv">2</span>];</span>
+<span id="cb4-117"><a aria-hidden="true" href="#cb4-117"></a></span>
+<span id="cb4-118"><a aria-hidden="true" href="#cb4-118"></a><span class="pp">#define L </span>(k<span class="pp"> </span>&lt;&lt;<span class="pp"> </span><span class="dv">1</span>)</span>
+<span id="cb4-119"><a aria-hidden="true" href="#cb4-119"></a><span class="pp">#define R </span>(L<span class="pp"> </span>|<span class="pp"> </span><span class="dv">1</span>)</span>
+<span id="cb4-120"><a aria-hidden="true" href="#cb4-120"></a><span class="pp">#define M </span>((i<span class="pp"> </span>+<span class="pp"> </span>j)<span class="pp"> </span>&gt;&gt;<span class="pp"> </span><span class="dv">1</span>)</span>
+<span id="cb4-121"><a aria-hidden="true" href="#cb4-121"></a></span>
+<span id="cb4-122"><a aria-hidden="true" href="#cb4-122"></a>il <span class="dt">void</span> pushup(<span class="dt">int</span> k)</span>
+<span id="cb4-123"><a aria-hidden="true" href="#cb4-123"></a>{</span>
+<span id="cb4-124"><a aria-hidden="true" href="#cb4-124"></a>    tree[k].val = tree[L].val * tree[R].val;</span>
+<span id="cb4-125"><a aria-hidden="true" href="#cb4-125"></a>    <span class="cf">return</span>;</span>
+<span id="cb4-126"><a aria-hidden="true" href="#cb4-126"></a>}</span>
+<span id="cb4-127"><a aria-hidden="true" href="#cb4-127"></a></span>
+<span id="cb4-128"><a aria-hidden="true" href="#cb4-128"></a><span class="dt">void</span> build(<span class="dt">int</span> i, <span class="dt">int</span> j, <span class="dt">int</span> k)</span>
+<span id="cb4-129"><a aria-hidden="true" href="#cb4-129"></a>{</span>
+<span id="cb4-130"><a aria-hidden="true" href="#cb4-130"></a>    tree[k].l = i, tree[k].r = j;</span>
+<span id="cb4-131"><a aria-hidden="true" href="#cb4-131"></a>    <span class="cf">if</span> (i == j)</span>
+<span id="cb4-132"><a aria-hidden="true" href="#cb4-132"></a>    {</span>
+<span id="cb4-133"><a aria-hidden="true" href="#cb4-133"></a>        tree[k].val = g[nfd[i]];</span>
+<span id="cb4-134"><a aria-hidden="true" href="#cb4-134"></a>        <span class="cf">return</span>;</span>
+<span id="cb4-135"><a aria-hidden="true" href="#cb4-135"></a>    }</span>
+<span id="cb4-136"><a aria-hidden="true" href="#cb4-136"></a>    build(i, M, L);</span>
+<span id="cb4-137"><a aria-hidden="true" href="#cb4-137"></a>    build(M + <span class="dv">1</span>, j, R);</span>
+<span id="cb4-138"><a aria-hidden="true" href="#cb4-138"></a>    pushup(k);</span>
+<span id="cb4-139"><a aria-hidden="true" href="#cb4-139"></a>    <span class="cf">return</span>;</span>
+<span id="cb4-140"><a aria-hidden="true" href="#cb4-140"></a>}</span>
+<span id="cb4-141"><a aria-hidden="true" href="#cb4-141"></a></span>
+<span id="cb4-142"><a aria-hidden="true" href="#cb4-142"></a>Matrix&lt;<span class="dv">2</span>, <span class="dv">2</span>&gt; query(<span class="dt">int</span> k, <span class="dt">int</span> x, <span class="dt">int</span> y)</span>
+<span id="cb4-143"><a aria-hidden="true" href="#cb4-143"></a>{</span>
+<span id="cb4-144"><a aria-hidden="true" href="#cb4-144"></a>    <span class="dt">int</span> i = tree[k].l, j = tree[k].r;</span>
+<span id="cb4-145"><a aria-hidden="true" href="#cb4-145"></a>    <span class="cf">if</span> (x &lt;= i &amp;&amp; y &gt;= j) <span class="cf">return</span> tree[k].val;</span>
+<span id="cb4-146"><a aria-hidden="true" href="#cb4-146"></a>    Matrix&lt;<span class="dv">2</span>, <span class="dv">2</span>&gt; ret = ID;</span>
+<span id="cb4-147"><a aria-hidden="true" href="#cb4-147"></a>    <span class="cf">if</span> (x &lt;= M) ret = query(L, x, y);</span>
+<span id="cb4-148"><a aria-hidden="true" href="#cb4-148"></a>    <span class="cf">if</span> (y &gt; M) ret = ret * query(R, x, y);</span>
+<span id="cb4-149"><a aria-hidden="true" href="#cb4-149"></a>    <span class="cf">return</span> ret;</span>
+<span id="cb4-150"><a aria-hidden="true" href="#cb4-150"></a>}</span>
+<span id="cb4-151"><a aria-hidden="true" href="#cb4-151"></a></span>
+<span id="cb4-152"><a aria-hidden="true" href="#cb4-152"></a><span class="dt">void</span> modify(<span class="dt">int</span> k, <span class="dt">int</span> x, <span class="dt">int</span> p)</span>
+<span id="cb4-153"><a aria-hidden="true" href="#cb4-153"></a>{</span>
+<span id="cb4-154"><a aria-hidden="true" href="#cb4-154"></a>    <span class="dt">int</span> i = tree[k].l, j = tree[k].r;</span>
+<span id="cb4-155"><a aria-hidden="true" href="#cb4-155"></a>    <span class="cf">if</span> (i == j)</span>
+<span id="cb4-156"><a aria-hidden="true" href="#cb4-156"></a>    {</span>
+<span id="cb4-157"><a aria-hidden="true" href="#cb4-157"></a>        tree[k].val = g[p];</span>
+<span id="cb4-158"><a aria-hidden="true" href="#cb4-158"></a>        <span class="cf">return</span>;</span>
+<span id="cb4-159"><a aria-hidden="true" href="#cb4-159"></a>    }</span>
+<span id="cb4-160"><a aria-hidden="true" href="#cb4-160"></a>    <span class="cf">if</span> (x &lt;= M) modify(L, x, p);</span>
+<span id="cb4-161"><a aria-hidden="true" href="#cb4-161"></a>    <span class="cf">else</span> modify(R, x, p);</span>
+<span id="cb4-162"><a aria-hidden="true" href="#cb4-162"></a>    pushup(k);</span>
+<span id="cb4-163"><a aria-hidden="true" href="#cb4-163"></a>    <span class="cf">return</span>;</span>
+<span id="cb4-164"><a aria-hidden="true" href="#cb4-164"></a>}</span>
+<span id="cb4-165"><a aria-hidden="true" href="#cb4-165"></a></span>
+<span id="cb4-166"><a aria-hidden="true" href="#cb4-166"></a>Matrix&lt;<span class="dv">2</span>, <span class="dv">1</span>&gt; query(<span class="dt">int</span> x)</span>
+<span id="cb4-167"><a aria-hidden="true" href="#cb4-167"></a>{</span>
+<span id="cb4-168"><a aria-hidden="true" href="#cb4-168"></a>    Matrix&lt;<span class="dv">2</span>, <span class="dv">1</span>&gt; ret;</span>
+<span id="cb4-169"><a aria-hidden="true" href="#cb4-169"></a><span class="pp">#define RET </span>ret.ele</span>
+<span id="cb4-170"><a aria-hidden="true" href="#cb4-170"></a>    RET[<span class="dv">0</span>][<span class="dv">0</span>] = <span class="dv">0</span>, RET[<span class="dv">1</span>][<span class="dv">0</span>] = p[end[x]];</span>
+<span id="cb4-171"><a aria-hidden="true" href="#cb4-171"></a>    <span class="cf">return</span> query(<span class="dv">1</span>, dfn[x], dfn[end[x]]) * ret;</span>
+<span id="cb4-172"><a aria-hidden="true" href="#cb4-172"></a><span class="pp">#undef RET</span></span>
+<span id="cb4-173"><a aria-hidden="true" href="#cb4-173"></a>}</span>
+<span id="cb4-174"><a aria-hidden="true" href="#cb4-174"></a></span>
+<span id="cb4-175"><a aria-hidden="true" href="#cb4-175"></a><span class="dt">void</span> modify(<span class="dt">int</span> x, ll y)</span>
+<span id="cb4-176"><a aria-hidden="true" href="#cb4-176"></a>{</span>
+<span id="cb4-177"><a aria-hidden="true" href="#cb4-177"></a>    Matrix&lt;<span class="dv">2</span>, <span class="dv">1</span>&gt; f0, f1;</span>
+<span id="cb4-178"><a aria-hidden="true" href="#cb4-178"></a><span class="pp">#define G </span>g[x].ele</span>
+<span id="cb4-179"><a aria-hidden="true" href="#cb4-179"></a><span class="pp">#define F0 </span>f0.ele</span>
+<span id="cb4-180"><a aria-hidden="true" href="#cb4-180"></a><span class="pp">#define F1 </span>f1.ele</span>
+<span id="cb4-181"><a aria-hidden="true" href="#cb4-181"></a>    G[<span class="dv">1</span>][<span class="dv">0</span>] += y - p[x];</span>
+<span id="cb4-182"><a aria-hidden="true" href="#cb4-182"></a>    f0 = query(top[x]);</span>
+<span id="cb4-183"><a aria-hidden="true" href="#cb4-183"></a>    p[x] = y;</span>
+<span id="cb4-184"><a aria-hidden="true" href="#cb4-184"></a>    <span class="cf">while</span> (x)</span>
+<span id="cb4-185"><a aria-hidden="true" href="#cb4-185"></a>    {</span>
+<span id="cb4-186"><a aria-hidden="true" href="#cb4-186"></a>        modify(<span class="dv">1</span>, dfn[x], x);</span>
+<span id="cb4-187"><a aria-hidden="true" href="#cb4-187"></a>        f1 = query(top[x]);</span>
+<span id="cb4-188"><a aria-hidden="true" href="#cb4-188"></a>        x = fa[top[x]];</span>
+<span id="cb4-189"><a aria-hidden="true" href="#cb4-189"></a>        G[<span class="dv">0</span>][<span class="dv">0</span>] = G[<span class="dv">0</span>][<span class="dv">1</span>] += max(F1[<span class="dv">0</span>][<span class="dv">0</span>], F1[<span class="dv">1</span>][<span class="dv">0</span>]) - max(F0[<span class="dv">0</span>][<span class="dv">0</span>], F0[<span class="dv">1</span>][<span class="dv">0</span>]);</span>
+<span id="cb4-190"><a aria-hidden="true" href="#cb4-190"></a>        G[<span class="dv">1</span>][<span class="dv">0</span>] += F1[<span class="dv">0</span>][<span class="dv">0</span>] - F0[<span class="dv">0</span>][<span class="dv">0</span>];</span>
+<span id="cb4-191"><a aria-hidden="true" href="#cb4-191"></a>        f0 = query(top[x]);</span>
+<span id="cb4-192"><a aria-hidden="true" href="#cb4-192"></a>    }</span>
+<span id="cb4-193"><a aria-hidden="true" href="#cb4-193"></a>    <span class="cf">return</span>;</span>
+<span id="cb4-194"><a aria-hidden="true" href="#cb4-194"></a><span class="pp">#undef G</span></span>
+<span id="cb4-195"><a aria-hidden="true" href="#cb4-195"></a><span class="pp">#undef F0</span></span>
+<span id="cb4-196"><a aria-hidden="true" href="#cb4-196"></a><span class="pp">#undef F1</span></span>
+<span id="cb4-197"><a aria-hidden="true" href="#cb4-197"></a>}</span>
+<span id="cb4-198"><a aria-hidden="true" href="#cb4-198"></a></span>
+<span id="cb4-199"><a aria-hidden="true" href="#cb4-199"></a><span class="dt">int</span> main()</span>
+<span id="cb4-200"><a aria-hidden="true" href="#cb4-200"></a>{</span>
+<span id="cb4-201"><a aria-hidden="true" href="#cb4-201"></a>    ID.ele[<span class="dv">1</span>][<span class="dv">0</span>] = ID.ele[<span class="dv">0</span>][<span class="dv">1</span>] = -INF;</span>
+<span id="cb4-202"><a aria-hidden="true" href="#cb4-202"></a>    n = read(), m = read(), read();</span>
+<span id="cb4-203"><a aria-hidden="true" href="#cb4-203"></a>    FOR(i, <span class="dv">1</span>, n) p[i] = read(), sump += p[i];</span>
+<span id="cb4-204"><a aria-hidden="true" href="#cb4-204"></a>    FOR(i, <span class="dv">1</span>, n - <span class="dv">1</span>)</span>
+<span id="cb4-205"><a aria-hidden="true" href="#cb4-205"></a>    {</span>
+<span id="cb4-206"><a aria-hidden="true" href="#cb4-206"></a>        <span class="dt">int</span> u = read(), v = read();</span>
+<span id="cb4-207"><a aria-hidden="true" href="#cb4-207"></a>        add(u, v), add(v, u);</span>
+<span id="cb4-208"><a aria-hidden="true" href="#cb4-208"></a>    }</span>
+<span id="cb4-209"><a aria-hidden="true" href="#cb4-209"></a>    dfs1(<span class="dv">1</span>, <span class="dv">0</span>);</span>
+<span id="cb4-210"><a aria-hidden="true" href="#cb4-210"></a>    dfs2(<span class="dv">1</span>, <span class="dv">1</span>);</span>
+<span id="cb4-211"><a aria-hidden="true" href="#cb4-211"></a>    build(<span class="dv">1</span>, n, <span class="dv">1</span>);</span>
+<span id="cb4-212"><a aria-hidden="true" href="#cb4-212"></a>    FOR(i, <span class="dv">1</span>, m)</span>
+<span id="cb4-213"><a aria-hidden="true" href="#cb4-213"></a>    {</span>
+<span id="cb4-214"><a aria-hidden="true" href="#cb4-214"></a>        <span class="dt">int</span> a = read(), x = read(), b = read(), y = read();</span>
+<span id="cb4-215"><a aria-hidden="true" href="#cb4-215"></a>        <span class="cf">if</span> (!x &amp;&amp; !y &amp;&amp; (fa[a] == b || fa[b] == a))</span>
+<span id="cb4-216"><a aria-hidden="true" href="#cb4-216"></a>        {</span>
+<span id="cb4-217"><a aria-hidden="true" href="#cb4-217"></a>            puts(<span class="st">"-1"</span>);</span>
+<span id="cb4-218"><a aria-hidden="true" href="#cb4-218"></a>            <span class="cf">continue</span>;</span>
+<span id="cb4-219"><a aria-hidden="true" href="#cb4-219"></a>        }</span>
+<span id="cb4-220"><a aria-hidden="true" href="#cb4-220"></a>        ll a0 = p[a], b0 = p[b], tmp = <span class="dv">0</span>;</span>
+<span id="cb4-221"><a aria-hidden="true" href="#cb4-221"></a>        <span class="cf">if</span> (!x) modify(a, INF), tmp += INF - a0; <span class="cf">else</span> modify(a, -INF);</span>
+<span id="cb4-222"><a aria-hidden="true" href="#cb4-222"></a>        <span class="cf">if</span> (!y) modify(b, INF), tmp += INF - b0; <span class="cf">else</span> modify(b, -INF);</span>
+<span id="cb4-223"><a aria-hidden="true" href="#cb4-223"></a>        Matrix&lt;<span class="dv">2</span>, <span class="dv">1</span>&gt; ans = query(<span class="dv">1</span>);</span>
+<span id="cb4-224"><a aria-hidden="true" href="#cb4-224"></a><span class="pp">#define ANS </span>ans.ele</span>
+<span id="cb4-225"><a aria-hidden="true" href="#cb4-225"></a>        printf(<span class="st">"</span><span class="sc">%lld\n</span><span class="st">"</span>, sump - max(ANS[<span class="dv">0</span>][<span class="dv">0</span>], ANS[<span class="dv">1</span>][<span class="dv">0</span>]) + tmp);</span>
+<span id="cb4-226"><a aria-hidden="true" href="#cb4-226"></a>        modify(a, a0), modify(b, b0);</span>
+<span id="cb4-227"><a aria-hidden="true" href="#cb4-227"></a><span class="pp">#undef ANS</span></span>
+<span id="cb4-228"><a aria-hidden="true" href="#cb4-228"></a>    }</span>
+<span id="cb4-229"><a aria-hidden="true" href="#cb4-229"></a>    <span class="cf">return</span> <span class="dv">0</span>;</span>
+<span id="cb4-230"><a aria-hidden="true" href="#cb4-230"></a>}</span></code></pre></div>
+<h3 id="其他做法">其他做法</h3>
+<p>不会，先咕咕咕。</p>
+</section>
+<footer class="article-footer">
+<section class="article-tags">
+<a href="/tags/OI/">OI</a>
+<a href="/tags/note/">笔记</a>
+<a href="/tags/ddp/">动态dp</a>
+<a href="/tags/segtree/">线段树</a>
+<a href="/tags/hld/">树链剖分</a>
+<a href="/tags/matrix-multiplication/">矩阵乘法</a>
+</section>
+<section class="article-copyright">
+<svg class="icon icon-tabler icon-tabler-copyright" fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+<path d="M0 0h24v24H0z" stroke="none"></path>
+<circle cx="12" cy="12" r="9"></circle>
+<path d="M14.5 9a3.5 4 0 1 0 0 6"></path>
+</svg>
+<span>Licensed under CC BY-NC-SA 4.0</span>
+</section>
+</footer>
+<link crossorigin="anonymous" href="https://cdn.jsdelivr.net/npm/katex@0.13.13/dist/katex.min.css" integrity="sha384-RZU/ijkSsFbcmivfdRBQDtwuwVqK7GMOw6IMvKyeWL2K5UAlyp6WonmB8m7Jd0Hn" rel="stylesheet"/><script crossorigin="anonymous" defer="" integrity="sha384-pK1WpvzWVBQiP0/GjnvRxV4mOb0oxFuyRxJlk6vVw146n3egcN5C925NCP7a7BY8" src="https://cdn.jsdelivr.net/npm/katex@0.13.13/dist/katex.min.js">
+</script><script crossorigin="anonymous" defer="" integrity="sha384-vZTG03m+2yp6N6BNi5iM4rW4oIwk5DfcNdFfxkk9ZWpDriOkXX8voJBFrAO7MpVl" src="https://cdn.jsdelivr.net/npm/katex@0.13.13/dist/contrib/auto-render.min.js">
+</script><script>
+    window.addEventListener("DOMContentLoaded", () => {
+        renderMathInElement(document.querySelector(`.article-content`), {
+            delimiters: [
+                { left: "$$", right: "$$", display: true },
+                { left: "$", right: "$", display: false },
+                { left: "\\(", right: "\\)", display: false },
+                { left: "\\[", right: "\\]", display: true }
+            ]
+        });})
+</script>
+</article>
+<aside class="related-contents--wrapper">
+<h2 class="section-title">相关文章</h2>
+<div class="related-contents">
+<div class="flex article-list--tile">
+<article class="has-image">
+<a href="/sol-sp-gss/">
+<div class="article-image">
+<img data-hash="https://yangty-pic.oss-cn-beijing.aliyuncs.com/bg41.webp" data-key="" loading="lazy" src="https://yangty-pic.oss-cn-beijing.aliyuncs.com/bg41.webp"/>
+</div>
+<div class="article-details">
+<h2 class="article-title">SPOJ GSS 系列题解</h2>
+</div>
+</a>
+</article>
+<article class="has-image">
+<a href="/note-lichao/">
+<div class="article-image">
+<img data-hash="https://yangty-pic.oss-cn-beijing.aliyuncs.com/bg18.webp" data-key="" loading="lazy" src="https://yangty-pic.oss-cn-beijing.aliyuncs.com/bg18.webp"/>
+</div>
+<div class="article-details">
+<h2 class="article-title">李超树学习笔记</h2>
+</div>
+</a>
+</article>
+<article class="has-image">
+<a href="/note-comb-number/">
+<div class="article-image">
+<img data-hash="https://yangty-pic.oss-cn-beijing.aliyuncs.com/bg10.webp" data-key="" loading="lazy" src="https://yangty-pic.oss-cn-beijing.aliyuncs.com/bg10.webp"/>
+</div>
+<div class="article-details">
+<h2 class="article-title">组合数求法小记</h2>
+</div>
+</a>
+</article>
+<article class="has-image">
+<a href="/summary-atcoder/">
+<div class="article-image">
+<img data-hash="https://yangty-pic.oss-cn-beijing.aliyuncs.com/bg70.webp" data-key="" loading="lazy" src="https://yangty-pic.oss-cn-beijing.aliyuncs.com/bg70.webp"/>
+</div>
+<div class="article-details">
+<h2 class="article-title">AtCoder 比赛日记</h2>
+</div>
+</a>
+</article>
+<article class="has-image">
+<a href="/note-lct/">
+<div class="article-image">
+<img data-hash="https://yangty-pic.oss-cn-beijing.aliyuncs.com/bg17.webp" data-key="" loading="lazy" src="https://yangty-pic.oss-cn-beijing.aliyuncs.com/bg17.webp"/>
+</div>
+<div class="article-details">
+<h2 class="article-title">Link-Cut Tree 学习笔记</h2>
+</div>
+</a>
+</article>
+</div>
+</div>
+</aside>
+<footer class="site-footer">
+<section class="copyright">
+        © 
+        
+            2019 - 
+        
+        2024 清烛的博客
+    </section>
+<section class="powerby">
+        Built with <a href="https://gohugo.io/" rel="noopener" target="_blank">Hugo</a> <br/>
+        主题 <b><a data-version="3.11.0" href="https://github.com/CaiJimmy/hugo-theme-stack" rel="noopener" target="_blank">Stack</a></b> 由 <a href="https://jimmycai.com" rel="noopener" target="_blank">Jimmy</a> 设计
+    </section>
+</footer>
+<div aria-hidden="true" class="pswp" role="dialog" tabindex="-1">
+<div class="pswp__bg"></div>
+<div class="pswp__scroll-wrap">
+<div class="pswp__container">
+<div class="pswp__item"></div>
+<div class="pswp__item"></div>
+<div class="pswp__item"></div>
+</div>
+<div class="pswp__ui pswp__ui--hidden">
+<div class="pswp__top-bar">
+<div class="pswp__counter"></div>
+<button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+<button class="pswp__button pswp__button--share" title="Share"></button>
+<button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+<button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+<div class="pswp__preloader">
+<div class="pswp__preloader__icn">
+<div class="pswp__preloader__cut">
+<div class="pswp__preloader__donut"></div>
+</div>
+</div>
+</div>
+</div>
+<div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+<div class="pswp__share-tooltip"></div>
+</div>
+<button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+</button>
+<button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+</button>
+<div class="pswp__caption">
+<div class="pswp__caption__center"></div>
+</div>
+</div>
+</div>
+</div><script crossorigin="anonymous" defer="" integrity="sha256-ePwmChbbvXbsO02lbM3HoHbSHTHFAeChekF1xKJdleo=" src="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe.min.js">
+</script><script crossorigin="anonymous" defer="" integrity="sha256-UKkzOn/w1mBxRmLLGrSeyB4e1xbrp4xylgAWb3M42pU=" src="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe-ui-default.min.js">
+</script><link crossorigin="anonymous" href="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/default-skin/default-skin.css" integrity="sha256-c0uckgykQ9v5k+IqViZOZKc47Jn7KQil4/MP3ySA3F8=" rel="stylesheet"/><link crossorigin="anonymous" href="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe.css" integrity="sha256-SBLU4vv6CA6lHsZ1XyTdhyjJxCjPif/TRkjnsyGAGnE=" rel="stylesheet"/>
+</main>
+</div>
+<script crossorigin="anonymous" integrity="sha256-5NovOZc4iwiAWTYIFiIM7DxKUXKWvpVEuMEPLzcm5/g=" src="https://cdn.jsdelivr.net/npm/node-vibrant@3.1.5/dist/vibrant.min.js">
+</script><script defer="" src="/ts/main.js" type="text/javascript"></script>
+<script>
+    (function () {
+        const customFont = document.createElement('link');
+        customFont.href = "https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&display=swap";
+
+        customFont.type = "text/css";
+        customFont.rel = "stylesheet";
+
+        document.head.appendChild(customFont);
+    }());
+</script>
+</body>
+</html>

@@ -1,0 +1,196 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+    <channel>
+        <title>wqs二分 on 清烛的博客</title>
+        <link>https://oi.imyangty.com/tags/wqs-binary-search/</link>
+        <description>Recent content in wqs二分 on 清烛的博客</description>
+        <generator>Hugo -- gohugo.io</generator>
+        <language>zh-CN</language>
+        <lastBuildDate>Mon, 28 Mar 2022 15:27:49 +0800</lastBuildDate><atom:link href="https://oi.imyangty.com/tags/wqs-binary-search/index.xml" rel="self" type="application/rss+xml" /><item>
+        <title>wqs 二分学习笔记</title>
+        <link>https://oi.imyangty.com/note-wqs/</link>
+        <pubDate>Mon, 28 Mar 2022 15:27:49 +0800</pubDate>
+        
+        <guid>https://oi.imyangty.com/note-wqs/</guid>
+        <description>&lt;img src="https://yangty-pic.oss-cn-beijing.aliyuncs.com/bg28.webp" alt="Featured image of post wqs 二分学习笔记" /&gt;&lt;h2 id=&#34;前言&#34;&gt;前言&lt;/h2&gt;
+&lt;p&gt;wqs 二分，又称带权二分，DP 凸优化，是一种求解带凸性且钦定选择个数的问题的二分方法，由王钦石大佬于 2012 年于其集训队论文中提出。&lt;/p&gt;
+&lt;p&gt;若遇到一类形如“钦定选择物品个数，而不钦定的话很好做，并且&lt;del&gt;感性理解&lt;/del&gt;答案关于物品个数有凸性”的问题，则可以考虑使用 wqs 二分进行求解。&lt;/p&gt;
+&lt;h2 id=&#34;算法流程&#34;&gt;算法流程&lt;/h2&gt;
+&lt;p&gt;考虑一道经典例题：&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;典例：&lt;span class=&#34;math inline&#34;&gt;\(n\)&lt;/span&gt; 个数，要求分成 &lt;span class=&#34;math inline&#34;&gt;\(m\)&lt;/span&gt; 段，求每段平方之和的最小值。&lt;span class=&#34;math inline&#34;&gt;\(m\le n\le 10^5\)&lt;/span&gt;。&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;发现可以设计一个很裸的 dp：&lt;span class=&#34;math inline&#34;&gt;\(f_{i,j}\)&lt;/span&gt; 表示 &lt;span class=&#34;math inline&#34;&gt;\([1, i]\)&lt;/span&gt; 划分成 &lt;span class=&#34;math inline&#34;&gt;\(j\)&lt;/span&gt; 段的答案。直接做是 &lt;span class=&#34;math inline&#34;&gt;\(O(n^2m)\)&lt;/span&gt; 的，套上斜率优化还是 &lt;span class=&#34;math inline&#34;&gt;\(O(nm)\)&lt;/span&gt; 的，没有办法丢掉 &lt;span class=&#34;math inline&#34;&gt;\(m\)&lt;/span&gt;。但是如果不要求分成 &lt;span class=&#34;math inline&#34;&gt;\(m\)&lt;/span&gt; 段的话会发现直接斜率优化可以 &lt;span class=&#34;math inline&#34;&gt;\(O(n)\)&lt;/span&gt;。即，&lt;strong&gt;钦定不好做，不钦定很好做&lt;/strong&gt;。&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;复杂度/维数和选的个数有关的可以考虑其凸性。&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;而&lt;del&gt;注意到&lt;/del&gt; &lt;del&gt;打表知&lt;/del&gt; &lt;del&gt;猜测&lt;/del&gt; &lt;span class=&#34;math inline&#34;&gt;\(f_{n, i}\)&lt;/span&gt; 是关于 &lt;span class=&#34;math inline&#34;&gt;\(i\)&lt;/span&gt; 的凸函数，故考虑 wqs 二分把这一维丢掉。&lt;/p&gt;
+&lt;p&gt;具体地，&lt;em&gt;感性理解&lt;/em&gt;一下，发现我们若是去掉钦定段数的限制，则 dp 一定会尽可能让他分成 &lt;span class=&#34;math inline&#34;&gt;\(n\)&lt;/span&gt; 段。&lt;/p&gt;
+&lt;p&gt;那么我们考虑&lt;strong&gt;给每一段加上附加权值 &lt;span class=&#34;math inline&#34;&gt;\(c\)&lt;/span&gt;&lt;/strong&gt;，这样 dp 算法就能从“分的段数多权值小”和“分的段数少权值小”中间进行取舍，&lt;strong&gt;找到一个“平衡点”&lt;/strong&gt;。继续感性理解一下发现 &lt;span class=&#34;math inline&#34;&gt;\(c\)&lt;/span&gt; 越大分段越少，&lt;span class=&#34;math inline&#34;&gt;\(c\)&lt;/span&gt; 越小分段越多。&lt;/p&gt;
+&lt;p&gt;那么通过&lt;strong&gt;二分这个权值&lt;/strong&gt;，我们就能让分的段数恰好 &lt;span class=&#34;math inline&#34;&gt;\(\le m\)&lt;/span&gt;，这样的解减去加上的附加权值就是最优解。&lt;/p&gt;
+&lt;hr /&gt;
+&lt;p&gt;上面是感性理解，下面我们来理性思考一下。上面的说明有两个问题：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;有可能我们无法通过“改变权值”来使得分段数恰好 &lt;span class=&#34;math inline&#34;&gt;\(= k\)&lt;/span&gt;，即函数可能“不连续”。&lt;/li&gt;
+&lt;li&gt;没有说明这样的解一定是最优解。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;那么首先建立 &lt;span class=&#34;math inline&#34;&gt;\(f_{n, i}\)&lt;/span&gt; 关于 &lt;span class=&#34;math inline&#34;&gt;\(i\)&lt;/span&gt; 的函数 &lt;span class=&#34;math inline&#34;&gt;\(y = f(x)\)&lt;/span&gt;，&lt;strong&gt;打表&lt;/strong&gt;发现其下凸。&lt;em&gt;具有凸性才能二分权值&lt;/em&gt;，原因下面会说明。&lt;/p&gt;
+&lt;p&gt;然后加上附加权值之后变为 &lt;span class=&#34;math inline&#34;&gt;\(y = f(x) + cx\)&lt;/span&gt;，根据简单的导数知识发现其仍然下凸，然后我们带上附加权后求的 dp 最值对应的分段数（&lt;em&gt;注意 dp 是需要同时求出这个分段数的&lt;/em&gt;）即为 &lt;span class=&#34;math inline&#34;&gt;\(f(x) + cs\)&lt;/span&gt; 的最小值点的横坐标，&lt;strong&gt;并且同时为 &lt;span class=&#34;math inline&#34;&gt;\(y = cx + b\)&lt;/span&gt; 与 &lt;span class=&#34;math inline&#34;&gt;\(y = f(x)\)&lt;/span&gt; 的切点横坐标&lt;/strong&gt;。&lt;/p&gt;
+&lt;p&gt;可以参考这个 geogebra 实例辅助理解（先点击一下“代数区”按钮以收起）其中 &lt;span class=&#34;math inline&#34;&gt;\(c\)&lt;/span&gt; 滑杆控制附加权值 &lt;span class=&#34;math inline&#34;&gt;\(c\)&lt;/span&gt;，&lt;span class=&#34;math inline&#34;&gt;\(b&amp;#39;\)&lt;/span&gt; 滑杆控制 &lt;span class=&#34;math inline&#34;&gt;\(y = cx + b\)&lt;/span&gt; 以观察其相切。&lt;/p&gt;
+&lt;iframe src=&#34;https://www.geogebra.org/calculator/quy745sm?embed&#34; width=&#34;780&#34; height=&#34;500&#34; allowfullscreen style=&#34;border: 1px solid #e4e4e4;border-radius: 4px;&#34; frameborder=&#34;0&#34;&gt;
+&lt;/iframe&gt;
+&lt;p&gt;那么我们来解决上面两个问题：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;事实证明，若 &lt;span class=&#34;math inline&#34;&gt;\(y = f(x)\)&lt;/span&gt; 存在三点共线的情况而且中间的点为我们要钦定的段数，那么根据相切的性质，那个点&lt;strong&gt;永远取不到&lt;/strong&gt;，不过我们若是能找到两边的点那也能根据两边的点推出中间的答案。&lt;strong&gt;关于三点共线的特殊情况后文还会进一步说明。&lt;/strong&gt;&lt;/li&gt;
+&lt;li&gt;由于函数具有凸性，所以&lt;strong&gt;斜率单调&lt;/strong&gt;，我们二分的这个附加权值 &lt;span class=&#34;math inline&#34;&gt;\(c\)&lt;/span&gt; 实际上就是斜率。那么找到的点减去附加权必然就能对应到原来的函数上面去了。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id=&#34;其他细节&#34;&gt;其他细节&lt;/h2&gt;
+&lt;p&gt;一般来说，dp 值是整数，所以 &lt;span class=&#34;math inline&#34;&gt;\(\displaystyle c = \frac{f(i + 1) - f(i)}{i + 1 - i}\)&lt;/span&gt; 也是整数，因此不需要实数二分，但若是 dp 值为小数，则需要进行小数二分。&lt;/p&gt;
+&lt;p&gt;并且，有一部分费用流问题可以使用 wqs 二分求解：&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;多次增广的费用流模型中，费用一定是关于流量的凸函数。&lt;/p&gt;
+&lt;p&gt;因为增广肯定是沿着最短路增广，后面增广的费用肯定会更大。&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;说白了就是“限制卡的越来越死”，这种类型的问题都可以考虑 wqs 二分。&lt;/p&gt;
+&lt;hr /&gt;
+&lt;p&gt;三点共线的情况较为不好处理，&lt;strong&gt;在保证解最优的情况下使得选择物品的数量最多/最少会很大程度上影响三点共线的判断&lt;/strong&gt;我们不妨考虑如下情况，假设最后要求的物品个数对应的为 &lt;span class=&#34;math inline&#34;&gt;\(C\)&lt;/span&gt; 点。&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://yangty-pic.oss-cn-beijing.aliyuncs.com/wqs_3pin1line.png&#34; /&gt;&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;p&gt;若 dp 在值最优的情况下求出的是物品数量 &lt;span class=&#34;math inline&#34;&gt;\(p\)&lt;/span&gt; 的&lt;em&gt;最大值&lt;/em&gt;，则相当于我们最后二分斜率到 &lt;span class=&#34;math inline&#34;&gt;\(k_2\)&lt;/span&gt; 的时候碰到的是 &lt;span class=&#34;math inline&#34;&gt;\(D\)&lt;/span&gt; 点。&lt;/p&gt;
+&lt;p&gt;则若是二分到 &lt;span class=&#34;math inline&#34;&gt;\(k_1\)&lt;/span&gt;，截到了 &lt;span class=&#34;math inline&#34;&gt;\(B\)&lt;/span&gt;，发现 &lt;span class=&#34;math inline&#34;&gt;\(x_B &amp;lt; x_C\)&lt;/span&gt;，故 &lt;span class=&#34;math inline&#34;&gt;\(k_1\)&lt;/span&gt; &lt;strong&gt;一定不会&lt;/strong&gt;是我们要的斜率。&lt;/p&gt;
+&lt;p&gt;若是二分到 &lt;span class=&#34;math inline&#34;&gt;\(k_2\)&lt;/span&gt;，截到了 &lt;span class=&#34;math inline&#34;&gt;\(C\)&lt;/span&gt;，发现 &lt;span class=&#34;math inline&#34;&gt;\(x_C &amp;lt; x_D\)&lt;/span&gt;，&lt;span class=&#34;math inline&#34;&gt;\(k_2\)&lt;/span&gt; &lt;strong&gt;可能是&lt;/strong&gt;我们要的斜率。&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;对于 dp 出来的是 &lt;span class=&#34;math inline&#34;&gt;\(p\)&lt;/span&gt; 的最小值的情况，&lt;span class=&#34;math inline&#34;&gt;\(x &amp;gt; x_C\)&lt;/span&gt; 则&lt;strong&gt;一定不是&lt;/strong&gt;要的斜率，&lt;span class=&#34;math inline&#34;&gt;\(x &amp;lt; x_C\)&lt;/span&gt; &lt;strong&gt;可能是&lt;/strong&gt;我们要的斜率。&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;实战的时候，如果想避免 不等号 带不带等号的问题，&lt;strong&gt;可以在找到解的时候直接退出&lt;/strong&gt;，剩下的情况按照上面&lt;strong&gt;画图处理&lt;/strong&gt;，具体问题具体分析，详见下文代码部分。&lt;/p&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;另外，&lt;strong&gt;整数二分中，写左闭右开的形式可以有效避免 &lt;span class=&#34;math inline&#34;&gt;\(l\)&lt;/span&gt; 要不要加一，&lt;span class=&#34;math inline&#34;&gt;\(r\)&lt;/span&gt; 要不要减一的问题&lt;/strong&gt;。&lt;/p&gt;
+&lt;p&gt;而且注意不要搞形如 &lt;code&gt;chkmax(ans, ...)&lt;/code&gt; 的代码，在还没二分到底前之前的都可能不是答案，要覆盖掉。&lt;/p&gt;
+&lt;h2 id=&#34;应用&#34;&gt;应用&lt;/h2&gt;
+&lt;blockquote&gt;
+&lt;p&gt;例题 &lt;span class=&#34;math inline&#34;&gt;\(1\)&lt;/span&gt;：&lt;a href=&#34;https://www.luogu.com.cn/problem/P2619&#34;&gt;P2619 [国家集训队]Tree I&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;给你一个无向带权连通图，每条边是黑色或白色。让你求一棵最小权的恰好有 &lt;span class=&#34;math inline&#34;&gt;\(k\)&lt;/span&gt; 条白色边的生成树，保证有解。&lt;span class=&#34;math inline&#34;&gt;\(n\le 5\times 10^4\)&lt;/span&gt;，&lt;span class=&#34;math inline&#34;&gt;\(m\le 10^5\)&lt;/span&gt;，边权 &lt;span class=&#34;math inline&#34;&gt;\(\in[-100, 100]\)&lt;/span&gt;。&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;wqs 论文里面的例题，虽然和 dp 没有什么关系。&lt;/p&gt;
+&lt;p&gt;注意到这种问题是典型的&lt;strong&gt;钦定个数不好解&lt;/strong&gt;，但&lt;strong&gt;不钦定个数非常好解&lt;/strong&gt;（直接 Kruskal）的问题，所以可以思考其凸性。&lt;/p&gt;
+&lt;p&gt;分黑白考虑，先假设生成树全由黑边构成（没边连的强行连 &lt;span class=&#34;math inline&#34;&gt;\(+\infty\)&lt;/span&gt; 的黑边），然后每次加白边都是加入最小白边，去掉能去掉的最大黑边，可以感受到&lt;strong&gt;限制在慢慢卡死&lt;/strong&gt;，所以最小生成树权值关于选的白边个数的函数是凸的，可以使用 wqs 二分。&lt;/p&gt;
+&lt;p&gt;由于斜率在 &lt;span class=&#34;math inline&#34;&gt;\([-100, 100]\)&lt;/span&gt; 中间，所以在这个区间内二分附加权值 &lt;span class=&#34;math inline&#34;&gt;\(c\)&lt;/span&gt;，分开存储黑白边然后类似归并地使用 Kruskal，在这里，&lt;span class=&#34;math inline&#34;&gt;\(c\)&lt;/span&gt; 越大则选的白边会越少。我的写法是优先选白边，那么二分的时候就需要注意，&lt;span class=&#34;math inline&#34;&gt;\(p &amp;gt; k\)&lt;/span&gt; 的时候&lt;strong&gt;可能是答案&lt;/strong&gt;，&lt;span class=&#34;math inline&#34;&gt;\(p&amp;lt;k\)&lt;/span&gt; 的时候&lt;strong&gt;绝对不会&lt;/strong&gt;是答案。&lt;/p&gt;
+&lt;div class=&#34;sourceCode&#34; id=&#34;cb1&#34;&gt;&lt;pre class=&#34;sourceCode cpp&#34;&gt;&lt;code class=&#34;sourceCode cpp&#34;&gt;&lt;span id=&#34;cb1-1&#34;&gt;&lt;a href=&#34;#cb1-1&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;&lt;span class=&#34;kw&#34;&gt;using&lt;/span&gt; fastIO::is;&lt;/span&gt;
+&lt;span id=&#34;cb1-2&#34;&gt;&lt;a href=&#34;#cb1-2&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;&lt;span class=&#34;kw&#34;&gt;using&lt;/span&gt; fastIO::os;&lt;/span&gt;
+&lt;span id=&#34;cb1-3&#34;&gt;&lt;a href=&#34;#cb1-3&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;&lt;/span&gt;
+&lt;span id=&#34;cb1-4&#34;&gt;&lt;a href=&#34;#cb1-4&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;&lt;span class=&#34;at&#34;&gt;const&lt;/span&gt; &lt;span class=&#34;dt&#34;&gt;int&lt;/span&gt; maxn = &lt;span class=&#34;fl&#34;&gt;5e4&lt;/span&gt; + &lt;span class=&#34;dv&#34;&gt;5&lt;/span&gt;, maxm = &lt;span class=&#34;fl&#34;&gt;1e5&lt;/span&gt; + &lt;span class=&#34;dv&#34;&gt;5&lt;/span&gt;;&lt;/span&gt;
+&lt;span id=&#34;cb1-5&#34;&gt;&lt;a href=&#34;#cb1-5&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;&lt;span class=&#34;kw&#34;&gt;struct&lt;/span&gt; Edge {&lt;/span&gt;
+&lt;span id=&#34;cb1-6&#34;&gt;&lt;a href=&#34;#cb1-6&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;    &lt;span class=&#34;dt&#34;&gt;int&lt;/span&gt; u, v, w, c;&lt;/span&gt;
+&lt;span id=&#34;cb1-7&#34;&gt;&lt;a href=&#34;#cb1-7&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;    il &lt;span class=&#34;dt&#34;&gt;bool&lt;/span&gt; &lt;span class=&#34;kw&#34;&gt;operator&lt;/span&gt;&amp;lt;(&lt;span class=&#34;at&#34;&gt;const&lt;/span&gt; Edge &amp;amp;rhs) &lt;span class=&#34;at&#34;&gt;const&lt;/span&gt; {&lt;span class=&#34;cf&#34;&gt;return&lt;/span&gt; w &amp;lt; rhs.w;}&lt;/span&gt;
+&lt;span id=&#34;cb1-8&#34;&gt;&lt;a href=&#34;#cb1-8&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;} e[maxm];&lt;/span&gt;
+&lt;span id=&#34;cb1-9&#34;&gt;&lt;a href=&#34;#cb1-9&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;&lt;span class=&#34;dt&#34;&gt;int&lt;/span&gt; n, m, need, cntw = &lt;span class=&#34;dv&#34;&gt;1&lt;/span&gt;, fa[maxn];&lt;/span&gt;
+&lt;span id=&#34;cb1-10&#34;&gt;&lt;a href=&#34;#cb1-10&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;&lt;/span&gt;
+&lt;span id=&#34;cb1-11&#34;&gt;&lt;a href=&#34;#cb1-11&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;&lt;span class=&#34;dt&#34;&gt;int&lt;/span&gt; find(&lt;span class=&#34;dt&#34;&gt;int&lt;/span&gt; u) {&lt;span class=&#34;cf&#34;&gt;return&lt;/span&gt; fa[u] == u ? u : fa[u] = find(fa[u]);}&lt;/span&gt;
+&lt;span id=&#34;cb1-12&#34;&gt;&lt;a href=&#34;#cb1-12&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;&lt;/span&gt;
+&lt;span id=&#34;cb1-13&#34;&gt;&lt;a href=&#34;#cb1-13&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;&lt;span class=&#34;dt&#34;&gt;bool&lt;/span&gt; add(&lt;span class=&#34;dt&#34;&gt;int&lt;/span&gt; i) {&lt;/span&gt;
+&lt;span id=&#34;cb1-14&#34;&gt;&lt;a href=&#34;#cb1-14&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;    &lt;span class=&#34;dt&#34;&gt;int&lt;/span&gt; u = find(e[i].u), v = find(e[i].v);&lt;/span&gt;
+&lt;span id=&#34;cb1-15&#34;&gt;&lt;a href=&#34;#cb1-15&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;    &lt;span class=&#34;cf&#34;&gt;if&lt;/span&gt; (u == v) &lt;span class=&#34;cf&#34;&gt;return&lt;/span&gt; &lt;span class=&#34;kw&#34;&gt;false&lt;/span&gt;;&lt;/span&gt;
+&lt;span id=&#34;cb1-16&#34;&gt;&lt;a href=&#34;#cb1-16&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;    &lt;span class=&#34;cf&#34;&gt;else&lt;/span&gt; &lt;span class=&#34;cf&#34;&gt;return&lt;/span&gt; fa[u] = v, &lt;span class=&#34;kw&#34;&gt;true&lt;/span&gt;;&lt;/span&gt;
+&lt;span id=&#34;cb1-17&#34;&gt;&lt;a href=&#34;#cb1-17&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;}&lt;/span&gt;
+&lt;span id=&#34;cb1-18&#34;&gt;&lt;a href=&#34;#cb1-18&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;&lt;/span&gt;
+&lt;span id=&#34;cb1-19&#34;&gt;&lt;a href=&#34;#cb1-19&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;&lt;span class=&#34;dt&#34;&gt;int&lt;/span&gt; main() {&lt;/span&gt;
+&lt;span id=&#34;cb1-20&#34;&gt;&lt;a href=&#34;#cb1-20&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;    is &amp;gt;&amp;gt; n &amp;gt;&amp;gt; m &amp;gt;&amp;gt; need;&lt;/span&gt;
+&lt;span id=&#34;cb1-21&#34;&gt;&lt;a href=&#34;#cb1-21&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;    FOR(i, &lt;span class=&#34;dv&#34;&gt;1&lt;/span&gt;, m) {&lt;/span&gt;
+&lt;span id=&#34;cb1-22&#34;&gt;&lt;a href=&#34;#cb1-22&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;        is &amp;gt;&amp;gt; e[i].u &amp;gt;&amp;gt; e[i].v &amp;gt;&amp;gt; e[i].w &amp;gt;&amp;gt; e[i].c;&lt;/span&gt;
+&lt;span id=&#34;cb1-23&#34;&gt;&lt;a href=&#34;#cb1-23&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;        ++e[i].u, ++e[i].v; &lt;span class=&#34;co&#34;&gt;// 注意原题点从 0 开始标号&lt;/span&gt;&lt;/span&gt;
+&lt;span id=&#34;cb1-24&#34;&gt;&lt;a href=&#34;#cb1-24&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;        &lt;span class=&#34;cf&#34;&gt;if&lt;/span&gt; (!e[i].c) swap(e[cntw++], e[i]); &lt;span class=&#34;co&#34;&gt;// 将白点集中在数组前部&lt;/span&gt;&lt;/span&gt;
+&lt;span id=&#34;cb1-25&#34;&gt;&lt;a href=&#34;#cb1-25&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;    }&lt;/span&gt;
+&lt;span id=&#34;cb1-26&#34;&gt;&lt;a href=&#34;#cb1-26&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;    sort(e + &lt;span class=&#34;dv&#34;&gt;1&lt;/span&gt;, e + cntw), sort(e + cntw, e + m + &lt;span class=&#34;dv&#34;&gt;1&lt;/span&gt;);&lt;/span&gt;
+&lt;span id=&#34;cb1-27&#34;&gt;&lt;a href=&#34;#cb1-27&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;    &lt;span class=&#34;dt&#34;&gt;int&lt;/span&gt; l = -&lt;span class=&#34;dv&#34;&gt;100&lt;/span&gt;, r = &lt;span class=&#34;dv&#34;&gt;101&lt;/span&gt;, ans = &lt;span class=&#34;dv&#34;&gt;0&lt;/span&gt;;&lt;/span&gt;
+&lt;span id=&#34;cb1-28&#34;&gt;&lt;a href=&#34;#cb1-28&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;    &lt;span class=&#34;cf&#34;&gt;while&lt;/span&gt; (l + &lt;span class=&#34;dv&#34;&gt;1&lt;/span&gt; &amp;lt; r) {&lt;/span&gt;
+&lt;span id=&#34;cb1-29&#34;&gt;&lt;a href=&#34;#cb1-29&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;        &lt;span class=&#34;dt&#34;&gt;int&lt;/span&gt; mid = (l + r) &amp;gt;&amp;gt; &lt;span class=&#34;dv&#34;&gt;1&lt;/span&gt;;&lt;/span&gt;
+&lt;span id=&#34;cb1-30&#34;&gt;&lt;a href=&#34;#cb1-30&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;        FOR(i, &lt;span class=&#34;dv&#34;&gt;1&lt;/span&gt;, n) fa[i] = i;&lt;/span&gt;
+&lt;span id=&#34;cb1-31&#34;&gt;&lt;a href=&#34;#cb1-31&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;        &lt;span class=&#34;dt&#34;&gt;int&lt;/span&gt; chosen = &lt;span class=&#34;dv&#34;&gt;0&lt;/span&gt;, val = &lt;span class=&#34;dv&#34;&gt;0&lt;/span&gt;;&lt;/span&gt;
+&lt;span id=&#34;cb1-32&#34;&gt;&lt;a href=&#34;#cb1-32&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;        &lt;span class=&#34;dt&#34;&gt;int&lt;/span&gt; i = &lt;span class=&#34;dv&#34;&gt;1&lt;/span&gt;, j = cntw;&lt;/span&gt;
+&lt;span id=&#34;cb1-33&#34;&gt;&lt;a href=&#34;#cb1-33&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;        &lt;span class=&#34;cf&#34;&gt;while&lt;/span&gt; (i &amp;lt; cntw &amp;amp;&amp;amp; j &amp;lt;= m) {&lt;/span&gt;
+&lt;span id=&#34;cb1-34&#34;&gt;&lt;a href=&#34;#cb1-34&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;            &lt;span class=&#34;cf&#34;&gt;if&lt;/span&gt; (e[i].w + mid &amp;lt;= e[j].w) { &lt;span class=&#34;co&#34;&gt;// 同权优先选白点，相当于保证最优解同时物品数最大&lt;/span&gt;&lt;/span&gt;
+&lt;span id=&#34;cb1-35&#34;&gt;&lt;a href=&#34;#cb1-35&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;                &lt;span class=&#34;cf&#34;&gt;if&lt;/span&gt; (add(i)) val += e[i].w + mid, ++chosen;&lt;/span&gt;
+&lt;span id=&#34;cb1-36&#34;&gt;&lt;a href=&#34;#cb1-36&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;                ++i;&lt;/span&gt;
+&lt;span id=&#34;cb1-37&#34;&gt;&lt;a href=&#34;#cb1-37&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;            } &lt;span class=&#34;cf&#34;&gt;else&lt;/span&gt; val += e[j].w * add(j), ++j;&lt;/span&gt;
+&lt;span id=&#34;cb1-38&#34;&gt;&lt;a href=&#34;#cb1-38&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;        }&lt;/span&gt;
+&lt;span id=&#34;cb1-39&#34;&gt;&lt;a href=&#34;#cb1-39&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;        &lt;span class=&#34;cf&#34;&gt;for&lt;/span&gt; (; i &amp;lt; cntw; ++i) &lt;span class=&#34;cf&#34;&gt;if&lt;/span&gt; (add(i)) val += (e[i].w + mid), ++chosen;&lt;/span&gt;
+&lt;span id=&#34;cb1-40&#34;&gt;&lt;a href=&#34;#cb1-40&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;        &lt;span class=&#34;cf&#34;&gt;for&lt;/span&gt; (; j &amp;lt;= m; ++j) val += add(j) * e[j].w;&lt;/span&gt;
+&lt;span id=&#34;cb1-41&#34;&gt;&lt;a href=&#34;#cb1-41&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;        &lt;span class=&#34;cf&#34;&gt;if&lt;/span&gt; (chosen &amp;gt;= need) ans = val - mid * need, l = mid; &lt;span class=&#34;co&#34;&gt;// 可能搜到解&lt;/span&gt;&lt;/span&gt;
+&lt;span id=&#34;cb1-42&#34;&gt;&lt;a href=&#34;#cb1-42&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;        &lt;span class=&#34;cf&#34;&gt;else&lt;/span&gt; r = mid; &lt;span class=&#34;co&#34;&gt;// 不可能是解&lt;/span&gt;&lt;/span&gt;
+&lt;span id=&#34;cb1-43&#34;&gt;&lt;a href=&#34;#cb1-43&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;    }&lt;/span&gt;
+&lt;span id=&#34;cb1-44&#34;&gt;&lt;a href=&#34;#cb1-44&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;    os &amp;lt;&amp;lt; ans &amp;lt;&amp;lt; &lt;span class=&#34;ch&#34;&gt;&amp;#39;&lt;/span&gt;&lt;span class=&#34;sc&#34;&gt;\n&lt;/span&gt;&lt;span class=&#34;ch&#34;&gt;&amp;#39;&lt;/span&gt;;&lt;/span&gt;
+&lt;span id=&#34;cb1-45&#34;&gt;&lt;a href=&#34;#cb1-45&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;    &lt;span class=&#34;cf&#34;&gt;return&lt;/span&gt; &lt;span class=&#34;dv&#34;&gt;0&lt;/span&gt;;&lt;/span&gt;
+&lt;span id=&#34;cb1-46&#34;&gt;&lt;a href=&#34;#cb1-46&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;}&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;blockquote&gt;
+&lt;p&gt;例题 &lt;span class=&#34;math inline&#34;&gt;\(2\)&lt;/span&gt;：&lt;a href=&#34;https://www.luogu.com.cn/problem/CF739E&#34;&gt;CF739E Gosha is hunting&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;要抓 &lt;span class=&#34;math inline&#34;&gt;\(n\)&lt;/span&gt; 只宝可梦，有 &lt;span class=&#34;math inline&#34;&gt;\(a\)&lt;/span&gt; 个 Poke Ball 和 &lt;span class=&#34;math inline&#34;&gt;\(b\)&lt;/span&gt; 个 Ultra Ball。Poke Ball 抓到第 &lt;span class=&#34;math inline&#34;&gt;\(i\)&lt;/span&gt; 只宝可梦的概率为 &lt;span class=&#34;math inline&#34;&gt;\(p_i\)&lt;/span&gt;，Ultra Ball 抓到第 &lt;span class=&#34;math inline&#34;&gt;\(j\)&lt;/span&gt; 只宝可梦的概率为 &lt;span class=&#34;math inline&#34;&gt;\(q_i\)&lt;/span&gt;，不能重复用一种球抓一个宝可梦，但是可以用两种球抓一个宝可梦（都抓到算一个）。求最优策略下期望抓到的宝可梦个数。&lt;span class=&#34;math inline&#34;&gt;\(a,b\le n\le 2000\)&lt;/span&gt;。&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;费用流可以解本题，但不在本文讨论范围内。&lt;/p&gt;
+&lt;p&gt;考虑一个 &lt;span class=&#34;math inline&#34;&gt;\(O(n^3)\)&lt;/span&gt; 的 naive dp：&lt;span class=&#34;math inline&#34;&gt;\(f_{i,j,k}\)&lt;/span&gt; 表示前 &lt;span class=&#34;math inline&#34;&gt;\(i\)&lt;/span&gt; 个宝可梦，用 &lt;span class=&#34;math inline&#34;&gt;\(j\)&lt;/span&gt; 个 Poke Ball 和 &lt;span class=&#34;math inline&#34;&gt;\(k\)&lt;/span&gt; 个 Ultra Ball，期望抓到的宝可梦个数。则有转移： &lt;span class=&#34;math display&#34;&gt;\[
+\begin{cases}
+f_{i,j,k} \leftarrow \max\{f_{i,j,k}, f_{i - 1, j - 1, k} + p_i\}\\
+f_{i,j,k} \leftarrow \max\{f_{i,j,k}, f_{i - 1, j, k - 1} + q_i\}\\
+f_{i,j,k} \leftarrow \max\{f_{i,j,k}, f_{i - 1, j - 1, k - 1} + p_i + q_i - p_iq_i\}
+\end{cases}
+\]&lt;/span&gt; 考虑优化。第一，发现最优策略一定会用完所有的球，即我们现在钦定要用 &lt;span class=&#34;math inline&#34;&gt;\(a\)&lt;/span&gt; 个 Poke Ball 和 &lt;span class=&#34;math inline&#34;&gt;\(b\)&lt;/span&gt; 个 Ultra Ball。&lt;/p&gt;
+&lt;p&gt;第二，发现若不考虑 &lt;span class=&#34;math inline&#34;&gt;\(b\)&lt;/span&gt; 的限制，我们的 dp 就是比较简单的二维 dp 了，所以思考是不是可以用 wqs 二分干掉这一维。&lt;/p&gt;
+&lt;p&gt;第三，考虑 &lt;span class=&#34;math inline&#34;&gt;\(f_{n, a, j}\)&lt;/span&gt; 关于 &lt;span class=&#34;math inline&#34;&gt;\(j\)&lt;/span&gt; 的函数 &lt;span class=&#34;math inline&#34;&gt;\(f(x)\)&lt;/span&gt;，发现（打表，猜测）其为凸函数（事实上感性理解一下，多加一个 Ultra Ball 能带来的期望增加值肯定越少），所以可以 wqs 二分，直接上就行了。&lt;/p&gt;
+&lt;p&gt;注意本题为实数二分，时间复杂度为 &lt;span class=&#34;math inline&#34;&gt;\(O(n^2\log\epsilon^{-1})\)&lt;/span&gt;。注：对两维都进行 wqs 二分的 &lt;span class=&#34;math inline&#34;&gt;\(O(n\log^2\epsilon^{-1})\)&lt;/span&gt; 做法&lt;a href=&#34;https://www.luogu.com.cn/discuss/422583&#34;&gt;疑似被证伪&lt;/a&gt;，故此处不展开。&lt;/p&gt;
+&lt;p&gt;这里再提一下实现细节，由于我们多加一个 Ultra Ball，至多期望新抓到 &lt;span class=&#34;math inline&#34;&gt;\(1\)&lt;/span&gt; 个宝可梦，所以在 &lt;span class=&#34;math inline&#34;&gt;\([0, 1]\)&lt;/span&gt; 间二分斜率，而且需要注意的是这个函数是上凸的，切不可生搬硬套，需要现场分析。&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;Trick：可以将 dp 值和选的物品个数打包成一个类，详见代码。&lt;/p&gt;
+&lt;p&gt;&lt;del&gt;只是这样似乎是会贡献大常数（笑）&lt;/del&gt;&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;div class=&#34;sourceCode&#34; id=&#34;cb2&#34;&gt;&lt;pre class=&#34;sourceCode cpp&#34;&gt;&lt;code class=&#34;sourceCode cpp&#34;&gt;&lt;span id=&#34;cb2-1&#34;&gt;&lt;a href=&#34;#cb2-1&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;&lt;span class=&#34;kw&#34;&gt;using&lt;/span&gt; db = &lt;span class=&#34;dt&#34;&gt;double&lt;/span&gt;;&lt;/span&gt;
+&lt;span id=&#34;cb2-2&#34;&gt;&lt;a href=&#34;#cb2-2&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;&lt;span class=&#34;at&#34;&gt;const&lt;/span&gt; &lt;span class=&#34;dt&#34;&gt;int&lt;/span&gt; maxn = &lt;span class=&#34;dv&#34;&gt;2005&lt;/span&gt;;&lt;/span&gt;
+&lt;span id=&#34;cb2-3&#34;&gt;&lt;a href=&#34;#cb2-3&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;&lt;span class=&#34;dt&#34;&gt;int&lt;/span&gt; n, a, b;&lt;/span&gt;
+&lt;span id=&#34;cb2-4&#34;&gt;&lt;a href=&#34;#cb2-4&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;db p[maxn], q[maxn];&lt;/span&gt;
+&lt;span id=&#34;cb2-5&#34;&gt;&lt;a href=&#34;#cb2-5&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;&lt;/span&gt;
+&lt;span id=&#34;cb2-6&#34;&gt;&lt;a href=&#34;#cb2-6&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;&lt;span class=&#34;kw&#34;&gt;struct&lt;/span&gt; DP {&lt;/span&gt;
+&lt;span id=&#34;cb2-7&#34;&gt;&lt;a href=&#34;#cb2-7&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;    db dp;&lt;/span&gt;
+&lt;span id=&#34;cb2-8&#34;&gt;&lt;a href=&#34;#cb2-8&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;    &lt;span class=&#34;dt&#34;&gt;int&lt;/span&gt; cnt;&lt;/span&gt;
+&lt;span id=&#34;cb2-9&#34;&gt;&lt;a href=&#34;#cb2-9&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;    DP(db _dp = &lt;span class=&#34;dv&#34;&gt;0&lt;/span&gt;, &lt;span class=&#34;dt&#34;&gt;int&lt;/span&gt; _cnt = &lt;span class=&#34;dv&#34;&gt;0&lt;/span&gt;) : dp(_dp), cnt(_cnt) {}&lt;/span&gt;
+&lt;span id=&#34;cb2-10&#34;&gt;&lt;a href=&#34;#cb2-10&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;    il &lt;span class=&#34;dt&#34;&gt;bool&lt;/span&gt; &lt;span class=&#34;kw&#34;&gt;operator&lt;/span&gt;&amp;gt;(&lt;span class=&#34;at&#34;&gt;const&lt;/span&gt; DP &amp;amp;rhs) &lt;span class=&#34;at&#34;&gt;const&lt;/span&gt; {&lt;/span&gt;
+&lt;span id=&#34;cb2-11&#34;&gt;&lt;a href=&#34;#cb2-11&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;        &lt;span class=&#34;cf&#34;&gt;return&lt;/span&gt; (myabs(dp - rhs.dp) &amp;lt; &lt;span class=&#34;fl&#34;&gt;1e-7&lt;/span&gt;) ? (cnt &amp;lt; rhs.cnt) : (dp &amp;gt; rhs.dp);&lt;/span&gt;
+&lt;span id=&#34;cb2-12&#34;&gt;&lt;a href=&#34;#cb2-12&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;    }&lt;/span&gt;
+&lt;span id=&#34;cb2-13&#34;&gt;&lt;a href=&#34;#cb2-13&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;    il DP &lt;span class=&#34;kw&#34;&gt;operator&lt;/span&gt;+(&lt;span class=&#34;at&#34;&gt;const&lt;/span&gt; DP &amp;amp;rhs) &lt;span class=&#34;at&#34;&gt;const&lt;/span&gt; {&lt;/span&gt;
+&lt;span id=&#34;cb2-14&#34;&gt;&lt;a href=&#34;#cb2-14&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;        &lt;span class=&#34;cf&#34;&gt;return&lt;/span&gt; DP(dp + rhs.dp, cnt + rhs.cnt);&lt;/span&gt;
+&lt;span id=&#34;cb2-15&#34;&gt;&lt;a href=&#34;#cb2-15&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;    }&lt;/span&gt;
+&lt;span id=&#34;cb2-16&#34;&gt;&lt;a href=&#34;#cb2-16&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;} f[maxn][maxn];&lt;/span&gt;
+&lt;span id=&#34;cb2-17&#34;&gt;&lt;a href=&#34;#cb2-17&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;&lt;/span&gt;
+&lt;span id=&#34;cb2-18&#34;&gt;&lt;a href=&#34;#cb2-18&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;&lt;span class=&#34;dt&#34;&gt;int&lt;/span&gt; main() {&lt;/span&gt;
+&lt;span id=&#34;cb2-19&#34;&gt;&lt;a href=&#34;#cb2-19&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;    ios::sync_with_stdio(&lt;span class=&#34;kw&#34;&gt;false&lt;/span&gt;);&lt;/span&gt;
+&lt;span id=&#34;cb2-20&#34;&gt;&lt;a href=&#34;#cb2-20&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;    cin &amp;gt;&amp;gt; n &amp;gt;&amp;gt; a &amp;gt;&amp;gt; b;&lt;/span&gt;
+&lt;span id=&#34;cb2-21&#34;&gt;&lt;a href=&#34;#cb2-21&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;    FOR(i, &lt;span class=&#34;dv&#34;&gt;1&lt;/span&gt;, n) cin &amp;gt;&amp;gt; p[i];&lt;/span&gt;
+&lt;span id=&#34;cb2-22&#34;&gt;&lt;a href=&#34;#cb2-22&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;    FOR(i, &lt;span class=&#34;dv&#34;&gt;1&lt;/span&gt;, n) cin &amp;gt;&amp;gt; q[i];&lt;/span&gt;
+&lt;span id=&#34;cb2-23&#34;&gt;&lt;a href=&#34;#cb2-23&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;    db l = &lt;span class=&#34;dv&#34;&gt;0&lt;/span&gt;, r = &lt;span class=&#34;dv&#34;&gt;1&lt;/span&gt;, ans = &lt;span class=&#34;dv&#34;&gt;0&lt;/span&gt;;&lt;/span&gt;
+&lt;span id=&#34;cb2-24&#34;&gt;&lt;a href=&#34;#cb2-24&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;    &lt;span class=&#34;cf&#34;&gt;for&lt;/span&gt; (&lt;span class=&#34;dt&#34;&gt;int&lt;/span&gt; kase = &lt;span class=&#34;dv&#34;&gt;1&lt;/span&gt;; kase &amp;lt;= &lt;span class=&#34;dv&#34;&gt;30&lt;/span&gt;; ++kase) {&lt;/span&gt;
+&lt;span id=&#34;cb2-25&#34;&gt;&lt;a href=&#34;#cb2-25&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;        db mid = (l + r) / &lt;span class=&#34;dv&#34;&gt;2&lt;/span&gt;;&lt;/span&gt;
+&lt;span id=&#34;cb2-26&#34;&gt;&lt;a href=&#34;#cb2-26&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;        memset(f, &lt;span class=&#34;dv&#34;&gt;0&lt;/span&gt;, &lt;span class=&#34;kw&#34;&gt;sizeof&lt;/span&gt; f);&lt;/span&gt;
+&lt;span id=&#34;cb2-27&#34;&gt;&lt;a href=&#34;#cb2-27&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;        FOR(i, &lt;span class=&#34;dv&#34;&gt;1&lt;/span&gt;, n) FOR(j, &lt;span class=&#34;dv&#34;&gt;0&lt;/span&gt;, a) {&lt;/span&gt;
+&lt;span id=&#34;cb2-28&#34;&gt;&lt;a href=&#34;#cb2-28&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;            chkmax(f[i][j], f[i - &lt;span class=&#34;dv&#34;&gt;1&lt;/span&gt;][j] + DP(&lt;span class=&#34;dv&#34;&gt;0&lt;/span&gt;, &lt;span class=&#34;dv&#34;&gt;0&lt;/span&gt;));&lt;/span&gt;
+&lt;span id=&#34;cb2-29&#34;&gt;&lt;a href=&#34;#cb2-29&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;            chkmax(f[i][j], f[i - &lt;span class=&#34;dv&#34;&gt;1&lt;/span&gt;][j] + DP(q[i] - mid, &lt;span class=&#34;dv&#34;&gt;1&lt;/span&gt;));&lt;/span&gt;
+&lt;span id=&#34;cb2-30&#34;&gt;&lt;a href=&#34;#cb2-30&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;            &lt;span class=&#34;cf&#34;&gt;if&lt;/span&gt; (j) {&lt;/span&gt;
+&lt;span id=&#34;cb2-31&#34;&gt;&lt;a href=&#34;#cb2-31&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;                chkmax(f[i][j], f[i - &lt;span class=&#34;dv&#34;&gt;1&lt;/span&gt;][j - &lt;span class=&#34;dv&#34;&gt;1&lt;/span&gt;] + DP(p[i], &lt;span class=&#34;dv&#34;&gt;0&lt;/span&gt;));&lt;/span&gt;
+&lt;span id=&#34;cb2-32&#34;&gt;&lt;a href=&#34;#cb2-32&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;                chkmax(f[i][j], f[i - &lt;span class=&#34;dv&#34;&gt;1&lt;/span&gt;][j - &lt;span class=&#34;dv&#34;&gt;1&lt;/span&gt;] + DP(p[i] + q[i] - p[i] * q[i] - mid, &lt;span class=&#34;dv&#34;&gt;1&lt;/span&gt;));&lt;/span&gt;
+&lt;span id=&#34;cb2-33&#34;&gt;&lt;a href=&#34;#cb2-33&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;            }&lt;/span&gt;
+&lt;span id=&#34;cb2-34&#34;&gt;&lt;a href=&#34;#cb2-34&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;        }&lt;/span&gt;
+&lt;span id=&#34;cb2-35&#34;&gt;&lt;a href=&#34;#cb2-35&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;        DP mx;&lt;/span&gt;
+&lt;span id=&#34;cb2-36&#34;&gt;&lt;a href=&#34;#cb2-36&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;        FOR(j, &lt;span class=&#34;dv&#34;&gt;0&lt;/span&gt;, a) chkmax(mx, f[n][j]);&lt;/span&gt;
+&lt;span id=&#34;cb2-37&#34;&gt;&lt;a href=&#34;#cb2-37&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;        &lt;span class=&#34;cf&#34;&gt;if&lt;/span&gt; (mx.cnt &amp;lt;= b) ans = mx.dp + mid * b, r = mid;&lt;/span&gt;
+&lt;span id=&#34;cb2-38&#34;&gt;&lt;a href=&#34;#cb2-38&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;        &lt;span class=&#34;cf&#34;&gt;else&lt;/span&gt; l = mid;&lt;/span&gt;
+&lt;span id=&#34;cb2-39&#34;&gt;&lt;a href=&#34;#cb2-39&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;    }&lt;/span&gt;
+&lt;span id=&#34;cb2-40&#34;&gt;&lt;a href=&#34;#cb2-40&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;    cout &amp;lt;&amp;lt; ans &amp;lt;&amp;lt; endl;&lt;/span&gt;
+&lt;span id=&#34;cb2-41&#34;&gt;&lt;a href=&#34;#cb2-41&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;    &lt;span class=&#34;cf&#34;&gt;return&lt;/span&gt; &lt;span class=&#34;dv&#34;&gt;0&lt;/span&gt;;&lt;/span&gt;
+&lt;span id=&#34;cb2-42&#34;&gt;&lt;a href=&#34;#cb2-42&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;}&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;h2 id=&#34;reference&#34;&gt;Reference&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;https://www.cnblogs.com/alex-wei/p/DP_Involution.html&#34;&gt;DP 优化方法大杂烩 I. by Alex Wei&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://www.luogu.com.cn/blog/daniu/wqs-er-fen&#34;&gt;wqs二分 学习笔记 by 小跳蛙&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://www.cnblogs.com/ET2006/p/jcddx-and-wqs-binary-search.html&#34;&gt;决策单调性&amp;amp;wqs二分 by tzc_wk&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://www.mina.moe/archives/6349&#34;&gt;【算法】带权二分 by boshi&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;感谢以上文章的作者以及伟大的 Asd_Okuu，没有您们我永远学不懂 wqs 二分/kk。&lt;/p&gt;
+</description>
+        </item>
+        
+    </channel>
+</rss>

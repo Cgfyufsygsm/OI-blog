@@ -1,0 +1,527 @@
+<!DOCTYPE html>
+<html dir="ltr" lang="zh-CN">
+<head><meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1" name="viewport"/><meta content="前言 省选 + NOI 复习。
+全凭个人喜好来搞。
+不会写的很严谨，实战导向型。
+本文内容概览：
+二分图 二分图基础 二分图匹配 Konig 定理 Dilworth 引理 Hall 定理 二分图博弈 网络流 最大流（EK 与 Dinic） 费用流（SSP 费用流） 上下界网络流 模型构建 最大流：拆点模型 最小割：集合划分问题、可行边与必须边、平面图最小割、最小割的最小边数、最大权闭合子图 费用流：各种乱七八糟的费用流 最小割树 二分图基础 定义：对于无向图 \(G = (V,E)\)，若存在将 \(V\) 划分成两个非空且不交子集 \(A,B\) 的方案，使得 \(A,B\) 的导出子图都不含边，则称 \(G\) 为一张二分图，\(A,B\) 分别为其左部和右部。
+因此，我们总可以对二分图进行黑白染色。
+注意若二分图 \(G\) 由 \(c\) 个连通分量构成，则其有 \(2^c\) 种染色方案（每个连通分量各有两种）。
+二分图的判定定理：\(G = (V,E)\) 为二分图 \(\iff\) 图中不含奇环。
+证明：考虑黑白染色，对于这个奇环，会发现其无法进行染色。而对于不含奇环的图我们总可以找到一个对应的染色方案。
+而且有推论：
+二分图的任意子图为二分图。 \(G=(V,E)\) 为二分图 \(\iff\) \(G\) 的每个连通分量都为二分图。 所以，
+判断二分图只需要挨个判断其连通分量，具体地，对其进行 dfs，生成一棵 dfs 生成树，遇到返祖边时若两端点深度奇偶性相同则其一定不是二分图，实际上相当于对图进行黑白染色。 二分图中任意两点间路径长度的奇偶性是确定的。 二分图匹配 最大匹配与匈牙利算法 图的一组匹配是一个边集 \(A\subseteq E\)，满足 \(A\) 中不存在共端点的边，最大匹配则指大小最大的一组匹配。" name="description"/><title>图论复习 3（二分图与网络流）</title>
+<link href="https://oi.imyangty.com/summary-graph3/" rel="canonical"/>
+<link href="/scss/style.min.a5821f3d3ab84ce5a0ac21477e347a2e0ca00292e398d16c5e8e36ded6e35a23.css" rel="stylesheet"/><meta content="图论复习 3（二分图与网络流）" property="og:title"/>
+<meta content="前言 省选 + NOI 复习。
+全凭个人喜好来搞。
+不会写的很严谨，实战导向型。
+本文内容概览：
+二分图 二分图基础 二分图匹配 Konig 定理 Dilworth 引理 Hall 定理 二分图博弈 网络流 最大流（EK 与 Dinic） 费用流（SSP 费用流） 上下界网络流 模型构建 最大流：拆点模型 最小割：集合划分问题、可行边与必须边、平面图最小割、最小割的最小边数、最大权闭合子图 费用流：各种乱七八糟的费用流 最小割树 二分图基础 定义：对于无向图 \(G = (V,E)\)，若存在将 \(V\) 划分成两个非空且不交子集 \(A,B\) 的方案，使得 \(A,B\) 的导出子图都不含边，则称 \(G\) 为一张二分图，\(A,B\) 分别为其左部和右部。
+因此，我们总可以对二分图进行黑白染色。
+注意若二分图 \(G\) 由 \(c\) 个连通分量构成，则其有 \(2^c\) 种染色方案（每个连通分量各有两种）。
+二分图的判定定理：\(G = (V,E)\) 为二分图 \(\iff\) 图中不含奇环。
+证明：考虑黑白染色，对于这个奇环，会发现其无法进行染色。而对于不含奇环的图我们总可以找到一个对应的染色方案。
+而且有推论：
+二分图的任意子图为二分图。 \(G=(V,E)\) 为二分图 \(\iff\) \(G\) 的每个连通分量都为二分图。 所以，
+判断二分图只需要挨个判断其连通分量，具体地，对其进行 dfs，生成一棵 dfs 生成树，遇到返祖边时若两端点深度奇偶性相同则其一定不是二分图，实际上相当于对图进行黑白染色。 二分图中任意两点间路径长度的奇偶性是确定的。 二分图匹配 最大匹配与匈牙利算法 图的一组匹配是一个边集 \(A\subseteq E\)，满足 \(A\) 中不存在共端点的边，最大匹配则指大小最大的一组匹配。" property="og:description"/>
+<meta content="https://oi.imyangty.com/summary-graph3/" property="og:url"/>
+<meta content="清烛的博客" property="og:site_name"/>
+<meta content="article" property="og:type"/><meta content="Post" property="article:section"/><meta content="2022-02-19T13:27:38+08:00" property="article:published_time"/><meta content="2022-02-19T13:27:38+08:00" property="article:modified_time"/><meta content="https://yangty-pic.oss-cn-beijing.aliyuncs.com/bg11.webp" property="og:image"/>
+<meta content="图论复习 3（二分图与网络流）" name="twitter:title"/>
+<meta content="前言 省选 + NOI 复习。
+全凭个人喜好来搞。
+不会写的很严谨，实战导向型。
+本文内容概览：
+二分图 二分图基础 二分图匹配 Konig 定理 Dilworth 引理 Hall 定理 二分图博弈 网络流 最大流（EK 与 Dinic） 费用流（SSP 费用流） 上下界网络流 模型构建 最大流：拆点模型 最小割：集合划分问题、可行边与必须边、平面图最小割、最小割的最小边数、最大权闭合子图 费用流：各种乱七八糟的费用流 最小割树 二分图基础 定义：对于无向图 \(G = (V,E)\)，若存在将 \(V\) 划分成两个非空且不交子集 \(A,B\) 的方案，使得 \(A,B\) 的导出子图都不含边，则称 \(G\) 为一张二分图，\(A,B\) 分别为其左部和右部。
+因此，我们总可以对二分图进行黑白染色。
+注意若二分图 \(G\) 由 \(c\) 个连通分量构成，则其有 \(2^c\) 种染色方案（每个连通分量各有两种）。
+二分图的判定定理：\(G = (V,E)\) 为二分图 \(\iff\) 图中不含奇环。
+证明：考虑黑白染色，对于这个奇环，会发现其无法进行染色。而对于不含奇环的图我们总可以找到一个对应的染色方案。
+而且有推论：
+二分图的任意子图为二分图。 \(G=(V,E)\) 为二分图 \(\iff\) \(G\) 的每个连通分量都为二分图。 所以，
+判断二分图只需要挨个判断其连通分量，具体地，对其进行 dfs，生成一棵 dfs 生成树，遇到返祖边时若两端点深度奇偶性相同则其一定不是二分图，实际上相当于对图进行黑白染色。 二分图中任意两点间路径长度的奇偶性是确定的。 二分图匹配 最大匹配与匈牙利算法 图的一组匹配是一个边集 \(A\subseteq E\)，满足 \(A\) 中不存在共端点的边，最大匹配则指大小最大的一组匹配。" name="twitter:description"/><meta content="summary_large_image" name="twitter:card"/>
+<meta content="https://yangty-pic.oss-cn-beijing.aliyuncs.com/bg11.webp" name="twitter:image"/>
+<link href="https://q1.qlogo.cn/g?b=qq&amp;nk=375836877&amp;s=5" rel="shortcut icon"/>
+<link href="https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.5.1/build/styles/github-dark-dimmed.min.css" rel="stylesheet"/>
+<script src="https://cdn.jsdelivr.net/gh/highlightjs/cdn-release/build/highlight.min.js"></script>
+<script>hljs.highlightAll();</script>
+</head>
+<body class="article-page">
+<script>
+        (function() {
+            const colorSchemeKey = 'StackColorScheme';
+            if(!localStorage.getItem(colorSchemeKey)){
+                localStorage.setItem(colorSchemeKey, "auto");
+            }
+        })();
+    </script><script>
+    (function() {
+        const colorSchemeKey = 'StackColorScheme';
+        const colorSchemeItem = localStorage.getItem(colorSchemeKey);
+        const supportDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches === true;
+
+        if (colorSchemeItem == 'dark' || colorSchemeItem === 'auto' && supportDarkMode) {
+            
+
+            document.documentElement.dataset.scheme = 'dark';
+        } else {
+            document.documentElement.dataset.scheme = 'light';
+        }
+    })();
+</script>
+<div class="container main-container flex on-phone--column extended"><aside class="sidebar left-sidebar sticky">
+<button aria-label="切换菜单" class="hamburger hamburger--spin" id="toggle-menu" type="button">
+<span class="hamburger-box">
+<span class="hamburger-inner"></span>
+</span>
+</button>
+<header>
+<figure class="site-avatar">
+<a href="/">
+<img alt="Avatar" class="site-logo" height="300" loading="lazy" src="/img/avatar_huea3ce2119467b51fdd2a81393644a76d_51594_300x0_resize_q75_box.jpg" width="300"/>
+</a>
+<span class="emoji">😅</span>
+</figure>
+<div class="site-meta">
+<h1 class="site-name"><a href="/">清烛的博客</a></h1>
+<h2 class="site-description">烟火已谢，笙歌未停</h2>
+</div>
+</header><ol class="social-menu">
+<li>
+<a href="mailto:i@imyangty.com" target="_blank" title="email">
+<svg class="icon icon-tabler icon-tabler-mail" fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" viewbox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+<path d="M0 0h24v24H0z" fill="none" stroke="none"></path>
+<rect height="14" rx="2" width="18" x="3" y="5"></rect>
+<polyline points="3 7 12 13 21 7"></polyline>
+</svg>
+</a>
+</li>
+<li>
+<a href="https://github.com/Cgfyufsygsm" target="_blank" title="GitHub">
+<svg class="icon icon-tabler icon-tabler-brand-github" fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+<path d="M0 0h24v24H0z" fill="none" stroke="none"></path>
+<path d="M9 19c-4.3 1.4 -4.3 -2.5 -6 -3m12 5v-3.5c0 -1 .1 -1.4 -.5 -2c2.8 -.3 5.5 -1.4 5.5 -6a4.6 4.6 0 0 0 -1.3 -3.2a4.2 4.2 0 0 0 -.1 -3.2s-1.1 -.3 -3.5 1.3a12.3 12.3 0 0 0 -6.2 0c-2.4 -1.6 -3.5 -1.3 -3.5 -1.3a4.2 4.2 0 0 0 -.1 3.2a4.6 4.6 0 0 0 -1.3 3.2c0 4.6 2.7 5.7 5.5 6c-.6 .6 -.6 1.2 -.5 2v3.5"></path>
+</svg>
+</a>
+</li>
+<li>
+<a href="https://t.me/Cgfyufsygsm" target="_blank" title="Telegram">
+<svg class="icon icon-tabler icon-tabler-brand-telegram" fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" viewbox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+<path d="M0 0h24v24H0z" fill="none" stroke="none"></path>
+<path d="M15 10l-4 4l6 6l4 -16l-18 7l4 2l2 6l3 -4"></path>
+</svg>
+</a>
+</li>
+<li>
+<a href="https://twitter.com/Cgfyufsygsm" target="_blank" title="Twitter">
+<svg class="icon icon-tabler icon-tabler-brand-twitter" fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+<path d="M0 0h24v24H0z" fill="none" stroke="none"></path>
+<path d="M22 4.01c-1 .49 -1.98 .689 -3 .99c-1.121 -1.265 -2.783 -1.335 -4.38 -.737s-2.643 2.06 -2.62 3.737v1c-3.245 .083 -6.135 -1.395 -8 -4c0 0 -4.182 7.433 4 11c-1.872 1.247 -3.739 2.088 -6 2c3.308 1.803 6.913 2.423 10.034 1.517c3.58 -1.04 6.522 -3.723 7.651 -7.742a13.84 13.84 0 0 0 .497 -3.753c-.002 -.249 1.51 -2.772 1.818 -4.013z"></path>
+</svg>
+</a>
+</li>
+</ol><ol class="menu" id="main-menu">
+<li>
+<a href="/">
+<svg class="icon icon-tabler icon-tabler-home" fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+<path d="M0 0h24v24H0z" stroke="none"></path>
+<polyline points="5 12 3 12 12 3 21 12 19 12"></polyline>
+<path d="M5 12v7a2 2 0 0 0 2 2h10a2 2 0 0 0 2 -2v-7"></path>
+<path d="M9 21v-6a2 2 0 0 1 2 -2h2a2 2 0 0 1 2 2v6"></path>
+</svg>
+<span>主页</span>
+</a>
+</li>
+<li>
+<a href="/about/">
+<svg class="icon icon-tabler icon-tabler-user" fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+<path d="M0 0h24v24H0z" stroke="none"></path>
+<circle cx="12" cy="7" r="4"></circle>
+<path d="M6 21v-2a4 4 0 0 1 4 -4h4a4 4 0 0 1 4 4v2"></path>
+</svg>
+<span>关于</span>
+</a>
+</li>
+<li>
+<a href="/idx/">
+<svg class="icon icon-tabler icon-tabler-hash" fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+<path d="M0 0h24v24H0z" stroke="none"></path>
+<line x1="5" x2="19" y1="9" y2="9"></line>
+<line x1="5" x2="19" y1="15" y2="15"></line>
+<line x1="11" x2="7" y1="4" y2="20"></line>
+<line x1="17" x2="13" y1="4" y2="20"></line>
+</svg>
+<span>导航</span>
+</a>
+</li>
+<li>
+<a href="/archives/">
+<svg class="icon icon-tabler icon-tabler-archive" fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+<path d="M0 0h24v24H0z" stroke="none"></path>
+<rect height="4" rx="2" width="18" x="3" y="4"></rect>
+<path d="M5 8v10a2 2 0 0 0 2 2h10a2 2 0 0 0 2 -2v-10"></path>
+<line x1="10" x2="14" y1="12" y2="12"></line>
+</svg>
+<span>归档</span>
+</a>
+</li>
+<li>
+<a href="/search/">
+<svg class="icon icon-tabler icon-tabler-search" fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+<path d="M0 0h24v24H0z" stroke="none"></path>
+<circle cx="10" cy="10" r="7"></circle>
+<line x1="21" x2="15" y1="21" y2="15"></line>
+</svg>
+<span>搜索</span>
+</a>
+</li>
+<li>
+<a href="/friends/">
+<svg class="icon icon-tabler icon-tabler-link" fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+<path d="M0 0h24v24H0z" stroke="none"></path>
+<path d="M10 14a3.5 3.5 0 0 0 5 0l4 -4a3.5 3.5 0 0 0 -5 -5l-.5 .5"></path>
+<path d="M14 10a3.5 3.5 0 0 0 -5 0l-4 4a3.5 3.5 0 0 0 5 5l.5 -.5"></path>
+</svg>
+<span>友链</span>
+</a>
+</li>
+<li>
+<a href="https://blog.imyangty.com" target="_blank">
+<svg class="icon icon-tabler icon-tabler-home" fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+<path d="M0 0h24v24H0z" stroke="none"></path>
+<polyline points="5 12 3 12 12 3 21 12 19 12"></polyline>
+<path d="M5 12v7a2 2 0 0 0 2 2h10a2 2 0 0 0 2 -2v-7"></path>
+<path d="M9 21v-6a2 2 0 0 1 2 -2h2a2 2 0 0 1 2 2v6"></path>
+</svg>
+<span>主博客</span>
+</a>
+</li>
+<div class="menu-bottom-section">
+<li id="dark-mode-toggle">
+<svg class="icon icon-tabler icon-tabler-toggle-left" fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+<path d="M0 0h24v24H0z" stroke="none"></path>
+<circle cx="8" cy="12" r="2"></circle>
+<rect height="12" rx="6" width="20" x="2" y="6"></rect>
+</svg>
+<svg class="icon icon-tabler icon-tabler-toggle-right" fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+<path d="M0 0h24v24H0z" stroke="none"></path>
+<circle cx="16" cy="12" r="2"></circle>
+<rect height="12" rx="6" width="20" x="2" y="6"></rect>
+</svg>
+<span>暗色模式</span>
+</li>
+</div>
+</ol>
+</aside>
+<main class="main full-width">
+<article class="has-image main-article">
+<header class="article-header">
+<div class="article-image">
+<a href="/summary-graph3/">
+<img alt="Featured image of post 图论复习 3（二分图与网络流）" loading="lazy" src="https://yangty-pic.oss-cn-beijing.aliyuncs.com/bg11.webp"/>
+</a>
+</div>
+<div class="article-details">
+<div class="article-title-wrapper">
+<h2 class="article-title">
+<a href="/summary-graph3/">图论复习 3（二分图与网络流）</a>
+</h2>
+</div>
+<footer class="article-time">
+<div>
+<svg class="icon icon-tabler icon-tabler-calendar-time" fill="none" height="56" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="56" xmlns="http://www.w3.org/2000/svg">
+<path d="M0 0h24v24H0z" stroke="none"></path>
+<path d="M11.795 21h-6.795a2 2 0 0 1 -2 -2v-12a2 2 0 0 1 2 -2h12a2 2 0 0 1 2 2v4"></path>
+<circle cx="18" cy="18" r="4"></circle>
+<path d="M15 3v4"></path>
+<path d="M7 3v4"></path>
+<path d="M3 11h16"></path>
+<path d="M18 16.496v1.504l1 1"></path>
+</svg>
+<time class="article-time--published">Feb 19, 2022</time>
+</div>
+<div>
+<svg class="icon icon-tabler icon-tabler-clock" fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+<path d="M0 0h24v24H0z" stroke="none"></path>
+<circle cx="12" cy="12" r="9"></circle>
+<polyline points="12 7 12 12 15 15"></polyline>
+</svg>
+<time class="article-time--reading">
+                    阅读时长: 3 分钟
+                </time>
+</div>
+</footer>
+</div>
+</header>
+<section class="article-content">
+<h2 id="前言">前言</h2>
+<p>省选 + NOI 复习。</p>
+<p>全凭个人喜好来搞。</p>
+<p>不会写的很严谨，实战导向型。</p>
+<p>本文内容概览：</p>
+<ul>
+<li>二分图
+<ul>
+<li>二分图基础</li>
+<li>二分图匹配</li>
+<li>Konig 定理</li>
+<li>Dilworth 引理</li>
+<li>Hall 定理</li>
+<li>二分图博弈</li>
+</ul></li>
+<li>网络流
+<ul>
+<li>最大流（EK 与 Dinic）</li>
+<li>费用流（SSP 费用流）</li>
+<li>上下界网络流</li>
+<li>模型构建
+<ul>
+<li>最大流：拆点模型</li>
+<li>最小割：集合划分问题、可行边与必须边、平面图最小割、最小割的最小边数、最大权闭合子图</li>
+<li>费用流：各种乱七八糟的费用流</li>
+</ul></li>
+<li>最小割树</li>
+</ul></li>
+</ul>
+<h2 id="二分图基础">二分图基础</h2>
+<blockquote>
+<p>定义：<strong>对于无向图 <span class="math inline">\(G = (V,E)\)</span>，若存在将 <span class="math inline">\(V\)</span> 划分成两个非空且不交子集 <span class="math inline">\(A,B\)</span> 的方案，使得 <span class="math inline">\(A,B\)</span> 的导出子图都不含边，则称 <span class="math inline">\(G\)</span> 为一张二分图，<span class="math inline">\(A,B\)</span> 分别为其左部和右部。</strong></p>
+</blockquote>
+<p>因此，我们总可以对二分图进行黑白染色。</p>
+<p>注意若二分图 <span class="math inline">\(G\)</span> 由 <span class="math inline">\(c\)</span> 个连通分量构成，则其有 <span class="math inline">\(2^c\)</span> 种染色方案（每个连通分量各有两种）。</p>
+<blockquote>
+<p>二分图的判定定理：<span class="math inline">\(G = (V,E)\)</span> 为二分图 <span class="math inline">\(\iff\)</span> 图中不含奇环。</p>
+</blockquote>
+<p>证明：考虑黑白染色，对于这个奇环，会发现其无法进行染色。而对于不含奇环的图我们总可以找到一个对应的染色方案。</p>
+<p>而且有推论：</p>
+<blockquote>
+<ul>
+<li>二分图的任意子图为二分图。</li>
+<li><span class="math inline">\(G=(V,E)\)</span> 为二分图 <span class="math inline">\(\iff\)</span> <span class="math inline">\(G\)</span> 的每个连通分量都为二分图。</li>
+</ul>
+</blockquote>
+<p>所以，</p>
+<ul>
+<li>判断二分图只需要挨个判断其连通分量，具体地，对其进行 dfs，生成一棵 dfs 生成树，遇到返祖边时若两端点深度奇偶性相同则其一定不是二分图，实际上相当于对图进行黑白染色。</li>
+<li><strong>二分图中任意两点间路径长度的奇偶性是确定的。</strong></li>
+</ul>
+<h2 id="二分图匹配">二分图匹配</h2>
+<h3 id="最大匹配与匈牙利算法">最大匹配与匈牙利算法</h3>
+<p>图的一组匹配是一个边集 <span class="math inline">\(A\subseteq E\)</span>，满足 <span class="math inline">\(A\)</span> 中不存在共端点的边，最大匹配则指大小最大的一组匹配。</p>
+<p>求解最大匹配可以使用匈牙利算法或者使用下文提到的最大流。</p>
+<blockquote>
+<p>定义：令 <span class="math inline">\(P\)</span> 为一组匹配，其中的边称为匹配边，匹配边的端点成为匹配点，若一条路径从一个未匹配的左部点出发到达一个未匹配的右部点，<strong>交替经过</strong>非匹配边和匹配边，则称该路径为一条<strong>增广路</strong>。</p>
+</blockquote>
+<p>匈牙利算法依赖一个结论：<strong><span class="math inline">\(P\)</span> 为最大匹配当且仅当图中不存在增广路</strong>，不证。</p>
+<blockquote>
+<p>研究了几个小时，终于明白了。说穿了，就是你从二分图中找出一条路径来，让路径的起点和终点都是还没有匹配过的点，并且路径经过的连线是一条没被匹配、一条已经匹配过，再下一条又没匹配这样交替地出现。找到这样的路径后，显然路径里没被匹配的连线比已经匹配了的连线多一条，于是修改匹配图，把路径里所有匹配过的连线去掉匹配关系，把没有匹配的连线变成匹配的，这样匹配数就比原来多1个。不断执行上述操作，直到找不到这样的路径为止。——Matrix67《二分图最大匹配问题匈牙利算法》</p>
+</blockquote>
+<p>匈牙利算法可以处理动态的二分图，时间复杂度为 <span class="math inline">\(O(n^2)\)</span>，并且实现起来并不难：</p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode cpp"><code class="sourceCode cpp"><span id="cb1-1"><a aria-hidden="true" href="#cb1-1"></a><span class="pp">#include </span><span class="im">&lt;bits/stdc++.h&gt;</span></span>
+<span id="cb1-2"><a aria-hidden="true" href="#cb1-2"></a><span class="pp">#define FOR</span>(i,<span class="pp"> </span>a,<span class="pp"> </span>b)<span class="pp"> </span><span class="cf">for</span><span class="pp"> </span>(<span class="dt">int</span><span class="pp"> </span>i<span class="pp"> </span>=<span class="pp"> </span>(a);<span class="pp"> </span>i<span class="pp"> </span>&lt;=<span class="pp"> </span>(b);<span class="pp"> </span>++i)</span>
+<span id="cb1-3"><a aria-hidden="true" href="#cb1-3"></a></span>
+<span id="cb1-4"><a aria-hidden="true" href="#cb1-4"></a><span class="kw">using</span> <span class="kw">namespace</span> std;</span>
+<span id="cb1-5"><a aria-hidden="true" href="#cb1-5"></a><span class="at">const</span> <span class="dt">int</span> maxn = <span class="dv">505</span>;</span>
+<span id="cb1-6"><a aria-hidden="true" href="#cb1-6"></a><span class="dt">int</span> n, m, e, G[maxn][maxn], ans;</span>
+<span id="cb1-7"><a aria-hidden="true" href="#cb1-7"></a><span class="dt">int</span> used[maxn], match[maxn];</span>
+<span id="cb1-8"><a aria-hidden="true" href="#cb1-8"></a></span>
+<span id="cb1-9"><a aria-hidden="true" href="#cb1-9"></a><span class="dt">int</span> dfs(<span class="dt">int</span> u) {</span>
+<span id="cb1-10"><a aria-hidden="true" href="#cb1-10"></a>    FOR(v, <span class="dv">1</span>, m) <span class="cf">if</span> (!used[v] &amp;&amp; G[u][v]) {</span>
+<span id="cb1-11"><a aria-hidden="true" href="#cb1-11"></a>        used[v] = <span class="dv">1</span>;</span>
+<span id="cb1-12"><a aria-hidden="true" href="#cb1-12"></a>        <span class="cf">if</span> (!match[v] || dfs(match[v])) { <span class="co">// 如果找到了增广路</span></span>
+<span id="cb1-13"><a aria-hidden="true" href="#cb1-13"></a>            match[v] = u;</span>
+<span id="cb1-14"><a aria-hidden="true" href="#cb1-14"></a>            <span class="cf">return</span> <span class="dv">1</span>;</span>
+<span id="cb1-15"><a aria-hidden="true" href="#cb1-15"></a>        }</span>
+<span id="cb1-16"><a aria-hidden="true" href="#cb1-16"></a>    }</span>
+<span id="cb1-17"><a aria-hidden="true" href="#cb1-17"></a>    <span class="cf">return</span> <span class="dv">0</span>;</span>
+<span id="cb1-18"><a aria-hidden="true" href="#cb1-18"></a>}</span>
+<span id="cb1-19"><a aria-hidden="true" href="#cb1-19"></a></span>
+<span id="cb1-20"><a aria-hidden="true" href="#cb1-20"></a><span class="dt">int</span> main() {</span>
+<span id="cb1-21"><a aria-hidden="true" href="#cb1-21"></a>    cin &gt;&gt; n &gt;&gt; m &gt;&gt; e;</span>
+<span id="cb1-22"><a aria-hidden="true" href="#cb1-22"></a>    FOR(i, <span class="dv">1</span>, e) {</span>
+<span id="cb1-23"><a aria-hidden="true" href="#cb1-23"></a>        <span class="dt">int</span> x, y; cin &gt;&gt; x &gt;&gt; y;</span>
+<span id="cb1-24"><a aria-hidden="true" href="#cb1-24"></a>        G[x][y] = <span class="dv">1</span>;</span>
+<span id="cb1-25"><a aria-hidden="true" href="#cb1-25"></a>    }</span>
+<span id="cb1-26"><a aria-hidden="true" href="#cb1-26"></a>    FOR(i, <span class="dv">1</span>, n) {</span>
+<span id="cb1-27"><a aria-hidden="true" href="#cb1-27"></a>        memset(used, <span class="dv">0</span>, <span class="kw">sizeof</span> used);</span>
+<span id="cb1-28"><a aria-hidden="true" href="#cb1-28"></a>        ans += dfs(i);</span>
+<span id="cb1-29"><a aria-hidden="true" href="#cb1-29"></a>    }</span>
+<span id="cb1-30"><a aria-hidden="true" href="#cb1-30"></a>    cout &lt;&lt; ans &lt;&lt; endl;</span>
+<span id="cb1-31"><a aria-hidden="true" href="#cb1-31"></a>    <span class="cf">return</span> <span class="dv">0</span>;</span>
+<span id="cb1-32"><a aria-hidden="true" href="#cb1-32"></a>}</span></code></pre></div>
+<p>平凡的二分图匹配在此不进行阐述，更多建模详见后文网络流部分。</p>
+<blockquote>
+<p>例题 <span class="math inline">\(2\)</span>：<a href="https://www.luogu.com.cn/problem/P1963">P1963 [NOI2009] 变换序列</a></p>
+<p>给定数列 <span class="math inline">\(A_{0,\cdots, n - 1}\)</span>，求一个字典序最小的 <span class="math inline">\(0\sim n - 1\)</span> 的排列 <span class="math inline">\(P\)</span> 使得 <span class="math inline">\(\forall i\)</span> 有 <span class="math inline">\(|P_i - i| = A_i\)</span>。<span class="math inline">\(n\le 10^4\)</span>。</p>
+</blockquote>
+<p>将 <span class="math inline">\(i\)</span> 看成左部，<span class="math inline">\(P_i + i\)</span> 看成右部，对 <span class="math inline">\(i\)</span> 连边 <span class="math inline">\(i\to (i + A_i)\bmod n\)</span> 和 <span class="math inline">\(i\to (i - A_i)\bmod n\)</span>。显然一个排列 <span class="math inline">\(P\)</span> 可以对应一个匹配。现在考虑字典序最小的限制，由于匈牙利的过程相当于是“把之前的挤到后面去”，所以本题中我们从 <span class="math inline">\(n - 1\)</span> 到 <span class="math inline">\(1\)</span> 跑匈牙利即可。</p>
+<h2 id="网络流题目泛做">网络流题目泛做</h2>
+<h3 id="最大流">最大流</h3>
+<h3 id="最小割">最小割</h3>
+<blockquote>
+<p>例题：<a href="https://www.luogu.com.cn/problem/P3227">P3227 [HNOI2013]切糕</a></p>
+<p>给定 <span class="math inline">\(P\times Q\times R\)</span> 的长方体，第 <span class="math inline">\(z\)</span> 层的 <span class="math inline">\((x,y)\)</span> 处有权值 <span class="math inline">\(v_{x,y,z}\)</span>，现要将其割成上下两部分，定义 <span class="math inline">\((x,y)\)</span> 的切点高度为 <span class="math inline">\(f(x,y)\)</span>，要求若 <span class="math inline">\((x',y')\)</span> 与之相邻，则 <span class="math inline">\(|f(x,y) - f(x', y') |\le D\)</span>，其中 <span class="math inline">\(D\)</span> 为给定常数。</p>
+<p>求 <span class="math inline">\(\sum\limits_{1\le x\le P}\sum\limits_{1\le y\le Q}v_{x,y,f(x,y)}\)</span> 的最小值。</p>
+</blockquote>
+<p>先不考虑 <span class="math inline">\(|f(x,y) - f(x', y') |\le D\)</span> 的限制，将 <span class="math inline">\((x,y,z)\)</span> 向 <span class="math inline">\((x,y,z + 1)\)</span> 连容量为 <span class="math inline">\(v_{x,y,z+1}\)</span> 的边，源和汇连一下，那么其就变成了纯纯的最小割问题，直接跑即可。</p>
+<p>现在把这个限制考虑进来，先强行钦定不合法的情况 <span class="math inline">\(f(x,y) - f(x',y')&gt;D\)</span>（小于 <span class="math inline">\(-D\)</span> 的也会被反着考虑到的），那么为了避免这种情况，就说明这些 <span class="math inline">\(f(x,y)\)</span> 和 <span class="math inline">\(f(x', y')\)</span> 不能同时被割掉。那么就考虑从 <span class="math inline">\((x,y,z)\)</span> 向 <span class="math inline">\((x',y',z - D)\)</span> 连 <span class="math inline">\(\inf\)</span> 边，画图直观地考虑会发现如果割的边确实 <span class="math inline">\(&gt;D\)</span> 了的话 <span class="math inline">\(S\)</span> 仍然可以到达 <span class="math inline">\(T\)</span>。</p>
+<p>所以直接建图跑最小割即可。</p>
+<blockquote>
+<p>例题：<a href="https://vjudge.net/problem/TopCoder-12727/">TopCoder12727 FoxAndCity</a></p>
+<p>给单位边权的无向图，可以加一些边，最小化 <span class="math inline">\(\sum\limits_{i=1}^n(A_i - \mathrm{dis}_i)^2\)</span>，其中 <span class="math inline">\(\mathrm{dis}_i\)</span> 指 <span class="math inline">\(1\)</span> 到 <span class="math inline">\(i\)</span> 的距离。<span class="math inline">\(n\le 40\)</span>。</p>
+</blockquote>
+<p>有一个很重要的结论：<span class="math inline">\((u,v)\in E\)</span> 等价于 <span class="math inline">\(|\mathrm{dis}_u - \mathrm{dis}_v|\le 1\)</span>。于是这题就变成了切糕。观察到这种变量取值约束的问题都可以考虑使用最小割连 <span class="math inline">\(\inf\)</span> 边来做到。</p>
+<p>这题里面，需要注意由于 <span class="math inline">\(\mathrm{dis}_0 = 0\)</span>，所以 <span class="math inline">\(0\)</span> 的 <span class="math inline">\(0\)</span> 号点不能向 <span class="math inline">\(1\)</span> 号点连边，同时其剩下的边都要连 <span class="math inline">\(\inf\)</span>。</p>
+<blockquote>
+<p>例题：<a href="https://vjudge.csgrandeur.cn/problem/TopCoder-12158/">TopCoder12158 SurroundingGame</a></p>
+<p><span class="math inline">\(n\times m\)</span> 的网格，占领 <span class="math inline">\((i,j)\)</span> 要么花费 <span class="math inline">\(c_{i,j}\)</span> 的代价，要么与其四联通的四个格子都被占领，<span class="math inline">\((i,j)\)</span> 被占领会带来 <span class="math inline">\(b_{i,j}\)</span> 的收益。求总收益 - 总代价的最大值。<span class="math inline">\(n,m\le 20\)</span>。</p>
+</blockquote>
+<p>这种冲突类型的就是集合划分问题，使用最小割，假设所有收益都拿到手，然后减去最小割得到答案。</p>
+<p>考虑对于一个格子，我们不妨连边 <span class="math inline">\((S,x, c_x)\)</span> 和 <span class="math inline">\((x, T, b_x)\)</span>，割前者说明花费这个代价来获取收益，割后者说明不花费代价然后放弃收益。</p>
+<p>但还有一种情况就是我们既不花费代价也要获得收益，这个时候就要求四周的代价都要被花费掉，说明这些边不能同时被割掉。</p>
+<p>黑白染色，对于黑点 <span class="math inline">\(x\)</span> 连边 <span class="math inline">\((S, x, c_x),(x, x', b_x),(x,y',\inf)\)</span>，对于白点 <span class="math inline">\(y\)</span> 连边 <span class="math inline">\((y,T, c_y),(y',y,b_y),(x',y,\inf)\)</span>。用 <span class="math inline">\(\sum b_x\)</span> 减最小割即为答案。</p>
+<blockquote>
+<p>例题：<a href="https://vjudge.csgrandeur.cn/problem/TopCoder-14719">TopCoder14719 RatingProgressAward</a></p>
+<p>有 <span class="math inline">\(n\)</span> 个课程，修完第 <span class="math inline">\(i\)</span> 们后 GPA 会变动 <span class="math inline">\(\Delta_i\)</span>。有 <span class="math inline">\(m\)</span> 条先后顺序的要求，即修 <span class="math inline">\(b\)</span> 之前必须修 <span class="math inline">\(a\)</span>。假设修了 <span class="math inline">\(i\)</span> 个课程后，GPA 为 <span class="math inline">\(r_i\)</span>，求安排课程顺序后能达到的最大的 <span class="math inline">\(r_i - r_j~(j&lt;i)\)</span>。<span class="math inline">\(n\le 50,m\le 1000\)</span>。</p>
+</blockquote>
+<p>确定了选课顺序之后变成选最大的一段区间和。考虑将一个课归为三种状态之一：选的段之前，选的段中间和选的段之后，则可以设计出这样一张网络： <span class="math display">\[
+S\xrightarrow{{\max(0,\Delta_x)}} x_a\xrightarrow{-\min(\Delta_x, 0)}x_b\xrightarrow{\max(0,\Delta_x)} T
+\]</span> 割掉第一条边表示 <span class="math inline">\(x\)</span> 在选的段前面，去掉 <span class="math inline">\(\max(0,\Delta_x)\)</span> 的贡献；割掉中间的边表示 <span class="math inline">\(x\)</span> 被选了，如果 <span class="math inline">\(\Delta_x&lt;0\)</span> 那么要减掉相应贡献；割掉第三条边表示 <span class="math inline">\(x\)</span> 在选的段后面，同理。注意到这里有处理正负贡献的技巧，一开始的时候我们的答案和是 <span class="math inline">\(\sum\max(\Delta_i, 0)\)</span>。</p>
+<p>然后考虑课程限制的问题。若有限制 <span class="math inline">\((x,y)\)</span> 则说明 <span class="math inline">\(x\)</span> 在选的段后面的时候 <span class="math inline">\(y\)</span> 不能在前两个状态，即 <span class="math inline">\(x\)</span> 割了 <span class="math inline">\(3\)</span> 号边 <span class="math inline">\(y\)</span> 就只能也割 <span class="math inline">\(3\)</span> 号边。将这些限制考虑进来后连边 <span class="math inline">\((x_a,y_a,\inf)\)</span> 和 <span class="math inline">\((x_b, y_b, \inf)\)</span> 即可。段内的不需要加以考虑，直接按着排没有影响。</p>
+<p>拿 <span class="math inline">\(\sum\max(\Delta_i, 0)\)</span> 减去最小割即为答案。这种处理限制的思路和 FoxAndCity 很像。</p>
+<h3 id="费用流">费用流</h3>
+<blockquote>
+<p>例题：<a href="https://www.luogu.com.cn/problem/CF717G">CF717G Underfail</a></p>
+<p>子串匹配平凡，转化后题意：有若干区间，每个区间可被选不超过 <span class="math inline">\(1\)</span> 次，选择的话有收益 <span class="math inline">\(p_i\)</span>。每个点被覆盖的次数不能超过 <span class="math inline">\(x\)</span>，求最大收益。区间个数 <span class="math inline">\(\le 50000\)</span>，点数 <span class="math inline">\(\le 500\)</span>。</p>
+</blockquote>
+<p><strong>区间 <span class="math inline">\(k\)</span> 覆盖问题</strong>。从线性规划的角度的做法我真的不太会，但是可以考虑一种建模的思路：</p>
+<p>对于一个区间 <span class="math inline">\([l,r]\)</span>，连边 <span class="math inline">\((l,r+1,1,p)\)</span>，然后对于 <span class="math inline">\(\forall 1\le i\le n + 1\)</span>，连边 <span class="math inline">\((i,i+1, x,0)\)</span>。然后以 <span class="math inline">\(1\)</span> 为源，<span class="math inline">\(n+2\)</span> 为汇，跑最大费用流即可。</p>
+<p>这样做的正确性可以这样直观地理解：如果一个点被覆盖了多于 <span class="math inline">\(x\)</span> 次，那么会发现这些流量最后都会流回主路上，会被 <span class="math inline">\((i,i+1,x,0)\)</span> 的边限制死。</p>
+<h2 id="最小割树">最小割树</h2>
+<h3 id="定义与证明">定义与证明</h3>
+<p>证明有空了会补。</p>
+<h3 id="求法">求法</h3>
+<p>一般而言我们使用分治的方法求：</p>
+<div class="sourceCode" id="cb2"><pre class="sourceCode cpp"><code class="sourceCode cpp"><span id="cb2-1"><a aria-hidden="true" href="#cb2-1"></a><span class="dt">int</span> tmp1[maxn], tmp2[maxn], node[maxn];</span>
+<span id="cb2-2"><a aria-hidden="true" href="#cb2-2"></a></span>
+<span id="cb2-3"><a aria-hidden="true" href="#cb2-3"></a><span class="dt">void</span> divide(<span class="dt">int</span> l, <span class="dt">int</span> r) {</span>
+<span id="cb2-4"><a aria-hidden="true" href="#cb2-4"></a>    <span class="cf">if</span> (l == r) <span class="cf">return</span>;</span>
+<span id="cb2-5"><a aria-hidden="true" href="#cb2-5"></a>    S = node[l + <span class="dv">1</span>], T = node[l];</span>
+<span id="cb2-6"><a aria-hidden="true" href="#cb2-6"></a>    addEdge(S, T, dinic()); <span class="co">// 连边</span></span>
+<span id="cb2-7"><a aria-hidden="true" href="#cb2-7"></a>    <span class="dt">int</span> cnt1 = <span class="dv">0</span>, cnt2 = <span class="dv">0</span>;</span>
+<span id="cb2-8"><a aria-hidden="true" href="#cb2-8"></a>    FOR(i, l, r) {</span>
+<span id="cb2-9"><a aria-hidden="true" href="#cb2-9"></a>        <span class="cf">if</span> (~dep[node[i]]) tmp1[++cnt1] = node[i]; <span class="co">// 注意到上一次 bfs 到的点就是被割开的左部</span></span>
+<span id="cb2-10"><a aria-hidden="true" href="#cb2-10"></a>        <span class="cf">else</span> tmp2[++cnt2] = node[i];</span>
+<span id="cb2-11"><a aria-hidden="true" href="#cb2-11"></a>    }</span>
+<span id="cb2-12"><a aria-hidden="true" href="#cb2-12"></a>    FOR(i, <span class="dv">1</span>, cnt1) node[l + i - <span class="dv">1</span>] = tmp1[i];</span>
+<span id="cb2-13"><a aria-hidden="true" href="#cb2-13"></a>    FOR(i, <span class="dv">1</span>, cnt2) node[l + cnt1 + i - <span class="dv">1</span>] = tmp2[i];</span>
+<span id="cb2-14"><a aria-hidden="true" href="#cb2-14"></a>    divide(l, l + cnt1 - <span class="dv">1</span>), divide(l + cnt1, r); <span class="co">// 继续分治</span></span>
+<span id="cb2-15"><a aria-hidden="true" href="#cb2-15"></a>    <span class="cf">return</span>;</span>
+<span id="cb2-16"><a aria-hidden="true" href="#cb2-16"></a>}</span></code></pre></div>
+<p>会做 <span class="math inline">\(n - 1\)</span> 次 Dinic，时间复杂度上界为 <span class="math inline">\(O(n^3m)\)</span> 但是很松。</p>
+<h3 id="应用">应用</h3>
+<h2 id="references">References</h2>
+<ul>
+<li><p><a href="https://blog.csdn.net/qq_31918005/article/details/81268671">一些有难度的网络流问题 by FFjet</a></p>
+<p>很牛逼的总结</p></li>
+<li><p><a href="https://www.luogu.com.cn/blog/command-block/wang-lao-liu-xiang-guan-bi-ji">网络流/二分图相关笔记(应用篇) by command_block</a></p>
+<p>拜谢，拜谢。</p></li>
+<li><p><a href="https://blog.aor.sd.cn/archives/738/">最小割模型 by RainAir</a></p>
+<p>TCO17 SemiFinal 那道题。</p></li>
+</ul>
+</section>
+<footer class="article-footer">
+<section class="article-copyright">
+<svg class="icon icon-tabler icon-tabler-copyright" fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+<path d="M0 0h24v24H0z" stroke="none"></path>
+<circle cx="12" cy="12" r="9"></circle>
+<path d="M14.5 9a3.5 4 0 1 0 0 6"></path>
+</svg>
+<span>Licensed under CC BY-NC-SA 4.0</span>
+</section>
+</footer>
+<link crossorigin="anonymous" href="https://cdn.jsdelivr.net/npm/katex@0.13.13/dist/katex.min.css" integrity="sha384-RZU/ijkSsFbcmivfdRBQDtwuwVqK7GMOw6IMvKyeWL2K5UAlyp6WonmB8m7Jd0Hn" rel="stylesheet"/><script crossorigin="anonymous" defer="" integrity="sha384-pK1WpvzWVBQiP0/GjnvRxV4mOb0oxFuyRxJlk6vVw146n3egcN5C925NCP7a7BY8" src="https://cdn.jsdelivr.net/npm/katex@0.13.13/dist/katex.min.js">
+</script><script crossorigin="anonymous" defer="" integrity="sha384-vZTG03m+2yp6N6BNi5iM4rW4oIwk5DfcNdFfxkk9ZWpDriOkXX8voJBFrAO7MpVl" src="https://cdn.jsdelivr.net/npm/katex@0.13.13/dist/contrib/auto-render.min.js">
+</script><script>
+    window.addEventListener("DOMContentLoaded", () => {
+        renderMathInElement(document.querySelector(`.article-content`), {
+            delimiters: [
+                { left: "$$", right: "$$", display: true },
+                { left: "$", right: "$", display: false },
+                { left: "\\(", right: "\\)", display: false },
+                { left: "\\[", right: "\\]", display: true }
+            ]
+        });})
+</script>
+</article>
+<footer class="site-footer">
+<section class="copyright">
+        © 
+        
+            2019 - 
+        
+        2024 清烛的博客
+    </section>
+<section class="powerby">
+        Built with <a href="https://gohugo.io/" rel="noopener" target="_blank">Hugo</a> <br/>
+        主题 <b><a data-version="3.11.0" href="https://github.com/CaiJimmy/hugo-theme-stack" rel="noopener" target="_blank">Stack</a></b> 由 <a href="https://jimmycai.com" rel="noopener" target="_blank">Jimmy</a> 设计
+    </section>
+</footer>
+<div aria-hidden="true" class="pswp" role="dialog" tabindex="-1">
+<div class="pswp__bg"></div>
+<div class="pswp__scroll-wrap">
+<div class="pswp__container">
+<div class="pswp__item"></div>
+<div class="pswp__item"></div>
+<div class="pswp__item"></div>
+</div>
+<div class="pswp__ui pswp__ui--hidden">
+<div class="pswp__top-bar">
+<div class="pswp__counter"></div>
+<button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+<button class="pswp__button pswp__button--share" title="Share"></button>
+<button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+<button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+<div class="pswp__preloader">
+<div class="pswp__preloader__icn">
+<div class="pswp__preloader__cut">
+<div class="pswp__preloader__donut"></div>
+</div>
+</div>
+</div>
+</div>
+<div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+<div class="pswp__share-tooltip"></div>
+</div>
+<button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+</button>
+<button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+</button>
+<div class="pswp__caption">
+<div class="pswp__caption__center"></div>
+</div>
+</div>
+</div>
+</div><script crossorigin="anonymous" defer="" integrity="sha256-ePwmChbbvXbsO02lbM3HoHbSHTHFAeChekF1xKJdleo=" src="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe.min.js">
+</script><script crossorigin="anonymous" defer="" integrity="sha256-UKkzOn/w1mBxRmLLGrSeyB4e1xbrp4xylgAWb3M42pU=" src="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe-ui-default.min.js">
+</script><link crossorigin="anonymous" href="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/default-skin/default-skin.css" integrity="sha256-c0uckgykQ9v5k+IqViZOZKc47Jn7KQil4/MP3ySA3F8=" rel="stylesheet"/><link crossorigin="anonymous" href="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe.css" integrity="sha256-SBLU4vv6CA6lHsZ1XyTdhyjJxCjPif/TRkjnsyGAGnE=" rel="stylesheet"/>
+</main>
+</div>
+<script crossorigin="anonymous" integrity="sha256-5NovOZc4iwiAWTYIFiIM7DxKUXKWvpVEuMEPLzcm5/g=" src="https://cdn.jsdelivr.net/npm/node-vibrant@3.1.5/dist/vibrant.min.js">
+</script><script defer="" src="/ts/main.js" type="text/javascript"></script>
+<script>
+    (function () {
+        const customFont = document.createElement('link');
+        customFont.href = "https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&display=swap";
+
+        customFont.type = "text/css";
+        customFont.rel = "stylesheet";
+
+        document.head.appendChild(customFont);
+    }());
+</script>
+</body>
+</html>

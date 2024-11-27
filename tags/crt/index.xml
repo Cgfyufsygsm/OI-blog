@@ -1,0 +1,298 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+    <channel>
+        <title>中国剩余定理 on 清烛的博客</title>
+        <link>https://oi.imyangty.com/tags/crt/</link>
+        <description>Recent content in 中国剩余定理 on 清烛的博客</description>
+        <generator>Hugo -- gohugo.io</generator>
+        <language>zh-CN</language>
+        <lastBuildDate>Sun, 12 Sep 2021 21:43:51 +0800</lastBuildDate><atom:link href="https://oi.imyangty.com/tags/crt/index.xml" rel="self" type="application/rss+xml" /><item>
+        <title>CF338D GCD Table</title>
+        <link>https://oi.imyangty.com/sol-cf338d/</link>
+        <pubDate>Sun, 12 Sep 2021 21:43:51 +0800</pubDate>
+        
+        <guid>https://oi.imyangty.com/sol-cf338d/</guid>
+        <description>&lt;img src="https://yangty-pic.oss-cn-beijing.aliyuncs.com/bg65.webp" alt="Featured image of post CF338D GCD Table" /&gt;&lt;h2 id=&#34;description&#34;&gt;Description&lt;/h2&gt;
+&lt;p&gt;给定一张 &lt;span class=&#34;math inline&#34;&gt;\(n\times m\)&lt;/span&gt; 的数表，&lt;span class=&#34;math inline&#34;&gt;\(G(i, j)\)&lt;/span&gt; 是 &lt;span class=&#34;math inline&#34;&gt;\(\gcd(i, j)\)&lt;/span&gt;。&lt;/p&gt;
+&lt;p&gt;给定一个长度为 &lt;span class=&#34;math inline&#34;&gt;\(k\)&lt;/span&gt; 的序列 &lt;span class=&#34;math inline&#34;&gt;\(\{a_i\}\)&lt;/span&gt;，问是否存在 &lt;span class=&#34;math inline&#34;&gt;\((i, j)\)&lt;/span&gt;（&lt;span class=&#34;math inline&#34;&gt;\(1\le i\le n\)&lt;/span&gt;，&lt;span class=&#34;math inline&#34;&gt;\(1\le j\le m - k + 1\)&lt;/span&gt;），使得 &lt;span class=&#34;math inline&#34;&gt;\(\forall 1\le l\le k\)&lt;/span&gt;，都有 &lt;span class=&#34;math inline&#34;&gt;\(G(i, j + l - 1) = a_l\)&lt;/span&gt;。&lt;/p&gt;
+&lt;p&gt;&lt;span class=&#34;math inline&#34;&gt;\(1\le n, m, a_i\le 10^{12}\)&lt;/span&gt;，&lt;span class=&#34;math inline&#34;&gt;\(1\le k\le 10000\)&lt;/span&gt;。&lt;/p&gt;
+&lt;h2 id=&#34;solution&#34;&gt;Solution&lt;/h2&gt;
+&lt;p&gt;观察限制：&lt;span class=&#34;math inline&#34;&gt;\(\gcd(x, y + i - 1) = a_i\)&lt;/span&gt;，则有 &lt;span class=&#34;math display&#34;&gt;\[
+\begin{aligned}
+ka_i &amp;amp;= y + i - 1\\
+y + i - 1 &amp;amp;\equiv 0\pmod {a_i}\\
+y &amp;amp;\equiv 1 - i\pmod {a_i}
+\end{aligned}
+\]&lt;/span&gt; 然后一定有 &lt;span class=&#34;math inline&#34;&gt;\(a_i\mid x\)&lt;/span&gt;，所以 &lt;span class=&#34;math inline&#34;&gt;\(\operatorname{lcm}\{a_i\}\mid x\)&lt;/span&gt;。&lt;/p&gt;
+&lt;p&gt;所以当 &lt;span class=&#34;math inline&#34;&gt;\(x = k\operatorname{lcm}\{a_i\}\)&lt;/span&gt; 时一定是有解的，exCRT 解出 &lt;span class=&#34;math inline&#34;&gt;\(y\)&lt;/span&gt; 之后检查 &lt;span class=&#34;math inline&#34;&gt;\(x = \operatorname{lcm}\{a_i\}\)&lt;/span&gt; 即可。&lt;/p&gt;
+&lt;h2 id=&#34;implementation&#34;&gt;Implementation&lt;/h2&gt;
+&lt;p&gt;注意 exCRT 解出来可能有 &lt;span class=&#34;math inline&#34;&gt;\(y = 0\)&lt;/span&gt; 的情况，需要加一句特判。&lt;/p&gt;
+&lt;div class=&#34;sourceCode&#34; id=&#34;cb1&#34;&gt;&lt;pre class=&#34;sourceCode cpp&#34;&gt;&lt;code class=&#34;sourceCode cpp&#34;&gt;&lt;span id=&#34;cb1-1&#34;&gt;&lt;a href=&#34;#cb1-1&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;&lt;span class=&#34;pp&#34;&gt;#include &lt;/span&gt;&lt;span class=&#34;im&#34;&gt;&amp;lt;cstdio&amp;gt;&lt;/span&gt;&lt;/span&gt;
+&lt;span id=&#34;cb1-2&#34;&gt;&lt;a href=&#34;#cb1-2&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;&lt;span class=&#34;pp&#34;&gt;#include &lt;/span&gt;&lt;span class=&#34;im&#34;&gt;&amp;lt;cctype&amp;gt;&lt;/span&gt;&lt;/span&gt;
+&lt;span id=&#34;cb1-3&#34;&gt;&lt;a href=&#34;#cb1-3&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;&lt;span class=&#34;pp&#34;&gt;#define il &lt;/span&gt;&lt;span class=&#34;kw&#34;&gt;inline&lt;/span&gt;&lt;/span&gt;
+&lt;span id=&#34;cb1-4&#34;&gt;&lt;a href=&#34;#cb1-4&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;&lt;span class=&#34;pp&#34;&gt;#define FOR&lt;/span&gt;(i,&lt;span class=&#34;pp&#34;&gt; &lt;/span&gt;a,&lt;span class=&#34;pp&#34;&gt; &lt;/span&gt;b)&lt;span class=&#34;pp&#34;&gt; &lt;/span&gt;&lt;span class=&#34;cf&#34;&gt;for&lt;/span&gt;&lt;span class=&#34;pp&#34;&gt; &lt;/span&gt;(&lt;span class=&#34;dt&#34;&gt;int&lt;/span&gt;&lt;span class=&#34;pp&#34;&gt; &lt;/span&gt;i&lt;span class=&#34;pp&#34;&gt; &lt;/span&gt;=&lt;span class=&#34;pp&#34;&gt; &lt;/span&gt;(a);&lt;span class=&#34;pp&#34;&gt; &lt;/span&gt;i&lt;span class=&#34;pp&#34;&gt; &lt;/span&gt;&amp;lt;=&lt;span class=&#34;pp&#34;&gt; &lt;/span&gt;(b);&lt;span class=&#34;pp&#34;&gt; &lt;/span&gt;++i)&lt;/span&gt;
+&lt;span id=&#34;cb1-5&#34;&gt;&lt;a href=&#34;#cb1-5&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;&lt;span class=&#34;pp&#34;&gt;#define DEC&lt;/span&gt;(i,&lt;span class=&#34;pp&#34;&gt; &lt;/span&gt;a,&lt;span class=&#34;pp&#34;&gt; &lt;/span&gt;b)&lt;span class=&#34;pp&#34;&gt; &lt;/span&gt;&lt;span class=&#34;cf&#34;&gt;for&lt;/span&gt;&lt;span class=&#34;pp&#34;&gt; &lt;/span&gt;(&lt;span class=&#34;dt&#34;&gt;int&lt;/span&gt;&lt;span class=&#34;pp&#34;&gt; &lt;/span&gt;i&lt;span class=&#34;pp&#34;&gt; &lt;/span&gt;=&lt;span class=&#34;pp&#34;&gt; &lt;/span&gt;(a);&lt;span class=&#34;pp&#34;&gt; &lt;/span&gt;i&lt;span class=&#34;pp&#34;&gt; &lt;/span&gt;&amp;gt;=&lt;span class=&#34;pp&#34;&gt; &lt;/span&gt;(b);&lt;span class=&#34;pp&#34;&gt; &lt;/span&gt;--i)&lt;/span&gt;
+&lt;span id=&#34;cb1-6&#34;&gt;&lt;a href=&#34;#cb1-6&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;&lt;/span&gt;
+&lt;span id=&#34;cb1-7&#34;&gt;&lt;a href=&#34;#cb1-7&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;&lt;span class=&#34;kw&#34;&gt;namespace&lt;/span&gt; fastIO {&lt;/span&gt;
+&lt;span id=&#34;cb1-8&#34;&gt;&lt;a href=&#34;#cb1-8&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;&lt;span class=&#34;at&#34;&gt;const&lt;/span&gt; &lt;span class=&#34;dt&#34;&gt;int&lt;/span&gt; maxc = &lt;span class=&#34;dv&#34;&gt;1&lt;/span&gt; &amp;lt;&amp;lt; &lt;span class=&#34;dv&#34;&gt;23&lt;/span&gt;;&lt;/span&gt;
+&lt;span id=&#34;cb1-9&#34;&gt;&lt;a href=&#34;#cb1-9&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;&lt;span class=&#34;dt&#34;&gt;char&lt;/span&gt; ibuf[maxc], *__p1 = ibuf, *__p2 = ibuf;&lt;/span&gt;
+&lt;span id=&#34;cb1-10&#34;&gt;&lt;a href=&#34;#cb1-10&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;il &lt;span class=&#34;dt&#34;&gt;char&lt;/span&gt; getchar() {&lt;span class=&#34;cf&#34;&gt;return&lt;/span&gt; __p1 == __p2 &amp;amp;&amp;amp; (__p2 = (__p1 = ibuf) + fread(ibuf, &lt;span class=&#34;dv&#34;&gt;1&lt;/span&gt;, maxc, stdin), __p1 == __p2) ? EOF : *__p1++;}&lt;/span&gt;
+&lt;span id=&#34;cb1-11&#34;&gt;&lt;a href=&#34;#cb1-11&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;&lt;span class=&#34;kw&#34;&gt;template&lt;/span&gt;&amp;lt;&lt;span class=&#34;kw&#34;&gt;typename&lt;/span&gt; T&amp;gt; &lt;span class=&#34;dt&#34;&gt;void&lt;/span&gt; read(T &amp;amp;n) {&lt;/span&gt;
+&lt;span id=&#34;cb1-12&#34;&gt;&lt;a href=&#34;#cb1-12&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;    &lt;span class=&#34;dt&#34;&gt;int&lt;/span&gt; x = &lt;span class=&#34;dv&#34;&gt;0&lt;/span&gt;; n = &lt;span class=&#34;dv&#34;&gt;0&lt;/span&gt;;&lt;/span&gt;
+&lt;span id=&#34;cb1-13&#34;&gt;&lt;a href=&#34;#cb1-13&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;    &lt;span class=&#34;dt&#34;&gt;char&lt;/span&gt; c = getchar();&lt;/span&gt;
+&lt;span id=&#34;cb1-14&#34;&gt;&lt;a href=&#34;#cb1-14&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;    &lt;span class=&#34;cf&#34;&gt;while&lt;/span&gt; (!isdigit(c))&lt;/span&gt;
+&lt;span id=&#34;cb1-15&#34;&gt;&lt;a href=&#34;#cb1-15&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;        x |= (c == &lt;span class=&#34;ch&#34;&gt;&amp;#39;-&amp;#39;&lt;/span&gt;), c = getchar();&lt;/span&gt;
+&lt;span id=&#34;cb1-16&#34;&gt;&lt;a href=&#34;#cb1-16&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;    &lt;span class=&#34;cf&#34;&gt;while&lt;/span&gt; (isdigit(c))&lt;/span&gt;
+&lt;span id=&#34;cb1-17&#34;&gt;&lt;a href=&#34;#cb1-17&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;        n = n * &lt;span class=&#34;dv&#34;&gt;10&lt;/span&gt; + c - &lt;span class=&#34;ch&#34;&gt;&amp;#39;0&amp;#39;&lt;/span&gt;, c = getchar();&lt;/span&gt;
+&lt;span id=&#34;cb1-18&#34;&gt;&lt;a href=&#34;#cb1-18&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;    n = x ? -n : n;&lt;/span&gt;
+&lt;span id=&#34;cb1-19&#34;&gt;&lt;a href=&#34;#cb1-19&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;}&lt;/span&gt;
+&lt;span id=&#34;cb1-20&#34;&gt;&lt;a href=&#34;#cb1-20&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;&lt;span class=&#34;dt&#34;&gt;void&lt;/span&gt; read(&lt;span class=&#34;dt&#34;&gt;char&lt;/span&gt; *s) {&lt;/span&gt;
+&lt;span id=&#34;cb1-21&#34;&gt;&lt;a href=&#34;#cb1-21&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;    &lt;span class=&#34;dt&#34;&gt;int&lt;/span&gt; p = &lt;span class=&#34;dv&#34;&gt;0&lt;/span&gt;;&lt;/span&gt;
+&lt;span id=&#34;cb1-22&#34;&gt;&lt;a href=&#34;#cb1-22&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;    &lt;span class=&#34;dt&#34;&gt;char&lt;/span&gt; c = getchar();&lt;/span&gt;
+&lt;span id=&#34;cb1-23&#34;&gt;&lt;a href=&#34;#cb1-23&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;    &lt;span class=&#34;cf&#34;&gt;while&lt;/span&gt; (!isdigit(c) &amp;amp;&amp;amp; !isalpha(c)) c = getchar();&lt;/span&gt;
+&lt;span id=&#34;cb1-24&#34;&gt;&lt;a href=&#34;#cb1-24&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;    &lt;span class=&#34;cf&#34;&gt;while&lt;/span&gt; (isalpha(c) || isdigit(c)) s[p++] = c, c = getchar();&lt;/span&gt;
+&lt;span id=&#34;cb1-25&#34;&gt;&lt;a href=&#34;#cb1-25&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;    &lt;span class=&#34;cf&#34;&gt;return&lt;/span&gt;;&lt;/span&gt;
+&lt;span id=&#34;cb1-26&#34;&gt;&lt;a href=&#34;#cb1-26&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;}&lt;/span&gt;
+&lt;span id=&#34;cb1-27&#34;&gt;&lt;a href=&#34;#cb1-27&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;&lt;span class=&#34;dt&#34;&gt;char&lt;/span&gt; obuf[maxc], *__pO = obuf;&lt;/span&gt;
+&lt;span id=&#34;cb1-28&#34;&gt;&lt;a href=&#34;#cb1-28&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;il &lt;span class=&#34;dt&#34;&gt;void&lt;/span&gt; putchar(&lt;span class=&#34;dt&#34;&gt;char&lt;/span&gt; c) {*__pO++ = c;}&lt;/span&gt;
+&lt;span id=&#34;cb1-29&#34;&gt;&lt;a href=&#34;#cb1-29&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;&lt;span class=&#34;kw&#34;&gt;template&lt;/span&gt;&amp;lt;&lt;span class=&#34;kw&#34;&gt;typename&lt;/span&gt; T&amp;gt; &lt;span class=&#34;dt&#34;&gt;void&lt;/span&gt; print(T x) {&lt;/span&gt;
+&lt;span id=&#34;cb1-30&#34;&gt;&lt;a href=&#34;#cb1-30&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;    &lt;span class=&#34;cf&#34;&gt;if&lt;/span&gt; (x &amp;lt; &lt;span class=&#34;dv&#34;&gt;0&lt;/span&gt;) putchar(&lt;span class=&#34;ch&#34;&gt;&amp;#39;-&amp;#39;&lt;/span&gt;), print(-x);&lt;/span&gt;
+&lt;span id=&#34;cb1-31&#34;&gt;&lt;a href=&#34;#cb1-31&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;    &lt;span class=&#34;cf&#34;&gt;else&lt;/span&gt; {&lt;/span&gt;
+&lt;span id=&#34;cb1-32&#34;&gt;&lt;a href=&#34;#cb1-32&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;        &lt;span class=&#34;cf&#34;&gt;if&lt;/span&gt; (x &amp;gt; &lt;span class=&#34;dv&#34;&gt;9&lt;/span&gt;) print(x / &lt;span class=&#34;dv&#34;&gt;10&lt;/span&gt;);&lt;/span&gt;
+&lt;span id=&#34;cb1-33&#34;&gt;&lt;a href=&#34;#cb1-33&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;        putchar(x % &lt;span class=&#34;dv&#34;&gt;10&lt;/span&gt; + &lt;span class=&#34;ch&#34;&gt;&amp;#39;0&amp;#39;&lt;/span&gt;);&lt;/span&gt;
+&lt;span id=&#34;cb1-34&#34;&gt;&lt;a href=&#34;#cb1-34&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;    }&lt;/span&gt;
+&lt;span id=&#34;cb1-35&#34;&gt;&lt;a href=&#34;#cb1-35&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;    &lt;span class=&#34;cf&#34;&gt;return&lt;/span&gt;;&lt;/span&gt;
+&lt;span id=&#34;cb1-36&#34;&gt;&lt;a href=&#34;#cb1-36&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;}&lt;/span&gt;
+&lt;span id=&#34;cb1-37&#34;&gt;&lt;a href=&#34;#cb1-37&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;&lt;span class=&#34;dt&#34;&gt;void&lt;/span&gt; output() {fwrite(obuf, __pO - obuf, &lt;span class=&#34;dv&#34;&gt;1&lt;/span&gt;, stdout);}&lt;/span&gt;
+&lt;span id=&#34;cb1-38&#34;&gt;&lt;a href=&#34;#cb1-38&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;} &lt;span class=&#34;co&#34;&gt;// namespace fastIO&lt;/span&gt;&lt;/span&gt;
+&lt;span id=&#34;cb1-39&#34;&gt;&lt;a href=&#34;#cb1-39&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;&lt;/span&gt;
+&lt;span id=&#34;cb1-40&#34;&gt;&lt;a href=&#34;#cb1-40&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;&lt;span class=&#34;kw&#34;&gt;using&lt;/span&gt; &lt;span class=&#34;kw&#34;&gt;namespace&lt;/span&gt; fastIO;&lt;/span&gt;
+&lt;span id=&#34;cb1-41&#34;&gt;&lt;a href=&#34;#cb1-41&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;&lt;/span&gt;
+&lt;span id=&#34;cb1-42&#34;&gt;&lt;a href=&#34;#cb1-42&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;&lt;span class=&#34;kw&#34;&gt;typedef&lt;/span&gt; &lt;span class=&#34;dt&#34;&gt;long&lt;/span&gt; &lt;span class=&#34;dt&#34;&gt;long&lt;/span&gt; ll;&lt;/span&gt;
+&lt;span id=&#34;cb1-43&#34;&gt;&lt;a href=&#34;#cb1-43&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;&lt;/span&gt;
+&lt;span id=&#34;cb1-44&#34;&gt;&lt;a href=&#34;#cb1-44&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;ll n, m, k, a[&lt;span class=&#34;dv&#34;&gt;10005&lt;/span&gt;], mod[&lt;span class=&#34;dv&#34;&gt;10005&lt;/span&gt;], r[&lt;span class=&#34;dv&#34;&gt;10005&lt;/span&gt;];&lt;/span&gt;
+&lt;span id=&#34;cb1-45&#34;&gt;&lt;a href=&#34;#cb1-45&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;&lt;/span&gt;
+&lt;span id=&#34;cb1-46&#34;&gt;&lt;a href=&#34;#cb1-46&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;ll exgcd(ll a, ll b, ll&amp;amp; x, ll&amp;amp; y) {&lt;/span&gt;
+&lt;span id=&#34;cb1-47&#34;&gt;&lt;a href=&#34;#cb1-47&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;    &lt;span class=&#34;cf&#34;&gt;if&lt;/span&gt; (!b) {&lt;/span&gt;
+&lt;span id=&#34;cb1-48&#34;&gt;&lt;a href=&#34;#cb1-48&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;        x = &lt;span class=&#34;dv&#34;&gt;1&lt;/span&gt;, y = &lt;span class=&#34;dv&#34;&gt;0&lt;/span&gt;;&lt;/span&gt;
+&lt;span id=&#34;cb1-49&#34;&gt;&lt;a href=&#34;#cb1-49&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;        &lt;span class=&#34;cf&#34;&gt;return&lt;/span&gt; a;&lt;/span&gt;
+&lt;span id=&#34;cb1-50&#34;&gt;&lt;a href=&#34;#cb1-50&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;    }&lt;/span&gt;
+&lt;span id=&#34;cb1-51&#34;&gt;&lt;a href=&#34;#cb1-51&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;    ll tmp = exgcd(b, a % b, y, x);&lt;/span&gt;
+&lt;span id=&#34;cb1-52&#34;&gt;&lt;a href=&#34;#cb1-52&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;    y -= a / b * x;&lt;/span&gt;
+&lt;span id=&#34;cb1-53&#34;&gt;&lt;a href=&#34;#cb1-53&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;    &lt;span class=&#34;cf&#34;&gt;return&lt;/span&gt; tmp;&lt;/span&gt;
+&lt;span id=&#34;cb1-54&#34;&gt;&lt;a href=&#34;#cb1-54&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;}&lt;/span&gt;
+&lt;span id=&#34;cb1-55&#34;&gt;&lt;a href=&#34;#cb1-55&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;&lt;/span&gt;
+&lt;span id=&#34;cb1-56&#34;&gt;&lt;a href=&#34;#cb1-56&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;il ll gcd(ll a, ll b) {&lt;span class=&#34;cf&#34;&gt;return&lt;/span&gt; !b ? a : gcd(b, a % b);}&lt;/span&gt;
+&lt;span id=&#34;cb1-57&#34;&gt;&lt;a href=&#34;#cb1-57&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;&lt;/span&gt;
+&lt;span id=&#34;cb1-58&#34;&gt;&lt;a href=&#34;#cb1-58&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;&lt;span class=&#34;kw&#34;&gt;typedef&lt;/span&gt; &lt;span class=&#34;dt&#34;&gt;long&lt;/span&gt; &lt;span class=&#34;dt&#34;&gt;double&lt;/span&gt; ldb;&lt;/span&gt;
+&lt;span id=&#34;cb1-59&#34;&gt;&lt;a href=&#34;#cb1-59&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;&lt;/span&gt;
+&lt;span id=&#34;cb1-60&#34;&gt;&lt;a href=&#34;#cb1-60&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;il ll mul(ll a, ll b, ll mod) {&lt;/span&gt;
+&lt;span id=&#34;cb1-61&#34;&gt;&lt;a href=&#34;#cb1-61&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;    &lt;span class=&#34;cf&#34;&gt;return&lt;/span&gt; (a * b - (ll)((ldb)a / mod * b) * mod + mod) % mod;&lt;/span&gt;
+&lt;span id=&#34;cb1-62&#34;&gt;&lt;a href=&#34;#cb1-62&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;}&lt;/span&gt;
+&lt;span id=&#34;cb1-63&#34;&gt;&lt;a href=&#34;#cb1-63&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;&lt;/span&gt;
+&lt;span id=&#34;cb1-64&#34;&gt;&lt;a href=&#34;#cb1-64&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;ll exCRT(ll *r, ll *m, &lt;span class=&#34;dt&#34;&gt;int&lt;/span&gt; n) {&lt;/span&gt;
+&lt;span id=&#34;cb1-65&#34;&gt;&lt;a href=&#34;#cb1-65&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;    &lt;span class=&#34;cf&#34;&gt;for&lt;/span&gt; (&lt;span class=&#34;dt&#34;&gt;int&lt;/span&gt; i = &lt;span class=&#34;dv&#34;&gt;2&lt;/span&gt;; i &amp;lt;= n; ++i) {&lt;/span&gt;
+&lt;span id=&#34;cb1-66&#34;&gt;&lt;a href=&#34;#cb1-66&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;        ll tmpx, tmpy;&lt;/span&gt;
+&lt;span id=&#34;cb1-67&#34;&gt;&lt;a href=&#34;#cb1-67&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;        ll gcd = exgcd(m[i], m[i - &lt;span class=&#34;dv&#34;&gt;1&lt;/span&gt;], tmpx, tmpy);&lt;/span&gt;
+&lt;span id=&#34;cb1-68&#34;&gt;&lt;a href=&#34;#cb1-68&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;        ll p1 = m[i - &lt;span class=&#34;dv&#34;&gt;1&lt;/span&gt;] / gcd, p2 = m[i] / gcd;&lt;/span&gt;
+&lt;span id=&#34;cb1-69&#34;&gt;&lt;a href=&#34;#cb1-69&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;        exgcd(p1, p2, tmpx, tmpy);&lt;/span&gt;
+&lt;span id=&#34;cb1-70&#34;&gt;&lt;a href=&#34;#cb1-70&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;        m[i] = m[i] / gcd * m[i - &lt;span class=&#34;dv&#34;&gt;1&lt;/span&gt;];&lt;/span&gt;
+&lt;span id=&#34;cb1-71&#34;&gt;&lt;a href=&#34;#cb1-71&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;        r[i] = (r[i - &lt;span class=&#34;dv&#34;&gt;1&lt;/span&gt;] + mul(m[i - &lt;span class=&#34;dv&#34;&gt;1&lt;/span&gt;], mul((r[i] - r[i - &lt;span class=&#34;dv&#34;&gt;1&lt;/span&gt;]) / gcd, tmpx, m[i]), m[i])) % m[i];&lt;/span&gt;
+&lt;span id=&#34;cb1-72&#34;&gt;&lt;a href=&#34;#cb1-72&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;    }&lt;/span&gt;
+&lt;span id=&#34;cb1-73&#34;&gt;&lt;a href=&#34;#cb1-73&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;    &lt;span class=&#34;cf&#34;&gt;return&lt;/span&gt; (r[n] + m[n] - &lt;span class=&#34;dv&#34;&gt;1&lt;/span&gt;) % m[n] + &lt;span class=&#34;dv&#34;&gt;1&lt;/span&gt;;&lt;/span&gt;
+&lt;span id=&#34;cb1-74&#34;&gt;&lt;a href=&#34;#cb1-74&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;}&lt;/span&gt;
+&lt;span id=&#34;cb1-75&#34;&gt;&lt;a href=&#34;#cb1-75&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;&lt;/span&gt;
+&lt;span id=&#34;cb1-76&#34;&gt;&lt;a href=&#34;#cb1-76&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;&lt;span class=&#34;dt&#34;&gt;int&lt;/span&gt; main() {&lt;/span&gt;
+&lt;span id=&#34;cb1-77&#34;&gt;&lt;a href=&#34;#cb1-77&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;    read(n), read(m), read(k);&lt;/span&gt;
+&lt;span id=&#34;cb1-78&#34;&gt;&lt;a href=&#34;#cb1-78&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;    ll x = &lt;span class=&#34;dv&#34;&gt;1&lt;/span&gt;;&lt;/span&gt;
+&lt;span id=&#34;cb1-79&#34;&gt;&lt;a href=&#34;#cb1-79&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;    FOR(i, &lt;span class=&#34;dv&#34;&gt;1&lt;/span&gt;, k) {&lt;/span&gt;
+&lt;span id=&#34;cb1-80&#34;&gt;&lt;a href=&#34;#cb1-80&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;        read(a[i]);&lt;/span&gt;
+&lt;span id=&#34;cb1-81&#34;&gt;&lt;a href=&#34;#cb1-81&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;        x = x / gcd(x, a[i]) * a[i];&lt;/span&gt;
+&lt;span id=&#34;cb1-82&#34;&gt;&lt;a href=&#34;#cb1-82&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;        &lt;span class=&#34;cf&#34;&gt;if&lt;/span&gt; (x &amp;gt; n) &lt;span class=&#34;cf&#34;&gt;return&lt;/span&gt; puts(&lt;span class=&#34;st&#34;&gt;&amp;quot;NO&amp;quot;&lt;/span&gt;), &lt;span class=&#34;dv&#34;&gt;0&lt;/span&gt;;&lt;/span&gt;
+&lt;span id=&#34;cb1-83&#34;&gt;&lt;a href=&#34;#cb1-83&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;        r[i] = ((a[i] + &lt;span class=&#34;dv&#34;&gt;1&lt;/span&gt; - i) % a[i] + a[i]) % a[i];&lt;/span&gt;
+&lt;span id=&#34;cb1-84&#34;&gt;&lt;a href=&#34;#cb1-84&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;        mod[i] = a[i];&lt;/span&gt;
+&lt;span id=&#34;cb1-85&#34;&gt;&lt;a href=&#34;#cb1-85&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;    }&lt;/span&gt;
+&lt;span id=&#34;cb1-86&#34;&gt;&lt;a href=&#34;#cb1-86&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;    ll y = exCRT(r, mod, k);&lt;/span&gt;
+&lt;span id=&#34;cb1-87&#34;&gt;&lt;a href=&#34;#cb1-87&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;    &lt;span class=&#34;cf&#34;&gt;if&lt;/span&gt; (y + k - &lt;span class=&#34;dv&#34;&gt;1&lt;/span&gt; &amp;gt; m || y &amp;lt; &lt;span class=&#34;dv&#34;&gt;1&lt;/span&gt;) &lt;span class=&#34;cf&#34;&gt;return&lt;/span&gt; puts(&lt;span class=&#34;st&#34;&gt;&amp;quot;NO&amp;quot;&lt;/span&gt;), &lt;span class=&#34;dv&#34;&gt;0&lt;/span&gt;;&lt;/span&gt;
+&lt;span id=&#34;cb1-88&#34;&gt;&lt;a href=&#34;#cb1-88&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;    FOR(i, &lt;span class=&#34;dv&#34;&gt;1&lt;/span&gt;, k) &lt;span class=&#34;cf&#34;&gt;if&lt;/span&gt; (gcd(x, y + i - &lt;span class=&#34;dv&#34;&gt;1&lt;/span&gt;) != a[i]) &lt;span class=&#34;cf&#34;&gt;return&lt;/span&gt; puts(&lt;span class=&#34;st&#34;&gt;&amp;quot;NO&amp;quot;&lt;/span&gt;), &lt;span class=&#34;dv&#34;&gt;0&lt;/span&gt;;&lt;/span&gt;
+&lt;span id=&#34;cb1-89&#34;&gt;&lt;a href=&#34;#cb1-89&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;    &lt;span class=&#34;cf&#34;&gt;return&lt;/span&gt; puts(&lt;span class=&#34;st&#34;&gt;&amp;quot;YES&amp;quot;&lt;/span&gt;), &lt;span class=&#34;dv&#34;&gt;0&lt;/span&gt;;&lt;/span&gt;
+&lt;span id=&#34;cb1-90&#34;&gt;&lt;a href=&#34;#cb1-90&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;}&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+</description>
+        </item>
+        <item>
+        <title>P3301 [SDOI2013]方程</title>
+        <link>https://oi.imyangty.com/sol-luogu-p3301/</link>
+        <pubDate>Mon, 02 Aug 2021 00:00:57 +0800</pubDate>
+        
+        <guid>https://oi.imyangty.com/sol-luogu-p3301/</guid>
+        <description>&lt;img src="https://yangty-pic.oss-cn-beijing.aliyuncs.com/bg56.webp" alt="Featured image of post P3301 [SDOI2013]方程" /&gt;&lt;h2 id=&#34;description&#34;&gt;Description&lt;/h2&gt;
+&lt;p&gt;给定不定方程 &lt;span class=&#34;math display&#34;&gt;\[
+x_1 + x_2 + \cdots + x_n = m
+\]&lt;/span&gt; 对于 &lt;span class=&#34;math inline&#34;&gt;\(i\in[1, n_1]\)&lt;/span&gt;，有如下限制： &lt;span class=&#34;math display&#34;&gt;\[
+x_i\le A_i
+\]&lt;/span&gt; 对于 &lt;span class=&#34;math inline&#34;&gt;\(i\in (n_1,n_2]\)&lt;/span&gt;，有如下限制： &lt;span class=&#34;math display&#34;&gt;\[
+x_i\ge A_i
+\]&lt;/span&gt; 求该方程正整数解的组数。答案对 &lt;span class=&#34;math inline&#34;&gt;\(p\)&lt;/span&gt; 取模，&lt;span class=&#34;math inline&#34;&gt;\(p\in\{10007,262203414,437367875\}\)&lt;/span&gt;。&lt;/p&gt;
+&lt;h2 id=&#34;solution&#34;&gt;Solution&lt;/h2&gt;
+&lt;p&gt;首先考虑不定方程 &lt;span class=&#34;math inline&#34;&gt;\(\sum_{i =1}^nx_i = m\)&lt;/span&gt; 的&lt;strong&gt;正整数解个数&lt;/strong&gt;，显然其为插板法： &lt;span class=&#34;math display&#34;&gt;\[
+\binom{m - 1}{n - 1}
+\]&lt;/span&gt; 然后我们考虑 &lt;span class=&#34;math inline&#34;&gt;\(x_i\ge A_i\)&lt;/span&gt; 的限制，显然，我们把 &lt;span class=&#34;math inline&#34;&gt;\(m\)&lt;/span&gt; 减去 &lt;span class=&#34;math inline&#34;&gt;\(\sum_{i = n_1 + 1}^{n_2}(A_i - 1)\)&lt;/span&gt;，然后就把问题转化为了直接插板。&lt;/p&gt;
+&lt;p&gt;然后考虑到 &lt;span class=&#34;math inline&#34;&gt;\(x_i\le A_i\)&lt;/span&gt; 的限制不好处理，既然限制数最大为 &lt;span class=&#34;math inline&#34;&gt;\(8\)&lt;/span&gt;，不如考虑容斥，将其转化为 &lt;span class=&#34;math inline&#34;&gt;\(x_i\ge A_i + 1\)&lt;/span&gt; 的形式来处理。&lt;/p&gt;
+&lt;p&gt;这样子每次计算的答案为 &lt;span class=&#34;math display&#34;&gt;\[
+\binom{m&amp;#39; - 1}{n - 1}\bmod p
+\]&lt;/span&gt; 然后这一坨式子是可以使用扩展 Lucas 来算的（因为 &lt;span class=&#34;math inline&#34;&gt;\(p\)&lt;/span&gt; 不为质数）。&lt;/p&gt;
+&lt;h2 id=&#34;implementation&#34;&gt;Implementation&lt;/h2&gt;
+&lt;p&gt;分解一下三个模数：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;span class=&#34;math inline&#34;&gt;\(262203414 = 2\times 3\times 11\times397\times10007\)&lt;/span&gt;&lt;/li&gt;
+&lt;li&gt;&lt;span class=&#34;math inline&#34;&gt;\(437367875 = 5^3\times7^3\times101^2\)&lt;/span&gt;&lt;/li&gt;
+&lt;li&gt;&lt;span class=&#34;math inline&#34;&gt;\(10007\)&lt;/span&gt; 是质数&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;这样子可以省去扩展卢卡斯分析 &lt;span class=&#34;math inline&#34;&gt;\(q^k\)&lt;/span&gt; 的过程，大大减少常数。&lt;/p&gt;
+&lt;p&gt;同时优化一下扩展卢卡斯处理阶乘的过程，提前计算好，这样也可以大力卡常。不然根本卡不过去。&lt;/p&gt;
+&lt;p&gt;一定要注意传进去计算 &lt;span class=&#34;math inline&#34;&gt;\(\dbinom n m\)&lt;/span&gt; 的时候 &lt;span class=&#34;math inline&#34;&gt;\(n &amp;lt; m\)&lt;/span&gt; 的情况是存在的，一定要特判掉。&lt;/p&gt;
+&lt;p&gt;细节较多。&lt;/p&gt;
+&lt;div class=&#34;sourceCode&#34; id=&#34;cb1&#34;&gt;&lt;pre class=&#34;sourceCode cpp&#34;&gt;&lt;code class=&#34;sourceCode cpp&#34;&gt;&lt;span id=&#34;cb1-1&#34;&gt;&lt;a href=&#34;#cb1-1&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;&lt;span class=&#34;pp&#34;&gt;#include &lt;/span&gt;&lt;span class=&#34;im&#34;&gt;&amp;lt;cstdio&amp;gt;&lt;/span&gt;&lt;/span&gt;
+&lt;span id=&#34;cb1-2&#34;&gt;&lt;a href=&#34;#cb1-2&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;&lt;span class=&#34;pp&#34;&gt;#include &lt;/span&gt;&lt;span class=&#34;im&#34;&gt;&amp;lt;cctype&amp;gt;&lt;/span&gt;&lt;/span&gt;
+&lt;span id=&#34;cb1-3&#34;&gt;&lt;a href=&#34;#cb1-3&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;&lt;span class=&#34;pp&#34;&gt;#include &lt;/span&gt;&lt;span class=&#34;im&#34;&gt;&amp;lt;cassert&amp;gt;&lt;/span&gt;&lt;/span&gt;
+&lt;span id=&#34;cb1-4&#34;&gt;&lt;a href=&#34;#cb1-4&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;&lt;span class=&#34;pp&#34;&gt;#define il &lt;/span&gt;&lt;span class=&#34;kw&#34;&gt;inline&lt;/span&gt;&lt;/span&gt;
+&lt;span id=&#34;cb1-5&#34;&gt;&lt;a href=&#34;#cb1-5&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;&lt;span class=&#34;pp&#34;&gt;#define FOR&lt;/span&gt;(i,&lt;span class=&#34;pp&#34;&gt; &lt;/span&gt;a,&lt;span class=&#34;pp&#34;&gt; &lt;/span&gt;b)&lt;span class=&#34;pp&#34;&gt; &lt;/span&gt;&lt;span class=&#34;cf&#34;&gt;for&lt;/span&gt;&lt;span class=&#34;pp&#34;&gt; &lt;/span&gt;(&lt;span class=&#34;dt&#34;&gt;int&lt;/span&gt;&lt;span class=&#34;pp&#34;&gt; &lt;/span&gt;i&lt;span class=&#34;pp&#34;&gt; &lt;/span&gt;=&lt;span class=&#34;pp&#34;&gt; &lt;/span&gt;(a);&lt;span class=&#34;pp&#34;&gt; &lt;/span&gt;i&lt;span class=&#34;pp&#34;&gt; &lt;/span&gt;&amp;lt;=&lt;span class=&#34;pp&#34;&gt; &lt;/span&gt;(b);&lt;span class=&#34;pp&#34;&gt; &lt;/span&gt;++i)&lt;/span&gt;
+&lt;span id=&#34;cb1-6&#34;&gt;&lt;a href=&#34;#cb1-6&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;&lt;span class=&#34;pp&#34;&gt;#define DEC&lt;/span&gt;(i,&lt;span class=&#34;pp&#34;&gt; &lt;/span&gt;a,&lt;span class=&#34;pp&#34;&gt; &lt;/span&gt;b)&lt;span class=&#34;pp&#34;&gt; &lt;/span&gt;&lt;span class=&#34;cf&#34;&gt;for&lt;/span&gt;&lt;span class=&#34;pp&#34;&gt; &lt;/span&gt;(&lt;span class=&#34;dt&#34;&gt;int&lt;/span&gt;&lt;span class=&#34;pp&#34;&gt; &lt;/span&gt;i&lt;span class=&#34;pp&#34;&gt; &lt;/span&gt;=&lt;span class=&#34;pp&#34;&gt; &lt;/span&gt;(a);&lt;span class=&#34;pp&#34;&gt; &lt;/span&gt;i&lt;span class=&#34;pp&#34;&gt; &lt;/span&gt;&amp;gt;=&lt;span class=&#34;pp&#34;&gt; &lt;/span&gt;(b);&lt;span class=&#34;pp&#34;&gt; &lt;/span&gt;--i)&lt;/span&gt;
+&lt;span id=&#34;cb1-7&#34;&gt;&lt;a href=&#34;#cb1-7&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;&lt;/span&gt;
+&lt;span id=&#34;cb1-8&#34;&gt;&lt;a href=&#34;#cb1-8&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;&lt;span class=&#34;kw&#34;&gt;namespace&lt;/span&gt; fastIO {}&lt;/span&gt;
+&lt;span id=&#34;cb1-9&#34;&gt;&lt;a href=&#34;#cb1-9&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;&lt;/span&gt;
+&lt;span id=&#34;cb1-10&#34;&gt;&lt;a href=&#34;#cb1-10&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;&lt;span class=&#34;kw&#34;&gt;using&lt;/span&gt; &lt;span class=&#34;kw&#34;&gt;namespace&lt;/span&gt; fastIO;&lt;/span&gt;
+&lt;span id=&#34;cb1-11&#34;&gt;&lt;a href=&#34;#cb1-11&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;&lt;/span&gt;
+&lt;span id=&#34;cb1-12&#34;&gt;&lt;a href=&#34;#cb1-12&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;&lt;span class=&#34;dt&#34;&gt;int&lt;/span&gt; T, p;&lt;/span&gt;
+&lt;span id=&#34;cb1-13&#34;&gt;&lt;a href=&#34;#cb1-13&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;&lt;span class=&#34;dt&#34;&gt;int&lt;/span&gt; n, n1, n2, m;&lt;/span&gt;
+&lt;span id=&#34;cb1-14&#34;&gt;&lt;a href=&#34;#cb1-14&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;&lt;span class=&#34;dt&#34;&gt;int&lt;/span&gt; a[&lt;span class=&#34;dv&#34;&gt;17&lt;/span&gt;];&lt;/span&gt;
+&lt;span id=&#34;cb1-15&#34;&gt;&lt;a href=&#34;#cb1-15&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;&lt;/span&gt;
+&lt;span id=&#34;cb1-16&#34;&gt;&lt;a href=&#34;#cb1-16&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;&lt;span class=&#34;dt&#34;&gt;int&lt;/span&gt; qPow(&lt;span class=&#34;dt&#34;&gt;int&lt;/span&gt; a, &lt;span class=&#34;dt&#34;&gt;int&lt;/span&gt; b, &lt;span class=&#34;dt&#34;&gt;int&lt;/span&gt; p) {&lt;/span&gt;
+&lt;span id=&#34;cb1-17&#34;&gt;&lt;a href=&#34;#cb1-17&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;    &lt;span class=&#34;dt&#34;&gt;int&lt;/span&gt; ret = &lt;span class=&#34;dv&#34;&gt;1&lt;/span&gt;;&lt;/span&gt;
+&lt;span id=&#34;cb1-18&#34;&gt;&lt;a href=&#34;#cb1-18&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;    &lt;span class=&#34;cf&#34;&gt;for&lt;/span&gt; (; b; b &amp;gt;&amp;gt;= &lt;span class=&#34;dv&#34;&gt;1&lt;/span&gt;, a = &lt;span class=&#34;dv&#34;&gt;1&lt;/span&gt;&lt;span class=&#34;bu&#34;&gt;ll&lt;/span&gt; * a * a % p)&lt;/span&gt;
+&lt;span id=&#34;cb1-19&#34;&gt;&lt;a href=&#34;#cb1-19&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;        &lt;span class=&#34;cf&#34;&gt;if&lt;/span&gt; (b &amp;amp; &lt;span class=&#34;dv&#34;&gt;1&lt;/span&gt;) ret = &lt;span class=&#34;dv&#34;&gt;1&lt;/span&gt;&lt;span class=&#34;bu&#34;&gt;ll&lt;/span&gt; * ret * a % p;&lt;/span&gt;
+&lt;span id=&#34;cb1-20&#34;&gt;&lt;a href=&#34;#cb1-20&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;    &lt;span class=&#34;cf&#34;&gt;return&lt;/span&gt; ret;&lt;/span&gt;
+&lt;span id=&#34;cb1-21&#34;&gt;&lt;a href=&#34;#cb1-21&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;}&lt;/span&gt;
+&lt;span id=&#34;cb1-22&#34;&gt;&lt;a href=&#34;#cb1-22&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;&lt;/span&gt;
+&lt;span id=&#34;cb1-23&#34;&gt;&lt;a href=&#34;#cb1-23&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;&lt;span class=&#34;kw&#34;&gt;namespace&lt;/span&gt; p10007 {&lt;/span&gt;
+&lt;span id=&#34;cb1-24&#34;&gt;&lt;a href=&#34;#cb1-24&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;    &lt;span class=&#34;kw&#34;&gt;using&lt;/span&gt; &lt;span class=&#34;kw&#34;&gt;namespace&lt;/span&gt; std;&lt;/span&gt;
+&lt;span id=&#34;cb1-25&#34;&gt;&lt;a href=&#34;#cb1-25&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;    &lt;span class=&#34;at&#34;&gt;const&lt;/span&gt; &lt;span class=&#34;dt&#34;&gt;int&lt;/span&gt; mod = &lt;span class=&#34;dv&#34;&gt;10007&lt;/span&gt;;&lt;/span&gt;
+&lt;span id=&#34;cb1-26&#34;&gt;&lt;a href=&#34;#cb1-26&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;    &lt;span class=&#34;dt&#34;&gt;int&lt;/span&gt; fac[&lt;span class=&#34;dv&#34;&gt;10050&lt;/span&gt;], invfac[&lt;span class=&#34;dv&#34;&gt;10050&lt;/span&gt;];&lt;/span&gt;
+&lt;span id=&#34;cb1-27&#34;&gt;&lt;a href=&#34;#cb1-27&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;&lt;/span&gt;
+&lt;span id=&#34;cb1-28&#34;&gt;&lt;a href=&#34;#cb1-28&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;    &lt;span class=&#34;dt&#34;&gt;void&lt;/span&gt; init() {&lt;/span&gt;
+&lt;span id=&#34;cb1-29&#34;&gt;&lt;a href=&#34;#cb1-29&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;        fac[&lt;span class=&#34;dv&#34;&gt;0&lt;/span&gt;] = &lt;span class=&#34;dv&#34;&gt;1&lt;/span&gt;;&lt;/span&gt;
+&lt;span id=&#34;cb1-30&#34;&gt;&lt;a href=&#34;#cb1-30&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;        FOR(i, &lt;span class=&#34;dv&#34;&gt;1&lt;/span&gt;, mod - &lt;span class=&#34;dv&#34;&gt;1&lt;/span&gt;) fac[i] = &lt;span class=&#34;dv&#34;&gt;1&lt;/span&gt;&lt;span class=&#34;bu&#34;&gt;ll&lt;/span&gt; * fac[i - &lt;span class=&#34;dv&#34;&gt;1&lt;/span&gt;] * i % mod;&lt;/span&gt;
+&lt;span id=&#34;cb1-31&#34;&gt;&lt;a href=&#34;#cb1-31&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;        invfac[mod - &lt;span class=&#34;dv&#34;&gt;1&lt;/span&gt;] = qPow(fac[mod - &lt;span class=&#34;dv&#34;&gt;1&lt;/span&gt;], mod - &lt;span class=&#34;dv&#34;&gt;2&lt;/span&gt;, mod);&lt;/span&gt;
+&lt;span id=&#34;cb1-32&#34;&gt;&lt;a href=&#34;#cb1-32&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;        DEC(i, mod - &lt;span class=&#34;dv&#34;&gt;2&lt;/span&gt;, &lt;span class=&#34;dv&#34;&gt;0&lt;/span&gt;) invfac[i] = &lt;span class=&#34;dv&#34;&gt;1&lt;/span&gt;&lt;span class=&#34;bu&#34;&gt;ll&lt;/span&gt; * invfac[i + &lt;span class=&#34;dv&#34;&gt;1&lt;/span&gt;] * (i + &lt;span class=&#34;dv&#34;&gt;1&lt;/span&gt;) % mod;&lt;/span&gt;
+&lt;span id=&#34;cb1-33&#34;&gt;&lt;a href=&#34;#cb1-33&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;        &lt;span class=&#34;cf&#34;&gt;return&lt;/span&gt;;&lt;/span&gt;
+&lt;span id=&#34;cb1-34&#34;&gt;&lt;a href=&#34;#cb1-34&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;    }&lt;/span&gt;
+&lt;span id=&#34;cb1-35&#34;&gt;&lt;a href=&#34;#cb1-35&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;&lt;/span&gt;
+&lt;span id=&#34;cb1-36&#34;&gt;&lt;a href=&#34;#cb1-36&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;    il &lt;span class=&#34;dt&#34;&gt;int&lt;/span&gt; C(&lt;span class=&#34;dt&#34;&gt;int&lt;/span&gt; n, &lt;span class=&#34;dt&#34;&gt;int&lt;/span&gt; m, &lt;span class=&#34;dt&#34;&gt;int&lt;/span&gt; p) {&lt;/span&gt;
+&lt;span id=&#34;cb1-37&#34;&gt;&lt;a href=&#34;#cb1-37&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;        &lt;span class=&#34;cf&#34;&gt;if&lt;/span&gt; (n &amp;lt; m) &lt;span class=&#34;cf&#34;&gt;return&lt;/span&gt; &lt;span class=&#34;dv&#34;&gt;0&lt;/span&gt;;&lt;/span&gt;
+&lt;span id=&#34;cb1-38&#34;&gt;&lt;a href=&#34;#cb1-38&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;        &lt;span class=&#34;cf&#34;&gt;if&lt;/span&gt; (!m) &lt;span class=&#34;cf&#34;&gt;return&lt;/span&gt; &lt;span class=&#34;dv&#34;&gt;1&lt;/span&gt;;&lt;/span&gt;
+&lt;span id=&#34;cb1-39&#34;&gt;&lt;a href=&#34;#cb1-39&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;        &lt;span class=&#34;cf&#34;&gt;return&lt;/span&gt; &lt;span class=&#34;dv&#34;&gt;1&lt;/span&gt;&lt;span class=&#34;bu&#34;&gt;ll&lt;/span&gt; * fac[n] * invfac[m] % mod * invfac[n - m] % mod;&lt;/span&gt;
+&lt;span id=&#34;cb1-40&#34;&gt;&lt;a href=&#34;#cb1-40&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;    }&lt;/span&gt;
+&lt;span id=&#34;cb1-41&#34;&gt;&lt;a href=&#34;#cb1-41&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;&lt;/span&gt;
+&lt;span id=&#34;cb1-42&#34;&gt;&lt;a href=&#34;#cb1-42&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;    &lt;span class=&#34;dt&#34;&gt;int&lt;/span&gt; lucas(&lt;span class=&#34;dt&#34;&gt;int&lt;/span&gt; n, &lt;span class=&#34;dt&#34;&gt;int&lt;/span&gt; m, &lt;span class=&#34;dt&#34;&gt;int&lt;/span&gt; p) {&lt;/span&gt;
+&lt;span id=&#34;cb1-43&#34;&gt;&lt;a href=&#34;#cb1-43&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;        &lt;span class=&#34;cf&#34;&gt;if&lt;/span&gt; (!m) &lt;span class=&#34;cf&#34;&gt;return&lt;/span&gt; &lt;span class=&#34;dv&#34;&gt;1&lt;/span&gt;;&lt;/span&gt;
+&lt;span id=&#34;cb1-44&#34;&gt;&lt;a href=&#34;#cb1-44&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;        &lt;span class=&#34;cf&#34;&gt;return&lt;/span&gt; &lt;span class=&#34;dv&#34;&gt;1&lt;/span&gt;&lt;span class=&#34;bu&#34;&gt;ll&lt;/span&gt; * lucas(n / p, m / p, p) * C(n % p, m % p, p) % p;&lt;/span&gt;
+&lt;span id=&#34;cb1-45&#34;&gt;&lt;a href=&#34;#cb1-45&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;    }&lt;/span&gt;
+&lt;span id=&#34;cb1-46&#34;&gt;&lt;a href=&#34;#cb1-46&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;}&lt;/span&gt;
+&lt;span id=&#34;cb1-47&#34;&gt;&lt;a href=&#34;#cb1-47&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;&lt;/span&gt;
+&lt;span id=&#34;cb1-48&#34;&gt;&lt;a href=&#34;#cb1-48&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;&lt;span class=&#34;dt&#34;&gt;void&lt;/span&gt; exgcd(&lt;span class=&#34;dt&#34;&gt;int&lt;/span&gt; a, &lt;span class=&#34;dt&#34;&gt;int&lt;/span&gt; b, &lt;span class=&#34;dt&#34;&gt;int&lt;/span&gt; &amp;amp;x, &lt;span class=&#34;dt&#34;&gt;int&lt;/span&gt; &amp;amp;y) {&lt;/span&gt;
+&lt;span id=&#34;cb1-49&#34;&gt;&lt;a href=&#34;#cb1-49&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;    &lt;span class=&#34;cf&#34;&gt;if&lt;/span&gt; (!b) {&lt;/span&gt;
+&lt;span id=&#34;cb1-50&#34;&gt;&lt;a href=&#34;#cb1-50&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;        x = &lt;span class=&#34;dv&#34;&gt;1&lt;/span&gt;, y = &lt;span class=&#34;dv&#34;&gt;0&lt;/span&gt;;&lt;/span&gt;
+&lt;span id=&#34;cb1-51&#34;&gt;&lt;a href=&#34;#cb1-51&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;        &lt;span class=&#34;cf&#34;&gt;return&lt;/span&gt;;&lt;/span&gt;
+&lt;span id=&#34;cb1-52&#34;&gt;&lt;a href=&#34;#cb1-52&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;    }&lt;/span&gt;
+&lt;span id=&#34;cb1-53&#34;&gt;&lt;a href=&#34;#cb1-53&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;    exgcd(b, a % b, y, x);&lt;/span&gt;
+&lt;span id=&#34;cb1-54&#34;&gt;&lt;a href=&#34;#cb1-54&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;    y -= a / b * x;&lt;/span&gt;
+&lt;span id=&#34;cb1-55&#34;&gt;&lt;a href=&#34;#cb1-55&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;    &lt;span class=&#34;cf&#34;&gt;return&lt;/span&gt;;&lt;/span&gt;
+&lt;span id=&#34;cb1-56&#34;&gt;&lt;a href=&#34;#cb1-56&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;}&lt;/span&gt;
+&lt;span id=&#34;cb1-57&#34;&gt;&lt;a href=&#34;#cb1-57&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;&lt;/span&gt;
+&lt;span id=&#34;cb1-58&#34;&gt;&lt;a href=&#34;#cb1-58&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;il &lt;span class=&#34;dt&#34;&gt;int&lt;/span&gt; inv(&lt;span class=&#34;dt&#34;&gt;int&lt;/span&gt; n, &lt;span class=&#34;dt&#34;&gt;int&lt;/span&gt; p) {&lt;/span&gt;
+&lt;span id=&#34;cb1-59&#34;&gt;&lt;a href=&#34;#cb1-59&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;    &lt;span class=&#34;dt&#34;&gt;int&lt;/span&gt; x, y;&lt;/span&gt;
+&lt;span id=&#34;cb1-60&#34;&gt;&lt;a href=&#34;#cb1-60&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;    exgcd(n, p, x, y);&lt;/span&gt;
+&lt;span id=&#34;cb1-61&#34;&gt;&lt;a href=&#34;#cb1-61&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;    &lt;span class=&#34;cf&#34;&gt;return&lt;/span&gt; (x + p) % p;&lt;/span&gt;
+&lt;span id=&#34;cb1-62&#34;&gt;&lt;a href=&#34;#cb1-62&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;}&lt;/span&gt;
+&lt;span id=&#34;cb1-63&#34;&gt;&lt;a href=&#34;#cb1-63&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;&lt;/span&gt;
+&lt;span id=&#34;cb1-64&#34;&gt;&lt;a href=&#34;#cb1-64&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;&lt;span class=&#34;dt&#34;&gt;int&lt;/span&gt; q1[] = {&lt;span class=&#34;dv&#34;&gt;0&lt;/span&gt;, &lt;span class=&#34;dv&#34;&gt;2&lt;/span&gt;, &lt;span class=&#34;dv&#34;&gt;3&lt;/span&gt;, &lt;span class=&#34;dv&#34;&gt;11&lt;/span&gt;, &lt;span class=&#34;dv&#34;&gt;397&lt;/span&gt;, &lt;span class=&#34;dv&#34;&gt;10007&lt;/span&gt;}, q2[] = {&lt;span class=&#34;dv&#34;&gt;0&lt;/span&gt;, &lt;span class=&#34;dv&#34;&gt;5&lt;/span&gt;, &lt;span class=&#34;dv&#34;&gt;7&lt;/span&gt;, &lt;span class=&#34;dv&#34;&gt;101&lt;/span&gt;}, q[&lt;span class=&#34;dv&#34;&gt;10&lt;/span&gt;];&lt;/span&gt;
+&lt;span id=&#34;cb1-65&#34;&gt;&lt;a href=&#34;#cb1-65&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;&lt;span class=&#34;dt&#34;&gt;int&lt;/span&gt; qk1[] = {&lt;span class=&#34;dv&#34;&gt;0&lt;/span&gt;, &lt;span class=&#34;dv&#34;&gt;2&lt;/span&gt;, &lt;span class=&#34;dv&#34;&gt;3&lt;/span&gt;, &lt;span class=&#34;dv&#34;&gt;11&lt;/span&gt;, &lt;span class=&#34;dv&#34;&gt;397&lt;/span&gt;, &lt;span class=&#34;dv&#34;&gt;10007&lt;/span&gt;}, qk2[] = {&lt;span class=&#34;dv&#34;&gt;0&lt;/span&gt;, &lt;span class=&#34;dv&#34;&gt;125&lt;/span&gt;, &lt;span class=&#34;dv&#34;&gt;343&lt;/span&gt;, &lt;span class=&#34;dv&#34;&gt;10201&lt;/span&gt;}, qk[&lt;span class=&#34;dv&#34;&gt;10&lt;/span&gt;], d;&lt;/span&gt;
+&lt;span id=&#34;cb1-66&#34;&gt;&lt;a href=&#34;#cb1-66&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;&lt;span class=&#34;dt&#34;&gt;int&lt;/span&gt; retfac[&lt;span class=&#34;dv&#34;&gt;10&lt;/span&gt;];&lt;/span&gt;
+&lt;span id=&#34;cb1-67&#34;&gt;&lt;a href=&#34;#cb1-67&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;&lt;/span&gt;
+&lt;span id=&#34;cb1-68&#34;&gt;&lt;a href=&#34;#cb1-68&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;&lt;span class=&#34;dt&#34;&gt;int&lt;/span&gt; calc(&lt;span class=&#34;dt&#34;&gt;int&lt;/span&gt; n, &lt;span class=&#34;dt&#34;&gt;int&lt;/span&gt; i) {&lt;/span&gt;
+&lt;span id=&#34;cb1-69&#34;&gt;&lt;a href=&#34;#cb1-69&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;    &lt;span class=&#34;cf&#34;&gt;if&lt;/span&gt; (!n) &lt;span class=&#34;cf&#34;&gt;return&lt;/span&gt; &lt;span class=&#34;dv&#34;&gt;1&lt;/span&gt;;&lt;/span&gt;
+&lt;span id=&#34;cb1-70&#34;&gt;&lt;a href=&#34;#cb1-70&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;    &lt;span class=&#34;dt&#34;&gt;int&lt;/span&gt; ret = retfac[i];&lt;/span&gt;
+&lt;span id=&#34;cb1-71&#34;&gt;&lt;a href=&#34;#cb1-71&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;    ret = qPow(ret, n / qk[i], qk[i]);&lt;/span&gt;
+&lt;span id=&#34;cb1-72&#34;&gt;&lt;a href=&#34;#cb1-72&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;    FOR(j, n / qk[i] * qk[i] + &lt;span class=&#34;dv&#34;&gt;1&lt;/span&gt;, n)&lt;/span&gt;
+&lt;span id=&#34;cb1-73&#34;&gt;&lt;a href=&#34;#cb1-73&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;        &lt;span class=&#34;cf&#34;&gt;if&lt;/span&gt; (j % q[i]) ret = &lt;span class=&#34;dv&#34;&gt;1&lt;/span&gt;&lt;span class=&#34;bu&#34;&gt;ll&lt;/span&gt; * ret * (j % qk[i]) % qk[i];&lt;/span&gt;
+&lt;span id=&#34;cb1-74&#34;&gt;&lt;a href=&#34;#cb1-74&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;    &lt;span class=&#34;cf&#34;&gt;return&lt;/span&gt; &lt;span class=&#34;dv&#34;&gt;1&lt;/span&gt;&lt;span class=&#34;bu&#34;&gt;ll&lt;/span&gt; * ret * calc(n / q[i], i) % qk[i];&lt;/span&gt;
+&lt;span id=&#34;cb1-75&#34;&gt;&lt;a href=&#34;#cb1-75&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;}&lt;/span&gt;
+&lt;span id=&#34;cb1-76&#34;&gt;&lt;a href=&#34;#cb1-76&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;&lt;/span&gt;
+&lt;span id=&#34;cb1-77&#34;&gt;&lt;a href=&#34;#cb1-77&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;&lt;span class=&#34;dt&#34;&gt;int&lt;/span&gt; multiLucas(&lt;span class=&#34;dt&#34;&gt;int&lt;/span&gt; n, &lt;span class=&#34;dt&#34;&gt;int&lt;/span&gt; m, &lt;span class=&#34;dt&#34;&gt;int&lt;/span&gt; i) {&lt;/span&gt;
+&lt;span id=&#34;cb1-78&#34;&gt;&lt;a href=&#34;#cb1-78&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;    &lt;span class=&#34;cf&#34;&gt;if&lt;/span&gt; (n &amp;lt; m) &lt;span class=&#34;cf&#34;&gt;return&lt;/span&gt; &lt;span class=&#34;dv&#34;&gt;0&lt;/span&gt;;&lt;/span&gt;
+&lt;span id=&#34;cb1-79&#34;&gt;&lt;a href=&#34;#cb1-79&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;    &lt;span class=&#34;dt&#34;&gt;int&lt;/span&gt; cnt = &lt;span class=&#34;dv&#34;&gt;0&lt;/span&gt;;&lt;/span&gt;
+&lt;span id=&#34;cb1-80&#34;&gt;&lt;a href=&#34;#cb1-80&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;    &lt;span class=&#34;cf&#34;&gt;for&lt;/span&gt; (&lt;span class=&#34;dt&#34;&gt;int&lt;/span&gt; j = n; j; j /= q[i]) cnt += j / q[i];&lt;/span&gt;
+&lt;span id=&#34;cb1-81&#34;&gt;&lt;a href=&#34;#cb1-81&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;    &lt;span class=&#34;cf&#34;&gt;for&lt;/span&gt; (&lt;span class=&#34;dt&#34;&gt;int&lt;/span&gt; j = m; j; j /= q[i]) cnt -= j / q[i];&lt;/span&gt;
+&lt;span id=&#34;cb1-82&#34;&gt;&lt;a href=&#34;#cb1-82&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;    &lt;span class=&#34;cf&#34;&gt;for&lt;/span&gt; (&lt;span class=&#34;dt&#34;&gt;int&lt;/span&gt; j = n - m; j; j /= q[i]) cnt -= j / q[i];&lt;/span&gt;
+&lt;span id=&#34;cb1-83&#34;&gt;&lt;a href=&#34;#cb1-83&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;    &lt;span class=&#34;cf&#34;&gt;return&lt;/span&gt; &lt;span class=&#34;dv&#34;&gt;1&lt;/span&gt;&lt;span class=&#34;bu&#34;&gt;ll&lt;/span&gt; * qPow(q[i], cnt, qk[i]) * calc(n, i) % qk[i] * inv(calc(m, i), qk[i]) % qk[i] * inv(calc(n - m, i), qk[i]) % qk[i];&lt;/span&gt;
+&lt;span id=&#34;cb1-84&#34;&gt;&lt;a href=&#34;#cb1-84&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;}&lt;/span&gt;
+&lt;span id=&#34;cb1-85&#34;&gt;&lt;a href=&#34;#cb1-85&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;&lt;/span&gt;
+&lt;span id=&#34;cb1-86&#34;&gt;&lt;a href=&#34;#cb1-86&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;&lt;span class=&#34;dt&#34;&gt;int&lt;/span&gt; CRT(&lt;span class=&#34;dt&#34;&gt;int&lt;/span&gt; n, &lt;span class=&#34;dt&#34;&gt;int&lt;/span&gt; *a, &lt;span class=&#34;dt&#34;&gt;int&lt;/span&gt; *m, &lt;span class=&#34;dt&#34;&gt;int&lt;/span&gt; mod) {&lt;/span&gt;
+&lt;span id=&#34;cb1-87&#34;&gt;&lt;a href=&#34;#cb1-87&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;    &lt;span class=&#34;dt&#34;&gt;int&lt;/span&gt; M = &lt;span class=&#34;dv&#34;&gt;1&lt;/span&gt;, ret = &lt;span class=&#34;dv&#34;&gt;0&lt;/span&gt;;&lt;/span&gt;
+&lt;span id=&#34;cb1-88&#34;&gt;&lt;a href=&#34;#cb1-88&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;    FOR(i, &lt;span class=&#34;dv&#34;&gt;1&lt;/span&gt;, n) M *= m[i];&lt;/span&gt;
+&lt;span id=&#34;cb1-89&#34;&gt;&lt;a href=&#34;#cb1-89&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;    FOR(i, &lt;span class=&#34;dv&#34;&gt;1&lt;/span&gt;, n) {&lt;/span&gt;
+&lt;span id=&#34;cb1-90&#34;&gt;&lt;a href=&#34;#cb1-90&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;        &lt;span class=&#34;dt&#34;&gt;int&lt;/span&gt; w = M / m[i];&lt;/span&gt;
+&lt;span id=&#34;cb1-91&#34;&gt;&lt;a href=&#34;#cb1-91&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;        ret = (ret + &lt;span class=&#34;dv&#34;&gt;1&lt;/span&gt;&lt;span class=&#34;bu&#34;&gt;ll&lt;/span&gt; * a[i] * w % mod * inv(w, m[i]) % mod) % mod;&lt;/span&gt;
+&lt;span id=&#34;cb1-92&#34;&gt;&lt;a href=&#34;#cb1-92&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;    }&lt;/span&gt;
+&lt;span id=&#34;cb1-93&#34;&gt;&lt;a href=&#34;#cb1-93&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;    &lt;span class=&#34;cf&#34;&gt;return&lt;/span&gt; (ret + mod) % mod;&lt;/span&gt;
+&lt;span id=&#34;cb1-94&#34;&gt;&lt;a href=&#34;#cb1-94&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;}&lt;/span&gt;
+&lt;span id=&#34;cb1-95&#34;&gt;&lt;a href=&#34;#cb1-95&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;&lt;/span&gt;
+&lt;span id=&#34;cb1-96&#34;&gt;&lt;a href=&#34;#cb1-96&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;&lt;span class=&#34;dt&#34;&gt;int&lt;/span&gt; exLucas(&lt;span class=&#34;dt&#34;&gt;int&lt;/span&gt; n, &lt;span class=&#34;dt&#34;&gt;int&lt;/span&gt; m, &lt;span class=&#34;dt&#34;&gt;int&lt;/span&gt; p) {&lt;/span&gt;
+&lt;span id=&#34;cb1-97&#34;&gt;&lt;a href=&#34;#cb1-97&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;    &lt;span class=&#34;cf&#34;&gt;if&lt;/span&gt; (n &amp;lt; m) &lt;span class=&#34;cf&#34;&gt;return&lt;/span&gt; &lt;span class=&#34;dv&#34;&gt;0&lt;/span&gt;;&lt;/span&gt;
+&lt;span id=&#34;cb1-98&#34;&gt;&lt;a href=&#34;#cb1-98&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;    &lt;span class=&#34;cf&#34;&gt;if&lt;/span&gt; (p == &lt;span class=&#34;dv&#34;&gt;10007&lt;/span&gt;) &lt;span class=&#34;cf&#34;&gt;return&lt;/span&gt; p10007::lucas(n, m, p);&lt;/span&gt;
+&lt;span id=&#34;cb1-99&#34;&gt;&lt;a href=&#34;#cb1-99&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;    &lt;span class=&#34;dt&#34;&gt;int&lt;/span&gt; a[&lt;span class=&#34;dv&#34;&gt;10&lt;/span&gt;];&lt;/span&gt;
+&lt;span id=&#34;cb1-100&#34;&gt;&lt;a href=&#34;#cb1-100&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;    FOR(i, &lt;span class=&#34;dv&#34;&gt;1&lt;/span&gt;, d) a[i] = multiLucas(n, m, i);&lt;/span&gt;
+&lt;span id=&#34;cb1-101&#34;&gt;&lt;a href=&#34;#cb1-101&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;    &lt;span class=&#34;cf&#34;&gt;return&lt;/span&gt; CRT(d, a, qk, p);&lt;/span&gt;
+&lt;span id=&#34;cb1-102&#34;&gt;&lt;a href=&#34;#cb1-102&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;}&lt;/span&gt;
+&lt;span id=&#34;cb1-103&#34;&gt;&lt;a href=&#34;#cb1-103&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;&lt;/span&gt;
+&lt;span id=&#34;cb1-104&#34;&gt;&lt;a href=&#34;#cb1-104&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;&lt;span class=&#34;dt&#34;&gt;void&lt;/span&gt; init() {&lt;/span&gt;
+&lt;span id=&#34;cb1-105&#34;&gt;&lt;a href=&#34;#cb1-105&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;    &lt;span class=&#34;cf&#34;&gt;if&lt;/span&gt; (p == &lt;span class=&#34;dv&#34;&gt;262203414&lt;/span&gt;) {&lt;/span&gt;
+&lt;span id=&#34;cb1-106&#34;&gt;&lt;a href=&#34;#cb1-106&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;        d = &lt;span class=&#34;dv&#34;&gt;5&lt;/span&gt;;&lt;/span&gt;
+&lt;span id=&#34;cb1-107&#34;&gt;&lt;a href=&#34;#cb1-107&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;        FOR(i, &lt;span class=&#34;dv&#34;&gt;1&lt;/span&gt;, d) qk[i] = qk1[i], q[i] = q1[i];&lt;/span&gt;
+&lt;span id=&#34;cb1-108&#34;&gt;&lt;a href=&#34;#cb1-108&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;    } &lt;span class=&#34;cf&#34;&gt;else&lt;/span&gt; {&lt;/span&gt;
+&lt;span id=&#34;cb1-109&#34;&gt;&lt;a href=&#34;#cb1-109&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;        d = &lt;span class=&#34;dv&#34;&gt;3&lt;/span&gt;;&lt;/span&gt;
+&lt;span id=&#34;cb1-110&#34;&gt;&lt;a href=&#34;#cb1-110&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;        FOR(i, &lt;span class=&#34;dv&#34;&gt;1&lt;/span&gt;, d) qk[i] = qk2[i], q[i] = q2[i];&lt;/span&gt;
+&lt;span id=&#34;cb1-111&#34;&gt;&lt;a href=&#34;#cb1-111&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;    }&lt;/span&gt;
+&lt;span id=&#34;cb1-112&#34;&gt;&lt;a href=&#34;#cb1-112&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;    FOR(i, &lt;span class=&#34;dv&#34;&gt;1&lt;/span&gt;, d) {&lt;/span&gt;
+&lt;span id=&#34;cb1-113&#34;&gt;&lt;a href=&#34;#cb1-113&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;        retfac[i] = &lt;span class=&#34;dv&#34;&gt;1&lt;/span&gt;;&lt;/span&gt;
+&lt;span id=&#34;cb1-114&#34;&gt;&lt;a href=&#34;#cb1-114&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;        FOR(j, &lt;span class=&#34;dv&#34;&gt;1&lt;/span&gt;, qk[i])&lt;/span&gt;
+&lt;span id=&#34;cb1-115&#34;&gt;&lt;a href=&#34;#cb1-115&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;            &lt;span class=&#34;cf&#34;&gt;if&lt;/span&gt; (j % q[i]) retfac[i] = &lt;span class=&#34;dv&#34;&gt;1&lt;/span&gt;&lt;span class=&#34;bu&#34;&gt;ll&lt;/span&gt; * retfac[i] * j % qk[i];&lt;/span&gt;
+&lt;span id=&#34;cb1-116&#34;&gt;&lt;a href=&#34;#cb1-116&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;    }&lt;/span&gt;
+&lt;span id=&#34;cb1-117&#34;&gt;&lt;a href=&#34;#cb1-117&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;    &lt;span class=&#34;cf&#34;&gt;return&lt;/span&gt;;&lt;/span&gt;
+&lt;span id=&#34;cb1-118&#34;&gt;&lt;a href=&#34;#cb1-118&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;}&lt;/span&gt;
+&lt;span id=&#34;cb1-119&#34;&gt;&lt;a href=&#34;#cb1-119&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;&lt;/span&gt;
+&lt;span id=&#34;cb1-120&#34;&gt;&lt;a href=&#34;#cb1-120&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;&lt;span class=&#34;dt&#34;&gt;int&lt;/span&gt; main() {&lt;/span&gt;
+&lt;span id=&#34;cb1-121&#34;&gt;&lt;a href=&#34;#cb1-121&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;    read(T), read(p);&lt;/span&gt;
+&lt;span id=&#34;cb1-122&#34;&gt;&lt;a href=&#34;#cb1-122&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;    p10007::init();&lt;/span&gt;
+&lt;span id=&#34;cb1-123&#34;&gt;&lt;a href=&#34;#cb1-123&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;    init();&lt;/span&gt;
+&lt;span id=&#34;cb1-124&#34;&gt;&lt;a href=&#34;#cb1-124&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;    &lt;span class=&#34;cf&#34;&gt;while&lt;/span&gt; (T--) {&lt;/span&gt;
+&lt;span id=&#34;cb1-125&#34;&gt;&lt;a href=&#34;#cb1-125&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;        read(n), read(n1), read(n2), read(m);&lt;/span&gt;
+&lt;span id=&#34;cb1-126&#34;&gt;&lt;a href=&#34;#cb1-126&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;        FOR(i, &lt;span class=&#34;dv&#34;&gt;1&lt;/span&gt;, n1 + n2) read(a[i]);&lt;/span&gt;
+&lt;span id=&#34;cb1-127&#34;&gt;&lt;a href=&#34;#cb1-127&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;        FOR(i, n1 + &lt;span class=&#34;dv&#34;&gt;1&lt;/span&gt;, n1 + n2) m -= a[i] - &lt;span class=&#34;dv&#34;&gt;1&lt;/span&gt;;&lt;/span&gt;
+&lt;span id=&#34;cb1-128&#34;&gt;&lt;a href=&#34;#cb1-128&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;        &lt;span class=&#34;dt&#34;&gt;int&lt;/span&gt; ans = &lt;span class=&#34;dv&#34;&gt;0&lt;/span&gt;;&lt;/span&gt;
+&lt;span id=&#34;cb1-129&#34;&gt;&lt;a href=&#34;#cb1-129&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;        FOR(S, &lt;span class=&#34;dv&#34;&gt;0&lt;/span&gt;, (&lt;span class=&#34;dv&#34;&gt;1&lt;/span&gt; &amp;lt;&amp;lt; n1) - &lt;span class=&#34;dv&#34;&gt;1&lt;/span&gt;) {&lt;/span&gt;
+&lt;span id=&#34;cb1-130&#34;&gt;&lt;a href=&#34;#cb1-130&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;            &lt;span class=&#34;dt&#34;&gt;int&lt;/span&gt; popcnt = &lt;span class=&#34;dv&#34;&gt;0&lt;/span&gt;, nowm = m;&lt;/span&gt;
+&lt;span id=&#34;cb1-131&#34;&gt;&lt;a href=&#34;#cb1-131&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;            FOR(i, &lt;span class=&#34;dv&#34;&gt;1&lt;/span&gt;, n1)&lt;/span&gt;
+&lt;span id=&#34;cb1-132&#34;&gt;&lt;a href=&#34;#cb1-132&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;                &lt;span class=&#34;cf&#34;&gt;if&lt;/span&gt; ((&lt;span class=&#34;dv&#34;&gt;1&lt;/span&gt; &amp;lt;&amp;lt; (i - &lt;span class=&#34;dv&#34;&gt;1&lt;/span&gt;)) &amp;amp; S) nowm -= a[i], ++popcnt;&lt;/span&gt;
+&lt;span id=&#34;cb1-133&#34;&gt;&lt;a href=&#34;#cb1-133&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;            &lt;span class=&#34;dt&#34;&gt;int&lt;/span&gt; tmp = exLucas(nowm - &lt;span class=&#34;dv&#34;&gt;1&lt;/span&gt;, n - &lt;span class=&#34;dv&#34;&gt;1&lt;/span&gt;, p);&lt;/span&gt;
+&lt;span id=&#34;cb1-134&#34;&gt;&lt;a href=&#34;#cb1-134&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;            ans = (ans + ((popcnt &amp;amp; &lt;span class=&#34;dv&#34;&gt;1&lt;/span&gt;) ? (p - tmp + p) % p : tmp)) % p;&lt;/span&gt;
+&lt;span id=&#34;cb1-135&#34;&gt;&lt;a href=&#34;#cb1-135&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;        }&lt;/span&gt;
+&lt;span id=&#34;cb1-136&#34;&gt;&lt;a href=&#34;#cb1-136&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;        print(ans), putchar(&lt;span class=&#34;ch&#34;&gt;&amp;#39;&lt;/span&gt;&lt;span class=&#34;sc&#34;&gt;\n&lt;/span&gt;&lt;span class=&#34;ch&#34;&gt;&amp;#39;&lt;/span&gt;);&lt;/span&gt;
+&lt;span id=&#34;cb1-137&#34;&gt;&lt;a href=&#34;#cb1-137&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;    }&lt;/span&gt;
+&lt;span id=&#34;cb1-138&#34;&gt;&lt;a href=&#34;#cb1-138&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;    &lt;span class=&#34;cf&#34;&gt;return&lt;/span&gt; output(), &lt;span class=&#34;dv&#34;&gt;0&lt;/span&gt;;&lt;/span&gt;
+&lt;span id=&#34;cb1-139&#34;&gt;&lt;a href=&#34;#cb1-139&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;}&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+</description>
+        </item>
+        
+    </channel>
+</rss>

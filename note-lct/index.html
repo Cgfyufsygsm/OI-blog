@@ -1,0 +1,832 @@
+<!DOCTYPE html>
+<html dir="ltr" lang="zh-CN">
+<head><meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1" name="viewport"/><meta content="参考资料 https://www.zybuluo.com/xzyxzy/note/1027479
+https://www.cnblogs.com/candy99/p/6271344.html
+https://www.cnblogs.com/flashhu/p/8324551.html
+https://oi-wiki.org/ds/lct/
+鸣谢以上博客的作者们。
+简介 Link/Cut Tree（简称 LCT），是一种可以解决动态树问题的数据结构。具体地，它可以维护一个动态的森林，实现如下操作（洛谷模板题）
+询问 \(x\) 到 \(y\) 上路径的异或和 连接 \(x\) 和 \(y\) 删除边 \((x,y)\) 更改 \(x\) 的权值为 \(v\) 学习 LCT 之前，首先需要对树链剖分有一定的认识，然后需要熟练掌握 Splay。因为 LCT 是一种十分精巧的数据结构，生来就是需要和 Splay 配合（如果使用别的平衡树时间复杂度会多一个 log，使用 Splay 的话均摊下来还是 \(O(n\log n)\) 的）。
+实链剖分 上述操作如果没有连接和删除操作的话，就是一个裸的树剖题。我们回想一下树剖是怎么做的：把整棵树按照子树大小剖分成若干条链，并重新标号使得这些链上面的标号连续，然后使用数据结构（线段树等）在这些链上搞事情。
+至于现在的动态树问题，假设我们能把需要的路径抽出来，然后直接进行序列操作，岂不美哉。所以我们考虑动态地进行剖分，即实链剖分。
+一个点有若干连向儿子的边，我们自己选择一条边进行剖分（即自己选定“重儿子”），这条被选择的边就称为实边，其他边称为虚边。 实边连接的儿子称为实儿子（类似于重链剖分中的重儿子） 实边组合成的链称为实链（类似于重链和长链） 选择实链剖分的好处就是实和虚可以互相进行转化。
+虚者实之，实者虚之。——《东周列国志》
+针对这样灵活多变的实链，我们使用 Splay 进行维护。
+主要性质 每一棵 Splay 维护的是一条实链 每棵 Splay 中序遍历得到的点在原树中深度单调递增（即对应这条实链从上往下走） 虚边由一棵 Splay 指向另外一棵 Splay 上面的性质告诉我们，LCT 其实本质上是一个森林，我们可以把组成这个森林的树称为辅助树，一定要搞清楚辅助树和原树的关系，否则极其容易想错问题。
+我们可以知道
+原树与辅助树中的节点一一对应 若干棵 Splay 组成了一棵辅助树 辅助树中的 Splay 不是互相独立的 通常来说，一棵 Splay 的根的父亲节点应该为空，但是在 LCT 中一棵 Splay 的根的父亲节点指向原树中这棵 Splay 维护的实链的父亲节点（即链顶的父节点），对应了原树中的一条虚边。其具有认父不认子的特点，即儿子存储了父亲，但是父亲不存储儿子。" name="description"/><title>Link-Cut Tree 学习笔记</title>
+<link href="https://oi.imyangty.com/note-lct/" rel="canonical"/>
+<link href="/scss/style.min.a5821f3d3ab84ce5a0ac21477e347a2e0ca00292e398d16c5e8e36ded6e35a23.css" rel="stylesheet"/><meta content="Link-Cut Tree 学习笔记" property="og:title"/>
+<meta content="参考资料 https://www.zybuluo.com/xzyxzy/note/1027479
+https://www.cnblogs.com/candy99/p/6271344.html
+https://www.cnblogs.com/flashhu/p/8324551.html
+https://oi-wiki.org/ds/lct/
+鸣谢以上博客的作者们。
+简介 Link/Cut Tree（简称 LCT），是一种可以解决动态树问题的数据结构。具体地，它可以维护一个动态的森林，实现如下操作（洛谷模板题）
+询问 \(x\) 到 \(y\) 上路径的异或和 连接 \(x\) 和 \(y\) 删除边 \((x,y)\) 更改 \(x\) 的权值为 \(v\) 学习 LCT 之前，首先需要对树链剖分有一定的认识，然后需要熟练掌握 Splay。因为 LCT 是一种十分精巧的数据结构，生来就是需要和 Splay 配合（如果使用别的平衡树时间复杂度会多一个 log，使用 Splay 的话均摊下来还是 \(O(n\log n)\) 的）。
+实链剖分 上述操作如果没有连接和删除操作的话，就是一个裸的树剖题。我们回想一下树剖是怎么做的：把整棵树按照子树大小剖分成若干条链，并重新标号使得这些链上面的标号连续，然后使用数据结构（线段树等）在这些链上搞事情。
+至于现在的动态树问题，假设我们能把需要的路径抽出来，然后直接进行序列操作，岂不美哉。所以我们考虑动态地进行剖分，即实链剖分。
+一个点有若干连向儿子的边，我们自己选择一条边进行剖分（即自己选定“重儿子”），这条被选择的边就称为实边，其他边称为虚边。 实边连接的儿子称为实儿子（类似于重链剖分中的重儿子） 实边组合成的链称为实链（类似于重链和长链） 选择实链剖分的好处就是实和虚可以互相进行转化。
+虚者实之，实者虚之。——《东周列国志》
+针对这样灵活多变的实链，我们使用 Splay 进行维护。
+主要性质 每一棵 Splay 维护的是一条实链 每棵 Splay 中序遍历得到的点在原树中深度单调递增（即对应这条实链从上往下走） 虚边由一棵 Splay 指向另外一棵 Splay 上面的性质告诉我们，LCT 其实本质上是一个森林，我们可以把组成这个森林的树称为辅助树，一定要搞清楚辅助树和原树的关系，否则极其容易想错问题。
+我们可以知道
+原树与辅助树中的节点一一对应 若干棵 Splay 组成了一棵辅助树 辅助树中的 Splay 不是互相独立的 通常来说，一棵 Splay 的根的父亲节点应该为空，但是在 LCT 中一棵 Splay 的根的父亲节点指向原树中这棵 Splay 维护的实链的父亲节点（即链顶的父节点），对应了原树中的一条虚边。其具有认父不认子的特点，即儿子存储了父亲，但是父亲不存储儿子。" property="og:description"/>
+<meta content="https://oi.imyangty.com/note-lct/" property="og:url"/>
+<meta content="清烛的博客" property="og:site_name"/>
+<meta content="article" property="og:type"/><meta content="Post" property="article:section"/><meta content="OI" property="article:tag"/><meta content="笔记" property="article:tag"/><meta content="LCT" property="article:tag"/><meta content="树链剖分" property="article:tag"/><meta content="2021-04-16T19:57:23+08:00" property="article:published_time"/><meta content="2021-04-16T19:57:23+08:00" property="article:modified_time"/><meta content="https://yangty-pic.oss-cn-beijing.aliyuncs.com/bg17.webp" property="og:image"/>
+<meta content="Link-Cut Tree 学习笔记" name="twitter:title"/>
+<meta content="参考资料 https://www.zybuluo.com/xzyxzy/note/1027479
+https://www.cnblogs.com/candy99/p/6271344.html
+https://www.cnblogs.com/flashhu/p/8324551.html
+https://oi-wiki.org/ds/lct/
+鸣谢以上博客的作者们。
+简介 Link/Cut Tree（简称 LCT），是一种可以解决动态树问题的数据结构。具体地，它可以维护一个动态的森林，实现如下操作（洛谷模板题）
+询问 \(x\) 到 \(y\) 上路径的异或和 连接 \(x\) 和 \(y\) 删除边 \((x,y)\) 更改 \(x\) 的权值为 \(v\) 学习 LCT 之前，首先需要对树链剖分有一定的认识，然后需要熟练掌握 Splay。因为 LCT 是一种十分精巧的数据结构，生来就是需要和 Splay 配合（如果使用别的平衡树时间复杂度会多一个 log，使用 Splay 的话均摊下来还是 \(O(n\log n)\) 的）。
+实链剖分 上述操作如果没有连接和删除操作的话，就是一个裸的树剖题。我们回想一下树剖是怎么做的：把整棵树按照子树大小剖分成若干条链，并重新标号使得这些链上面的标号连续，然后使用数据结构（线段树等）在这些链上搞事情。
+至于现在的动态树问题，假设我们能把需要的路径抽出来，然后直接进行序列操作，岂不美哉。所以我们考虑动态地进行剖分，即实链剖分。
+一个点有若干连向儿子的边，我们自己选择一条边进行剖分（即自己选定“重儿子”），这条被选择的边就称为实边，其他边称为虚边。 实边连接的儿子称为实儿子（类似于重链剖分中的重儿子） 实边组合成的链称为实链（类似于重链和长链） 选择实链剖分的好处就是实和虚可以互相进行转化。
+虚者实之，实者虚之。——《东周列国志》
+针对这样灵活多变的实链，我们使用 Splay 进行维护。
+主要性质 每一棵 Splay 维护的是一条实链 每棵 Splay 中序遍历得到的点在原树中深度单调递增（即对应这条实链从上往下走） 虚边由一棵 Splay 指向另外一棵 Splay 上面的性质告诉我们，LCT 其实本质上是一个森林，我们可以把组成这个森林的树称为辅助树，一定要搞清楚辅助树和原树的关系，否则极其容易想错问题。
+我们可以知道
+原树与辅助树中的节点一一对应 若干棵 Splay 组成了一棵辅助树 辅助树中的 Splay 不是互相独立的 通常来说，一棵 Splay 的根的父亲节点应该为空，但是在 LCT 中一棵 Splay 的根的父亲节点指向原树中这棵 Splay 维护的实链的父亲节点（即链顶的父节点），对应了原树中的一条虚边。其具有认父不认子的特点，即儿子存储了父亲，但是父亲不存储儿子。" name="twitter:description"/><meta content="summary_large_image" name="twitter:card"/>
+<meta content="https://yangty-pic.oss-cn-beijing.aliyuncs.com/bg17.webp" name="twitter:image"/>
+<link href="https://q1.qlogo.cn/g?b=qq&amp;nk=375836877&amp;s=5" rel="shortcut icon"/>
+<link href="https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.5.1/build/styles/github-dark-dimmed.min.css" rel="stylesheet"/>
+<script src="https://cdn.jsdelivr.net/gh/highlightjs/cdn-release/build/highlight.min.js"></script>
+<script>hljs.highlightAll();</script>
+</head>
+<body class="article-page">
+<script>
+        (function() {
+            const colorSchemeKey = 'StackColorScheme';
+            if(!localStorage.getItem(colorSchemeKey)){
+                localStorage.setItem(colorSchemeKey, "auto");
+            }
+        })();
+    </script><script>
+    (function() {
+        const colorSchemeKey = 'StackColorScheme';
+        const colorSchemeItem = localStorage.getItem(colorSchemeKey);
+        const supportDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches === true;
+
+        if (colorSchemeItem == 'dark' || colorSchemeItem === 'auto' && supportDarkMode) {
+            
+
+            document.documentElement.dataset.scheme = 'dark';
+        } else {
+            document.documentElement.dataset.scheme = 'light';
+        }
+    })();
+</script>
+<div class="container main-container flex on-phone--column extended"><aside class="sidebar left-sidebar sticky">
+<button aria-label="切换菜单" class="hamburger hamburger--spin" id="toggle-menu" type="button">
+<span class="hamburger-box">
+<span class="hamburger-inner"></span>
+</span>
+</button>
+<header>
+<figure class="site-avatar">
+<a href="/">
+<img alt="Avatar" class="site-logo" height="300" loading="lazy" src="/img/avatar_huea3ce2119467b51fdd2a81393644a76d_51594_300x0_resize_q75_box.jpg" width="300"/>
+</a>
+<span class="emoji">😅</span>
+</figure>
+<div class="site-meta">
+<h1 class="site-name"><a href="/">清烛的博客</a></h1>
+<h2 class="site-description">烟火已谢，笙歌未停</h2>
+</div>
+</header><ol class="social-menu">
+<li>
+<a href="mailto:i@imyangty.com" target="_blank" title="email">
+<svg class="icon icon-tabler icon-tabler-mail" fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" viewbox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+<path d="M0 0h24v24H0z" fill="none" stroke="none"></path>
+<rect height="14" rx="2" width="18" x="3" y="5"></rect>
+<polyline points="3 7 12 13 21 7"></polyline>
+</svg>
+</a>
+</li>
+<li>
+<a href="https://github.com/Cgfyufsygsm" target="_blank" title="GitHub">
+<svg class="icon icon-tabler icon-tabler-brand-github" fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+<path d="M0 0h24v24H0z" fill="none" stroke="none"></path>
+<path d="M9 19c-4.3 1.4 -4.3 -2.5 -6 -3m12 5v-3.5c0 -1 .1 -1.4 -.5 -2c2.8 -.3 5.5 -1.4 5.5 -6a4.6 4.6 0 0 0 -1.3 -3.2a4.2 4.2 0 0 0 -.1 -3.2s-1.1 -.3 -3.5 1.3a12.3 12.3 0 0 0 -6.2 0c-2.4 -1.6 -3.5 -1.3 -3.5 -1.3a4.2 4.2 0 0 0 -.1 3.2a4.6 4.6 0 0 0 -1.3 3.2c0 4.6 2.7 5.7 5.5 6c-.6 .6 -.6 1.2 -.5 2v3.5"></path>
+</svg>
+</a>
+</li>
+<li>
+<a href="https://t.me/Cgfyufsygsm" target="_blank" title="Telegram">
+<svg class="icon icon-tabler icon-tabler-brand-telegram" fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" viewbox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+<path d="M0 0h24v24H0z" fill="none" stroke="none"></path>
+<path d="M15 10l-4 4l6 6l4 -16l-18 7l4 2l2 6l3 -4"></path>
+</svg>
+</a>
+</li>
+<li>
+<a href="https://twitter.com/Cgfyufsygsm" target="_blank" title="Twitter">
+<svg class="icon icon-tabler icon-tabler-brand-twitter" fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+<path d="M0 0h24v24H0z" fill="none" stroke="none"></path>
+<path d="M22 4.01c-1 .49 -1.98 .689 -3 .99c-1.121 -1.265 -2.783 -1.335 -4.38 -.737s-2.643 2.06 -2.62 3.737v1c-3.245 .083 -6.135 -1.395 -8 -4c0 0 -4.182 7.433 4 11c-1.872 1.247 -3.739 2.088 -6 2c3.308 1.803 6.913 2.423 10.034 1.517c3.58 -1.04 6.522 -3.723 7.651 -7.742a13.84 13.84 0 0 0 .497 -3.753c-.002 -.249 1.51 -2.772 1.818 -4.013z"></path>
+</svg>
+</a>
+</li>
+</ol><ol class="menu" id="main-menu">
+<li>
+<a href="/">
+<svg class="icon icon-tabler icon-tabler-home" fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+<path d="M0 0h24v24H0z" stroke="none"></path>
+<polyline points="5 12 3 12 12 3 21 12 19 12"></polyline>
+<path d="M5 12v7a2 2 0 0 0 2 2h10a2 2 0 0 0 2 -2v-7"></path>
+<path d="M9 21v-6a2 2 0 0 1 2 -2h2a2 2 0 0 1 2 2v6"></path>
+</svg>
+<span>主页</span>
+</a>
+</li>
+<li>
+<a href="/about/">
+<svg class="icon icon-tabler icon-tabler-user" fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+<path d="M0 0h24v24H0z" stroke="none"></path>
+<circle cx="12" cy="7" r="4"></circle>
+<path d="M6 21v-2a4 4 0 0 1 4 -4h4a4 4 0 0 1 4 4v2"></path>
+</svg>
+<span>关于</span>
+</a>
+</li>
+<li>
+<a href="/idx/">
+<svg class="icon icon-tabler icon-tabler-hash" fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+<path d="M0 0h24v24H0z" stroke="none"></path>
+<line x1="5" x2="19" y1="9" y2="9"></line>
+<line x1="5" x2="19" y1="15" y2="15"></line>
+<line x1="11" x2="7" y1="4" y2="20"></line>
+<line x1="17" x2="13" y1="4" y2="20"></line>
+</svg>
+<span>导航</span>
+</a>
+</li>
+<li>
+<a href="/archives/">
+<svg class="icon icon-tabler icon-tabler-archive" fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+<path d="M0 0h24v24H0z" stroke="none"></path>
+<rect height="4" rx="2" width="18" x="3" y="4"></rect>
+<path d="M5 8v10a2 2 0 0 0 2 2h10a2 2 0 0 0 2 -2v-10"></path>
+<line x1="10" x2="14" y1="12" y2="12"></line>
+</svg>
+<span>归档</span>
+</a>
+</li>
+<li>
+<a href="/search/">
+<svg class="icon icon-tabler icon-tabler-search" fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+<path d="M0 0h24v24H0z" stroke="none"></path>
+<circle cx="10" cy="10" r="7"></circle>
+<line x1="21" x2="15" y1="21" y2="15"></line>
+</svg>
+<span>搜索</span>
+</a>
+</li>
+<li>
+<a href="/friends/">
+<svg class="icon icon-tabler icon-tabler-link" fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+<path d="M0 0h24v24H0z" stroke="none"></path>
+<path d="M10 14a3.5 3.5 0 0 0 5 0l4 -4a3.5 3.5 0 0 0 -5 -5l-.5 .5"></path>
+<path d="M14 10a3.5 3.5 0 0 0 -5 0l-4 4a3.5 3.5 0 0 0 5 5l.5 -.5"></path>
+</svg>
+<span>友链</span>
+</a>
+</li>
+<li>
+<a href="https://blog.imyangty.com" target="_blank">
+<svg class="icon icon-tabler icon-tabler-home" fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+<path d="M0 0h24v24H0z" stroke="none"></path>
+<polyline points="5 12 3 12 12 3 21 12 19 12"></polyline>
+<path d="M5 12v7a2 2 0 0 0 2 2h10a2 2 0 0 0 2 -2v-7"></path>
+<path d="M9 21v-6a2 2 0 0 1 2 -2h2a2 2 0 0 1 2 2v6"></path>
+</svg>
+<span>主博客</span>
+</a>
+</li>
+<div class="menu-bottom-section">
+<li id="dark-mode-toggle">
+<svg class="icon icon-tabler icon-tabler-toggle-left" fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+<path d="M0 0h24v24H0z" stroke="none"></path>
+<circle cx="8" cy="12" r="2"></circle>
+<rect height="12" rx="6" width="20" x="2" y="6"></rect>
+</svg>
+<svg class="icon icon-tabler icon-tabler-toggle-right" fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+<path d="M0 0h24v24H0z" stroke="none"></path>
+<circle cx="16" cy="12" r="2"></circle>
+<rect height="12" rx="6" width="20" x="2" y="6"></rect>
+</svg>
+<span>暗色模式</span>
+</li>
+</div>
+</ol>
+</aside>
+<main class="main full-width">
+<article class="has-image main-article">
+<header class="article-header">
+<div class="article-image">
+<a href="/note-lct/">
+<img alt="Featured image of post Link-Cut Tree 学习笔记" loading="lazy" src="https://yangty-pic.oss-cn-beijing.aliyuncs.com/bg17.webp"/>
+</a>
+</div>
+<div class="article-details">
+<header class="article-category">
+<a href="/categories/oi/">
+                OI
+            </a>
+<a href="/categories/note/">
+                笔记
+            </a>
+</header>
+<div class="article-title-wrapper">
+<h2 class="article-title">
+<a href="/note-lct/">Link-Cut Tree 学习笔记</a>
+</h2>
+</div>
+<footer class="article-time">
+<div>
+<svg class="icon icon-tabler icon-tabler-calendar-time" fill="none" height="56" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="56" xmlns="http://www.w3.org/2000/svg">
+<path d="M0 0h24v24H0z" stroke="none"></path>
+<path d="M11.795 21h-6.795a2 2 0 0 1 -2 -2v-12a2 2 0 0 1 2 -2h12a2 2 0 0 1 2 2v4"></path>
+<circle cx="18" cy="18" r="4"></circle>
+<path d="M15 3v4"></path>
+<path d="M7 3v4"></path>
+<path d="M3 11h16"></path>
+<path d="M18 16.496v1.504l1 1"></path>
+</svg>
+<time class="article-time--published">Apr 16, 2021</time>
+</div>
+<div>
+<svg class="icon icon-tabler icon-tabler-clock" fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+<path d="M0 0h24v24H0z" stroke="none"></path>
+<circle cx="12" cy="12" r="9"></circle>
+<polyline points="12 7 12 12 15 15"></polyline>
+</svg>
+<time class="article-time--reading">
+                    阅读时长: 6 分钟
+                </time>
+</div>
+</footer>
+</div>
+</header>
+<section class="article-content">
+<h2 id="参考资料">参考资料</h2>
+<p>https://www.zybuluo.com/xzyxzy/note/1027479</p>
+<p>https://www.cnblogs.com/candy99/p/6271344.html</p>
+<p>https://www.cnblogs.com/flashhu/p/8324551.html</p>
+<p>https://oi-wiki.org/ds/lct/</p>
+<p>鸣谢以上博客的作者们。</p>
+<h2 id="简介">简介</h2>
+<p>Link/Cut Tree（简称 LCT），是一种可以解决动态树问题的数据结构。具体地，它可以维护一个动态的森林，实现如下操作（洛谷模板题）</p>
+<ul>
+<li>询问 <span class="math inline">\(x\)</span> 到 <span class="math inline">\(y\)</span> 上路径的异或和</li>
+<li>连接 <span class="math inline">\(x\)</span> 和 <span class="math inline">\(y\)</span></li>
+<li>删除边 <span class="math inline">\((x,y)\)</span></li>
+<li>更改 <span class="math inline">\(x\)</span> 的权值为 <span class="math inline">\(v\)</span></li>
+</ul>
+<p>学习 LCT 之前，首先需要对树链剖分有一定的认识，然后需要熟练掌握 Splay。因为 LCT 是一种十分精巧的数据结构，生来就是需要和 Splay 配合（如果使用别的平衡树时间复杂度会多一个 log，使用 Splay 的话均摊下来还是 <span class="math inline">\(O(n\log n)\)</span> 的）。</p>
+<h2 id="实链剖分">实链剖分</h2>
+<p>上述操作如果没有连接和删除操作的话，就是一个裸的树剖题。我们回想一下树剖是怎么做的：把整棵树按照子树大小剖分成若干条链，并重新标号使得这些链上面的标号连续，然后使用数据结构（线段树等）在这些链上搞事情。</p>
+<p>至于现在的动态树问题，假设我们能把需要的路径抽出来，然后直接进行序列操作，岂不美哉。所以我们考虑<strong>动态地进行剖分</strong>，即<strong>实链剖分</strong>。</p>
+<ul>
+<li>一个点有若干连向儿子的边，<strong>我们自己选择一条边进行剖分</strong>（即自己选定“重儿子”），这条被选择的边就称为<strong>实边</strong>，其他边称为<strong>虚边</strong>。</li>
+<li>实边连接的儿子称为<strong>实儿子</strong>（类似于重链剖分中的重儿子）</li>
+<li>实边组合成的链称为<strong>实链</strong>（类似于重链和长链）</li>
+</ul>
+<p>选择实链剖分的好处就是<strong>实和虚可以互相进行转化</strong>。</p>
+<blockquote>
+<p>虚者实之，实者虚之。——《东周列国志》</p>
+</blockquote>
+<p>针对这样灵活多变的实链，我们使用 <strong>Splay</strong> 进行维护。</p>
+<h2 id="主要性质">主要性质</h2>
+<ul>
+<li><strong>每一棵 Splay 维护的是一条实链</strong></li>
+<li><strong>每棵 Splay 中序遍历得到的点在原树中深度单调递增</strong>（即对应这条实链从上往下走）</li>
+<li><strong>虚边由一棵 Splay 指向另外一棵 Splay</strong></li>
+</ul>
+<p>上面的性质告诉我们，LCT 其实本质上是一个森林，我们可以把组成这个森林的树称为<strong>辅助树</strong>，一定要搞清楚辅助树和原树的关系，否则极其容易想错问题。</p>
+<p>我们可以知道</p>
+<ul>
+<li>原树与辅助树中的节点一一对应</li>
+<li>若干棵 Splay 组成了一棵辅助树</li>
+<li>辅助树中的 Splay 不是互相独立的</li>
+</ul>
+<p>通常来说，一棵 Splay 的根的父亲节点应该为空，但是在 LCT 中一棵 Splay 的根的父亲节点指向原树中<strong>这棵 Splay 维护的实链的父亲节点</strong>（即链顶的父节点），对应了原树中的一条<strong>虚边</strong>。其具有<strong>认父不认子</strong>的特点，即儿子存储了父亲，但是父亲不存储儿子。</p>
+<p>所以所有的操作都可以在辅助树上进行而不需要动原树。</p>
+<p>上面这样说可能有些抽象，我们看看图</p>
+<p><img src="https://yangty-pic.oss-cn-beijing.aliyuncs.com/LCT1.png"/></p>
+<p>上图是一棵剖好了的原树，虚线代表虚边，实线代表实边，可见图中有两条实链：<span class="math inline">\(\{1,2,4\}\)</span> 和 <span class="math inline">\(\{5,6\}\)</span>。现在我们按照这样子建出来的 LCT 应该是如下的样子：</p>
+<p><img src="https://yangty-pic.oss-cn-beijing.aliyuncs.com/LCT2.png"/></p>
+<p>每个绿色圈内是一棵 Splay，每棵 Splay 内的红边对应了原图的实边。黑色的单向边对应了原图的虚边，在 Splay 中的体现就是 <code>fa[5] = 1</code>，而 <code>ch[1][0]</code> 和 <code>ch[1][1]</code> 都不等于 <code>5</code>，在 <span class="math inline">\(2\)</span> 号点上也有体现：其左/右儿子都储存有值，但是 <span class="math inline">\(3\)</span> 的父亲指向了 <span class="math inline">\(2\)</span>。而且我们发现每棵 Splay 的中序遍历在原图中都是深度单调递增的。</p>
+<p>了解了上述性质之后，就可以开始学习如何写出一棵 LCT 了。</p>
+<h2 id="代码基础定义">代码基础定义</h2>
+<p>以下代码均以<a href="https://www.luogu.com.cn/problem/P3690">洛谷模板题</a>（维护路径异或和）为例进行讲解。</p>
+<h3 id="变量宏声明">变量/宏声明</h3>
+<p>首先是 Splay 的结构体：</p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode cpp"><code class="sourceCode cpp"><span id="cb1-1"><a aria-hidden="true" href="#cb1-1"></a><span class="kw">struct</span> Node</span>
+<span id="cb1-2"><a aria-hidden="true" href="#cb1-2"></a>{</span>
+<span id="cb1-3"><a aria-hidden="true" href="#cb1-3"></a>    <span class="dt">int</span> ch[<span class="dv">2</span>], fa, size, tag, val, res;</span>
+<span id="cb1-4"><a aria-hidden="true" href="#cb1-4"></a>} t[maxn];</span></code></pre></div>
+<p>分别维护左/右儿子，父亲，子树大小，<strong>翻转标记</strong>，节点的值，路径权值和。</p>
+<p>然后是一些宏定义：</p>
+<div class="sourceCode" id="cb2"><pre class="sourceCode cpp"><code class="sourceCode cpp"><span id="cb2-1"><a aria-hidden="true" href="#cb2-1"></a><span class="pp">#define ls</span>(u)<span class="pp"> </span>t[u].ch[<span class="dv">0</span>]</span>
+<span id="cb2-2"><a aria-hidden="true" href="#cb2-2"></a><span class="pp">#define rs</span>(u)<span class="pp"> </span>t[u].ch[<span class="dv">1</span>]</span></code></pre></div>
+<p>接下来需要用到的函数如下：</p>
+<h3 id="基础函数字面意思">基础函数（字面意思）</h3>
+<ul>
+<li><code>void pushUp(int u)</code></li>
+<li><code>void pushDown(int u)</code></li>
+</ul>
+<p>不解释，分别是合并信息和懒标记下传。</p>
+<h3 id="splay-的基础函数">Splay 的基础函数</h3>
+<ul>
+<li><code>void rotate(int u)</code></li>
+<li><code>void splay(int u)</code></li>
+<li><code>int get(int u)</code></li>
+</ul>
+<p><code>rotate()</code> 和 <code>splay()</code> 是<strong>经过魔改</strong>了的版本，下面会进行说明。</p>
+<h3 id="lct-的特有函数">LCT 的特有函数</h3>
+<ul>
+<li><code>int isRoot(int u)</code> 判断 <span class="math inline">\(u\)</span> 是否为根</li>
+<li><code>void pushAll(int u)</code> 把 <span class="math inline">\(u\)</span> 一直到根的路径上的点的标记全部下传</li>
+<li><code>void access(int u)</code> 打通根到 <span class="math inline">\(u\)</span> 的一条实链</li>
+<li><code>void makeRoot(int u)</code> 将原树换根为 <span class="math inline">\(u\)</span></li>
+<li><code>int findRoot(int u)</code> 找到 <span class="math inline">\(u\)</span> 所在的树的根节点的编号</li>
+<li><code>void link(int u, int v)</code> 连边 <span class="math inline">\((u, v)\)</span></li>
+<li><code>void cut(int u, int v)</code> 删边 <span class="math inline">\((u, v)\)</span></li>
+<li><code>void split(int u, int v)</code> 提取出 <span class="math inline">\(u\)</span> 到 <span class="math inline">\(v\)</span> 的路径以方便进行区间操作</li>
+</ul>
+<h2 id="函数讲解">函数讲解</h2>
+<p>从简单的开始：</p>
+<h3 id="pushup-和-pushdown-和-pushall"><code>pushUp()</code> 和 <code>pushDown()</code> 和 <code>pushAll()</code></h3>
+<div class="sourceCode" id="cb3"><pre class="sourceCode cpp"><code class="sourceCode cpp"><span id="cb3-1"><a aria-hidden="true" href="#cb3-1"></a>il <span class="dt">void</span> pushUp(<span class="dt">int</span> u)</span>
+<span id="cb3-2"><a aria-hidden="true" href="#cb3-2"></a>{</span>
+<span id="cb3-3"><a aria-hidden="true" href="#cb3-3"></a>    t[u].size = t[ls(u)].size + t[rs(u)].size + <span class="dv">1</span>;</span>
+<span id="cb3-4"><a aria-hidden="true" href="#cb3-4"></a>    t[u].res = t[ls(u)].res ^ t[rs(u)].res ^ t[u].val;</span>
+<span id="cb3-5"><a aria-hidden="true" href="#cb3-5"></a>    <span class="cf">return</span>;</span>
+<span id="cb3-6"><a aria-hidden="true" href="#cb3-6"></a>}</span>
+<span id="cb3-7"><a aria-hidden="true" href="#cb3-7"></a></span>
+<span id="cb3-8"><a aria-hidden="true" href="#cb3-8"></a>il <span class="dt">void</span> pushDown(<span class="dt">int</span> u)</span>
+<span id="cb3-9"><a aria-hidden="true" href="#cb3-9"></a>{</span>
+<span id="cb3-10"><a aria-hidden="true" href="#cb3-10"></a>    <span class="cf">if</span> (t[u].tag)</span>
+<span id="cb3-11"><a aria-hidden="true" href="#cb3-11"></a>    {</span>
+<span id="cb3-12"><a aria-hidden="true" href="#cb3-12"></a>        <span class="cf">if</span> (ls(u)) t[ls(u)].tag ^= <span class="dv">1</span>, swap(ls(ls(u)), rs(ls(u)));</span>
+<span id="cb3-13"><a aria-hidden="true" href="#cb3-13"></a>        <span class="cf">if</span> (rs(u)) t[rs(u)].tag ^= <span class="dv">1</span>, swap(ls(rs(u)), rs(rs(u)));</span>
+<span id="cb3-14"><a aria-hidden="true" href="#cb3-14"></a>        t[u].tag ^= <span class="dv">1</span>;</span>
+<span id="cb3-15"><a aria-hidden="true" href="#cb3-15"></a>    }</span>
+<span id="cb3-16"><a aria-hidden="true" href="#cb3-16"></a>    <span class="cf">return</span>;</span>
+<span id="cb3-17"><a aria-hidden="true" href="#cb3-17"></a>}</span>
+<span id="cb3-18"><a aria-hidden="true" href="#cb3-18"></a></span>
+<span id="cb3-19"><a aria-hidden="true" href="#cb3-19"></a>il <span class="dt">void</span> pushAll(<span class="dt">int</span> u)</span>
+<span id="cb3-20"><a aria-hidden="true" href="#cb3-20"></a>{</span>
+<span id="cb3-21"><a aria-hidden="true" href="#cb3-21"></a>    <span class="cf">if</span> (!isRoot(u)) pushAll(t[u].fa);</span>
+<span id="cb3-22"><a aria-hidden="true" href="#cb3-22"></a>    pushDown(u);</span>
+<span id="cb3-23"><a aria-hidden="true" href="#cb3-23"></a>    <span class="cf">return</span>;</span>
+<span id="cb3-24"><a aria-hidden="true" href="#cb3-24"></a>}</span></code></pre></div>
+<p>此时 <code>pushup()</code> 维护异或和，<code>pushdown()</code> 维护翻转标记。</p>
+<h3 id="splay-和-rotate"><code>splay()</code> 和 <code>rotate()</code></h3>
+<p>和普通 Splay 的有些不一样：</p>
+<div class="sourceCode" id="cb4"><pre class="sourceCode cpp"><code class="sourceCode cpp"><span id="cb4-1"><a aria-hidden="true" href="#cb4-1"></a><span class="pp">#define get</span>(u)<span class="pp"> </span>(rs(t[u].fa)<span class="pp"> </span>==<span class="pp"> </span>u)</span>
+<span id="cb4-2"><a aria-hidden="true" href="#cb4-2"></a><span class="pp">#define isRoot</span>(u)<span class="pp"> </span>(ls(t[u].fa)<span class="pp"> </span>!=<span class="pp"> </span>u<span class="pp"> </span>&amp;&amp;<span class="pp"> </span>rs(t[u].fa)<span class="pp"> </span>!=<span class="pp"> </span>u)</span>
+<span id="cb4-3"><a aria-hidden="true" href="#cb4-3"></a></span>
+<span id="cb4-4"><a aria-hidden="true" href="#cb4-4"></a>il <span class="dt">void</span> pushAll(<span class="dt">int</span> u)</span>
+<span id="cb4-5"><a aria-hidden="true" href="#cb4-5"></a>{</span>
+<span id="cb4-6"><a aria-hidden="true" href="#cb4-6"></a>    <span class="cf">if</span> (!isRoot(u)) pushAll(t[u].fa);</span>
+<span id="cb4-7"><a aria-hidden="true" href="#cb4-7"></a>    pushDown(u);</span>
+<span id="cb4-8"><a aria-hidden="true" href="#cb4-8"></a>    <span class="cf">return</span>;</span>
+<span id="cb4-9"><a aria-hidden="true" href="#cb4-9"></a>}</span>
+<span id="cb4-10"><a aria-hidden="true" href="#cb4-10"></a></span>
+<span id="cb4-11"><a aria-hidden="true" href="#cb4-11"></a>il <span class="dt">void</span> rotate(<span class="dt">int</span> u)</span>
+<span id="cb4-12"><a aria-hidden="true" href="#cb4-12"></a>{</span>
+<span id="cb4-13"><a aria-hidden="true" href="#cb4-13"></a>    <span class="dt">int</span> fa = t[u].fa, gfa = t[fa].fa, k1 = get(u), k2 = get(fa);</span>
+<span id="cb4-14"><a aria-hidden="true" href="#cb4-14"></a>    <span class="cf">if</span> (!isRoot(fa)) t[gfa].ch[k2] = u;</span>
+<span id="cb4-15"><a aria-hidden="true" href="#cb4-15"></a>    t[fa].ch[k1] = t[u].ch[k1 ^ <span class="dv">1</span>], t[t[u].ch[k1 ^ <span class="dv">1</span>]].fa = fa;</span>
+<span id="cb4-16"><a aria-hidden="true" href="#cb4-16"></a>    t[u].fa = gfa, t[fa].fa = u, t[u].ch[k1 ^ <span class="dv">1</span>] = fa;</span>
+<span id="cb4-17"><a aria-hidden="true" href="#cb4-17"></a>    pushUp(fa), pushUp(u);</span>
+<span id="cb4-18"><a aria-hidden="true" href="#cb4-18"></a>    <span class="cf">return</span>;</span>
+<span id="cb4-19"><a aria-hidden="true" href="#cb4-19"></a>}</span>
+<span id="cb4-20"><a aria-hidden="true" href="#cb4-20"></a></span>
+<span id="cb4-21"><a aria-hidden="true" href="#cb4-21"></a>il <span class="dt">void</span> splay(<span class="dt">int</span> u)</span>
+<span id="cb4-22"><a aria-hidden="true" href="#cb4-22"></a>{</span>
+<span id="cb4-23"><a aria-hidden="true" href="#cb4-23"></a>    pushAll(u);</span>
+<span id="cb4-24"><a aria-hidden="true" href="#cb4-24"></a>    <span class="cf">for</span> (<span class="dt">int</span> fa; fa = t[u].fa, !isRoot(u); rotate(u))</span>
+<span id="cb4-25"><a aria-hidden="true" href="#cb4-25"></a>    {</span>
+<span id="cb4-26"><a aria-hidden="true" href="#cb4-26"></a>        <span class="cf">if</span> (!isRoot(fa))</span>
+<span id="cb4-27"><a aria-hidden="true" href="#cb4-27"></a>            rotate(get(fa) == get(u) ? fa : u);</span>
+<span id="cb4-28"><a aria-hidden="true" href="#cb4-28"></a>    }</span>
+<span id="cb4-29"><a aria-hidden="true" href="#cb4-29"></a>    <span class="cf">return</span>;</span>
+<span id="cb4-30"><a aria-hidden="true" href="#cb4-30"></a>}</span></code></pre></div>
+<p>要注意的就是：</p>
+<ul>
+<li><code>rotate</code> 的时候一定要先判断 <code>fa</code> 是不是根在进行下一步操作。</li>
+<li><code>splay</code> 只需要传入一个参数，因为不存在要把某个点旋转到另一个点下面这种操作了。而且进行之前要把其到根上的懒标记先全部下传。</li>
+</ul>
+<h3 id="access"><code>access()</code></h3>
+<p>这个操作的目的是打通从原树的树根到 <span class="math inline">\(u\)</span> 节点的一条实链，代码很短但是不太好理解：</p>
+<div class="sourceCode" id="cb5"><pre class="sourceCode cpp"><code class="sourceCode cpp"><span id="cb5-1"><a aria-hidden="true" href="#cb5-1"></a>il <span class="dt">int</span> access(<span class="dt">int</span> u)</span>
+<span id="cb5-2"><a aria-hidden="true" href="#cb5-2"></a>{</span>
+<span id="cb5-3"><a aria-hidden="true" href="#cb5-3"></a>    <span class="dt">int</span> p;</span>
+<span id="cb5-4"><a aria-hidden="true" href="#cb5-4"></a>    <span class="cf">for</span> (p = <span class="dv">0</span>; u; p = u, u = t[u].fa)</span>
+<span id="cb5-5"><a aria-hidden="true" href="#cb5-5"></a>        splay(u), rs(u) = p, pushUp(u);</span>
+<span id="cb5-6"><a aria-hidden="true" href="#cb5-6"></a>    <span class="cf">return</span> p;</span>
+<span id="cb5-7"><a aria-hidden="true" href="#cb5-7"></a>}</span></code></pre></div>
+<p>总的来说，操作分为下面几个步骤：</p>
+<ul>
+<li>把当前的节点 <span class="math inline">\(u\)</span> 旋转到当前 Splay 的根（<code>splay(u)</code>）</li>
+<li>把 <span class="math inline">\(u\)</span> 的右儿子替换成之前的节点 <code>rs(u) = p</code>（对应了”化实为虚“的过程）</li>
+<li>更新当前点的信息 <code>pushup(u)</code></li>
+<li>重复以上步骤</li>
+</ul>
+<p>解释一下：我们要拉通这条实链的话，是自底而上逐步更新 Splay 来进行操作的。首先肯定是把 <span class="math inline">\(u\)</span> 旋转到 Splay 的根，然后注意到这个 <span class="math inline">\(u\)</span> （可能）有两个实儿子，以及一个父亲（一条虚边），现在我们既然要打通实链，那么肯定有虚实的转化，注意到<strong>认父不认子</strong>的特点，我们可以直接把 <span class="math inline">\(u\)</span> 的右儿子更新为之前更新过的点 <span class="math inline">\(p\)</span>，然后 <code>pushup</code>，再更新 <span class="math inline">\(p\)</span>，把 <span class="math inline">\(u\)</span> 更新为其父亲，继续进行操作。</p>
+<h3 id="makeroot"><code>makeRoot()</code></h3>
+<p><code>makeRoot(int u)</code> 是把 <span class="math inline">\(u\)</span> 点设为该连通块的根节点。</p>
+<p>步骤</p>
+<ul>
+<li><code>access(u)</code></li>
+<li><code>splay(u)</code></li>
+<li>反转整棵 Splay</li>
+</ul>
+<p>第一步之后，<span class="math inline">\(u\)</span> 节点会在当前连通块根节点所在 Splay 的最右下角（因为深度最大），第二步我们把它提到根节点之后就可以注意到其右儿子为空（仍是由于深度最大），第三步把 Splay 反转之后 <span class="math inline">\(u\)</span> 点变到了最左端，这样子整棵树的深度就完全倒过来了，<span class="math inline">\(u\)</span> 点变为了深度最浅的点。这样就达到了我们把 <span class="math inline">\(u\)</span> 变成根的目的。</p>
+<p>至于下面的这种实现，结合上面的代码可以发现 <code>access()</code> 的返回值就是这棵 Splay 的根，所以我们直接对其进行操作即可。</p>
+<div class="sourceCode" id="cb6"><pre class="sourceCode cpp"><code class="sourceCode cpp"><span id="cb6-1"><a aria-hidden="true" href="#cb6-1"></a>il <span class="dt">void</span> makeRoot(<span class="dt">int</span> u)</span>
+<span id="cb6-2"><a aria-hidden="true" href="#cb6-2"></a>{</span>
+<span id="cb6-3"><a aria-hidden="true" href="#cb6-3"></a>    u = access(u);</span>
+<span id="cb6-4"><a aria-hidden="true" href="#cb6-4"></a>    swap(ls(u), rs(u));</span>
+<span id="cb6-5"><a aria-hidden="true" href="#cb6-5"></a>    t[u].tag ^= <span class="dv">1</span>;</span>
+<span id="cb6-6"><a aria-hidden="true" href="#cb6-6"></a>    <span class="cf">return</span>;</span>
+<span id="cb6-7"><a aria-hidden="true" href="#cb6-7"></a>}</span></code></pre></div>
+<h3 id="finroot"><code>finRoot()</code></h3>
+<p><code>findRoot(int u)</code> 是寻找 <span class="math inline">\(u\)</span> 节点所在的连通块的根节点。可以判断两个点的连通性，<code>findRoot(x) == findRoot(y)</code> 表示 <span class="math inline">\(x\)</span> 和 <span class="math inline">\(y\)</span> 联通。具体来说，我们需要把 <span class="math inline">\(u\)</span> 的实链打通，然后将其搞到 Splay 的根，再一路向左下不停走，就能找到我们可爱的根节点了。<strong>找到之后一定要 Splay 一下以保证复杂度。</strong></p>
+<p>走的时候一定要一路 <code>pushDown</code></p>
+<div class="sourceCode" id="cb7"><pre class="sourceCode cpp"><code class="sourceCode cpp"><span id="cb7-1"><a aria-hidden="true" href="#cb7-1"></a>il <span class="dt">int</span> findRoot(<span class="dt">int</span> u)</span>
+<span id="cb7-2"><a aria-hidden="true" href="#cb7-2"></a>{</span>
+<span id="cb7-3"><a aria-hidden="true" href="#cb7-3"></a>    access(u), splay(u);</span>
+<span id="cb7-4"><a aria-hidden="true" href="#cb7-4"></a>    <span class="cf">while</span> (ls(u)) pushDown(u), u = ls(u);</span>
+<span id="cb7-5"><a aria-hidden="true" href="#cb7-5"></a>    splay(u);</span>
+<span id="cb7-6"><a aria-hidden="true" href="#cb7-6"></a>    <span class="cf">return</span> u;</span>
+<span id="cb7-7"><a aria-hidden="true" href="#cb7-7"></a>}</span></code></pre></div>
+<h3 id="link"><code>link()</code></h3>
+<p><code>link(int u, int v)</code> 的作用是连接一条边 <span class="math inline">\((u,v)\)</span>，当然前提是 <span class="math inline">\(u\)</span> 和 <span class="math inline">\(v\)</span> 不联通。</p>
+<p>首先需要让 <span class="math inline">\(u\)</span> 成为该连通块的根并 Splay 到辅助树的根（不难发现其肯定没有向上的虚边），然后暴力把 <span class="math inline">\(u\)</span> 的父亲设成 <span class="math inline">\(v\)</span> 即可（连一条虚边）。</p>
+<p>至于判断，只需在 <code>makeRoot()</code> 之后 <code>findRoot(v) == u</code> 即可。</p>
+<div class="sourceCode" id="cb8"><pre class="sourceCode cpp"><code class="sourceCode cpp"><span id="cb8-1"><a aria-hidden="true" href="#cb8-1"></a>il <span class="dt">void</span> link(<span class="dt">int</span> u, <span class="dt">int</span> v)</span>
+<span id="cb8-2"><a aria-hidden="true" href="#cb8-2"></a>{</span>
+<span id="cb8-3"><a aria-hidden="true" href="#cb8-3"></a>    makeRoot(u);</span>
+<span id="cb8-4"><a aria-hidden="true" href="#cb8-4"></a>    <span class="cf">if</span> (findRoot(v) == u) <span class="cf">return</span>;</span>
+<span id="cb8-5"><a aria-hidden="true" href="#cb8-5"></a>    splay(u);</span>
+<span id="cb8-6"><a aria-hidden="true" href="#cb8-6"></a>    t[u].fa = v;</span>
+<span id="cb8-7"><a aria-hidden="true" href="#cb8-7"></a>    <span class="cf">return</span>;</span>
+<span id="cb8-8"><a aria-hidden="true" href="#cb8-8"></a>}</span></code></pre></div>
+<h3 id="cut"><code>cut()</code></h3>
+<p><code>cut(int u, int v)</code> 的作用是切断原有的边 <span class="math inline">\((u,v)\)</span>。当然数据有可能不合法， 当数据不合法的时候我们就需要进行判断。</p>
+<p>如果数据保证合法，就先把 <span class="math inline">\(u\)</span> 设为连通块的根，然后 <code>access(v)</code> 使得 <span class="math inline">\(u\)</span> 到 <span class="math inline">\(v\)</span> 拉通一条实链，再 <code>splay(u)</code> 把 <span class="math inline">\(u\)</span> 拉到根处。不难发现如果 <span class="math inline">\((u, v)\)</span> 有连边而且<strong>相邻</strong>的话 <span class="math inline">\(v\)</span> 一定是 <span class="math inline">\(u\)</span> 的右儿子，所以双向断开 <code>t[v].fa = rs(u) = 0</code> 即可。</p>
+<p>但是如果数据不合法，我们就需要思考一下数据怎么样能合法：</p>
+<ul>
+<li><span class="math inline">\(u\)</span> 和 <span class="math inline">\(v\)</span> 在同一连通块内</li>
+<li><code>makeRoot(u)</code> 之后，<span class="math inline">\(u\)</span> 为 <span class="math inline">\(v\)</span> 的<strong>直接</strong>父亲</li>
+<li><span class="math inline">\(v\)</span> 没有左儿子（想一下为什么不可以）</li>
+</ul>
+<div class="sourceCode" id="cb9"><pre class="sourceCode cpp"><code class="sourceCode cpp"><span id="cb9-1"><a aria-hidden="true" href="#cb9-1"></a>il <span class="dt">void</span> cut(<span class="dt">int</span> u, <span class="dt">int</span> v)</span>
+<span id="cb9-2"><a aria-hidden="true" href="#cb9-2"></a>{</span>
+<span id="cb9-3"><a aria-hidden="true" href="#cb9-3"></a>    makeRoot(u);</span>
+<span id="cb9-4"><a aria-hidden="true" href="#cb9-4"></a>    <span class="cf">if</span> (findRoot(v) != u || t[v].fa != u || ls(v)) <span class="cf">return</span>;</span>
+<span id="cb9-5"><a aria-hidden="true" href="#cb9-5"></a>    t[v].fa = rs(u) = <span class="dv">0</span>;</span>
+<span id="cb9-6"><a aria-hidden="true" href="#cb9-6"></a>    pushUp(u);</span>
+<span id="cb9-7"><a aria-hidden="true" href="#cb9-7"></a>    <span class="cf">return</span>;</span>
+<span id="cb9-8"><a aria-hidden="true" href="#cb9-8"></a>}</span></code></pre></div>
+<p>如果 <span class="math inline">\(v\)</span> 有左儿子，那么按照中序遍历的原则，<span class="math inline">\(u\)</span> 和 <span class="math inline">\(v\)</span> 的深度差就不是 <span class="math inline">\(1\)</span> 了。</p>
+<p>最后更不更新信息都无所谓其实。但是既然右边的儿子都没了，还是上传一下标记比较好。</p>
+<h3 id="split"><code>split()</code></h3>
+<p><code>split(int u, int v)</code> 可以把 <span class="math inline">\(u\)</span> 到 <span class="math inline">\(v\)</span> 的路径抽出来变成一条实链（即放进一棵 Splay 里面）方便我们进行处理。代码很简单：</p>
+<ul>
+<li>让 <span class="math inline">\(u\)</span> 成为根</li>
+<li>打通 <span class="math inline">\(u\)</span>（此时的根）到 <span class="math inline">\(v\)</span> 的实链</li>
+<li>把 <span class="math inline">\(v\)</span> 变成 Splay 的树根方便进行处理</li>
+</ul>
+<div class="sourceCode" id="cb10"><pre class="sourceCode cpp"><code class="sourceCode cpp"><span id="cb10-1"><a aria-hidden="true" href="#cb10-1"></a>il <span class="dt">void</span> split(<span class="dt">int</span> u, <span class="dt">int</span> v)</span>
+<span id="cb10-2"><a aria-hidden="true" href="#cb10-2"></a>{</span>
+<span id="cb10-3"><a aria-hidden="true" href="#cb10-3"></a>    makeRoot(u);</span>
+<span id="cb10-4"><a aria-hidden="true" href="#cb10-4"></a>    access(v);</span>
+<span id="cb10-5"><a aria-hidden="true" href="#cb10-5"></a>    splay(v);</span>
+<span id="cb10-6"><a aria-hidden="true" href="#cb10-6"></a>    <span class="cf">return</span>;</span>
+<span id="cb10-7"><a aria-hidden="true" href="#cb10-7"></a>}</span></code></pre></div>
+<h3 id="总的实现">总的实现</h3>
+<div class="sourceCode" id="cb11"><pre class="sourceCode cpp"><code class="sourceCode cpp"><span id="cb11-1"><a aria-hidden="true" href="#cb11-1"></a><span class="pp">#include </span><span class="im">&lt;cstdio&gt;</span></span>
+<span id="cb11-2"><a aria-hidden="true" href="#cb11-2"></a><span class="pp">#include </span><span class="im">&lt;cctype&gt;</span></span>
+<span id="cb11-3"><a aria-hidden="true" href="#cb11-3"></a><span class="pp">#define FOR</span>(i,<span class="pp"> </span>a,<span class="pp"> </span>b)<span class="pp"> </span><span class="cf">for</span><span class="pp"> </span>(<span class="dt">int</span><span class="pp"> </span>i<span class="pp"> </span>=<span class="pp"> </span>a;<span class="pp"> </span>i<span class="pp"> </span>&lt;=<span class="pp"> </span>b;<span class="pp"> </span>++i)</span>
+<span id="cb11-4"><a aria-hidden="true" href="#cb11-4"></a><span class="pp">#define il </span><span class="kw">inline</span></span>
+<span id="cb11-5"><a aria-hidden="true" href="#cb11-5"></a></span>
+<span id="cb11-6"><a aria-hidden="true" href="#cb11-6"></a><span class="dt">int</span> read()</span>
+<span id="cb11-7"><a aria-hidden="true" href="#cb11-7"></a>{</span>
+<span id="cb11-8"><a aria-hidden="true" href="#cb11-8"></a>    <span class="dt">int</span> s = <span class="dv">0</span>, x = <span class="dv">0</span>;</span>
+<span id="cb11-9"><a aria-hidden="true" href="#cb11-9"></a>    <span class="dt">char</span> c = getchar();</span>
+<span id="cb11-10"><a aria-hidden="true" href="#cb11-10"></a>    <span class="cf">while</span> (!isdigit(c))</span>
+<span id="cb11-11"><a aria-hidden="true" href="#cb11-11"></a>        x |= (c == <span class="ch">'-'</span>), c = getchar();</span>
+<span id="cb11-12"><a aria-hidden="true" href="#cb11-12"></a>    <span class="cf">while</span> (isdigit(c))</span>
+<span id="cb11-13"><a aria-hidden="true" href="#cb11-13"></a>        s = <span class="dv">10</span> * s + c - <span class="ch">'0'</span>, c = getchar();</span>
+<span id="cb11-14"><a aria-hidden="true" href="#cb11-14"></a>    <span class="cf">return</span> x ? -s : s;</span>
+<span id="cb11-15"><a aria-hidden="true" href="#cb11-15"></a>}</span>
+<span id="cb11-16"><a aria-hidden="true" href="#cb11-16"></a></span>
+<span id="cb11-17"><a aria-hidden="true" href="#cb11-17"></a><span class="kw">template</span>&lt;<span class="kw">typename</span> T&gt; il <span class="dt">void</span> swap(T &amp;a, T &amp;b)</span>
+<span id="cb11-18"><a aria-hidden="true" href="#cb11-18"></a>{</span>
+<span id="cb11-19"><a aria-hidden="true" href="#cb11-19"></a>    T t = a;</span>
+<span id="cb11-20"><a aria-hidden="true" href="#cb11-20"></a>    a = b, b = t;</span>
+<span id="cb11-21"><a aria-hidden="true" href="#cb11-21"></a>    <span class="cf">return</span>;</span>
+<span id="cb11-22"><a aria-hidden="true" href="#cb11-22"></a>}</span>
+<span id="cb11-23"><a aria-hidden="true" href="#cb11-23"></a></span>
+<span id="cb11-24"><a aria-hidden="true" href="#cb11-24"></a><span class="at">const</span> <span class="dt">int</span> maxn = <span class="fl">1e5</span> + <span class="dv">5</span>;</span>
+<span id="cb11-25"><a aria-hidden="true" href="#cb11-25"></a></span>
+<span id="cb11-26"><a aria-hidden="true" href="#cb11-26"></a><span class="dt">int</span> n, m;</span>
+<span id="cb11-27"><a aria-hidden="true" href="#cb11-27"></a></span>
+<span id="cb11-28"><a aria-hidden="true" href="#cb11-28"></a><span class="kw">struct</span> Node</span>
+<span id="cb11-29"><a aria-hidden="true" href="#cb11-29"></a>{</span>
+<span id="cb11-30"><a aria-hidden="true" href="#cb11-30"></a>    <span class="dt">int</span> ch[<span class="dv">2</span>], fa, size, tag, val, res;</span>
+<span id="cb11-31"><a aria-hidden="true" href="#cb11-31"></a>} t[maxn];</span>
+<span id="cb11-32"><a aria-hidden="true" href="#cb11-32"></a></span>
+<span id="cb11-33"><a aria-hidden="true" href="#cb11-33"></a></span>
+<span id="cb11-34"><a aria-hidden="true" href="#cb11-34"></a><span class="pp">#define ls</span>(u)<span class="pp"> </span>t[u].ch[<span class="dv">0</span>]</span>
+<span id="cb11-35"><a aria-hidden="true" href="#cb11-35"></a><span class="pp">#define rs</span>(u)<span class="pp"> </span>t[u].ch[<span class="dv">1</span>]</span>
+<span id="cb11-36"><a aria-hidden="true" href="#cb11-36"></a></span>
+<span id="cb11-37"><a aria-hidden="true" href="#cb11-37"></a>il <span class="dt">void</span> pushUp(<span class="dt">int</span> u)</span>
+<span id="cb11-38"><a aria-hidden="true" href="#cb11-38"></a>{</span>
+<span id="cb11-39"><a aria-hidden="true" href="#cb11-39"></a>    t[u].size = t[ls(u)].size + t[rs(u)].size + <span class="dv">1</span>;</span>
+<span id="cb11-40"><a aria-hidden="true" href="#cb11-40"></a>    t[u].res = t[ls(u)].res ^ t[rs(u)].res ^ t[u].val;</span>
+<span id="cb11-41"><a aria-hidden="true" href="#cb11-41"></a>    <span class="cf">return</span>;</span>
+<span id="cb11-42"><a aria-hidden="true" href="#cb11-42"></a>}</span>
+<span id="cb11-43"><a aria-hidden="true" href="#cb11-43"></a></span>
+<span id="cb11-44"><a aria-hidden="true" href="#cb11-44"></a>il <span class="dt">void</span> pushDown(<span class="dt">int</span> u)</span>
+<span id="cb11-45"><a aria-hidden="true" href="#cb11-45"></a>{</span>
+<span id="cb11-46"><a aria-hidden="true" href="#cb11-46"></a>    <span class="cf">if</span> (t[u].tag)</span>
+<span id="cb11-47"><a aria-hidden="true" href="#cb11-47"></a>    {</span>
+<span id="cb11-48"><a aria-hidden="true" href="#cb11-48"></a>        <span class="cf">if</span> (ls(u)) t[ls(u)].tag ^= <span class="dv">1</span>, swap(ls(ls(u)), rs(ls(u)));</span>
+<span id="cb11-49"><a aria-hidden="true" href="#cb11-49"></a>        <span class="cf">if</span> (rs(u)) t[rs(u)].tag ^= <span class="dv">1</span>, swap(ls(rs(u)), rs(rs(u)));</span>
+<span id="cb11-50"><a aria-hidden="true" href="#cb11-50"></a>        t[u].tag ^= <span class="dv">1</span>;</span>
+<span id="cb11-51"><a aria-hidden="true" href="#cb11-51"></a>    }</span>
+<span id="cb11-52"><a aria-hidden="true" href="#cb11-52"></a>    <span class="cf">return</span>;</span>
+<span id="cb11-53"><a aria-hidden="true" href="#cb11-53"></a>}</span>
+<span id="cb11-54"><a aria-hidden="true" href="#cb11-54"></a></span>
+<span id="cb11-55"><a aria-hidden="true" href="#cb11-55"></a><span class="pp">#define get</span>(u)<span class="pp"> </span>(rs(t[u].fa)<span class="pp"> </span>==<span class="pp"> </span>u)</span>
+<span id="cb11-56"><a aria-hidden="true" href="#cb11-56"></a><span class="pp">#define isRoot</span>(u)<span class="pp"> </span>(ls(t[u].fa)<span class="pp"> </span>!=<span class="pp"> </span>u<span class="pp"> </span>&amp;&amp;<span class="pp"> </span>rs(t[u].fa)<span class="pp"> </span>!=<span class="pp"> </span>u)</span>
+<span id="cb11-57"><a aria-hidden="true" href="#cb11-57"></a></span>
+<span id="cb11-58"><a aria-hidden="true" href="#cb11-58"></a>il <span class="dt">void</span> pushAll(<span class="dt">int</span> u)</span>
+<span id="cb11-59"><a aria-hidden="true" href="#cb11-59"></a>{</span>
+<span id="cb11-60"><a aria-hidden="true" href="#cb11-60"></a>    <span class="cf">if</span> (!isRoot(u)) pushAll(t[u].fa);</span>
+<span id="cb11-61"><a aria-hidden="true" href="#cb11-61"></a>    pushDown(u);</span>
+<span id="cb11-62"><a aria-hidden="true" href="#cb11-62"></a>    <span class="cf">return</span>;</span>
+<span id="cb11-63"><a aria-hidden="true" href="#cb11-63"></a>}</span>
+<span id="cb11-64"><a aria-hidden="true" href="#cb11-64"></a></span>
+<span id="cb11-65"><a aria-hidden="true" href="#cb11-65"></a>il <span class="dt">void</span> rotate(<span class="dt">int</span> u)</span>
+<span id="cb11-66"><a aria-hidden="true" href="#cb11-66"></a>{</span>
+<span id="cb11-67"><a aria-hidden="true" href="#cb11-67"></a>    <span class="dt">int</span> fa = t[u].fa, gfa = t[fa].fa, k1 = get(u), k2 = get(fa);</span>
+<span id="cb11-68"><a aria-hidden="true" href="#cb11-68"></a>    <span class="cf">if</span> (!isRoot(fa)) t[gfa].ch[k2] = u;</span>
+<span id="cb11-69"><a aria-hidden="true" href="#cb11-69"></a>    t[fa].ch[k1] = t[u].ch[k1 ^ <span class="dv">1</span>], t[t[u].ch[k1 ^ <span class="dv">1</span>]].fa = fa;</span>
+<span id="cb11-70"><a aria-hidden="true" href="#cb11-70"></a>    t[u].fa = gfa, t[fa].fa = u, t[u].ch[k1 ^ <span class="dv">1</span>] = fa;</span>
+<span id="cb11-71"><a aria-hidden="true" href="#cb11-71"></a>    pushUp(fa), pushUp(u);</span>
+<span id="cb11-72"><a aria-hidden="true" href="#cb11-72"></a>    <span class="cf">return</span>;</span>
+<span id="cb11-73"><a aria-hidden="true" href="#cb11-73"></a>}</span>
+<span id="cb11-74"><a aria-hidden="true" href="#cb11-74"></a></span>
+<span id="cb11-75"><a aria-hidden="true" href="#cb11-75"></a>il <span class="dt">void</span> splay(<span class="dt">int</span> u)</span>
+<span id="cb11-76"><a aria-hidden="true" href="#cb11-76"></a>{</span>
+<span id="cb11-77"><a aria-hidden="true" href="#cb11-77"></a>    pushAll(u);</span>
+<span id="cb11-78"><a aria-hidden="true" href="#cb11-78"></a>    <span class="cf">for</span> (<span class="dt">int</span> fa; fa = t[u].fa, !isRoot(u); rotate(u))</span>
+<span id="cb11-79"><a aria-hidden="true" href="#cb11-79"></a>    {</span>
+<span id="cb11-80"><a aria-hidden="true" href="#cb11-80"></a>        <span class="cf">if</span> (!isRoot(fa))</span>
+<span id="cb11-81"><a aria-hidden="true" href="#cb11-81"></a>            rotate(get(fa) == get(u) ? fa : u);</span>
+<span id="cb11-82"><a aria-hidden="true" href="#cb11-82"></a>    }</span>
+<span id="cb11-83"><a aria-hidden="true" href="#cb11-83"></a>    <span class="cf">return</span>;</span>
+<span id="cb11-84"><a aria-hidden="true" href="#cb11-84"></a>}</span>
+<span id="cb11-85"><a aria-hidden="true" href="#cb11-85"></a></span>
+<span id="cb11-86"><a aria-hidden="true" href="#cb11-86"></a>il <span class="dt">int</span> access(<span class="dt">int</span> u)</span>
+<span id="cb11-87"><a aria-hidden="true" href="#cb11-87"></a>{</span>
+<span id="cb11-88"><a aria-hidden="true" href="#cb11-88"></a>    <span class="dt">int</span> p;</span>
+<span id="cb11-89"><a aria-hidden="true" href="#cb11-89"></a>    <span class="cf">for</span> (p = <span class="dv">0</span>; u; p = u, u = t[u].fa)</span>
+<span id="cb11-90"><a aria-hidden="true" href="#cb11-90"></a>        splay(u), rs(u) = p, pushUp(u);</span>
+<span id="cb11-91"><a aria-hidden="true" href="#cb11-91"></a>    <span class="cf">return</span> p;</span>
+<span id="cb11-92"><a aria-hidden="true" href="#cb11-92"></a>}</span>
+<span id="cb11-93"><a aria-hidden="true" href="#cb11-93"></a></span>
+<span id="cb11-94"><a aria-hidden="true" href="#cb11-94"></a>il <span class="dt">void</span> makeRoot(<span class="dt">int</span> u)</span>
+<span id="cb11-95"><a aria-hidden="true" href="#cb11-95"></a>{</span>
+<span id="cb11-96"><a aria-hidden="true" href="#cb11-96"></a>    u = access(u);</span>
+<span id="cb11-97"><a aria-hidden="true" href="#cb11-97"></a>    swap(ls(u), rs(u));</span>
+<span id="cb11-98"><a aria-hidden="true" href="#cb11-98"></a>    t[u].tag ^= <span class="dv">1</span>;</span>
+<span id="cb11-99"><a aria-hidden="true" href="#cb11-99"></a>    <span class="cf">return</span>;</span>
+<span id="cb11-100"><a aria-hidden="true" href="#cb11-100"></a>}</span>
+<span id="cb11-101"><a aria-hidden="true" href="#cb11-101"></a></span>
+<span id="cb11-102"><a aria-hidden="true" href="#cb11-102"></a>il <span class="dt">int</span> findRoot(<span class="dt">int</span> u)</span>
+<span id="cb11-103"><a aria-hidden="true" href="#cb11-103"></a>{</span>
+<span id="cb11-104"><a aria-hidden="true" href="#cb11-104"></a>    access(u), splay(u);</span>
+<span id="cb11-105"><a aria-hidden="true" href="#cb11-105"></a>    <span class="cf">while</span> (ls(u)) pushDown(u), u = ls(u);</span>
+<span id="cb11-106"><a aria-hidden="true" href="#cb11-106"></a>    splay(u);</span>
+<span id="cb11-107"><a aria-hidden="true" href="#cb11-107"></a>    <span class="cf">return</span> u;</span>
+<span id="cb11-108"><a aria-hidden="true" href="#cb11-108"></a>}</span>
+<span id="cb11-109"><a aria-hidden="true" href="#cb11-109"></a></span>
+<span id="cb11-110"><a aria-hidden="true" href="#cb11-110"></a>il <span class="dt">void</span> link(<span class="dt">int</span> u, <span class="dt">int</span> v)</span>
+<span id="cb11-111"><a aria-hidden="true" href="#cb11-111"></a>{</span>
+<span id="cb11-112"><a aria-hidden="true" href="#cb11-112"></a>    makeRoot(u);</span>
+<span id="cb11-113"><a aria-hidden="true" href="#cb11-113"></a>    <span class="cf">if</span> (findRoot(v) == u) <span class="cf">return</span>;</span>
+<span id="cb11-114"><a aria-hidden="true" href="#cb11-114"></a>    splay(u);</span>
+<span id="cb11-115"><a aria-hidden="true" href="#cb11-115"></a>    t[u].fa = v;</span>
+<span id="cb11-116"><a aria-hidden="true" href="#cb11-116"></a>    <span class="cf">return</span>;</span>
+<span id="cb11-117"><a aria-hidden="true" href="#cb11-117"></a>}</span>
+<span id="cb11-118"><a aria-hidden="true" href="#cb11-118"></a></span>
+<span id="cb11-119"><a aria-hidden="true" href="#cb11-119"></a>il <span class="dt">void</span> cut(<span class="dt">int</span> u, <span class="dt">int</span> v)</span>
+<span id="cb11-120"><a aria-hidden="true" href="#cb11-120"></a>{</span>
+<span id="cb11-121"><a aria-hidden="true" href="#cb11-121"></a>    makeRoot(u);</span>
+<span id="cb11-122"><a aria-hidden="true" href="#cb11-122"></a>    <span class="cf">if</span> (findRoot(v) != u || t[v].fa != u || ls(v)) <span class="cf">return</span>;</span>
+<span id="cb11-123"><a aria-hidden="true" href="#cb11-123"></a>    t[v].fa = rs(u) = <span class="dv">0</span>;</span>
+<span id="cb11-124"><a aria-hidden="true" href="#cb11-124"></a>    pushUp(u);</span>
+<span id="cb11-125"><a aria-hidden="true" href="#cb11-125"></a>    <span class="cf">return</span>;</span>
+<span id="cb11-126"><a aria-hidden="true" href="#cb11-126"></a>}</span>
+<span id="cb11-127"><a aria-hidden="true" href="#cb11-127"></a></span>
+<span id="cb11-128"><a aria-hidden="true" href="#cb11-128"></a>il <span class="dt">void</span> split(<span class="dt">int</span> u, <span class="dt">int</span> v)</span>
+<span id="cb11-129"><a aria-hidden="true" href="#cb11-129"></a>{</span>
+<span id="cb11-130"><a aria-hidden="true" href="#cb11-130"></a>    makeRoot(u);</span>
+<span id="cb11-131"><a aria-hidden="true" href="#cb11-131"></a>    access(v);</span>
+<span id="cb11-132"><a aria-hidden="true" href="#cb11-132"></a>    splay(v);</span>
+<span id="cb11-133"><a aria-hidden="true" href="#cb11-133"></a>    <span class="cf">return</span>;</span>
+<span id="cb11-134"><a aria-hidden="true" href="#cb11-134"></a>}</span>
+<span id="cb11-135"><a aria-hidden="true" href="#cb11-135"></a></span>
+<span id="cb11-136"><a aria-hidden="true" href="#cb11-136"></a><span class="dt">int</span> main()</span>
+<span id="cb11-137"><a aria-hidden="true" href="#cb11-137"></a>{</span>
+<span id="cb11-138"><a aria-hidden="true" href="#cb11-138"></a>    n = read(), m = read();</span>
+<span id="cb11-139"><a aria-hidden="true" href="#cb11-139"></a>    FOR(i, <span class="dv">1</span>, n)</span>
+<span id="cb11-140"><a aria-hidden="true" href="#cb11-140"></a>        t[i].val = read();</span>
+<span id="cb11-141"><a aria-hidden="true" href="#cb11-141"></a>    <span class="cf">while</span> (m--)</span>
+<span id="cb11-142"><a aria-hidden="true" href="#cb11-142"></a>    {</span>
+<span id="cb11-143"><a aria-hidden="true" href="#cb11-143"></a>        <span class="dt">int</span> opt = read(), x = read(), y = read();</span>
+<span id="cb11-144"><a aria-hidden="true" href="#cb11-144"></a>        <span class="cf">if</span> (opt == <span class="dv">0</span>)</span>
+<span id="cb11-145"><a aria-hidden="true" href="#cb11-145"></a>            split(x, y), printf(<span class="st">"</span><span class="sc">%d\n</span><span class="st">"</span>, t[y].res);</span>
+<span id="cb11-146"><a aria-hidden="true" href="#cb11-146"></a>        <span class="cf">else</span> <span class="cf">if</span> (opt == <span class="dv">1</span>)</span>
+<span id="cb11-147"><a aria-hidden="true" href="#cb11-147"></a>            link(x, y);</span>
+<span id="cb11-148"><a aria-hidden="true" href="#cb11-148"></a>        <span class="cf">else</span> <span class="cf">if</span> (opt == <span class="dv">2</span>)</span>
+<span id="cb11-149"><a aria-hidden="true" href="#cb11-149"></a>            cut(x, y);</span>
+<span id="cb11-150"><a aria-hidden="true" href="#cb11-150"></a>        <span class="cf">else</span> <span class="cf">if</span> (opt == <span class="dv">3</span>)</span>
+<span id="cb11-151"><a aria-hidden="true" href="#cb11-151"></a>            splay(x), t[x].val = y, pushUp(x);</span>
+<span id="cb11-152"><a aria-hidden="true" href="#cb11-152"></a>    }</span>
+<span id="cb11-153"><a aria-hidden="true" href="#cb11-153"></a>    <span class="cf">return</span> <span class="dv">0</span>;</span>
+<span id="cb11-154"><a aria-hidden="true" href="#cb11-154"></a>}</span></code></pre></div>
+<h2 id="应用">应用</h2>
+<p>https://www.cnblogs.com/flashhu/p/9498517.html</p>
+<p>https://www.zybuluo.com/xzyxzy/note/1027479</p>
+<p>https://www.luogu.com.cn/blog/command-block/lct-xiao-ji</p>
+<h3 id="维护">维护</h3>
+</section>
+<footer class="article-footer">
+<section class="article-tags">
+<a href="/tags/OI/">OI</a>
+<a href="/tags/note/">笔记</a>
+<a href="/tags/LCT/">LCT</a>
+<a href="/tags/hld/">树链剖分</a>
+</section>
+<section class="article-copyright">
+<svg class="icon icon-tabler icon-tabler-copyright" fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+<path d="M0 0h24v24H0z" stroke="none"></path>
+<circle cx="12" cy="12" r="9"></circle>
+<path d="M14.5 9a3.5 4 0 1 0 0 6"></path>
+</svg>
+<span>Licensed under CC BY-NC-SA 4.0</span>
+</section>
+</footer>
+<link crossorigin="anonymous" href="https://cdn.jsdelivr.net/npm/katex@0.13.13/dist/katex.min.css" integrity="sha384-RZU/ijkSsFbcmivfdRBQDtwuwVqK7GMOw6IMvKyeWL2K5UAlyp6WonmB8m7Jd0Hn" rel="stylesheet"/><script crossorigin="anonymous" defer="" integrity="sha384-pK1WpvzWVBQiP0/GjnvRxV4mOb0oxFuyRxJlk6vVw146n3egcN5C925NCP7a7BY8" src="https://cdn.jsdelivr.net/npm/katex@0.13.13/dist/katex.min.js">
+</script><script crossorigin="anonymous" defer="" integrity="sha384-vZTG03m+2yp6N6BNi5iM4rW4oIwk5DfcNdFfxkk9ZWpDriOkXX8voJBFrAO7MpVl" src="https://cdn.jsdelivr.net/npm/katex@0.13.13/dist/contrib/auto-render.min.js">
+</script><script>
+    window.addEventListener("DOMContentLoaded", () => {
+        renderMathInElement(document.querySelector(`.article-content`), {
+            delimiters: [
+                { left: "$$", right: "$$", display: true },
+                { left: "$", right: "$", display: false },
+                { left: "\\(", right: "\\)", display: false },
+                { left: "\\[", right: "\\]", display: true }
+            ]
+        });})
+</script>
+</article>
+<aside class="related-contents--wrapper">
+<h2 class="section-title">相关文章</h2>
+<div class="related-contents">
+<div class="flex article-list--tile">
+<article class="has-image">
+<a href="/note-ddp/">
+<div class="article-image">
+<img data-hash="https://yangty-pic.oss-cn-beijing.aliyuncs.com/bg12.webp" data-key="" loading="lazy" src="https://yangty-pic.oss-cn-beijing.aliyuncs.com/bg12.webp"/>
+</div>
+<div class="article-details">
+<h2 class="article-title">动态 DP 学习笔记</h2>
+</div>
+</a>
+</article>
+<article class="has-image">
+<a href="/sol-luogu-p5305/">
+<div class="article-image">
+<img data-hash="https://yangty-pic.oss-cn-beijing.aliyuncs.com/bg32.webp" data-key="" loading="lazy" src="https://yangty-pic.oss-cn-beijing.aliyuncs.com/bg32.webp"/>
+</div>
+<div class="article-details">
+<h2 class="article-title">P5305 [GXOI/GZOI2019]旧词</h2>
+</div>
+</a>
+</article>
+<article class="has-image">
+<a href="/note-gf/">
+<div class="article-image">
+<img data-hash="https://yangty-pic.oss-cn-beijing.aliyuncs.com/bg28.webp" data-key="" loading="lazy" src="https://yangty-pic.oss-cn-beijing.aliyuncs.com/bg28.webp"/>
+</div>
+<div class="article-details">
+<h2 class="article-title">生成函数胡扯</h2>
+</div>
+</a>
+</article>
+<article class="has-image">
+<a href="/note-set-power-series/">
+<div class="article-image">
+<img data-hash="https://yangty-pic.oss-cn-beijing.aliyuncs.com/bg39.webp" data-key="" loading="lazy" src="https://yangty-pic.oss-cn-beijing.aliyuncs.com/bg39.webp"/>
+</div>
+<div class="article-details">
+<h2 class="article-title">集合幂级数胡扯</h2>
+</div>
+</a>
+</article>
+<article class="has-image">
+<a href="/note-linear-basis/">
+<div class="article-image">
+<img data-hash="https://yangty-pic.oss-cn-beijing.aliyuncs.com/bg19.webp" data-key="" loading="lazy" src="https://yangty-pic.oss-cn-beijing.aliyuncs.com/bg19.webp"/>
+</div>
+<div class="article-details">
+<h2 class="article-title">线性基学习笔记</h2>
+</div>
+</a>
+</article>
+</div>
+</div>
+</aside>
+<footer class="site-footer">
+<section class="copyright">
+        © 
+        
+            2019 - 
+        
+        2024 清烛的博客
+    </section>
+<section class="powerby">
+        Built with <a href="https://gohugo.io/" rel="noopener" target="_blank">Hugo</a> <br/>
+        主题 <b><a data-version="3.11.0" href="https://github.com/CaiJimmy/hugo-theme-stack" rel="noopener" target="_blank">Stack</a></b> 由 <a href="https://jimmycai.com" rel="noopener" target="_blank">Jimmy</a> 设计
+    </section>
+</footer>
+<div aria-hidden="true" class="pswp" role="dialog" tabindex="-1">
+<div class="pswp__bg"></div>
+<div class="pswp__scroll-wrap">
+<div class="pswp__container">
+<div class="pswp__item"></div>
+<div class="pswp__item"></div>
+<div class="pswp__item"></div>
+</div>
+<div class="pswp__ui pswp__ui--hidden">
+<div class="pswp__top-bar">
+<div class="pswp__counter"></div>
+<button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+<button class="pswp__button pswp__button--share" title="Share"></button>
+<button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+<button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+<div class="pswp__preloader">
+<div class="pswp__preloader__icn">
+<div class="pswp__preloader__cut">
+<div class="pswp__preloader__donut"></div>
+</div>
+</div>
+</div>
+</div>
+<div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+<div class="pswp__share-tooltip"></div>
+</div>
+<button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+</button>
+<button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+</button>
+<div class="pswp__caption">
+<div class="pswp__caption__center"></div>
+</div>
+</div>
+</div>
+</div><script crossorigin="anonymous" defer="" integrity="sha256-ePwmChbbvXbsO02lbM3HoHbSHTHFAeChekF1xKJdleo=" src="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe.min.js">
+</script><script crossorigin="anonymous" defer="" integrity="sha256-UKkzOn/w1mBxRmLLGrSeyB4e1xbrp4xylgAWb3M42pU=" src="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe-ui-default.min.js">
+</script><link crossorigin="anonymous" href="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/default-skin/default-skin.css" integrity="sha256-c0uckgykQ9v5k+IqViZOZKc47Jn7KQil4/MP3ySA3F8=" rel="stylesheet"/><link crossorigin="anonymous" href="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe.css" integrity="sha256-SBLU4vv6CA6lHsZ1XyTdhyjJxCjPif/TRkjnsyGAGnE=" rel="stylesheet"/>
+</main>
+</div>
+<script crossorigin="anonymous" integrity="sha256-5NovOZc4iwiAWTYIFiIM7DxKUXKWvpVEuMEPLzcm5/g=" src="https://cdn.jsdelivr.net/npm/node-vibrant@3.1.5/dist/vibrant.min.js">
+</script><script defer="" src="/ts/main.js" type="text/javascript"></script>
+<script>
+    (function () {
+        const customFont = document.createElement('link');
+        customFont.href = "https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&display=swap";
+
+        customFont.type = "text/css";
+        customFont.rel = "stylesheet";
+
+        document.head.appendChild(customFont);
+    }());
+</script>
+</body>
+</html>

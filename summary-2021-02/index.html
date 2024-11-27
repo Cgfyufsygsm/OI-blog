@@ -1,0 +1,720 @@
+<!DOCTYPE html>
+<html dir="ltr" lang="zh-CN">
+<head><meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1" name="viewport"/><meta content="前言 仍旧菜的抠脚。 WC 2021 rp ++
+学习内容 轮廓线 dp 上下界网络流 Manacher 最小表示法 exKMP SA 多项式乘法逆 做题记录 21/02/01 CF1198D Rectangle Painting 1 二维区间 dp，以 x 和 y 方向分别划分即可
+HDU4283 You Are The One 比较清奇的区间 dp，考虑第 \(i\) 个人放到第 \(k\) 个出场造成的影响
+UVA11270 Tiling Dominoes 插头 dp，参见大佬题解
+HDU3507 Print Article 斜率优化 dp
+21/02/02 P3254 圆桌问题 网络流。源向单位连大小为单位人数的边，餐桌向汇连大小为餐桌人数的边，每个单位连每个餐桌，跑最大流，满流有解，找流有东西的边输出即可
+P2763 试题库问题 网络流。试题向属于的类型连 1，类型向汇连需要的题数，跑最大流，满流有解，输出方案。
+P2891 [USACO07OPEN]Dining G 拆点，源-&amp;gt;食物-&amp;gt;牛in-&amp;gt;牛out-&amp;gt;饮料-&amp;gt;汇，保证流过牛的流量为 1，跑最大流即可
+P3805 【模板】manacher算法 manacher
+P1368 【模板】最小表示法 最小表示法
+21/02/03 CF734E Anton and Tree ————————AC500 祭 缩点 + 树的直径" name="description"/><title>2021年2月 OI 学习记录</title>
+<link href="https://oi.imyangty.com/summary-2021-02/" rel="canonical"/>
+<link href="/scss/style.min.a5821f3d3ab84ce5a0ac21477e347a2e0ca00292e398d16c5e8e36ded6e35a23.css" rel="stylesheet"/><meta content="2021年2月 OI 学习记录" property="og:title"/>
+<meta content="前言 仍旧菜的抠脚。 WC 2021 rp ++
+学习内容 轮廓线 dp 上下界网络流 Manacher 最小表示法 exKMP SA 多项式乘法逆 做题记录 21/02/01 CF1198D Rectangle Painting 1 二维区间 dp，以 x 和 y 方向分别划分即可
+HDU4283 You Are The One 比较清奇的区间 dp，考虑第 \(i\) 个人放到第 \(k\) 个出场造成的影响
+UVA11270 Tiling Dominoes 插头 dp，参见大佬题解
+HDU3507 Print Article 斜率优化 dp
+21/02/02 P3254 圆桌问题 网络流。源向单位连大小为单位人数的边，餐桌向汇连大小为餐桌人数的边，每个单位连每个餐桌，跑最大流，满流有解，找流有东西的边输出即可
+P2763 试题库问题 网络流。试题向属于的类型连 1，类型向汇连需要的题数，跑最大流，满流有解，输出方案。
+P2891 [USACO07OPEN]Dining G 拆点，源-&amp;gt;食物-&amp;gt;牛in-&amp;gt;牛out-&amp;gt;饮料-&amp;gt;汇，保证流过牛的流量为 1，跑最大流即可
+P3805 【模板】manacher算法 manacher
+P1368 【模板】最小表示法 最小表示法
+21/02/03 CF734E Anton and Tree ————————AC500 祭 缩点 + 树的直径" property="og:description"/>
+<meta content="https://oi.imyangty.com/summary-2021-02/" property="og:url"/>
+<meta content="清烛的博客" property="og:site_name"/>
+<meta content="article" property="og:type"/><meta content="Post" property="article:section"/><meta content="OI" property="article:tag"/><meta content="2021-02-01T13:55:30+08:00" property="article:published_time"/><meta content="2021-02-01T13:55:30+08:00" property="article:modified_time"/><meta content="https://yangty-pic.oss-cn-beijing.aliyuncs.com/bg55.webp" property="og:image"/>
+<meta content="2021年2月 OI 学习记录" name="twitter:title"/>
+<meta content="前言 仍旧菜的抠脚。 WC 2021 rp ++
+学习内容 轮廓线 dp 上下界网络流 Manacher 最小表示法 exKMP SA 多项式乘法逆 做题记录 21/02/01 CF1198D Rectangle Painting 1 二维区间 dp，以 x 和 y 方向分别划分即可
+HDU4283 You Are The One 比较清奇的区间 dp，考虑第 \(i\) 个人放到第 \(k\) 个出场造成的影响
+UVA11270 Tiling Dominoes 插头 dp，参见大佬题解
+HDU3507 Print Article 斜率优化 dp
+21/02/02 P3254 圆桌问题 网络流。源向单位连大小为单位人数的边，餐桌向汇连大小为餐桌人数的边，每个单位连每个餐桌，跑最大流，满流有解，找流有东西的边输出即可
+P2763 试题库问题 网络流。试题向属于的类型连 1，类型向汇连需要的题数，跑最大流，满流有解，输出方案。
+P2891 [USACO07OPEN]Dining G 拆点，源-&amp;gt;食物-&amp;gt;牛in-&amp;gt;牛out-&amp;gt;饮料-&amp;gt;汇，保证流过牛的流量为 1，跑最大流即可
+P3805 【模板】manacher算法 manacher
+P1368 【模板】最小表示法 最小表示法
+21/02/03 CF734E Anton and Tree ————————AC500 祭 缩点 + 树的直径" name="twitter:description"/><meta content="summary_large_image" name="twitter:card"/>
+<meta content="https://yangty-pic.oss-cn-beijing.aliyuncs.com/bg55.webp" name="twitter:image"/>
+<link href="https://q1.qlogo.cn/g?b=qq&amp;nk=375836877&amp;s=5" rel="shortcut icon"/>
+<link href="https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.5.1/build/styles/github-dark-dimmed.min.css" rel="stylesheet"/>
+<script src="https://cdn.jsdelivr.net/gh/highlightjs/cdn-release/build/highlight.min.js"></script>
+<script>hljs.highlightAll();</script>
+</head>
+<body class="article-page">
+<script>
+        (function() {
+            const colorSchemeKey = 'StackColorScheme';
+            if(!localStorage.getItem(colorSchemeKey)){
+                localStorage.setItem(colorSchemeKey, "auto");
+            }
+        })();
+    </script><script>
+    (function() {
+        const colorSchemeKey = 'StackColorScheme';
+        const colorSchemeItem = localStorage.getItem(colorSchemeKey);
+        const supportDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches === true;
+
+        if (colorSchemeItem == 'dark' || colorSchemeItem === 'auto' && supportDarkMode) {
+            
+
+            document.documentElement.dataset.scheme = 'dark';
+        } else {
+            document.documentElement.dataset.scheme = 'light';
+        }
+    })();
+</script>
+<div class="container main-container flex on-phone--column extended"><aside class="sidebar left-sidebar sticky">
+<button aria-label="切换菜单" class="hamburger hamburger--spin" id="toggle-menu" type="button">
+<span class="hamburger-box">
+<span class="hamburger-inner"></span>
+</span>
+</button>
+<header>
+<figure class="site-avatar">
+<a href="/">
+<img alt="Avatar" class="site-logo" height="300" loading="lazy" src="/img/avatar_huea3ce2119467b51fdd2a81393644a76d_51594_300x0_resize_q75_box.jpg" width="300"/>
+</a>
+<span class="emoji">😅</span>
+</figure>
+<div class="site-meta">
+<h1 class="site-name"><a href="/">清烛的博客</a></h1>
+<h2 class="site-description">烟火已谢，笙歌未停</h2>
+</div>
+</header><ol class="social-menu">
+<li>
+<a href="mailto:i@imyangty.com" target="_blank" title="email">
+<svg class="icon icon-tabler icon-tabler-mail" fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" viewbox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+<path d="M0 0h24v24H0z" fill="none" stroke="none"></path>
+<rect height="14" rx="2" width="18" x="3" y="5"></rect>
+<polyline points="3 7 12 13 21 7"></polyline>
+</svg>
+</a>
+</li>
+<li>
+<a href="https://github.com/Cgfyufsygsm" target="_blank" title="GitHub">
+<svg class="icon icon-tabler icon-tabler-brand-github" fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+<path d="M0 0h24v24H0z" fill="none" stroke="none"></path>
+<path d="M9 19c-4.3 1.4 -4.3 -2.5 -6 -3m12 5v-3.5c0 -1 .1 -1.4 -.5 -2c2.8 -.3 5.5 -1.4 5.5 -6a4.6 4.6 0 0 0 -1.3 -3.2a4.2 4.2 0 0 0 -.1 -3.2s-1.1 -.3 -3.5 1.3a12.3 12.3 0 0 0 -6.2 0c-2.4 -1.6 -3.5 -1.3 -3.5 -1.3a4.2 4.2 0 0 0 -.1 3.2a4.6 4.6 0 0 0 -1.3 3.2c0 4.6 2.7 5.7 5.5 6c-.6 .6 -.6 1.2 -.5 2v3.5"></path>
+</svg>
+</a>
+</li>
+<li>
+<a href="https://t.me/Cgfyufsygsm" target="_blank" title="Telegram">
+<svg class="icon icon-tabler icon-tabler-brand-telegram" fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" viewbox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+<path d="M0 0h24v24H0z" fill="none" stroke="none"></path>
+<path d="M15 10l-4 4l6 6l4 -16l-18 7l4 2l2 6l3 -4"></path>
+</svg>
+</a>
+</li>
+<li>
+<a href="https://twitter.com/Cgfyufsygsm" target="_blank" title="Twitter">
+<svg class="icon icon-tabler icon-tabler-brand-twitter" fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+<path d="M0 0h24v24H0z" fill="none" stroke="none"></path>
+<path d="M22 4.01c-1 .49 -1.98 .689 -3 .99c-1.121 -1.265 -2.783 -1.335 -4.38 -.737s-2.643 2.06 -2.62 3.737v1c-3.245 .083 -6.135 -1.395 -8 -4c0 0 -4.182 7.433 4 11c-1.872 1.247 -3.739 2.088 -6 2c3.308 1.803 6.913 2.423 10.034 1.517c3.58 -1.04 6.522 -3.723 7.651 -7.742a13.84 13.84 0 0 0 .497 -3.753c-.002 -.249 1.51 -2.772 1.818 -4.013z"></path>
+</svg>
+</a>
+</li>
+</ol><ol class="menu" id="main-menu">
+<li>
+<a href="/">
+<svg class="icon icon-tabler icon-tabler-home" fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+<path d="M0 0h24v24H0z" stroke="none"></path>
+<polyline points="5 12 3 12 12 3 21 12 19 12"></polyline>
+<path d="M5 12v7a2 2 0 0 0 2 2h10a2 2 0 0 0 2 -2v-7"></path>
+<path d="M9 21v-6a2 2 0 0 1 2 -2h2a2 2 0 0 1 2 2v6"></path>
+</svg>
+<span>主页</span>
+</a>
+</li>
+<li>
+<a href="/about/">
+<svg class="icon icon-tabler icon-tabler-user" fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+<path d="M0 0h24v24H0z" stroke="none"></path>
+<circle cx="12" cy="7" r="4"></circle>
+<path d="M6 21v-2a4 4 0 0 1 4 -4h4a4 4 0 0 1 4 4v2"></path>
+</svg>
+<span>关于</span>
+</a>
+</li>
+<li>
+<a href="/idx/">
+<svg class="icon icon-tabler icon-tabler-hash" fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+<path d="M0 0h24v24H0z" stroke="none"></path>
+<line x1="5" x2="19" y1="9" y2="9"></line>
+<line x1="5" x2="19" y1="15" y2="15"></line>
+<line x1="11" x2="7" y1="4" y2="20"></line>
+<line x1="17" x2="13" y1="4" y2="20"></line>
+</svg>
+<span>导航</span>
+</a>
+</li>
+<li>
+<a href="/archives/">
+<svg class="icon icon-tabler icon-tabler-archive" fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+<path d="M0 0h24v24H0z" stroke="none"></path>
+<rect height="4" rx="2" width="18" x="3" y="4"></rect>
+<path d="M5 8v10a2 2 0 0 0 2 2h10a2 2 0 0 0 2 -2v-10"></path>
+<line x1="10" x2="14" y1="12" y2="12"></line>
+</svg>
+<span>归档</span>
+</a>
+</li>
+<li>
+<a href="/search/">
+<svg class="icon icon-tabler icon-tabler-search" fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+<path d="M0 0h24v24H0z" stroke="none"></path>
+<circle cx="10" cy="10" r="7"></circle>
+<line x1="21" x2="15" y1="21" y2="15"></line>
+</svg>
+<span>搜索</span>
+</a>
+</li>
+<li>
+<a href="/friends/">
+<svg class="icon icon-tabler icon-tabler-link" fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+<path d="M0 0h24v24H0z" stroke="none"></path>
+<path d="M10 14a3.5 3.5 0 0 0 5 0l4 -4a3.5 3.5 0 0 0 -5 -5l-.5 .5"></path>
+<path d="M14 10a3.5 3.5 0 0 0 -5 0l-4 4a3.5 3.5 0 0 0 5 5l.5 -.5"></path>
+</svg>
+<span>友链</span>
+</a>
+</li>
+<li>
+<a href="https://blog.imyangty.com" target="_blank">
+<svg class="icon icon-tabler icon-tabler-home" fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+<path d="M0 0h24v24H0z" stroke="none"></path>
+<polyline points="5 12 3 12 12 3 21 12 19 12"></polyline>
+<path d="M5 12v7a2 2 0 0 0 2 2h10a2 2 0 0 0 2 -2v-7"></path>
+<path d="M9 21v-6a2 2 0 0 1 2 -2h2a2 2 0 0 1 2 2v6"></path>
+</svg>
+<span>主博客</span>
+</a>
+</li>
+<div class="menu-bottom-section">
+<li id="dark-mode-toggle">
+<svg class="icon icon-tabler icon-tabler-toggle-left" fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+<path d="M0 0h24v24H0z" stroke="none"></path>
+<circle cx="8" cy="12" r="2"></circle>
+<rect height="12" rx="6" width="20" x="2" y="6"></rect>
+</svg>
+<svg class="icon icon-tabler icon-tabler-toggle-right" fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+<path d="M0 0h24v24H0z" stroke="none"></path>
+<circle cx="16" cy="12" r="2"></circle>
+<rect height="12" rx="6" width="20" x="2" y="6"></rect>
+</svg>
+<span>暗色模式</span>
+</li>
+</div>
+</ol>
+</aside>
+<main class="main full-width">
+<article class="has-image main-article">
+<header class="article-header">
+<div class="article-image">
+<a href="/summary-2021-02/">
+<img alt="Featured image of post 2021年2月 OI 学习记录" loading="lazy" src="https://yangty-pic.oss-cn-beijing.aliyuncs.com/bg55.webp"/>
+</a>
+</div>
+<div class="article-details">
+<header class="article-category">
+<a href="/categories/oi/">
+                OI
+            </a>
+<a href="/categories/summary/">
+                总结
+            </a>
+</header>
+<div class="article-title-wrapper">
+<h2 class="article-title">
+<a href="/summary-2021-02/">2021年2月 OI 学习记录</a>
+</h2>
+</div>
+<footer class="article-time">
+<div>
+<svg class="icon icon-tabler icon-tabler-calendar-time" fill="none" height="56" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="56" xmlns="http://www.w3.org/2000/svg">
+<path d="M0 0h24v24H0z" stroke="none"></path>
+<path d="M11.795 21h-6.795a2 2 0 0 1 -2 -2v-12a2 2 0 0 1 2 -2h12a2 2 0 0 1 2 2v4"></path>
+<circle cx="18" cy="18" r="4"></circle>
+<path d="M15 3v4"></path>
+<path d="M7 3v4"></path>
+<path d="M3 11h16"></path>
+<path d="M18 16.496v1.504l1 1"></path>
+</svg>
+<time class="article-time--published">Feb 01, 2021</time>
+</div>
+<div>
+<svg class="icon icon-tabler icon-tabler-clock" fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+<path d="M0 0h24v24H0z" stroke="none"></path>
+<circle cx="12" cy="12" r="9"></circle>
+<polyline points="12 7 12 12 15 15"></polyline>
+</svg>
+<time class="article-time--reading">
+                    阅读时长: 3 分钟
+                </time>
+</div>
+</footer>
+</div>
+</header>
+<section class="article-content">
+<h2 id="前言">前言</h2>
+<p>仍旧菜的抠脚。 WC 2021 rp ++</p>
+<h2 id="学习内容">学习内容</h2>
+<ul>
+<li>轮廓线 dp</li>
+<li>上下界网络流</li>
+<li>Manacher</li>
+<li>最小表示法</li>
+<li>exKMP</li>
+<li>SA</li>
+<li>多项式乘法逆</li>
+</ul>
+<h2 id="做题记录">做题记录</h2>
+<h3 id="section">21/02/01</h3>
+<ul>
+<li><strong>CF1198D Rectangle Painting 1</strong></li>
+</ul>
+<p>二维区间 dp，以 x 和 y 方向分别划分即可</p>
+<ul>
+<li><strong>HDU4283 You Are The One</strong></li>
+</ul>
+<p>比较清奇的区间 dp，考虑第 <span class="math inline">\(i\)</span> 个人放到第 <span class="math inline">\(k\)</span> 个出场造成的影响</p>
+<ul>
+<li><strong>UVA11270 Tiling Dominoes</strong></li>
+</ul>
+<p>插头 dp，参见<a href="https://www.luogu.com.cn/blog/cluster-yw/uva11270" title="大佬题解">大佬题解</a></p>
+<ul>
+<li><strong>HDU3507 Print Article</strong></li>
+</ul>
+<p>斜率优化 dp</p>
+<h3 id="section-1">21/02/02</h3>
+<ul>
+<li><strong>P3254 圆桌问题</strong></li>
+</ul>
+<p>网络流。源向单位连大小为单位人数的边，餐桌向汇连大小为餐桌人数的边，每个单位连每个餐桌，跑最大流，满流有解，找流有东西的边输出即可</p>
+<ul>
+<li><strong>P2763 试题库问题</strong></li>
+</ul>
+<p>网络流。试题向属于的类型连 1，类型向汇连需要的题数，跑最大流，满流有解，输出方案。</p>
+<ul>
+<li><strong>P2891 [USACO07OPEN]Dining G</strong></li>
+</ul>
+<p>拆点，源-&gt;食物-&gt;牛in-&gt;牛out-&gt;饮料-&gt;汇，保证流过牛的流量为 1，跑最大流即可</p>
+<ul>
+<li><strong>P3805 【模板】manacher算法</strong></li>
+</ul>
+<p>manacher</p>
+<ul>
+<li><strong>P1368 【模板】最小表示法</strong></li>
+</ul>
+<p>最小表示法</p>
+<h3 id="section-2">21/02/03</h3>
+<ul>
+<li><strong>CF734E Anton and Tree</strong> ————————<strong><em>AC500 祭</em></strong></li>
+</ul>
+<p><a href="https://imyangty.com/oi/1304" title="缩点 + 树的直径">缩点 + 树的直径</a></p>
+<ul>
+<li><strong>CF911F Tree Destruction</strong></li>
+</ul>
+<p><a href="https://imyangty.com/oi/1305" title="树的直径 + 贪心">树的直径 + 贪心</a></p>
+<h3 id="section-3">21/02/04</h3>
+<ul>
+<li><strong>CF1000E We Need More Bosses</strong></li>
+</ul>
+<p><a href="https://imyangty.com/oi/1306" title="边双 + 缩点 + 树的直径">边双 + 缩点 + 树的直径</a></p>
+<ul>
+<li><strong>P2766 最长不下降子序列问题</strong></li>
+</ul>
+<p>拆点 + 最大流</p>
+<h3 id="section-4">21/02/05</h3>
+<ul>
+<li><p><strong>WC 2021</strong></p></li>
+<li><p><strong>Codeforces Round #699 (Div. 2)</strong></p></li>
+</ul>
+<p><strong>A + B + C</strong> rk2134 该死终于能做三道题出来了/kk</p>
+<h3 id="section-5">21/02/06</h3>
+<ul>
+<li><p><strong>WC2021 10 + 50 + 20 = 80，Cu</strong></p></li>
+<li><p><strong>LOJ#115. 无源汇有上下界可行流</strong></p></li>
+</ul>
+<p>上下界网络流</p>
+<ul>
+<li><strong>LOJ#116. 有源汇有上下界最大流</strong></li>
+</ul>
+<p>上下界网络流</p>
+<ul>
+<li><strong>P5192 Zoj3229 Shoot the Bullet东方文花帖【模板】有源汇上下界最大流</strong></li>
+</ul>
+<p>建模 + 上下界网络流</p>
+<h3 id="section-6">21/02/07</h3>
+<ul>
+<li><strong>P2764 最小路径覆盖问题</strong></li>
+</ul>
+<p>最小路径覆盖数 = 点数 - 最大匹配数</p>
+<ul>
+<li><strong>P2765 魔术球问题</strong></li>
+</ul>
+<p>上题的加强版，从小往大枚举答案，每次在残量网络上继续跑 Dinic</p>
+<ul>
+<li><strong>P2754 [CTSC1999]家园 / 星际转移问题</strong></li>
+</ul>
+<p>最大流</p>
+<ul>
+<li><strong>P4015 运输问题</strong></li>
+</ul>
+<p>费用流。套路：费用取负可以得到最大费用最大流</p>
+<ul>
+<li><strong>P4016 负载平衡问题</strong></li>
+</ul>
+<p>费用流</p>
+<h3 id="section-7">21/02/08</h3>
+<ul>
+<li><strong>CF1475D Cleaning the Phone</strong></li>
+</ul>
+<p>补题，贪心 + 二分</p>
+<ul>
+<li><strong>CF1475F Unusual Matrix</strong></li>
+</ul>
+<p>异或运算的性质：考虑先异或两个矩阵，然后判断这个矩阵是否能变为 <span class="math inline">\(0\)</span></p>
+<ul>
+<li><strong>CF1475G Strange Beauty</strong></li>
+</ul>
+<p>比较神奇的数论dp</p>
+<ul>
+<li><strong>CF1476C Longest Simple Cycle</strong></li>
+</ul>
+<p>dp，注意 <code>long long</code></p>
+<ul>
+<li><strong>P2770 航空路线问题</strong></li>
+</ul>
+<p>最大费用最大流</p>
+<ul>
+<li><strong>P4014 分配问题</strong></li>
+</ul>
+<p>二分图最大权匹配，费用流</p>
+<ul>
+<li><strong>P4013 数字梯形问题</strong></li>
+</ul>
+<p>拆点 + 费用流，注意细节</p>
+<h3 id="section-8">21/02/09</h3>
+<ul>
+<li><strong>CF1476D Journey</strong></li>
+</ul>
+<p>记忆化搜索/dp。注意到其实就是最多往左走的加上最多往右走的。</p>
+<ul>
+<li><strong>CF1476E Pattern Matching</strong></li>
+</ul>
+<p>字符串哈希/Trie + 拓扑排序。找到 s 能匹配的所有 p，然后加边，拓扑。</p>
+<ul>
+<li><strong>P2580 于是他错误的点名开始了</strong></li>
+</ul>
+<p>Trie 模板，注意数组开够</p>
+<ul>
+<li><strong>SP4033 PHONELST - Phone List</strong></li>
+</ul>
+<p>Trie，如果在插入过程中遇到结束标记或者没有建立新的节点，则说明有前缀包含</p>
+<ul>
+<li><strong>HDU4825 Xor Sum</strong></li>
+</ul>
+<p>01-Trie 模板，考虑将每个数字化成 01 二进制串插入 Trie 树。为了找到异或的最大值需往反方向下跳（相同为 0，不同为 1）</p>
+<ul>
+<li><strong>HDU5536 Chip Factory</strong></li>
+</ul>
+<p>01-Trie。要开够空间，多测清空。注意 <span class="math inline">\(i,j,k\)</span> 两两不同，需要删点/加点。</p>
+<ul>
+<li><strong>P4551 最长异或路径</strong></li>
+</ul>
+<p>01-Trie。考虑处理每个点到根异或和 <span class="math inline">\(d_i\)</span>，则答案为 <span class="math inline">\(\max\lbrace d_x, d_y\rbrace\)</span>。因为到根重复的一段会被消去（异或运算的性质）</p>
+<ul>
+<li><strong>P3358 最长k可重区间集问题</strong></li>
+</ul>
+<p>比较精巧的网络流建模，费用流。</p>
+<h3 id="section-9">21/02/10</h3>
+<ul>
+<li><strong>P3808 【模板】AC自动机（简单版）</strong></li>
+</ul>
+<p>AC 自动机</p>
+<ul>
+<li><strong>P3796 【模板】AC自动机（加强版）</strong></li>
+</ul>
+<p>AC 自动机</p>
+<ul>
+<li><strong>P2375 [NOI2014] 动物园</strong></li>
+</ul>
+<p>KMP，首先求出所有的 fail 然后建好 fail 树，在 fail 树上面进行动态统计即可。</p>
+<h3 id="section-10">21/02/11</h3>
+<ul>
+<li><strong>P5357 【模板】AC自动机（二次加强版）</strong></li>
+</ul>
+<p>避免每次跳 fail，直接建 fail 树最后树上差分即可。</p>
+<h3 id="section-11">21/02/13</h3>
+<ul>
+<li><strong>CF1485B Replace and Keep Sorted</strong></li>
+</ul>
+<p>dp</p>
+<h3 id="section-12">21/02/15</h3>
+<ul>
+<li><strong>P4782 【模板】2-SAT 问题</strong></li>
+</ul>
+<p>2-SAT</p>
+<ul>
+<li><strong>P4171 [JSOI2010]满汉全席</strong></li>
+</ul>
+<p>2-SAT，读清楚题意是每种食材要么满要么汉</p>
+<ul>
+<li><strong>P2341 [USACO03FALL][HAOI2006]受欢迎的牛 G</strong></li>
+</ul>
+<p>tarjan 求 scc，只需要找出出度为 0 的 scc 即可</p>
+<ul>
+<li><strong>P2002 消息扩散</strong></li>
+</ul>
+<p>tarjan scc，找入度为 0 的点，即没有别的城市传信的城市</p>
+<ul>
+<li><strong>Educational Codeforces Round 104 (Rated for Div. 2)</strong></li>
+</ul>
+<p>A + D，赛后补 B，C</p>
+<h3 id="section-13">21/02/16</h3>
+<ul>
+<li>P3357 <strong>最长k可重线段集问题</strong></li>
+</ul>
+<p>费用流</p>
+<ul>
+<li><strong>P4012 深海机器人问题</strong></li>
+</ul>
+<p>费用流</p>
+<ul>
+<li><strong>P1251 餐巾计划问题</strong></li>
+</ul>
+<p>费用流</p>
+<ul>
+<li><strong>Codeforces Round #702 (Div. 3)</strong></li>
+</ul>
+<p>赛中 A + B + C + D + F，赛后补 E <strong>不开 <code>long long</code> 见祖宗</strong></p>
+<h3 id="section-14">21/02/17</h3>
+<ul>
+<li><strong>CF1490G Old Floppy Drive</strong></li>
+</ul>
+<p>赛后补题</p>
+<ul>
+<li><strong>CF1481D AB Graph</strong></li>
+</ul>
+<p>图论 + 构造。比较巧妙的构造题</p>
+<h3 id="section-15">21/02/18</h3>
+<ul>
+<li><strong>UVA1660 电视网络 Cable TV Network</strong></li>
+</ul>
+<p>最小割</p>
+<h3 id="section-16">21/02/19</h3>
+<ul>
+<li><strong>CF1481E Sorting Books</strong></li>
+</ul>
+<p>比较诡诈的 dp</p>
+<ul>
+<li><strong>P3809 【模板】后缀排序</strong></li>
+</ul>
+<p>学习 SA</p>
+<ul>
+<li><strong>P4051 [JSOI2007]字符加密</strong></li>
+</ul>
+<p>断环为链，即倍长串之后跑 SA</p>
+<ul>
+<li><strong>BZOJ#3771. Triple</strong></li>
+</ul>
+<p><a href="https://imyangty.com/oi/1311" title="NTT + 容斥">NTT + 容斥</a></p>
+<ul>
+<li><strong>P2408 不同子串个数</strong></li>
+</ul>
+<p>SA</p>
+<ul>
+<li><strong>P4391 [BOI2009]Radio Transmission 无线传输</strong></li>
+</ul>
+<p>KMP 求循环节：<span class="math inline">\(N - fail(N)\)</span></p>
+<ul>
+<li><strong>UVA10298 Power Strings</strong></li>
+</ul>
+<p>同上</p>
+<ul>
+<li><strong>CF1200E Compress Words</strong></li>
+</ul>
+<p>找后缀和前缀的最长公共部分，那就 KMP</p>
+<ul>
+<li><strong>P5410 【模板】扩展 KMP（Z 函数）</strong></li>
+</ul>
+<p>Z 算法</p>
+<h3 id="section-17">21/02/20</h3>
+<ul>
+<li><strong>P4238 【模板】多项式乘法逆</strong></li>
+</ul>
+<p>多项式乘法逆，倍增</p>
+<h3 id="section-18">21/02/21</h3>
+<ul>
+<li><strong>P4173 残缺的字符串</strong></li>
+</ul>
+<p>NTT 做带通配符的字符串匹配</p>
+<ul>
+<li><strong>CF528D Fuzzy Search</strong></li>
+</ul>
+<p>myy 论文题，单独考虑每个字符跑 NTT</p>
+<h3 id="section-19">21/02/25</h3>
+<ul>
+<li><strong>P3518 [POI2011]SEJ-Strongbox</strong></li>
+</ul>
+<p><a href="https://imyangty.com/oi/1315" title="gcd">gcd</a></p>
+</section>
+<footer class="article-footer">
+<section class="article-tags">
+<a href="/tags/OI/">OI</a>
+</section>
+<section class="article-copyright">
+<svg class="icon icon-tabler icon-tabler-copyright" fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+<path d="M0 0h24v24H0z" stroke="none"></path>
+<circle cx="12" cy="12" r="9"></circle>
+<path d="M14.5 9a3.5 4 0 1 0 0 6"></path>
+</svg>
+<span>Licensed under CC BY-NC-SA 4.0</span>
+</section>
+</footer>
+<link crossorigin="anonymous" href="https://cdn.jsdelivr.net/npm/katex@0.13.13/dist/katex.min.css" integrity="sha384-RZU/ijkSsFbcmivfdRBQDtwuwVqK7GMOw6IMvKyeWL2K5UAlyp6WonmB8m7Jd0Hn" rel="stylesheet"/><script crossorigin="anonymous" defer="" integrity="sha384-pK1WpvzWVBQiP0/GjnvRxV4mOb0oxFuyRxJlk6vVw146n3egcN5C925NCP7a7BY8" src="https://cdn.jsdelivr.net/npm/katex@0.13.13/dist/katex.min.js">
+</script><script crossorigin="anonymous" defer="" integrity="sha384-vZTG03m+2yp6N6BNi5iM4rW4oIwk5DfcNdFfxkk9ZWpDriOkXX8voJBFrAO7MpVl" src="https://cdn.jsdelivr.net/npm/katex@0.13.13/dist/contrib/auto-render.min.js">
+</script><script>
+    window.addEventListener("DOMContentLoaded", () => {
+        renderMathInElement(document.querySelector(`.article-content`), {
+            delimiters: [
+                { left: "$$", right: "$$", display: true },
+                { left: "$", right: "$", display: false },
+                { left: "\\(", right: "\\)", display: false },
+                { left: "\\[", right: "\\]", display: true }
+            ]
+        });})
+</script>
+</article>
+<aside class="related-contents--wrapper">
+<h2 class="section-title">相关文章</h2>
+<div class="related-contents">
+<div class="flex article-list--tile">
+<article class="has-image">
+<a href="/sol-luogu-p5468/">
+<div class="article-image">
+<img data-hash="https://yangty-pic.oss-cn-beijing.aliyuncs.com/bg01.webp" data-key="" loading="lazy" src="https://yangty-pic.oss-cn-beijing.aliyuncs.com/bg01.webp"/>
+</div>
+<div class="article-details">
+<h2 class="article-title">P5468 [NOI2019] 回家路线</h2>
+</div>
+</a>
+</article>
+<article class="has-image">
+<a href="/travels-noi2022/">
+<div class="article-image">
+<img data-hash="https://yangty-pic.oss-cn-beijing.aliyuncs.com/bg01.webp" data-key="" loading="lazy" src="https://yangty-pic.oss-cn-beijing.aliyuncs.com/bg01.webp"/>
+</div>
+<div class="article-details">
+<h2 class="article-title">NOI2022 游记</h2>
+</div>
+</a>
+</article>
+<article class="has-image">
+<a href="/sol-cf715b/">
+<div class="article-image">
+<img data-hash="https://yangty-pic.oss-cn-beijing.aliyuncs.com/bg57.webp" data-key="" loading="lazy" src="https://yangty-pic.oss-cn-beijing.aliyuncs.com/bg57.webp"/>
+</div>
+<div class="article-details">
+<h2 class="article-title">CF715B Complete The Graph</h2>
+</div>
+</a>
+</article>
+<article class="has-image">
+<a href="/sol-agc027d/">
+<div class="article-image">
+<img data-hash="https://yangty-pic.oss-cn-beijing.aliyuncs.com/bg01.webp" data-key="" loading="lazy" src="https://yangty-pic.oss-cn-beijing.aliyuncs.com/bg01.webp"/>
+</div>
+<div class="article-details">
+<h2 class="article-title">AGC027D - Modulo Matrix</h2>
+</div>
+</a>
+</article>
+<article class="has-image">
+<a href="/sol-luogu-p5305/">
+<div class="article-image">
+<img data-hash="https://yangty-pic.oss-cn-beijing.aliyuncs.com/bg32.webp" data-key="" loading="lazy" src="https://yangty-pic.oss-cn-beijing.aliyuncs.com/bg32.webp"/>
+</div>
+<div class="article-details">
+<h2 class="article-title">P5305 [GXOI/GZOI2019]旧词</h2>
+</div>
+</a>
+</article>
+</div>
+</div>
+</aside>
+<footer class="site-footer">
+<section class="copyright">
+        © 
+        
+            2019 - 
+        
+        2024 清烛的博客
+    </section>
+<section class="powerby">
+        Built with <a href="https://gohugo.io/" rel="noopener" target="_blank">Hugo</a> <br/>
+        主题 <b><a data-version="3.11.0" href="https://github.com/CaiJimmy/hugo-theme-stack" rel="noopener" target="_blank">Stack</a></b> 由 <a href="https://jimmycai.com" rel="noopener" target="_blank">Jimmy</a> 设计
+    </section>
+</footer>
+<div aria-hidden="true" class="pswp" role="dialog" tabindex="-1">
+<div class="pswp__bg"></div>
+<div class="pswp__scroll-wrap">
+<div class="pswp__container">
+<div class="pswp__item"></div>
+<div class="pswp__item"></div>
+<div class="pswp__item"></div>
+</div>
+<div class="pswp__ui pswp__ui--hidden">
+<div class="pswp__top-bar">
+<div class="pswp__counter"></div>
+<button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+<button class="pswp__button pswp__button--share" title="Share"></button>
+<button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+<button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+<div class="pswp__preloader">
+<div class="pswp__preloader__icn">
+<div class="pswp__preloader__cut">
+<div class="pswp__preloader__donut"></div>
+</div>
+</div>
+</div>
+</div>
+<div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+<div class="pswp__share-tooltip"></div>
+</div>
+<button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+</button>
+<button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+</button>
+<div class="pswp__caption">
+<div class="pswp__caption__center"></div>
+</div>
+</div>
+</div>
+</div><script crossorigin="anonymous" defer="" integrity="sha256-ePwmChbbvXbsO02lbM3HoHbSHTHFAeChekF1xKJdleo=" src="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe.min.js">
+</script><script crossorigin="anonymous" defer="" integrity="sha256-UKkzOn/w1mBxRmLLGrSeyB4e1xbrp4xylgAWb3M42pU=" src="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe-ui-default.min.js">
+</script><link crossorigin="anonymous" href="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/default-skin/default-skin.css" integrity="sha256-c0uckgykQ9v5k+IqViZOZKc47Jn7KQil4/MP3ySA3F8=" rel="stylesheet"/><link crossorigin="anonymous" href="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe.css" integrity="sha256-SBLU4vv6CA6lHsZ1XyTdhyjJxCjPif/TRkjnsyGAGnE=" rel="stylesheet"/>
+</main>
+</div>
+<script crossorigin="anonymous" integrity="sha256-5NovOZc4iwiAWTYIFiIM7DxKUXKWvpVEuMEPLzcm5/g=" src="https://cdn.jsdelivr.net/npm/node-vibrant@3.1.5/dist/vibrant.min.js">
+</script><script defer="" src="/ts/main.js" type="text/javascript"></script>
+<script>
+    (function () {
+        const customFont = document.createElement('link');
+        customFont.href = "https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&display=swap";
+
+        customFont.type = "text/css";
+        customFont.rel = "stylesheet";
+
+        document.head.appendChild(customFont);
+    }());
+</script>
+</body>
+</html>

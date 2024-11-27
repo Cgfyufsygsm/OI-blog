@@ -1,0 +1,810 @@
+<!DOCTYPE html>
+<html dir="ltr" lang="zh-CN">
+<head><meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1" name="viewport"/><meta content="B 卷 D1T1 卡牌游戏 洛谷 P6625，LOJ3305
+算法：贪心
+Description 轩轩某天想到了一个卡牌游戏，游戏规则如下：
+初始时轩轩的手中有自左向右排成一排的 \(n\) 张卡牌，每张卡牌上有一个整数分值。 接下来，轩轩每次可以选取卡牌序列最左边的连续若干张卡牌（至少 \(2\) 张），将它们替换为一张新卡牌。新卡牌将插入到序列的最左端，它的分值为本次操作中被替换掉的卡牌的分值之和。 初始时轩轩总分为 \(0\)，每执行一次卡牌替换操作，新卡牌的分值将加到总分中。当序列长度为 \(1\) 时游戏结束，轩轩也可以在任意时刻结束游戏。 现在给出序列中各个卡牌的分值，请你来帮助轩轩计算他能够获得的最高总分是多少？
+Solution 直接贪心即可，可以证明如果当前选的牌分值恰好大于等于 \(0\)，那么加入总贡献肯定是最优的。
+注意数据范围，不开 long long 只有 65pts。
+typedef long long ll; const int maxn = 1e5 + 5; int n; ll a[maxn]; int main() { n = read(); FOR(i, 1, n) a[i] = read(); ll ans = 0, cur = 0; int chose = 0; FOR(i, 1, n) { cur += a[i], ++chose; if (cur &amp;gt;= 0 &amp;amp;&amp;amp; chose &amp;gt;= 2) ans += cur, chose = 1; } printf(&amp;quot;%lld\n&amp;quot;, ans); return 0; } B 卷 D1T2 消息传递 洛谷 P6626，LOJ3306" name="description"/><title>联合省选 2020 题解</title>
+<link href="https://oi.imyangty.com/sol-lhsx2020/" rel="canonical"/>
+<link href="/scss/style.min.a5821f3d3ab84ce5a0ac21477e347a2e0ca00292e398d16c5e8e36ded6e35a23.css" rel="stylesheet"/><meta content="联合省选 2020 题解" property="og:title"/>
+<meta content="B 卷 D1T1 卡牌游戏 洛谷 P6625，LOJ3305
+算法：贪心
+Description 轩轩某天想到了一个卡牌游戏，游戏规则如下：
+初始时轩轩的手中有自左向右排成一排的 \(n\) 张卡牌，每张卡牌上有一个整数分值。 接下来，轩轩每次可以选取卡牌序列最左边的连续若干张卡牌（至少 \(2\) 张），将它们替换为一张新卡牌。新卡牌将插入到序列的最左端，它的分值为本次操作中被替换掉的卡牌的分值之和。 初始时轩轩总分为 \(0\)，每执行一次卡牌替换操作，新卡牌的分值将加到总分中。当序列长度为 \(1\) 时游戏结束，轩轩也可以在任意时刻结束游戏。 现在给出序列中各个卡牌的分值，请你来帮助轩轩计算他能够获得的最高总分是多少？
+Solution 直接贪心即可，可以证明如果当前选的牌分值恰好大于等于 \(0\)，那么加入总贡献肯定是最优的。
+注意数据范围，不开 long long 只有 65pts。
+typedef long long ll; const int maxn = 1e5 + 5; int n; ll a[maxn]; int main() { n = read(); FOR(i, 1, n) a[i] = read(); ll ans = 0, cur = 0; int chose = 0; FOR(i, 1, n) { cur += a[i], ++chose; if (cur &amp;gt;= 0 &amp;amp;&amp;amp; chose &amp;gt;= 2) ans += cur, chose = 1; } printf(&amp;quot;%lld\n&amp;quot;, ans); return 0; } B 卷 D1T2 消息传递 洛谷 P6626，LOJ3306" property="og:description"/>
+<meta content="https://oi.imyangty.com/sol-lhsx2020/" property="og:url"/>
+<meta content="清烛的博客" property="og:site_name"/>
+<meta content="article" property="og:type"/><meta content="Post" property="article:section"/><meta content="OI" property="article:tag"/><meta content="题解" property="article:tag"/><meta content="贪心" property="article:tag"/><meta content="点分治" property="article:tag"/><meta content="2021-09-30T16:14:25+08:00" property="article:published_time"/><meta content="2021-09-30T16:14:25+08:00" property="article:modified_time"/><meta content="https://yangty-pic.oss-cn-beijing.aliyuncs.com/bg21.webp" property="og:image"/>
+<meta content="联合省选 2020 题解" name="twitter:title"/>
+<meta content="B 卷 D1T1 卡牌游戏 洛谷 P6625，LOJ3305
+算法：贪心
+Description 轩轩某天想到了一个卡牌游戏，游戏规则如下：
+初始时轩轩的手中有自左向右排成一排的 \(n\) 张卡牌，每张卡牌上有一个整数分值。 接下来，轩轩每次可以选取卡牌序列最左边的连续若干张卡牌（至少 \(2\) 张），将它们替换为一张新卡牌。新卡牌将插入到序列的最左端，它的分值为本次操作中被替换掉的卡牌的分值之和。 初始时轩轩总分为 \(0\)，每执行一次卡牌替换操作，新卡牌的分值将加到总分中。当序列长度为 \(1\) 时游戏结束，轩轩也可以在任意时刻结束游戏。 现在给出序列中各个卡牌的分值，请你来帮助轩轩计算他能够获得的最高总分是多少？
+Solution 直接贪心即可，可以证明如果当前选的牌分值恰好大于等于 \(0\)，那么加入总贡献肯定是最优的。
+注意数据范围，不开 long long 只有 65pts。
+typedef long long ll; const int maxn = 1e5 + 5; int n; ll a[maxn]; int main() { n = read(); FOR(i, 1, n) a[i] = read(); ll ans = 0, cur = 0; int chose = 0; FOR(i, 1, n) { cur += a[i], ++chose; if (cur &amp;gt;= 0 &amp;amp;&amp;amp; chose &amp;gt;= 2) ans += cur, chose = 1; } printf(&amp;quot;%lld\n&amp;quot;, ans); return 0; } B 卷 D1T2 消息传递 洛谷 P6626，LOJ3306" name="twitter:description"/><meta content="summary_large_image" name="twitter:card"/>
+<meta content="https://yangty-pic.oss-cn-beijing.aliyuncs.com/bg21.webp" name="twitter:image"/>
+<link href="https://q1.qlogo.cn/g?b=qq&amp;nk=375836877&amp;s=5" rel="shortcut icon"/>
+<link href="https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.5.1/build/styles/github-dark-dimmed.min.css" rel="stylesheet"/>
+<script src="https://cdn.jsdelivr.net/gh/highlightjs/cdn-release/build/highlight.min.js"></script>
+<script>hljs.highlightAll();</script>
+</head>
+<body class="article-page">
+<script>
+        (function() {
+            const colorSchemeKey = 'StackColorScheme';
+            if(!localStorage.getItem(colorSchemeKey)){
+                localStorage.setItem(colorSchemeKey, "auto");
+            }
+        })();
+    </script><script>
+    (function() {
+        const colorSchemeKey = 'StackColorScheme';
+        const colorSchemeItem = localStorage.getItem(colorSchemeKey);
+        const supportDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches === true;
+
+        if (colorSchemeItem == 'dark' || colorSchemeItem === 'auto' && supportDarkMode) {
+            
+
+            document.documentElement.dataset.scheme = 'dark';
+        } else {
+            document.documentElement.dataset.scheme = 'light';
+        }
+    })();
+</script>
+<div class="container main-container flex on-phone--column extended"><aside class="sidebar left-sidebar sticky">
+<button aria-label="切换菜单" class="hamburger hamburger--spin" id="toggle-menu" type="button">
+<span class="hamburger-box">
+<span class="hamburger-inner"></span>
+</span>
+</button>
+<header>
+<figure class="site-avatar">
+<a href="/">
+<img alt="Avatar" class="site-logo" height="300" loading="lazy" src="/img/avatar_huea3ce2119467b51fdd2a81393644a76d_51594_300x0_resize_q75_box.jpg" width="300"/>
+</a>
+<span class="emoji">😅</span>
+</figure>
+<div class="site-meta">
+<h1 class="site-name"><a href="/">清烛的博客</a></h1>
+<h2 class="site-description">烟火已谢，笙歌未停</h2>
+</div>
+</header><ol class="social-menu">
+<li>
+<a href="mailto:i@imyangty.com" target="_blank" title="email">
+<svg class="icon icon-tabler icon-tabler-mail" fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" viewbox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+<path d="M0 0h24v24H0z" fill="none" stroke="none"></path>
+<rect height="14" rx="2" width="18" x="3" y="5"></rect>
+<polyline points="3 7 12 13 21 7"></polyline>
+</svg>
+</a>
+</li>
+<li>
+<a href="https://github.com/Cgfyufsygsm" target="_blank" title="GitHub">
+<svg class="icon icon-tabler icon-tabler-brand-github" fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+<path d="M0 0h24v24H0z" fill="none" stroke="none"></path>
+<path d="M9 19c-4.3 1.4 -4.3 -2.5 -6 -3m12 5v-3.5c0 -1 .1 -1.4 -.5 -2c2.8 -.3 5.5 -1.4 5.5 -6a4.6 4.6 0 0 0 -1.3 -3.2a4.2 4.2 0 0 0 -.1 -3.2s-1.1 -.3 -3.5 1.3a12.3 12.3 0 0 0 -6.2 0c-2.4 -1.6 -3.5 -1.3 -3.5 -1.3a4.2 4.2 0 0 0 -.1 3.2a4.6 4.6 0 0 0 -1.3 3.2c0 4.6 2.7 5.7 5.5 6c-.6 .6 -.6 1.2 -.5 2v3.5"></path>
+</svg>
+</a>
+</li>
+<li>
+<a href="https://t.me/Cgfyufsygsm" target="_blank" title="Telegram">
+<svg class="icon icon-tabler icon-tabler-brand-telegram" fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" viewbox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+<path d="M0 0h24v24H0z" fill="none" stroke="none"></path>
+<path d="M15 10l-4 4l6 6l4 -16l-18 7l4 2l2 6l3 -4"></path>
+</svg>
+</a>
+</li>
+<li>
+<a href="https://twitter.com/Cgfyufsygsm" target="_blank" title="Twitter">
+<svg class="icon icon-tabler icon-tabler-brand-twitter" fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+<path d="M0 0h24v24H0z" fill="none" stroke="none"></path>
+<path d="M22 4.01c-1 .49 -1.98 .689 -3 .99c-1.121 -1.265 -2.783 -1.335 -4.38 -.737s-2.643 2.06 -2.62 3.737v1c-3.245 .083 -6.135 -1.395 -8 -4c0 0 -4.182 7.433 4 11c-1.872 1.247 -3.739 2.088 -6 2c3.308 1.803 6.913 2.423 10.034 1.517c3.58 -1.04 6.522 -3.723 7.651 -7.742a13.84 13.84 0 0 0 .497 -3.753c-.002 -.249 1.51 -2.772 1.818 -4.013z"></path>
+</svg>
+</a>
+</li>
+</ol><ol class="menu" id="main-menu">
+<li>
+<a href="/">
+<svg class="icon icon-tabler icon-tabler-home" fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+<path d="M0 0h24v24H0z" stroke="none"></path>
+<polyline points="5 12 3 12 12 3 21 12 19 12"></polyline>
+<path d="M5 12v7a2 2 0 0 0 2 2h10a2 2 0 0 0 2 -2v-7"></path>
+<path d="M9 21v-6a2 2 0 0 1 2 -2h2a2 2 0 0 1 2 2v6"></path>
+</svg>
+<span>主页</span>
+</a>
+</li>
+<li>
+<a href="/about/">
+<svg class="icon icon-tabler icon-tabler-user" fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+<path d="M0 0h24v24H0z" stroke="none"></path>
+<circle cx="12" cy="7" r="4"></circle>
+<path d="M6 21v-2a4 4 0 0 1 4 -4h4a4 4 0 0 1 4 4v2"></path>
+</svg>
+<span>关于</span>
+</a>
+</li>
+<li>
+<a href="/idx/">
+<svg class="icon icon-tabler icon-tabler-hash" fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+<path d="M0 0h24v24H0z" stroke="none"></path>
+<line x1="5" x2="19" y1="9" y2="9"></line>
+<line x1="5" x2="19" y1="15" y2="15"></line>
+<line x1="11" x2="7" y1="4" y2="20"></line>
+<line x1="17" x2="13" y1="4" y2="20"></line>
+</svg>
+<span>导航</span>
+</a>
+</li>
+<li>
+<a href="/archives/">
+<svg class="icon icon-tabler icon-tabler-archive" fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+<path d="M0 0h24v24H0z" stroke="none"></path>
+<rect height="4" rx="2" width="18" x="3" y="4"></rect>
+<path d="M5 8v10a2 2 0 0 0 2 2h10a2 2 0 0 0 2 -2v-10"></path>
+<line x1="10" x2="14" y1="12" y2="12"></line>
+</svg>
+<span>归档</span>
+</a>
+</li>
+<li>
+<a href="/search/">
+<svg class="icon icon-tabler icon-tabler-search" fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+<path d="M0 0h24v24H0z" stroke="none"></path>
+<circle cx="10" cy="10" r="7"></circle>
+<line x1="21" x2="15" y1="21" y2="15"></line>
+</svg>
+<span>搜索</span>
+</a>
+</li>
+<li>
+<a href="/friends/">
+<svg class="icon icon-tabler icon-tabler-link" fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+<path d="M0 0h24v24H0z" stroke="none"></path>
+<path d="M10 14a3.5 3.5 0 0 0 5 0l4 -4a3.5 3.5 0 0 0 -5 -5l-.5 .5"></path>
+<path d="M14 10a3.5 3.5 0 0 0 -5 0l-4 4a3.5 3.5 0 0 0 5 5l.5 -.5"></path>
+</svg>
+<span>友链</span>
+</a>
+</li>
+<li>
+<a href="https://blog.imyangty.com" target="_blank">
+<svg class="icon icon-tabler icon-tabler-home" fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+<path d="M0 0h24v24H0z" stroke="none"></path>
+<polyline points="5 12 3 12 12 3 21 12 19 12"></polyline>
+<path d="M5 12v7a2 2 0 0 0 2 2h10a2 2 0 0 0 2 -2v-7"></path>
+<path d="M9 21v-6a2 2 0 0 1 2 -2h2a2 2 0 0 1 2 2v6"></path>
+</svg>
+<span>主博客</span>
+</a>
+</li>
+<div class="menu-bottom-section">
+<li id="dark-mode-toggle">
+<svg class="icon icon-tabler icon-tabler-toggle-left" fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+<path d="M0 0h24v24H0z" stroke="none"></path>
+<circle cx="8" cy="12" r="2"></circle>
+<rect height="12" rx="6" width="20" x="2" y="6"></rect>
+</svg>
+<svg class="icon icon-tabler icon-tabler-toggle-right" fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+<path d="M0 0h24v24H0z" stroke="none"></path>
+<circle cx="16" cy="12" r="2"></circle>
+<rect height="12" rx="6" width="20" x="2" y="6"></rect>
+</svg>
+<span>暗色模式</span>
+</li>
+</div>
+</ol>
+</aside>
+<main class="main full-width">
+<article class="has-image main-article">
+<header class="article-header">
+<div class="article-image">
+<a href="/sol-lhsx2020/">
+<img alt="Featured image of post 联合省选 2020 题解" loading="lazy" src="https://yangty-pic.oss-cn-beijing.aliyuncs.com/bg21.webp"/>
+</a>
+</div>
+<div class="article-details">
+<header class="article-category">
+<a href="/categories/oi/">
+                OI
+            </a>
+<a href="/categories/tutorial/">
+                题解
+            </a>
+</header>
+<div class="article-title-wrapper">
+<h2 class="article-title">
+<a href="/sol-lhsx2020/">联合省选 2020 题解</a>
+</h2>
+</div>
+<footer class="article-time">
+<div>
+<svg class="icon icon-tabler icon-tabler-calendar-time" fill="none" height="56" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="56" xmlns="http://www.w3.org/2000/svg">
+<path d="M0 0h24v24H0z" stroke="none"></path>
+<path d="M11.795 21h-6.795a2 2 0 0 1 -2 -2v-12a2 2 0 0 1 2 -2h12a2 2 0 0 1 2 2v4"></path>
+<circle cx="18" cy="18" r="4"></circle>
+<path d="M15 3v4"></path>
+<path d="M7 3v4"></path>
+<path d="M3 11h16"></path>
+<path d="M18 16.496v1.504l1 1"></path>
+</svg>
+<time class="article-time--published">Sep 30, 2021</time>
+</div>
+<div>
+<svg class="icon icon-tabler icon-tabler-clock" fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+<path d="M0 0h24v24H0z" stroke="none"></path>
+<circle cx="12" cy="12" r="9"></circle>
+<polyline points="12 7 12 12 15 15"></polyline>
+</svg>
+<time class="article-time--reading">
+                    阅读时长: 7 分钟
+                </time>
+</div>
+</footer>
+</div>
+</header>
+<section class="article-content">
+<h2 id="b-卷-d1t1-卡牌游戏">B 卷 D1T1 卡牌游戏</h2>
+<p><a href="https://www.luogu.com.cn/problem/P6625">洛谷 P6625</a>，<a href="https://loj.ac/p/3305">LOJ3305</a></p>
+<p>算法：贪心</p>
+<h3 id="description">Description</h3>
+<p>轩轩某天想到了一个卡牌游戏，游戏规则如下：</p>
+<ol type="1">
+<li>初始时轩轩的手中有自左向右排成一排的 <span class="math inline">\(n\)</span> 张卡牌，每张卡牌上有一个整数分值。</li>
+<li>接下来，轩轩每次可以选取卡牌序列最左边的连续若干张卡牌（至少 <span class="math inline">\(2\)</span> 张），将它们替换为一张新卡牌。新卡牌将插入到序列的最左端，它的分值为本次操作中被替换掉的卡牌的分值之和。</li>
+<li>初始时轩轩总分为 <span class="math inline">\(0\)</span>，每执行一次卡牌替换操作，新卡牌的分值将加到总分中。当序列长度为 <span class="math inline">\(1\)</span> 时游戏结束，轩轩也可以在任意时刻结束游戏。</li>
+</ol>
+<p>现在给出序列中各个卡牌的分值，请你来帮助轩轩计算他能够获得的最高总分是多少？</p>
+<h3 id="solution">Solution</h3>
+<p>直接贪心即可，可以证明如果当前选的牌分值恰好大于等于 <span class="math inline">\(0\)</span>，那么加入总贡献肯定是最优的。</p>
+<p>注意数据范围，不开 <code>long long</code> 只有 65pts。</p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode cpp"><code class="sourceCode cpp"><span id="cb1-1"><a aria-hidden="true" href="#cb1-1"></a><span class="kw">typedef</span> <span class="dt">long</span> <span class="dt">long</span> ll;</span>
+<span id="cb1-2"><a aria-hidden="true" href="#cb1-2"></a><span class="at">const</span> <span class="dt">int</span> maxn = <span class="fl">1e5</span> + <span class="dv">5</span>;</span>
+<span id="cb1-3"><a aria-hidden="true" href="#cb1-3"></a><span class="dt">int</span> n;</span>
+<span id="cb1-4"><a aria-hidden="true" href="#cb1-4"></a>ll a[maxn];</span>
+<span id="cb1-5"><a aria-hidden="true" href="#cb1-5"></a></span>
+<span id="cb1-6"><a aria-hidden="true" href="#cb1-6"></a><span class="dt">int</span> main()</span>
+<span id="cb1-7"><a aria-hidden="true" href="#cb1-7"></a>{</span>
+<span id="cb1-8"><a aria-hidden="true" href="#cb1-8"></a>    n = read();</span>
+<span id="cb1-9"><a aria-hidden="true" href="#cb1-9"></a>    FOR(i, <span class="dv">1</span>, n) a[i] = read();</span>
+<span id="cb1-10"><a aria-hidden="true" href="#cb1-10"></a>    ll ans = <span class="dv">0</span>, cur = <span class="dv">0</span>;</span>
+<span id="cb1-11"><a aria-hidden="true" href="#cb1-11"></a>    <span class="dt">int</span> chose = <span class="dv">0</span>;</span>
+<span id="cb1-12"><a aria-hidden="true" href="#cb1-12"></a>    FOR(i, <span class="dv">1</span>, n)</span>
+<span id="cb1-13"><a aria-hidden="true" href="#cb1-13"></a>    {</span>
+<span id="cb1-14"><a aria-hidden="true" href="#cb1-14"></a>        cur += a[i], ++chose;</span>
+<span id="cb1-15"><a aria-hidden="true" href="#cb1-15"></a>        <span class="cf">if</span> (cur &gt;= <span class="dv">0</span> &amp;&amp; chose &gt;= <span class="dv">2</span>)</span>
+<span id="cb1-16"><a aria-hidden="true" href="#cb1-16"></a>            ans += cur, chose = <span class="dv">1</span>;</span>
+<span id="cb1-17"><a aria-hidden="true" href="#cb1-17"></a>    }</span>
+<span id="cb1-18"><a aria-hidden="true" href="#cb1-18"></a>    printf(<span class="st">"</span><span class="sc">%lld\n</span><span class="st">"</span>, ans);</span>
+<span id="cb1-19"><a aria-hidden="true" href="#cb1-19"></a>    <span class="cf">return</span> <span class="dv">0</span>;</span>
+<span id="cb1-20"><a aria-hidden="true" href="#cb1-20"></a>}</span></code></pre></div>
+<h2 id="b-卷-d1t2-消息传递">B 卷 D1T2 消息传递</h2>
+<p><a href="https://www.luogu.com.cn/problem/P6626">洛谷 P6626</a>，<a href="https://loj.ac/p/3306">LOJ3306</a></p>
+<p>算法：点分治</p>
+<h3 id="description-1">Description</h3>
+<p>给定一个包含 <span class="math inline">\(n\)</span> 个人（从 <span class="math inline">\(1\)</span> 到 <span class="math inline">\(n\)</span> 编号）的树形社交网络。如果一个人在某天收到了一条消息，则下一天他会将消息传递给所有与他有直接社交关系的人。</p>
+<p>现在有 <span class="math inline">\(m\)</span> 次询问，每次询问假定第 <span class="math inline">\(0\)</span> 天 <span class="math inline">\(x\)</span> 号人收到了一条消息，请你计算第 <span class="math inline">\(k\)</span> 天时新收到此条消息的人数（即第 <span class="math inline">\(k\)</span> 天前收到过此条消息的人不计入其中）。不同询问间互不影响。</p>
+<p>数据范围：<span class="math inline">\(1\le n,m\le 10^5\)</span>，<span class="math inline">\(0\le k\lt n\)</span>。</p>
+<h3 id="solution-1">Solution</h3>
+<p>发现每次询问的其实就是距离 <span class="math inline">\(x\)</span> 距离为 <span class="math inline">\(k\)</span> 的点有多少。</p>
+<p>考虑点分治进行处理：设离 <span class="math inline">\(x\)</span> 的距离为 <span class="math inline">\(k\)</span> 的一个点为 <span class="math inline">\(y\)</span>，则 <span class="math inline">\(x\)</span> 与 <span class="math inline">\(y\)</span> 之间构成了一条简单路径，这些路径可以使用点分治进行处理。 因为他们无非</p>
+<ul>
+<li>经过当前子树的根 <span class="math inline">\(u\)</span>，直接统计即可</li>
+<li>不经过当前子树的根 <span class="math inline">\(u\)</span>，递归分治即可</li>
+</ul>
+<p>具体进行点分治（当前分治根节点为 <span class="math inline">\(u\)</span>）的时候这样处理：</p>
+<ul>
+<li>假设已经处理完了前面的子树并且把距离存进了桶（<code>judge</code> 数组）里面而且把需要处理的点存进了 <code>proc</code> 数组里面</li>
+<li>处理当前子树 <span class="math inline">\(v\)</span>，把距离存进临时桶 <code>judge1</code> 数组里面，把需要处理的点加进 <code>proc</code> 数组</li>
+<li><strong>处理当前子树 <span class="math inline">\(v\)</span> 对于前面的子树的贡献</strong>，遍历之前的 <code>proc</code> 数组，在 <code>judge1</code> 数组里面统计贡献</li>
+<li><strong>处理前面的子树对于当前子树 <span class="math inline">\(v\)</span> 的贡献</strong>，遍历新加进去的点，在 <code>judge</code> 数组里面统计贡献</li>
+<li>把 <code>judge1</code> 数组中的贡献累加到 <code>judge</code> 中并清空之</li>
+</ul>
+<p>当然，最后不要忘记</p>
+<ul>
+<li>统计所有子树对于根的贡献</li>
+<li>清空 <code>judge</code> 数组</li>
+</ul>
+<p>点分治的细节比较烦人，调了很久</p>
+<div class="sourceCode" id="cb2"><pre class="sourceCode cpp"><code class="sourceCode cpp"><span id="cb2-1"><a aria-hidden="true" href="#cb2-1"></a><span class="pp">#include </span><span class="im">&lt;cstdio&gt;</span></span>
+<span id="cb2-2"><a aria-hidden="true" href="#cb2-2"></a><span class="pp">#include </span><span class="im">&lt;cctype&gt;</span></span>
+<span id="cb2-3"><a aria-hidden="true" href="#cb2-3"></a><span class="pp">#include </span><span class="im">&lt;vector&gt;</span></span>
+<span id="cb2-4"><a aria-hidden="true" href="#cb2-4"></a><span class="pp">#include </span><span class="im">&lt;cstring&gt;</span></span>
+<span id="cb2-5"><a aria-hidden="true" href="#cb2-5"></a><span class="pp">#define FOR</span>(i,<span class="pp"> </span>a,<span class="pp"> </span>b)<span class="pp"> </span><span class="cf">for</span><span class="pp"> </span>(<span class="dt">int</span><span class="pp"> </span>i<span class="pp"> </span>=<span class="pp"> </span>a;<span class="pp"> </span>i<span class="pp"> </span>&lt;=<span class="pp"> </span>b;<span class="pp"> </span>++i)</span>
+<span id="cb2-6"><a aria-hidden="true" href="#cb2-6"></a><span class="pp">#define DEC</span>(i,<span class="pp"> </span>a,<span class="pp"> </span>b)<span class="pp"> </span><span class="cf">for</span><span class="pp"> </span>(<span class="dt">int</span><span class="pp"> </span>i<span class="pp"> </span>=<span class="pp"> </span>a;<span class="pp"> </span>i<span class="pp"> </span>&gt;=<span class="pp"> </span>b;<span class="pp"> </span>--i)</span>
+<span id="cb2-7"><a aria-hidden="true" href="#cb2-7"></a><span class="pp">#define GO</span>(u)<span class="pp"> </span><span class="cf">for</span><span class="pp"> </span>(<span class="dt">int</span><span class="pp"> </span>i<span class="pp"> </span>=<span class="pp"> </span>head[u],<span class="pp"> </span>v<span class="pp"> </span>=<span class="pp"> </span>to[i];<span class="pp"> </span>i;<span class="pp"> </span>i<span class="pp"> </span>=<span class="pp"> </span>nxt[i],<span class="pp"> </span>v<span class="pp"> </span>=<span class="pp"> </span>to[i])</span>
+<span id="cb2-8"><a aria-hidden="true" href="#cb2-8"></a><span class="pp">#define clr</span>(x)<span class="pp"> </span>memset(x,<span class="pp"> </span><span class="dv">0</span>,<span class="pp"> </span><span class="kw">sizeof</span><span class="pp"> </span>x)</span>
+<span id="cb2-9"><a aria-hidden="true" href="#cb2-9"></a></span>
+<span id="cb2-10"><a aria-hidden="true" href="#cb2-10"></a><span class="dt">int</span> read()</span>
+<span id="cb2-11"><a aria-hidden="true" href="#cb2-11"></a>{</span>
+<span id="cb2-12"><a aria-hidden="true" href="#cb2-12"></a>    <span class="dt">int</span> s = <span class="dv">0</span>, x = <span class="dv">0</span>;</span>
+<span id="cb2-13"><a aria-hidden="true" href="#cb2-13"></a>    <span class="dt">char</span> c = getchar();</span>
+<span id="cb2-14"><a aria-hidden="true" href="#cb2-14"></a>    <span class="cf">while</span> (!isdigit(c))</span>
+<span id="cb2-15"><a aria-hidden="true" href="#cb2-15"></a>        x |= (c == <span class="ch">'-'</span>), c = getchar();</span>
+<span id="cb2-16"><a aria-hidden="true" href="#cb2-16"></a>    <span class="cf">while</span> (isdigit(c))</span>
+<span id="cb2-17"><a aria-hidden="true" href="#cb2-17"></a>        s = <span class="dv">10</span> * s + c - <span class="ch">'0'</span>, c = getchar();</span>
+<span id="cb2-18"><a aria-hidden="true" href="#cb2-18"></a>    <span class="cf">return</span> x ? -s : s;</span>
+<span id="cb2-19"><a aria-hidden="true" href="#cb2-19"></a>}</span>
+<span id="cb2-20"><a aria-hidden="true" href="#cb2-20"></a></span>
+<span id="cb2-21"><a aria-hidden="true" href="#cb2-21"></a><span class="kw">inline</span> <span class="dt">int</span> max(<span class="dt">int</span> a, <span class="dt">int</span> b) {<span class="cf">return</span> a &gt; b ? a : b;}</span>
+<span id="cb2-22"><a aria-hidden="true" href="#cb2-22"></a></span>
+<span id="cb2-23"><a aria-hidden="true" href="#cb2-23"></a><span class="kw">struct</span> node</span>
+<span id="cb2-24"><a aria-hidden="true" href="#cb2-24"></a>{</span>
+<span id="cb2-25"><a aria-hidden="true" href="#cb2-25"></a>    <span class="dt">int</span> id, k;</span>
+<span id="cb2-26"><a aria-hidden="true" href="#cb2-26"></a>};</span>
+<span id="cb2-27"><a aria-hidden="true" href="#cb2-27"></a></span>
+<span id="cb2-28"><a aria-hidden="true" href="#cb2-28"></a><span class="at">const</span> <span class="dt">int</span> maxn = <span class="fl">1e5</span> + <span class="dv">5</span>;</span>
+<span id="cb2-29"><a aria-hidden="true" href="#cb2-29"></a><span class="dt">int</span> n, m, head[maxn], to[maxn &lt;&lt; <span class="dv">1</span>], nxt[maxn &lt;&lt; <span class="dv">1</span>], cnte;</span>
+<span id="cb2-30"><a aria-hidden="true" href="#cb2-30"></a><span class="dt">int</span> qhead[maxn], qk[maxn], qi[maxn], qnxt[maxn], cntq;</span>
+<span id="cb2-31"><a aria-hidden="true" href="#cb2-31"></a></span>
+<span id="cb2-32"><a aria-hidden="true" href="#cb2-32"></a><span class="kw">inline</span> <span class="dt">void</span> add(<span class="dt">int</span> u, <span class="dt">int</span> v)</span>
+<span id="cb2-33"><a aria-hidden="true" href="#cb2-33"></a>{</span>
+<span id="cb2-34"><a aria-hidden="true" href="#cb2-34"></a>    to[++cnte] = v;</span>
+<span id="cb2-35"><a aria-hidden="true" href="#cb2-35"></a>    nxt[cnte] = head[u];</span>
+<span id="cb2-36"><a aria-hidden="true" href="#cb2-36"></a>    head[u] = cnte;</span>
+<span id="cb2-37"><a aria-hidden="true" href="#cb2-37"></a>    <span class="cf">return</span>;</span>
+<span id="cb2-38"><a aria-hidden="true" href="#cb2-38"></a>}</span>
+<span id="cb2-39"><a aria-hidden="true" href="#cb2-39"></a></span>
+<span id="cb2-40"><a aria-hidden="true" href="#cb2-40"></a><span class="dt">int</span> size[maxn], maxp[maxn], root, tot, vis[maxn];</span>
+<span id="cb2-41"><a aria-hidden="true" href="#cb2-41"></a><span class="dt">int</span> ans[maxn];</span>
+<span id="cb2-42"><a aria-hidden="true" href="#cb2-42"></a><span class="dt">int</span> dis[maxn];</span>
+<span id="cb2-43"><a aria-hidden="true" href="#cb2-43"></a></span>
+<span id="cb2-44"><a aria-hidden="true" href="#cb2-44"></a><span class="dt">void</span> getrt(<span class="dt">int</span> u, <span class="dt">int</span> fa)</span>
+<span id="cb2-45"><a aria-hidden="true" href="#cb2-45"></a>{</span>
+<span id="cb2-46"><a aria-hidden="true" href="#cb2-46"></a>    size[u] = <span class="dv">1</span>, maxp[u] = <span class="dv">0</span>;</span>
+<span id="cb2-47"><a aria-hidden="true" href="#cb2-47"></a>    GO(u)</span>
+<span id="cb2-48"><a aria-hidden="true" href="#cb2-48"></a>    {</span>
+<span id="cb2-49"><a aria-hidden="true" href="#cb2-49"></a>        <span class="cf">if</span> (vis[v] || v == fa) <span class="cf">continue</span>;</span>
+<span id="cb2-50"><a aria-hidden="true" href="#cb2-50"></a>        getrt(v, u);</span>
+<span id="cb2-51"><a aria-hidden="true" href="#cb2-51"></a>        size[u] += size[v];</span>
+<span id="cb2-52"><a aria-hidden="true" href="#cb2-52"></a>        maxp[u] = max(maxp[u], size[v]);</span>
+<span id="cb2-53"><a aria-hidden="true" href="#cb2-53"></a>    }</span>
+<span id="cb2-54"><a aria-hidden="true" href="#cb2-54"></a>    maxp[u] = max(maxp[u], tot - size[u]);</span>
+<span id="cb2-55"><a aria-hidden="true" href="#cb2-55"></a>    <span class="cf">if</span> (maxp[u] &lt; maxp[root]) root = u;</span>
+<span id="cb2-56"><a aria-hidden="true" href="#cb2-56"></a>    <span class="cf">return</span>;</span>
+<span id="cb2-57"><a aria-hidden="true" href="#cb2-57"></a>}</span>
+<span id="cb2-58"><a aria-hidden="true" href="#cb2-58"></a></span>
+<span id="cb2-59"><a aria-hidden="true" href="#cb2-59"></a><span class="dt">int</span> proc[maxn], rem[maxn], judge[maxn], judge1[maxn];</span>
+<span id="cb2-60"><a aria-hidden="true" href="#cb2-60"></a></span>
+<span id="cb2-61"><a aria-hidden="true" href="#cb2-61"></a><span class="dt">void</span> getdis(<span class="dt">int</span> u, <span class="dt">int</span> fa)</span>
+<span id="cb2-62"><a aria-hidden="true" href="#cb2-62"></a>{</span>
+<span id="cb2-63"><a aria-hidden="true" href="#cb2-63"></a>    <span class="cf">if</span> (qhead[u]) proc[++proc[<span class="dv">0</span>]] = u;</span>
+<span id="cb2-64"><a aria-hidden="true" href="#cb2-64"></a>    rem[++rem[<span class="dv">0</span>]] = dis[u];</span>
+<span id="cb2-65"><a aria-hidden="true" href="#cb2-65"></a>    ++judge1[dis[u]];</span>
+<span id="cb2-66"><a aria-hidden="true" href="#cb2-66"></a>    GO(u)</span>
+<span id="cb2-67"><a aria-hidden="true" href="#cb2-67"></a>    {</span>
+<span id="cb2-68"><a aria-hidden="true" href="#cb2-68"></a>        <span class="cf">if</span> (v == fa || vis[v]) <span class="cf">continue</span>;</span>
+<span id="cb2-69"><a aria-hidden="true" href="#cb2-69"></a>        dis[v] = dis[u] + <span class="dv">1</span>;</span>
+<span id="cb2-70"><a aria-hidden="true" href="#cb2-70"></a>        getdis(v, u);</span>
+<span id="cb2-71"><a aria-hidden="true" href="#cb2-71"></a>    }</span>
+<span id="cb2-72"><a aria-hidden="true" href="#cb2-72"></a>    <span class="cf">return</span>;</span>
+<span id="cb2-73"><a aria-hidden="true" href="#cb2-73"></a>}</span>
+<span id="cb2-74"><a aria-hidden="true" href="#cb2-74"></a></span>
+<span id="cb2-75"><a aria-hidden="true" href="#cb2-75"></a><span class="dt">int</span> q[maxn];</span>
+<span id="cb2-76"><a aria-hidden="true" href="#cb2-76"></a></span>
+<span id="cb2-77"><a aria-hidden="true" href="#cb2-77"></a><span class="dt">void</span> calc(<span class="dt">int</span> u)</span>
+<span id="cb2-78"><a aria-hidden="true" href="#cb2-78"></a>{</span>
+<span id="cb2-79"><a aria-hidden="true" href="#cb2-79"></a>    proc[<span class="dv">0</span>] = <span class="dv">0</span>;</span>
+<span id="cb2-80"><a aria-hidden="true" href="#cb2-80"></a>    <span class="dt">int</span> p = <span class="dv">0</span>;</span>
+<span id="cb2-81"><a aria-hidden="true" href="#cb2-81"></a>    GO(u)</span>
+<span id="cb2-82"><a aria-hidden="true" href="#cb2-82"></a>    {</span>
+<span id="cb2-83"><a aria-hidden="true" href="#cb2-83"></a>        <span class="cf">if</span> (vis[v]) <span class="cf">continue</span>;</span>
+<span id="cb2-84"><a aria-hidden="true" href="#cb2-84"></a>        dis[v] = <span class="dv">1</span>;</span>
+<span id="cb2-85"><a aria-hidden="true" href="#cb2-85"></a>        rem[<span class="dv">0</span>] = <span class="dv">0</span>;</span>
+<span id="cb2-86"><a aria-hidden="true" href="#cb2-86"></a>        <span class="dt">int</span> proc0 = proc[<span class="dv">0</span>];</span>
+<span id="cb2-87"><a aria-hidden="true" href="#cb2-87"></a>        getdis(v, u);</span>
+<span id="cb2-88"><a aria-hidden="true" href="#cb2-88"></a>        <span class="dt">int</span> proc1 = proc[<span class="dv">0</span>];</span>
+<span id="cb2-89"><a aria-hidden="true" href="#cb2-89"></a>        FOR(j, proc0 + <span class="dv">1</span>, proc1)</span>
+<span id="cb2-90"><a aria-hidden="true" href="#cb2-90"></a>        {</span>
+<span id="cb2-91"><a aria-hidden="true" href="#cb2-91"></a>            <span class="dt">int</span> cur = proc[j];</span>
+<span id="cb2-92"><a aria-hidden="true" href="#cb2-92"></a>            <span class="cf">for</span> (<span class="dt">int</span> ii = qhead[cur]; ii; ii = qnxt[ii])</span>
+<span id="cb2-93"><a aria-hidden="true" href="#cb2-93"></a>            {</span>
+<span id="cb2-94"><a aria-hidden="true" href="#cb2-94"></a>                <span class="dt">int</span> k = qk[ii];</span>
+<span id="cb2-95"><a aria-hidden="true" href="#cb2-95"></a>                <span class="cf">if</span> (k &gt;= dis[cur])</span>
+<span id="cb2-96"><a aria-hidden="true" href="#cb2-96"></a>                    ans[qi[ii]] += judge[k - dis[cur]];</span>
+<span id="cb2-97"><a aria-hidden="true" href="#cb2-97"></a>            }</span>
+<span id="cb2-98"><a aria-hidden="true" href="#cb2-98"></a>        }</span>
+<span id="cb2-99"><a aria-hidden="true" href="#cb2-99"></a>        FOR(j, <span class="dv">1</span>, proc0)</span>
+<span id="cb2-100"><a aria-hidden="true" href="#cb2-100"></a>        {</span>
+<span id="cb2-101"><a aria-hidden="true" href="#cb2-101"></a>            <span class="dt">int</span> cur = proc[j];</span>
+<span id="cb2-102"><a aria-hidden="true" href="#cb2-102"></a>            <span class="cf">for</span> (<span class="dt">int</span> ii = qhead[cur]; ii; ii = qnxt[ii])</span>
+<span id="cb2-103"><a aria-hidden="true" href="#cb2-103"></a>            {</span>
+<span id="cb2-104"><a aria-hidden="true" href="#cb2-104"></a>                <span class="dt">int</span> k = qk[ii];</span>
+<span id="cb2-105"><a aria-hidden="true" href="#cb2-105"></a>                <span class="cf">if</span> (k &gt;= dis[cur])</span>
+<span id="cb2-106"><a aria-hidden="true" href="#cb2-106"></a>                    ans[qi[ii]] += judge1[k - dis[cur]];</span>
+<span id="cb2-107"><a aria-hidden="true" href="#cb2-107"></a>            }</span>
+<span id="cb2-108"><a aria-hidden="true" href="#cb2-108"></a>        }</span>
+<span id="cb2-109"><a aria-hidden="true" href="#cb2-109"></a>        FOR(j, <span class="dv">1</span>, rem[<span class="dv">0</span>])</span>
+<span id="cb2-110"><a aria-hidden="true" href="#cb2-110"></a>            --judge1[rem[j]], ++judge[rem[j]], q[++p] = rem[j];</span>
+<span id="cb2-111"><a aria-hidden="true" href="#cb2-111"></a>    }</span>
+<span id="cb2-112"><a aria-hidden="true" href="#cb2-112"></a>    <span class="cf">for</span> (<span class="dt">int</span> i = qhead[u]; i; i = qnxt[i])</span>
+<span id="cb2-113"><a aria-hidden="true" href="#cb2-113"></a>        ans[qi[i]] += judge[qk[i]];</span>
+<span id="cb2-114"><a aria-hidden="true" href="#cb2-114"></a>    FOR(i, <span class="dv">1</span>, p)</span>
+<span id="cb2-115"><a aria-hidden="true" href="#cb2-115"></a>        --judge[q[i]];</span>
+<span id="cb2-116"><a aria-hidden="true" href="#cb2-116"></a>    <span class="cf">return</span>;</span>
+<span id="cb2-117"><a aria-hidden="true" href="#cb2-117"></a>}</span>
+<span id="cb2-118"><a aria-hidden="true" href="#cb2-118"></a></span>
+<span id="cb2-119"><a aria-hidden="true" href="#cb2-119"></a><span class="dt">void</span> divide(<span class="dt">int</span> u)</span>
+<span id="cb2-120"><a aria-hidden="true" href="#cb2-120"></a>{</span>
+<span id="cb2-121"><a aria-hidden="true" href="#cb2-121"></a>    vis[u] = <span class="dv">1</span>;</span>
+<span id="cb2-122"><a aria-hidden="true" href="#cb2-122"></a>    judge[<span class="dv">0</span>] = <span class="dv">1</span>;</span>
+<span id="cb2-123"><a aria-hidden="true" href="#cb2-123"></a>    calc(u);</span>
+<span id="cb2-124"><a aria-hidden="true" href="#cb2-124"></a>    GO(u)</span>
+<span id="cb2-125"><a aria-hidden="true" href="#cb2-125"></a>    {</span>
+<span id="cb2-126"><a aria-hidden="true" href="#cb2-126"></a>        <span class="cf">if</span> (vis[v]) <span class="cf">continue</span>;</span>
+<span id="cb2-127"><a aria-hidden="true" href="#cb2-127"></a>        maxp[<span class="dv">0</span>] = n, tot = size[v], root = <span class="dv">0</span>;</span>
+<span id="cb2-128"><a aria-hidden="true" href="#cb2-128"></a>        getrt(v, u);</span>
+<span id="cb2-129"><a aria-hidden="true" href="#cb2-129"></a>        divide(root);</span>
+<span id="cb2-130"><a aria-hidden="true" href="#cb2-130"></a>    }</span>
+<span id="cb2-131"><a aria-hidden="true" href="#cb2-131"></a>    <span class="cf">return</span>;</span>
+<span id="cb2-132"><a aria-hidden="true" href="#cb2-132"></a>}</span>
+<span id="cb2-133"><a aria-hidden="true" href="#cb2-133"></a></span>
+<span id="cb2-134"><a aria-hidden="true" href="#cb2-134"></a><span class="dt">int</span> main()</span>
+<span id="cb2-135"><a aria-hidden="true" href="#cb2-135"></a>{</span>
+<span id="cb2-136"><a aria-hidden="true" href="#cb2-136"></a>    <span class="dt">int</span> T = read();</span>
+<span id="cb2-137"><a aria-hidden="true" href="#cb2-137"></a>    <span class="cf">while</span> (T--)</span>
+<span id="cb2-138"><a aria-hidden="true" href="#cb2-138"></a>    {</span>
+<span id="cb2-139"><a aria-hidden="true" href="#cb2-139"></a>        n = read(), m = read();</span>
+<span id="cb2-140"><a aria-hidden="true" href="#cb2-140"></a>        clr(head), clr(vis), clr(qhead);</span>
+<span id="cb2-141"><a aria-hidden="true" href="#cb2-141"></a>        cnte = <span class="dv">0</span>, cntq = <span class="dv">0</span>;</span>
+<span id="cb2-142"><a aria-hidden="true" href="#cb2-142"></a>        FOR(i, <span class="dv">1</span>, n - <span class="dv">1</span>)</span>
+<span id="cb2-143"><a aria-hidden="true" href="#cb2-143"></a>        {</span>
+<span id="cb2-144"><a aria-hidden="true" href="#cb2-144"></a>            <span class="dt">int</span> u = read(), v = read();</span>
+<span id="cb2-145"><a aria-hidden="true" href="#cb2-145"></a>            add(u, v), add(v, u);</span>
+<span id="cb2-146"><a aria-hidden="true" href="#cb2-146"></a>        }</span>
+<span id="cb2-147"><a aria-hidden="true" href="#cb2-147"></a>        FOR(i, <span class="dv">1</span>, m)</span>
+<span id="cb2-148"><a aria-hidden="true" href="#cb2-148"></a>        {</span>
+<span id="cb2-149"><a aria-hidden="true" href="#cb2-149"></a>            <span class="dt">int</span> u = read(), k = read();</span>
+<span id="cb2-150"><a aria-hidden="true" href="#cb2-150"></a>            ans[i] = <span class="dv">0</span>;</span>
+<span id="cb2-151"><a aria-hidden="true" href="#cb2-151"></a>            <span class="cf">if</span> (k)</span>
+<span id="cb2-152"><a aria-hidden="true" href="#cb2-152"></a>            {</span>
+<span id="cb2-153"><a aria-hidden="true" href="#cb2-153"></a>                qk[++cntq] = k;</span>
+<span id="cb2-154"><a aria-hidden="true" href="#cb2-154"></a>                qi[cntq] = i;</span>
+<span id="cb2-155"><a aria-hidden="true" href="#cb2-155"></a>                qnxt[cntq] = qhead[u];</span>
+<span id="cb2-156"><a aria-hidden="true" href="#cb2-156"></a>                qhead[u] = cntq;</span>
+<span id="cb2-157"><a aria-hidden="true" href="#cb2-157"></a>            }</span>
+<span id="cb2-158"><a aria-hidden="true" href="#cb2-158"></a>            <span class="cf">else</span> ans[i] = <span class="dv">1</span>;</span>
+<span id="cb2-159"><a aria-hidden="true" href="#cb2-159"></a>        }</span>
+<span id="cb2-160"><a aria-hidden="true" href="#cb2-160"></a>        tot = maxp[root = <span class="dv">0</span>] = n;</span>
+<span id="cb2-161"><a aria-hidden="true" href="#cb2-161"></a>        getrt(<span class="dv">1</span>, <span class="dv">0</span>);</span>
+<span id="cb2-162"><a aria-hidden="true" href="#cb2-162"></a>        divide(root);</span>
+<span id="cb2-163"><a aria-hidden="true" href="#cb2-163"></a>        FOR(i, <span class="dv">1</span>, m)</span>
+<span id="cb2-164"><a aria-hidden="true" href="#cb2-164"></a>            printf(<span class="st">"</span><span class="sc">%d\n</span><span class="st">"</span>, ans[i]);</span>
+<span id="cb2-165"><a aria-hidden="true" href="#cb2-165"></a>    }</span>
+<span id="cb2-166"><a aria-hidden="true" href="#cb2-166"></a>    <span class="cf">return</span> <span class="dv">0</span>;</span>
+<span id="cb2-167"><a aria-hidden="true" href="#cb2-167"></a>}</span></code></pre></div>
+<h2 id="b-卷-d1t3-a-卷-d1t1-冰火战士">B 卷 D1T3 | A 卷 D1T1 冰火战士</h2>
+<p><a href="https://www.luogu.com.cn/problem/P6619">洛谷 P6619</a></p>
+<h3 id="description-2">Description</h3>
+<p>一场比赛即将开始。</p>
+<p>每位战士有两个属性：温度和能量，有两派战士：冰系战士的技能会对周围造成降温冰冻伤害，因而要求场地温度不低于他的自身温度才能参赛；火系战士的技能会对周围造成升温灼烧伤害，因而要求场地温度不高于他的自身温度才能参赛。</p>
+<p>当场地温度确定时，双方能够参赛的战士分别排成一队。冰系战士按自身温度从低到高排序，火系战士按自身温度从高到低排序，<strong>温度相同时能量大的战士排在前面</strong>。首先，双方的第一位战士之间展开战斗，两位战士消耗相同的能量，能量少的战士将耗尽能量退出比赛，而能量有剩余的战士将继续和对方的下一位战士战斗（能量都耗尽则双方下一位战士之间展开战斗）。如此循环，直至某方战士队列为空，比赛结束。</p>
+<p>你需要寻找最佳场地温度：<strong>使冰火双方消耗总能量最高的温度的最高值</strong>。</p>
+<p>现在，比赛还处于报名阶段，目前还没有任何战士报名，接下来你将不断地收到报名信息和撤回信息。其中，报名信息包含报名战士的派系和两个属性，撤回信息包含要撤回的报名信息的序号。每当报名情况发生变化（即收到一条信息）时，你需要立即报出当前局面下的最佳场地温度，以及该场地温度下双方消耗的总能量之和是多少。若当前局面下无论何种温度都无法开展比赛（某一方没有战士能参赛），则只要输出 <code>Peace</code>。</p>
+<h4 id="input">Input</h4>
+<p>第一行一个数 <span class="math inline">\(Q\)</span>，表示信息的数量。</p>
+<p>接下来 <span class="math inline">\(Q\)</span> 行，每行为 <code>1 t x y</code> （<span class="math inline">\(t \in \{0, 1\}\)</span>，<span class="math inline">\(x\)</span> 和 <span class="math inline">\(y\)</span> 都是正整数）或 <code>2 k</code>（<span class="math inline">\(k\)</span> 是正整数）：</p>
+<p><code>1 t x y</code> 表示一条报名信息，<span class="math inline">\(t=0\)</span> 时报名战士是冰系，<span class="math inline">\(t=1\)</span> 时报名战士是火系，<span class="math inline">\(x\)</span> 表示战士的自身温度，<span class="math inline">\(y\)</span> 表示战士的能量。</p>
+<p><code>2 k</code> 表示一条撤回信息，撤回的是第 <span class="math inline">\(k\)</span> 条信息。被撤回的信息一定是报名信息，已被撤回的信息不会再次被撤回。</p>
+<h4 id="output">Output</h4>
+<p>共 <span class="math inline">\(Q\)</span> 行，每行有两个用空格隔开的正整数，分别表示当前局面下的最佳温度和该温度下冰火双方消耗的总能量之和。</p>
+<h4 id="data-range">Data Range</h4>
+<p><span class="math inline">\(1 \leq Q \leq 2 \times 10^6\)</span>，<span class="math inline">\(1 \leq x \leq 2 \times 10^9\)</span>，所有 <span class="math inline">\(y\)</span> 之和不超过 <span class="math inline">\(2 \times 10^9\)</span>，保证不存在 <span class="math inline">\(t, x, y\)</span> 完全相同的两个战士。</p>
+<h3 id="solution-2">Solution</h3>
+<h2 id="b-卷-d2t1-幸运数字">B 卷 D2T1 幸运数字</h2>
+<h3 id="description-3">Description</h3>
+<p>为庆祝疫情防治取得重大进展，某商场举行酬宾活动，给顾客一些优惠额度，规则如下：</p>
+<ol type="1">
+<li>每位顾客可以任意选择一个整数作为自己的幸运数字。</li>
+<li>每位顾客的初始优惠额度为 <span class="math inline">\(0\)</span> 元。</li>
+<li>商场有 <span class="math inline">\(n\)</span> 个奖励条件，对应不同的奖励额度 <span class="math inline">\(w_i\)</span>。</li>
+<li>每位顾客需要依次比对这 <span class="math inline">\(n\)</span> 个奖励条件，如果该位顾客选择的幸运数字满足第 <span class="math inline">\(i\)</span> 个条件，那么他的优惠额度就会<strong>异或</strong>上这个条件所对应的奖励额度。</li>
+</ol>
+<p>奖励条件共有三种，假设顾客选择的幸运数字为 <span class="math inline">\(x\)</span>：</p>
+<ol type="1">
+<li>区间型条件，其有两个参数 <span class="math inline">\(L\)</span> 与 R<em>R</em>，满足条件为 <span class="math inline">\(L \le x\le R\)</span>。保证 <span class="math inline">\(L &lt; R\)</span>。</li>
+<li>相等型条件，其有一个参数 <span class="math inline">\(A\)</span>，满足条件为 <span class="math inline">\(x = A\)</span>。</li>
+<li>不等型条件，其有一个参数 <span class="math inline">\(B\)</span>，满足条件为 <span class="math inline">\(x \neq B\)</span>。</li>
+</ol>
+<p>小炎同学获知了所有奖励条件的信息，他希望知道一位顾客能够得到的最大优惠额度以及对应的幸运数字是多少，请你帮他计算。</p>
+<h4 id="input-1">Input</h4>
+<p>第一行包含一个正整数 <span class="math inline">\(n\)</span>，代表奖励条件的数量。</p>
+<p>接下来 <span class="math inline">\(n\)</span> 行，每行三个或四个整数表示一个奖励条件。每行第一个整数 <span class="math inline">\(t_i\)</span> 代表奖励条件的类型：</p>
+<ol type="1">
+<li><span class="math inline">\(t_i = 1\)</span> 则该条件是区间型条件，接下来三个整数，分别代表 <span class="math inline">\(L, R, w_i\)</span>。</li>
+<li><span class="math inline">\(t_i = 2\)</span> 则该条件是相等型条件，接下来两个整数，分别代表 <span class="math inline">\(A, w_i\)</span>。</li>
+<li><span class="math inline">\(t_i = 3\)</span> 则该条件是不等型条件，接下来两个整数，分别代表 <span class="math inline">\(B, w_i\)</span>。</li>
+</ol>
+<h4 id="output-1">Output</h4>
+<p>输出一行两个整数，第一个数代表能够得到的最大优惠额度，第二个数代表对应的幸运数字。</p>
+<p>如果有多个幸运数字能够得到最大优惠额度，输出绝对值最小的那个。如果还有多个，则输出值最大的。</p>
+<h2 id="b-卷-d2t2-a-卷-d2t1-信号传递">B 卷 D2T2 | A 卷 D2T1 信号传递</h2>
+<h2 id="b-卷-d2t3-丁香之路">B 卷 D2T3 丁香之路</h2>
+<h2 id="a-卷-d1t2-组合数问题">A 卷 D1T2 组合数问题</h2>
+<h2 id="a-卷-d1t3-魔法商店">A 卷 D1T3 魔法商店</h2>
+<h2 id="a-卷-d2t2-树">A 卷 D2T2 树</h2>
+<h2 id="a-卷-d2t3-作业题">A 卷 D2T3 作业题</h2>
+<h3 id="description-4">Description</h3>
+<p>给定无向图 <span class="math inline">\(G\)</span>，其一棵生成树 <span class="math inline">\(T\)</span> 的权值定义为所包含边的 <span class="math inline">\(\gcd\)</span> 乘上边权之和。求出 <span class="math inline">\(G\)</span> 的所有生成树的权值之和，答案模 <span class="math inline">\(998244353\)</span>。<span class="math inline">\(1\le n\le 30,1\le m\le \dfrac{n(n-1)}{2},1\le w_i\le 152501\)</span>。</p>
+<h3 id="solution-3">Solution</h3>
+<p>所以要我们求的就是 <span class="math display">\[
+\sum_T\gcd_{i=1}^{n-1}\{w_{e_i}\}\sum_{i=1}^{n-1}w_{e_i}
+\]</span> 用欧拉反演将 <span class="math inline">\(\gcd\)</span> 反演成 <span class="math inline">\(\sum\)</span>： <span class="math display">\[
+\sum_{T}\sum_{d\mid w_{e_i}}\varphi(d)\sum_{i=1}^{n-1}w_{e_i}
+\]</span> 枚举 <span class="math inline">\(d\)</span>，则 <span class="math display">\[
+\sum_{d}\varphi(d)\sum_{T,d\mid w_{e_i}}\sum_{i=1}^{n-1}w_{e_i}
+\]</span> 于是我们可以看成只保留 <span class="math inline">\(d\)</span> 的倍数的边，然后求所有生成树的权值和。</p>
+<p>发现矩阵树定理只能处理所有边权的乘积和，但是若我们通过什么奇妙转化能将乘积变成加法的话，问题就迎刃而解了。</p>
+<p>那么考虑令 <span class="math inline">\(F_i(x) = 1 + w_ix\)</span>，将所有边权弄成这个一次函数，最后看乘积的一次项系数即可。为什么？朴素的来想，所有生成树的边权和可以拆分为每条边的贡献，而一条边的贡献可以看作 边权 乘上 包含这条边的生成树个数。包含这条边的生成树个数，可以使用所有生成树的个数减去去掉这条边后的生成树个数来计算。</p>
+<p>放在本题中，最后一次项的 <span class="math inline">\(x\)</span> 就是从所谓被钦定的边来的。那么实际上就考虑在 <span class="math inline">\(\bmod x^2\)</span> 意义下进行运算，加减乘法较为简单，主要是除法： <span class="math display">\[
+\begin{aligned}
+&amp;(ax+b)(cx+d)\equiv 1\pmod{x^2}\\
+\implies&amp;\begin{cases}
+bd = 1\\
+bc + ad = 0
+\end{cases}\\
+\implies&amp;\begin{cases}
+c = -\dfrac{a}{b^2}\\
+d = \dfrac{1}{b}
+\end{cases}
+\end{aligned}
+\]</span> 于是用一个 <code>pair&lt;int, int&gt;</code> 维护多项式，就可以快乐矩阵树了（雾）。</p>
+<p>细节上需要注意，只有当常数项不为 <span class="math inline">\(0\)</span> 时多项式才存在逆元，高斯消元的时候要先交换行啥的。</p>
+<h3 id="implementation">Implementation</h3>
+<div class="sourceCode" id="cb3"><pre class="sourceCode cpp"><code class="sourceCode cpp"><span id="cb3-1"><a aria-hidden="true" href="#cb3-1"></a><span class="pp">#include </span><span class="im">&lt;bits/stdc++.h&gt;</span></span>
+<span id="cb3-2"><a aria-hidden="true" href="#cb3-2"></a><span class="pp">#define il </span><span class="kw">inline</span></span>
+<span id="cb3-3"><a aria-hidden="true" href="#cb3-3"></a><span class="pp">#define FOR</span>(i,<span class="pp"> </span>a,<span class="pp"> </span>b)<span class="pp"> </span><span class="cf">for</span><span class="pp"> </span>(<span class="dt">int</span><span class="pp"> </span>i<span class="pp"> </span>=<span class="pp"> </span>(a);<span class="pp"> </span>i<span class="pp"> </span>&lt;=<span class="pp"> </span>(b);<span class="pp"> </span>++i)</span>
+<span id="cb3-4"><a aria-hidden="true" href="#cb3-4"></a></span>
+<span id="cb3-5"><a aria-hidden="true" href="#cb3-5"></a><span class="kw">using</span> <span class="kw">namespace</span> std;</span>
+<span id="cb3-6"><a aria-hidden="true" href="#cb3-6"></a></span>
+<span id="cb3-7"><a aria-hidden="true" href="#cb3-7"></a><span class="at">const</span> <span class="dt">int</span> maxn = <span class="dv">35</span>, mod = <span class="dv">998244353</span>, maxv = <span class="dv">152501</span>;</span>
+<span id="cb3-8"><a aria-hidden="true" href="#cb3-8"></a><span class="dt">int</span> n, m, G[maxn][maxn];</span>
+<span id="cb3-9"><a aria-hidden="true" href="#cb3-9"></a><span class="dt">int</span> cntW[maxv + <span class="dv">5</span>], maxw;</span>
+<span id="cb3-10"><a aria-hidden="true" href="#cb3-10"></a></span>
+<span id="cb3-11"><a aria-hidden="true" href="#cb3-11"></a><span class="dt">int</span> qPow(<span class="dt">int</span> a, <span class="dt">int</span> b) {</span>
+<span id="cb3-12"><a aria-hidden="true" href="#cb3-12"></a>    <span class="dt">int</span> ret = <span class="dv">1</span>;</span>
+<span id="cb3-13"><a aria-hidden="true" href="#cb3-13"></a>    <span class="cf">for</span> (a %= mod; b; b &gt;&gt;= <span class="dv">1</span>, a = <span class="dv">1</span><span class="bu">ll</span> * a * a % mod)</span>
+<span id="cb3-14"><a aria-hidden="true" href="#cb3-14"></a>        <span class="cf">if</span> (b &amp; <span class="dv">1</span>) ret = <span class="dv">1</span><span class="bu">ll</span> * ret * a % mod;</span>
+<span id="cb3-15"><a aria-hidden="true" href="#cb3-15"></a>    <span class="cf">return</span> ret;</span>
+<span id="cb3-16"><a aria-hidden="true" href="#cb3-16"></a>}</span>
+<span id="cb3-17"><a aria-hidden="true" href="#cb3-17"></a></span>
+<span id="cb3-18"><a aria-hidden="true" href="#cb3-18"></a><span class="kw">using</span> pii = pair&lt;<span class="dt">int</span>, <span class="dt">int</span>&gt;;</span>
+<span id="cb3-19"><a aria-hidden="true" href="#cb3-19"></a></span>
+<span id="cb3-20"><a aria-hidden="true" href="#cb3-20"></a>pair&lt;<span class="dt">int</span>, <span class="dt">int</span>&gt; a[maxn][maxn];</span>
+<span id="cb3-21"><a aria-hidden="true" href="#cb3-21"></a></span>
+<span id="cb3-22"><a aria-hidden="true" href="#cb3-22"></a>il pii <span class="kw">operator</span>+(<span class="at">const</span> pii &amp;a, <span class="at">const</span> pii &amp;b) {</span>
+<span id="cb3-23"><a aria-hidden="true" href="#cb3-23"></a>    <span class="cf">return</span> {(a.first + b.first) % mod, (a.second + b.second) % mod};</span>
+<span id="cb3-24"><a aria-hidden="true" href="#cb3-24"></a>}</span>
+<span id="cb3-25"><a aria-hidden="true" href="#cb3-25"></a>il pii <span class="kw">operator</span>-(<span class="at">const</span> pii &amp;a, <span class="at">const</span> pii &amp;b) {</span>
+<span id="cb3-26"><a aria-hidden="true" href="#cb3-26"></a>    <span class="cf">return</span> {(a.first - b.first + mod) % mod, (a.second - b.second + mod) % mod};</span>
+<span id="cb3-27"><a aria-hidden="true" href="#cb3-27"></a>}</span>
+<span id="cb3-28"><a aria-hidden="true" href="#cb3-28"></a>il pii <span class="kw">operator</span>*(<span class="at">const</span> pii &amp;a, <span class="at">const</span> pii &amp;b) {</span>
+<span id="cb3-29"><a aria-hidden="true" href="#cb3-29"></a>    <span class="cf">return</span> {<span class="dv">1</span><span class="bu">ll</span> * a.first * b.first % mod, (<span class="dv">1</span><span class="bu">ll</span> * a.first * b.second % mod + <span class="dv">1</span><span class="bu">ll</span> * a.second * b.first % mod) % mod};</span>
+<span id="cb3-30"><a aria-hidden="true" href="#cb3-30"></a>}</span>
+<span id="cb3-31"><a aria-hidden="true" href="#cb3-31"></a>il pii <span class="kw">operator</span>/(<span class="at">const</span> pii &amp;a, <span class="at">const</span> pii &amp;b) {</span>
+<span id="cb3-32"><a aria-hidden="true" href="#cb3-32"></a>    <span class="dt">int</span> inv = qPow(b.first, mod - <span class="dv">2</span>);</span>
+<span id="cb3-33"><a aria-hidden="true" href="#cb3-33"></a>    <span class="kw">auto</span> bb = (pii){inv, (mod - <span class="dv">1</span><span class="bu">ll</span>) * inv % mod * inv % mod * b.second % mod};</span>
+<span id="cb3-34"><a aria-hidden="true" href="#cb3-34"></a>    <span class="cf">return</span> a * bb;</span>
+<span id="cb3-35"><a aria-hidden="true" href="#cb3-35"></a>}</span>
+<span id="cb3-36"><a aria-hidden="true" href="#cb3-36"></a></span>
+<span id="cb3-37"><a aria-hidden="true" href="#cb3-37"></a><span class="dt">void</span> buildMat(<span class="dt">int</span> d) {</span>
+<span id="cb3-38"><a aria-hidden="true" href="#cb3-38"></a>    memset(a, <span class="dv">0</span>, <span class="kw">sizeof</span> a);</span>
+<span id="cb3-39"><a aria-hidden="true" href="#cb3-39"></a>    FOR(i, <span class="dv">1</span>, n) FOR(j, <span class="dv">1</span>, n) <span class="cf">if</span> (j != i &amp;&amp; G[i][j] &amp;&amp; G[i][j] % d == <span class="dv">0</span>) a[i][i] = a[i][i] + (pii){<span class="dv">1</span>, G[i][j]};</span>
+<span id="cb3-40"><a aria-hidden="true" href="#cb3-40"></a>    FOR(i, <span class="dv">1</span>, n) FOR(j, <span class="dv">1</span>, n) <span class="cf">if</span> (j != i &amp;&amp; G[i][j] &amp;&amp; G[i][j] % d == <span class="dv">0</span>) a[i][j] = a[i][j] - (pii){<span class="dv">1</span>, G[i][j]};</span>
+<span id="cb3-41"><a aria-hidden="true" href="#cb3-41"></a>    <span class="cf">return</span>;</span>
+<span id="cb3-42"><a aria-hidden="true" href="#cb3-42"></a>}</span>
+<span id="cb3-43"><a aria-hidden="true" href="#cb3-43"></a></span>
+<span id="cb3-44"><a aria-hidden="true" href="#cb3-44"></a><span class="dt">int</span> getPhi(<span class="dt">int</span> n) {</span>
+<span id="cb3-45"><a aria-hidden="true" href="#cb3-45"></a>    <span class="dt">int</span> ans = n;</span>
+<span id="cb3-46"><a aria-hidden="true" href="#cb3-46"></a>    <span class="cf">for</span> (<span class="dt">int</span> i = <span class="dv">2</span>; i * i &lt;= n; ++i) <span class="cf">if</span> (n % i == <span class="dv">0</span>) {</span>
+<span id="cb3-47"><a aria-hidden="true" href="#cb3-47"></a>        ans = ans / i * (i - <span class="dv">1</span>);</span>
+<span id="cb3-48"><a aria-hidden="true" href="#cb3-48"></a>        <span class="cf">while</span> (n % i == <span class="dv">0</span>) n /= i;</span>
+<span id="cb3-49"><a aria-hidden="true" href="#cb3-49"></a>    }</span>
+<span id="cb3-50"><a aria-hidden="true" href="#cb3-50"></a>    <span class="cf">if</span> (n &gt; <span class="dv">1</span>) ans = ans / n * (n - <span class="dv">1</span>);</span>
+<span id="cb3-51"><a aria-hidden="true" href="#cb3-51"></a>    <span class="cf">return</span> ans;</span>
+<span id="cb3-52"><a aria-hidden="true" href="#cb3-52"></a>}</span>
+<span id="cb3-53"><a aria-hidden="true" href="#cb3-53"></a></span>
+<span id="cb3-54"><a aria-hidden="true" href="#cb3-54"></a><span class="dt">int</span> solve() {</span>
+<span id="cb3-55"><a aria-hidden="true" href="#cb3-55"></a>    <span class="dt">int</span> n = ::n - <span class="dv">1</span>;</span>
+<span id="cb3-56"><a aria-hidden="true" href="#cb3-56"></a>    pii ans = pii(<span class="dv">1</span>, <span class="dv">0</span>);</span>
+<span id="cb3-57"><a aria-hidden="true" href="#cb3-57"></a>    <span class="dt">int</span> rev = <span class="dv">0</span>;</span>
+<span id="cb3-58"><a aria-hidden="true" href="#cb3-58"></a>    FOR(i, <span class="dv">1</span>, n) {</span>
+<span id="cb3-59"><a aria-hidden="true" href="#cb3-59"></a>        <span class="cf">if</span> (!a[i][i].first) FOR(j, i + <span class="dv">1</span>, n) {</span>
+<span id="cb3-60"><a aria-hidden="true" href="#cb3-60"></a>            <span class="cf">if</span> (a[j][i].first) {</span>
+<span id="cb3-61"><a aria-hidden="true" href="#cb3-61"></a>                rev ^= <span class="dv">1</span>;</span>
+<span id="cb3-62"><a aria-hidden="true" href="#cb3-62"></a>                swap(a[i], a[j]);</span>
+<span id="cb3-63"><a aria-hidden="true" href="#cb3-63"></a>                <span class="cf">break</span>;</span>
+<span id="cb3-64"><a aria-hidden="true" href="#cb3-64"></a>            }</span>
+<span id="cb3-65"><a aria-hidden="true" href="#cb3-65"></a>        }</span>
+<span id="cb3-66"><a aria-hidden="true" href="#cb3-66"></a>        <span class="kw">auto</span> inv = pii(<span class="dv">1</span>, <span class="dv">0</span>) / a[i][i];</span>
+<span id="cb3-67"><a aria-hidden="true" href="#cb3-67"></a>        FOR(j, i + <span class="dv">1</span>, n) {</span>
+<span id="cb3-68"><a aria-hidden="true" href="#cb3-68"></a>            <span class="kw">auto</span> div = a[j][i] * inv;</span>
+<span id="cb3-69"><a aria-hidden="true" href="#cb3-69"></a>            FOR(k, i, n) a[j][k] = a[j][k] - div * a[i][k];</span>
+<span id="cb3-70"><a aria-hidden="true" href="#cb3-70"></a>        }</span>
+<span id="cb3-71"><a aria-hidden="true" href="#cb3-71"></a>        ans = ans * a[i][i];</span>
+<span id="cb3-72"><a aria-hidden="true" href="#cb3-72"></a>    }</span>
+<span id="cb3-73"><a aria-hidden="true" href="#cb3-73"></a>    <span class="cf">return</span> (rev ? (pii(<span class="dv">0</span>, <span class="dv">0</span>) - ans) : ans).second;</span>
+<span id="cb3-74"><a aria-hidden="true" href="#cb3-74"></a>}</span>
+<span id="cb3-75"><a aria-hidden="true" href="#cb3-75"></a></span>
+<span id="cb3-76"><a aria-hidden="true" href="#cb3-76"></a><span class="dt">int</span> main() {</span>
+<span id="cb3-77"><a aria-hidden="true" href="#cb3-77"></a>    cin &gt;&gt; n &gt;&gt; m;</span>
+<span id="cb3-78"><a aria-hidden="true" href="#cb3-78"></a>    FOR(i, <span class="dv">1</span>, m) {</span>
+<span id="cb3-79"><a aria-hidden="true" href="#cb3-79"></a>        <span class="dt">int</span> u, v, w; cin &gt;&gt; u &gt;&gt; v &gt;&gt; w;</span>
+<span id="cb3-80"><a aria-hidden="true" href="#cb3-80"></a>        G[u][v] = G[v][u] = w;</span>
+<span id="cb3-81"><a aria-hidden="true" href="#cb3-81"></a>        <span class="cf">for</span> (<span class="dt">int</span> j = <span class="dv">1</span>; j * j &lt;= w; ++j) <span class="cf">if</span> (w % j == <span class="dv">0</span>) {</span>
+<span id="cb3-82"><a aria-hidden="true" href="#cb3-82"></a>            ++cntW[j];</span>
+<span id="cb3-83"><a aria-hidden="true" href="#cb3-83"></a>            <span class="cf">if</span> (j * j != w) ++cntW[w / j];</span>
+<span id="cb3-84"><a aria-hidden="true" href="#cb3-84"></a>        }</span>
+<span id="cb3-85"><a aria-hidden="true" href="#cb3-85"></a>        maxw = max(maxw, w);</span>
+<span id="cb3-86"><a aria-hidden="true" href="#cb3-86"></a>    }</span>
+<span id="cb3-87"><a aria-hidden="true" href="#cb3-87"></a>    <span class="dt">int</span> ans = <span class="dv">0</span>;</span>
+<span id="cb3-88"><a aria-hidden="true" href="#cb3-88"></a>    FOR(d, <span class="dv">1</span>, maxw) {</span>
+<span id="cb3-89"><a aria-hidden="true" href="#cb3-89"></a>        <span class="cf">if</span> (cntW[d] &lt; n - <span class="dv">1</span>) <span class="cf">continue</span>;</span>
+<span id="cb3-90"><a aria-hidden="true" href="#cb3-90"></a>        buildMat(d);</span>
+<span id="cb3-91"><a aria-hidden="true" href="#cb3-91"></a>        ans = (ans + <span class="dv">1</span><span class="bu">ll</span> * getPhi(d) * solve() % mod) % mod;</span>
+<span id="cb3-92"><a aria-hidden="true" href="#cb3-92"></a>    }</span>
+<span id="cb3-93"><a aria-hidden="true" href="#cb3-93"></a>    cout &lt;&lt; ans &lt;&lt; endl;</span>
+<span id="cb3-94"><a aria-hidden="true" href="#cb3-94"></a>    <span class="cf">return</span> <span class="dv">0</span>;</span>
+<span id="cb3-95"><a aria-hidden="true" href="#cb3-95"></a>}</span></code></pre></div>
+</section>
+<footer class="article-footer">
+<section class="article-tags">
+<a href="/tags/OI/">OI</a>
+<a href="/tags/editorial/">题解</a>
+<a href="/tags/greedy/">贪心</a>
+<a href="/tags/centroid-decomposition/">点分治</a>
+</section>
+<section class="article-copyright">
+<svg class="icon icon-tabler icon-tabler-copyright" fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+<path d="M0 0h24v24H0z" stroke="none"></path>
+<circle cx="12" cy="12" r="9"></circle>
+<path d="M14.5 9a3.5 4 0 1 0 0 6"></path>
+</svg>
+<span>Licensed under CC BY-NC-SA 4.0</span>
+</section>
+</footer>
+<link crossorigin="anonymous" href="https://cdn.jsdelivr.net/npm/katex@0.13.13/dist/katex.min.css" integrity="sha384-RZU/ijkSsFbcmivfdRBQDtwuwVqK7GMOw6IMvKyeWL2K5UAlyp6WonmB8m7Jd0Hn" rel="stylesheet"/><script crossorigin="anonymous" defer="" integrity="sha384-pK1WpvzWVBQiP0/GjnvRxV4mOb0oxFuyRxJlk6vVw146n3egcN5C925NCP7a7BY8" src="https://cdn.jsdelivr.net/npm/katex@0.13.13/dist/katex.min.js">
+</script><script crossorigin="anonymous" defer="" integrity="sha384-vZTG03m+2yp6N6BNi5iM4rW4oIwk5DfcNdFfxkk9ZWpDriOkXX8voJBFrAO7MpVl" src="https://cdn.jsdelivr.net/npm/katex@0.13.13/dist/contrib/auto-render.min.js">
+</script><script>
+    window.addEventListener("DOMContentLoaded", () => {
+        renderMathInElement(document.querySelector(`.article-content`), {
+            delimiters: [
+                { left: "$$", right: "$$", display: true },
+                { left: "$", right: "$", display: false },
+                { left: "\\(", right: "\\)", display: false },
+                { left: "\\[", right: "\\]", display: true }
+            ]
+        });})
+</script>
+</article>
+<aside class="related-contents--wrapper">
+<h2 class="section-title">相关文章</h2>
+<div class="related-contents">
+<div class="flex article-list--tile">
+<article class="has-image">
+<a href="/sol-lhsx2022/">
+<div class="article-image">
+<img data-hash="https://yangty-pic.oss-cn-beijing.aliyuncs.com/bg1.webp" data-key="" loading="lazy" src="https://yangty-pic.oss-cn-beijing.aliyuncs.com/bg1.webp"/>
+</div>
+<div class="article-details">
+<h2 class="article-title">联合省选 2022 题解</h2>
+</div>
+</a>
+</article>
+<article class="has-image">
+<a href="/sol-lhsx2021/">
+<div class="article-image">
+<img data-hash="https://yangty-pic.oss-cn-beijing.aliyuncs.com/bg22.webp" data-key="" loading="lazy" src="https://yangty-pic.oss-cn-beijing.aliyuncs.com/bg22.webp"/>
+</div>
+<div class="article-details">
+<h2 class="article-title">联合省选 2021 题解</h2>
+</div>
+</a>
+</article>
+<article class="has-image">
+<a href="/sol-past-noip/">
+<div class="article-image">
+<img data-hash="https://yangty-pic.oss-cn-beijing.aliyuncs.com/bg35.webp" data-key="" loading="lazy" src="https://yangty-pic.oss-cn-beijing.aliyuncs.com/bg35.webp"/>
+</div>
+<div class="article-details">
+<h2 class="article-title">历年联赛真题选做</h2>
+</div>
+</a>
+</article>
+<article class="has-image">
+<a href="/sol-qoj2812/">
+<div class="article-image">
+<img data-hash="https://yangty-pic.oss-cn-beijing.aliyuncs.com/bg40.webp" data-key="" loading="lazy" src="https://yangty-pic.oss-cn-beijing.aliyuncs.com/bg40.webp"/>
+</div>
+<div class="article-details">
+<h2 class="article-title">QOJ2812 [RMI 2021 Day 2] Paths</h2>
+</div>
+</a>
+</article>
+<article class="has-image">
+<a href="/sol-qoj1825/">
+<div class="article-image">
+<img data-hash="https://yangty-pic.oss-cn-beijing.aliyuncs.com/bg39.webp" data-key="" loading="lazy" src="https://yangty-pic.oss-cn-beijing.aliyuncs.com/bg39.webp"/>
+</div>
+<div class="article-details">
+<h2 class="article-title">QOJ1825 [NAC2021 I] The King's Guards</h2>
+</div>
+</a>
+</article>
+</div>
+</div>
+</aside>
+<footer class="site-footer">
+<section class="copyright">
+        © 
+        
+            2019 - 
+        
+        2024 清烛的博客
+    </section>
+<section class="powerby">
+        Built with <a href="https://gohugo.io/" rel="noopener" target="_blank">Hugo</a> <br/>
+        主题 <b><a data-version="3.11.0" href="https://github.com/CaiJimmy/hugo-theme-stack" rel="noopener" target="_blank">Stack</a></b> 由 <a href="https://jimmycai.com" rel="noopener" target="_blank">Jimmy</a> 设计
+    </section>
+</footer>
+<div aria-hidden="true" class="pswp" role="dialog" tabindex="-1">
+<div class="pswp__bg"></div>
+<div class="pswp__scroll-wrap">
+<div class="pswp__container">
+<div class="pswp__item"></div>
+<div class="pswp__item"></div>
+<div class="pswp__item"></div>
+</div>
+<div class="pswp__ui pswp__ui--hidden">
+<div class="pswp__top-bar">
+<div class="pswp__counter"></div>
+<button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+<button class="pswp__button pswp__button--share" title="Share"></button>
+<button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+<button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+<div class="pswp__preloader">
+<div class="pswp__preloader__icn">
+<div class="pswp__preloader__cut">
+<div class="pswp__preloader__donut"></div>
+</div>
+</div>
+</div>
+</div>
+<div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+<div class="pswp__share-tooltip"></div>
+</div>
+<button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+</button>
+<button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+</button>
+<div class="pswp__caption">
+<div class="pswp__caption__center"></div>
+</div>
+</div>
+</div>
+</div><script crossorigin="anonymous" defer="" integrity="sha256-ePwmChbbvXbsO02lbM3HoHbSHTHFAeChekF1xKJdleo=" src="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe.min.js">
+</script><script crossorigin="anonymous" defer="" integrity="sha256-UKkzOn/w1mBxRmLLGrSeyB4e1xbrp4xylgAWb3M42pU=" src="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe-ui-default.min.js">
+</script><link crossorigin="anonymous" href="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/default-skin/default-skin.css" integrity="sha256-c0uckgykQ9v5k+IqViZOZKc47Jn7KQil4/MP3ySA3F8=" rel="stylesheet"/><link crossorigin="anonymous" href="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe.css" integrity="sha256-SBLU4vv6CA6lHsZ1XyTdhyjJxCjPif/TRkjnsyGAGnE=" rel="stylesheet"/>
+</main>
+</div>
+<script crossorigin="anonymous" integrity="sha256-5NovOZc4iwiAWTYIFiIM7DxKUXKWvpVEuMEPLzcm5/g=" src="https://cdn.jsdelivr.net/npm/node-vibrant@3.1.5/dist/vibrant.min.js">
+</script><script defer="" src="/ts/main.js" type="text/javascript"></script>
+<script>
+    (function () {
+        const customFont = document.createElement('link');
+        customFont.href = "https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&display=swap";
+
+        customFont.type = "text/css";
+        customFont.rel = "stylesheet";
+
+        document.head.appendChild(customFont);
+    }());
+</script>
+</body>
+</html>

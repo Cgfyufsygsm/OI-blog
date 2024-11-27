@@ -1,0 +1,610 @@
+<!DOCTYPE html>
+<html dir="ltr" lang="zh-CN">
+<head><meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1" name="viewport"/><meta content="前言 新年快乐！终于活过 2020 年了。 WC2021 GZOI2021 NOI2021（如果有可能的话）rp++
+学习内容 欧拉函数 (ex)BSGS 矩阵乘法的应用 高斯消元 基础分块 基础线性代数 数位 dp 复杂度分析 狄利克雷卷积 莫比乌斯反演 杜教筛 FFT 做题记录 21/01/01 EOJ monthly 2020.01 A+C+E rk80 P1072 [NOIP2009 提高组] Hankson 的趣味题 需要特别注意处理 \(a_0,a_1,b_0,b_1&amp;gt;\sqrt n\) 的情况
+P2158 [SDOI2008]仪仗队 设左下角 \((0, 0)\)，右上角 \((n-1, n - 1)\)。抛开 \((1,0)(0,1)(1,1)\) 三个点，发现能看到的关于对角线对称，考虑一半即可。这一半就是求 \(1\le x\lt y\) 且 \(x \perp y\) 的 \((x,y)\) 对数，发现对于每个 \(y\) 来说这样的 \(x\) 对数即为 \(\varphi(y)\)。 答案为 \(\displaystyle3 + 2\sum_{i=2}^{n-1}\varphi(i)\)，特判 \(n = 1\) 的情况" name="description"/><title>2021年1月 OI学习记录</title>
+<link href="https://oi.imyangty.com/summary-2021-01/" rel="canonical"/>
+<link href="/scss/style.min.a5821f3d3ab84ce5a0ac21477e347a2e0ca00292e398d16c5e8e36ded6e35a23.css" rel="stylesheet"/><meta content="2021年1月 OI学习记录" property="og:title"/>
+<meta content="前言 新年快乐！终于活过 2020 年了。 WC2021 GZOI2021 NOI2021（如果有可能的话）rp++
+学习内容 欧拉函数 (ex)BSGS 矩阵乘法的应用 高斯消元 基础分块 基础线性代数 数位 dp 复杂度分析 狄利克雷卷积 莫比乌斯反演 杜教筛 FFT 做题记录 21/01/01 EOJ monthly 2020.01 A+C+E rk80 P1072 [NOIP2009 提高组] Hankson 的趣味题 需要特别注意处理 \(a_0,a_1,b_0,b_1&amp;gt;\sqrt n\) 的情况
+P2158 [SDOI2008]仪仗队 设左下角 \((0, 0)\)，右上角 \((n-1, n - 1)\)。抛开 \((1,0)(0,1)(1,1)\) 三个点，发现能看到的关于对角线对称，考虑一半即可。这一半就是求 \(1\le x\lt y\) 且 \(x \perp y\) 的 \((x,y)\) 对数，发现对于每个 \(y\) 来说这样的 \(x\) 对数即为 \(\varphi(y)\)。 答案为 \(\displaystyle3 + 2\sum_{i=2}^{n-1}\varphi(i)\)，特判 \(n = 1\) 的情况" property="og:description"/>
+<meta content="https://oi.imyangty.com/summary-2021-01/" property="og:url"/>
+<meta content="清烛的博客" property="og:site_name"/>
+<meta content="article" property="og:type"/><meta content="Post" property="article:section"/><meta content="OI" property="article:tag"/><meta content="2021-01-01T23:33:40+08:00" property="article:published_time"/><meta content="2021-01-01T23:33:40+08:00" property="article:modified_time"/><meta content="https://yangty-pic.oss-cn-beijing.aliyuncs.com/bg54.webp" property="og:image"/>
+<meta content="2021年1月 OI学习记录" name="twitter:title"/>
+<meta content="前言 新年快乐！终于活过 2020 年了。 WC2021 GZOI2021 NOI2021（如果有可能的话）rp++
+学习内容 欧拉函数 (ex)BSGS 矩阵乘法的应用 高斯消元 基础分块 基础线性代数 数位 dp 复杂度分析 狄利克雷卷积 莫比乌斯反演 杜教筛 FFT 做题记录 21/01/01 EOJ monthly 2020.01 A+C+E rk80 P1072 [NOIP2009 提高组] Hankson 的趣味题 需要特别注意处理 \(a_0,a_1,b_0,b_1&amp;gt;\sqrt n\) 的情况
+P2158 [SDOI2008]仪仗队 设左下角 \((0, 0)\)，右上角 \((n-1, n - 1)\)。抛开 \((1,0)(0,1)(1,1)\) 三个点，发现能看到的关于对角线对称，考虑一半即可。这一半就是求 \(1\le x\lt y\) 且 \(x \perp y\) 的 \((x,y)\) 对数，发现对于每个 \(y\) 来说这样的 \(x\) 对数即为 \(\varphi(y)\)。 答案为 \(\displaystyle3 + 2\sum_{i=2}^{n-1}\varphi(i)\)，特判 \(n = 1\) 的情况" name="twitter:description"/><meta content="summary_large_image" name="twitter:card"/>
+<meta content="https://yangty-pic.oss-cn-beijing.aliyuncs.com/bg54.webp" name="twitter:image"/>
+<link href="https://q1.qlogo.cn/g?b=qq&amp;nk=375836877&amp;s=5" rel="shortcut icon"/>
+<link href="https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.5.1/build/styles/github-dark-dimmed.min.css" rel="stylesheet"/>
+<script src="https://cdn.jsdelivr.net/gh/highlightjs/cdn-release/build/highlight.min.js"></script>
+<script>hljs.highlightAll();</script>
+</head>
+<body class="article-page">
+<script>
+        (function() {
+            const colorSchemeKey = 'StackColorScheme';
+            if(!localStorage.getItem(colorSchemeKey)){
+                localStorage.setItem(colorSchemeKey, "auto");
+            }
+        })();
+    </script><script>
+    (function() {
+        const colorSchemeKey = 'StackColorScheme';
+        const colorSchemeItem = localStorage.getItem(colorSchemeKey);
+        const supportDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches === true;
+
+        if (colorSchemeItem == 'dark' || colorSchemeItem === 'auto' && supportDarkMode) {
+            
+
+            document.documentElement.dataset.scheme = 'dark';
+        } else {
+            document.documentElement.dataset.scheme = 'light';
+        }
+    })();
+</script>
+<div class="container main-container flex on-phone--column extended"><aside class="sidebar left-sidebar sticky">
+<button aria-label="切换菜单" class="hamburger hamburger--spin" id="toggle-menu" type="button">
+<span class="hamburger-box">
+<span class="hamburger-inner"></span>
+</span>
+</button>
+<header>
+<figure class="site-avatar">
+<a href="/">
+<img alt="Avatar" class="site-logo" height="300" loading="lazy" src="/img/avatar_huea3ce2119467b51fdd2a81393644a76d_51594_300x0_resize_q75_box.jpg" width="300"/>
+</a>
+<span class="emoji">😅</span>
+</figure>
+<div class="site-meta">
+<h1 class="site-name"><a href="/">清烛的博客</a></h1>
+<h2 class="site-description">烟火已谢，笙歌未停</h2>
+</div>
+</header><ol class="social-menu">
+<li>
+<a href="mailto:i@imyangty.com" target="_blank" title="email">
+<svg class="icon icon-tabler icon-tabler-mail" fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" viewbox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+<path d="M0 0h24v24H0z" fill="none" stroke="none"></path>
+<rect height="14" rx="2" width="18" x="3" y="5"></rect>
+<polyline points="3 7 12 13 21 7"></polyline>
+</svg>
+</a>
+</li>
+<li>
+<a href="https://github.com/Cgfyufsygsm" target="_blank" title="GitHub">
+<svg class="icon icon-tabler icon-tabler-brand-github" fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+<path d="M0 0h24v24H0z" fill="none" stroke="none"></path>
+<path d="M9 19c-4.3 1.4 -4.3 -2.5 -6 -3m12 5v-3.5c0 -1 .1 -1.4 -.5 -2c2.8 -.3 5.5 -1.4 5.5 -6a4.6 4.6 0 0 0 -1.3 -3.2a4.2 4.2 0 0 0 -.1 -3.2s-1.1 -.3 -3.5 1.3a12.3 12.3 0 0 0 -6.2 0c-2.4 -1.6 -3.5 -1.3 -3.5 -1.3a4.2 4.2 0 0 0 -.1 3.2a4.6 4.6 0 0 0 -1.3 3.2c0 4.6 2.7 5.7 5.5 6c-.6 .6 -.6 1.2 -.5 2v3.5"></path>
+</svg>
+</a>
+</li>
+<li>
+<a href="https://t.me/Cgfyufsygsm" target="_blank" title="Telegram">
+<svg class="icon icon-tabler icon-tabler-brand-telegram" fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" viewbox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+<path d="M0 0h24v24H0z" fill="none" stroke="none"></path>
+<path d="M15 10l-4 4l6 6l4 -16l-18 7l4 2l2 6l3 -4"></path>
+</svg>
+</a>
+</li>
+<li>
+<a href="https://twitter.com/Cgfyufsygsm" target="_blank" title="Twitter">
+<svg class="icon icon-tabler icon-tabler-brand-twitter" fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+<path d="M0 0h24v24H0z" fill="none" stroke="none"></path>
+<path d="M22 4.01c-1 .49 -1.98 .689 -3 .99c-1.121 -1.265 -2.783 -1.335 -4.38 -.737s-2.643 2.06 -2.62 3.737v1c-3.245 .083 -6.135 -1.395 -8 -4c0 0 -4.182 7.433 4 11c-1.872 1.247 -3.739 2.088 -6 2c3.308 1.803 6.913 2.423 10.034 1.517c3.58 -1.04 6.522 -3.723 7.651 -7.742a13.84 13.84 0 0 0 .497 -3.753c-.002 -.249 1.51 -2.772 1.818 -4.013z"></path>
+</svg>
+</a>
+</li>
+</ol><ol class="menu" id="main-menu">
+<li>
+<a href="/">
+<svg class="icon icon-tabler icon-tabler-home" fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+<path d="M0 0h24v24H0z" stroke="none"></path>
+<polyline points="5 12 3 12 12 3 21 12 19 12"></polyline>
+<path d="M5 12v7a2 2 0 0 0 2 2h10a2 2 0 0 0 2 -2v-7"></path>
+<path d="M9 21v-6a2 2 0 0 1 2 -2h2a2 2 0 0 1 2 2v6"></path>
+</svg>
+<span>主页</span>
+</a>
+</li>
+<li>
+<a href="/about/">
+<svg class="icon icon-tabler icon-tabler-user" fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+<path d="M0 0h24v24H0z" stroke="none"></path>
+<circle cx="12" cy="7" r="4"></circle>
+<path d="M6 21v-2a4 4 0 0 1 4 -4h4a4 4 0 0 1 4 4v2"></path>
+</svg>
+<span>关于</span>
+</a>
+</li>
+<li>
+<a href="/idx/">
+<svg class="icon icon-tabler icon-tabler-hash" fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+<path d="M0 0h24v24H0z" stroke="none"></path>
+<line x1="5" x2="19" y1="9" y2="9"></line>
+<line x1="5" x2="19" y1="15" y2="15"></line>
+<line x1="11" x2="7" y1="4" y2="20"></line>
+<line x1="17" x2="13" y1="4" y2="20"></line>
+</svg>
+<span>导航</span>
+</a>
+</li>
+<li>
+<a href="/archives/">
+<svg class="icon icon-tabler icon-tabler-archive" fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+<path d="M0 0h24v24H0z" stroke="none"></path>
+<rect height="4" rx="2" width="18" x="3" y="4"></rect>
+<path d="M5 8v10a2 2 0 0 0 2 2h10a2 2 0 0 0 2 -2v-10"></path>
+<line x1="10" x2="14" y1="12" y2="12"></line>
+</svg>
+<span>归档</span>
+</a>
+</li>
+<li>
+<a href="/search/">
+<svg class="icon icon-tabler icon-tabler-search" fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+<path d="M0 0h24v24H0z" stroke="none"></path>
+<circle cx="10" cy="10" r="7"></circle>
+<line x1="21" x2="15" y1="21" y2="15"></line>
+</svg>
+<span>搜索</span>
+</a>
+</li>
+<li>
+<a href="/friends/">
+<svg class="icon icon-tabler icon-tabler-link" fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+<path d="M0 0h24v24H0z" stroke="none"></path>
+<path d="M10 14a3.5 3.5 0 0 0 5 0l4 -4a3.5 3.5 0 0 0 -5 -5l-.5 .5"></path>
+<path d="M14 10a3.5 3.5 0 0 0 -5 0l-4 4a3.5 3.5 0 0 0 5 5l.5 -.5"></path>
+</svg>
+<span>友链</span>
+</a>
+</li>
+<li>
+<a href="https://blog.imyangty.com" target="_blank">
+<svg class="icon icon-tabler icon-tabler-home" fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+<path d="M0 0h24v24H0z" stroke="none"></path>
+<polyline points="5 12 3 12 12 3 21 12 19 12"></polyline>
+<path d="M5 12v7a2 2 0 0 0 2 2h10a2 2 0 0 0 2 -2v-7"></path>
+<path d="M9 21v-6a2 2 0 0 1 2 -2h2a2 2 0 0 1 2 2v6"></path>
+</svg>
+<span>主博客</span>
+</a>
+</li>
+<div class="menu-bottom-section">
+<li id="dark-mode-toggle">
+<svg class="icon icon-tabler icon-tabler-toggle-left" fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+<path d="M0 0h24v24H0z" stroke="none"></path>
+<circle cx="8" cy="12" r="2"></circle>
+<rect height="12" rx="6" width="20" x="2" y="6"></rect>
+</svg>
+<svg class="icon icon-tabler icon-tabler-toggle-right" fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+<path d="M0 0h24v24H0z" stroke="none"></path>
+<circle cx="16" cy="12" r="2"></circle>
+<rect height="12" rx="6" width="20" x="2" y="6"></rect>
+</svg>
+<span>暗色模式</span>
+</li>
+</div>
+</ol>
+</aside>
+<main class="main full-width">
+<article class="has-image main-article">
+<header class="article-header">
+<div class="article-image">
+<a href="/summary-2021-01/">
+<img alt="Featured image of post 2021年1月 OI学习记录" loading="lazy" src="https://yangty-pic.oss-cn-beijing.aliyuncs.com/bg54.webp"/>
+</a>
+</div>
+<div class="article-details">
+<header class="article-category">
+<a href="/categories/oi/">
+                OI
+            </a>
+<a href="/categories/summary/">
+                总结
+            </a>
+</header>
+<div class="article-title-wrapper">
+<h2 class="article-title">
+<a href="/summary-2021-01/">2021年1月 OI学习记录</a>
+</h2>
+</div>
+<footer class="article-time">
+<div>
+<svg class="icon icon-tabler icon-tabler-calendar-time" fill="none" height="56" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="56" xmlns="http://www.w3.org/2000/svg">
+<path d="M0 0h24v24H0z" stroke="none"></path>
+<path d="M11.795 21h-6.795a2 2 0 0 1 -2 -2v-12a2 2 0 0 1 2 -2h12a2 2 0 0 1 2 2v4"></path>
+<circle cx="18" cy="18" r="4"></circle>
+<path d="M15 3v4"></path>
+<path d="M7 3v4"></path>
+<path d="M3 11h16"></path>
+<path d="M18 16.496v1.504l1 1"></path>
+</svg>
+<time class="article-time--published">Jan 01, 2021</time>
+</div>
+<div>
+<svg class="icon icon-tabler icon-tabler-clock" fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+<path d="M0 0h24v24H0z" stroke="none"></path>
+<circle cx="12" cy="12" r="9"></circle>
+<polyline points="12 7 12 12 15 15"></polyline>
+</svg>
+<time class="article-time--reading">
+                    阅读时长: 2 分钟
+                </time>
+</div>
+</footer>
+</div>
+</header>
+<section class="article-content">
+<h2 id="前言">前言</h2>
+<p>新年快乐！终于活过 2020 年了。 WC2021 GZOI2021 NOI2021（如果有可能的话）rp++</p>
+<h2 id="学习内容">学习内容</h2>
+<ul>
+<li>欧拉函数</li>
+<li>(ex)BSGS</li>
+<li>矩阵乘法的应用</li>
+<li>高斯消元</li>
+<li>基础分块</li>
+<li>基础线性代数</li>
+<li>数位 dp</li>
+<li>复杂度分析</li>
+<li>狄利克雷卷积</li>
+<li>莫比乌斯反演</li>
+<li>杜教筛</li>
+<li>FFT</li>
+</ul>
+<h2 id="做题记录">做题记录</h2>
+<h3 id="section">21/01/01</h3>
+<ul>
+<li>EOJ monthly 2020.01 A+C+E rk80</li>
+<li><strong>P1072 [NOIP2009 提高组] Hankson 的趣味题</strong></li>
+</ul>
+<p>需要特别注意处理 <span class="math inline">\(a_0,a_1,b_0,b_1&gt;\sqrt n\)</span> 的情况</p>
+<ul>
+<li><strong>P2158 [SDOI2008]仪仗队</strong></li>
+</ul>
+<p>设左下角 <span class="math inline">\((0, 0)\)</span>，右上角 <span class="math inline">\((n-1, n - 1)\)</span>。抛开 <span class="math inline">\((1,0)(0,1)(1,1)\)</span> 三个点，发现能看到的关于对角线对称，考虑一半即可。这一半就是求 <span class="math inline">\(1\le x\lt y\)</span> 且 <span class="math inline">\(x \perp y\)</span> 的 <span class="math inline">\((x,y)\)</span> 对数，发现对于每个 <span class="math inline">\(y\)</span> 来说这样的 <span class="math inline">\(x\)</span> 对数即为 <span class="math inline">\(\varphi(y)\)</span>。 答案为 <span class="math inline">\(\displaystyle3 + 2\sum_{i=2}^{n-1}\varphi(i)\)</span>，特判 <span class="math inline">\(n = 1\)</span> 的情况</p>
+<h3 id="section-1">21/01/06</h3>
+<ul>
+<li><strong>POJ3696 The Luckiest number</strong></li>
+</ul>
+<p>欧拉定理的推论 https://imyangty.com/oi/1280</p>
+<ul>
+<li><strong>P3846 [TJOI2007] 可爱的质数/【模板】BSGS</strong></li>
+</ul>
+<p>BSGS</p>
+<h3 id="section-2">21/01/07</h3>
+<ul>
+<li><strong>P4861 按钮</strong></li>
+</ul>
+<p>求满足 <span class="math inline">\(k^x\equiv 1\pmod m\)</span> 的最小正整数 <span class="math inline">\(x\)</span>。由裴蜀定理可得有解的充要条件是 <span class="math inline">\(\gcd(k, m) = 1\)</span>，所以直接 BSGS</p>
+<ul>
+<li><strong>P2485 [SDOI2011]计算器</strong></li>
+</ul>
+<p>快速幂取模 + exgcd + BSGS 综合题</p>
+<h3 id="section-3">21/01/09</h3>
+<ul>
+<li><strong>P4195 【模板】扩展BSGS/SP3105 MOD - Power Modulo Inverted</strong></li>
+</ul>
+<p>exBSGS</p>
+<ul>
+<li><strong>CF1063B Labyrinth</strong></li>
+</ul>
+<p>双端队列优化 01bfs</p>
+<ul>
+<li><strong>CF786B Legacy</strong></li>
+</ul>
+<p>线段树优化建图模板</p>
+<h3 id="section-4">21/01/13</h3>
+<ul>
+<li><strong>BZOJ2973 石子游戏</strong></li>
+</ul>
+<p>构造转移矩阵，<a href="https://imyangty.com/oi/1287" title="矩阵乘法">矩阵乘法</a></p>
+<h3 id="section-5">21/01/14</h3>
+<ul>
+<li><strong>P3389 【模板】高斯消元法</strong></li>
+</ul>
+<p>高斯消元</p>
+<ul>
+<li><strong>LOJ6208 树上询问</strong></li>
+</ul>
+<p><a href="https://imyangty.com/oi/1288" title="线段树维护矩阵和">线段树维护矩阵和</a></p>
+<ul>
+<li><strong>P4035 [JSOI2008]球形空间产生器</strong></li>
+</ul>
+<p>推式子，二次项消去后高斯消元</p>
+<h3 id="section-6">21/01/15</h3>
+<ul>
+<li><strong>LOJ#6277. 数列分块入门 1</strong></li>
+</ul>
+<p>区间修改单点求值</p>
+<ul>
+<li><strong>LOJ#6278. 数列分块入门 2</strong></li>
+</ul>
+<p>区间修改区间询问某数排名</p>
+<ul>
+<li><strong>P3372 【模板】线段树 1</strong></li>
+</ul>
+<p>分块重写</p>
+<h3 id="section-7">21/01/16</h3>
+<ul>
+<li><strong>CF149D Coloring Brackets</strong></li>
+</ul>
+<p>区间 dp（记忆化搜索）， <span class="math inline">\(f(i, j, k_1, k_2)\)</span> 为合法序列 <span class="math inline">\([i,j]\)</span>，两端状态 <span class="math inline">\(k_1, k_2\)</span>，需注意合法序列两端未必就是匹配的，所以之前定义 <span class="math inline">\(f(i, j, k)\)</span> 是错误的</p>
+<ul>
+<li><strong>CF242E XOR on Segment</strong></li>
+</ul>
+<p>区间 xor 区间求和，按位拆分方便处理区间 xor，对于每一位都建一棵线段树，xor 就是集体取反。</p>
+<h3 id="section-8">21/01/17</h3>
+<ul>
+<li><strong>CF607A Chain Reaction</strong></li>
+</ul>
+<p>线性 dp，<span class="math inline">\(f_i\)</span> 为从位置 <span class="math inline">\(i\)</span> 开始激活最多保留的激光塔个数</p>
+<ul>
+<li><strong>P1005 [NOIP2007 提高组] 矩阵取数游戏</strong></li>
+</ul>
+<p>很水的区间dp，难点高精，int128 过之</p>
+<ul>
+<li><strong>LOJ#6279. 数列分块入门 3</strong></li>
+</ul>
+<p>区间修改区间询问某数前驱</p>
+<h3 id="section-9">21/01/21</h3>
+<ul>
+<li><strong>LOJ#6280. 数列分块入门 4</strong></li>
+</ul>
+<p>区间修改区间查询</p>
+<ul>
+<li><strong>LOJ#6281. 数列分块入门 5</strong></li>
+</ul>
+<p>区间开根区间查询</p>
+<h3 id="section-10">21/01/23</h3>
+<ul>
+<li><strong>POJ1830 开关问题</strong></li>
+</ul>
+<p>高斯消元求解 xor 方程组</p>
+<ul>
+<li><strong>P1102 A-B 数对</strong></li>
+</ul>
+<p><code>std::map</code> 或二分</p>
+<ul>
+<li><strong>LOJ#6282. 数列分块入门 6</strong></li>
+</ul>
+<p>单点插入单点查询（块状链表）</p>
+<ul>
+<li><strong>LOJ#6283. 数列分块入门 7</strong></li>
+</ul>
+<p>区间乘区间加单点查询</p>
+<ul>
+<li><strong>LOJ#6284. 数列分块入门 8</strong></li>
+</ul>
+<p>区间查询某数出现个数并赋值</p>
+<ul>
+<li><strong>P4168 [Violet]蒲公英</strong></li>
+</ul>
+<p>强制在线区间众数</p>
+<ul>
+<li><strong>LOJ#6285. 数列分块入门 9</strong></li>
+</ul>
+<p>区间众数</p>
+<h3 id="section-11">21/01/24</h3>
+<ul>
+<li><strong>P4127 [AHOI2009]同类分布</strong></li>
+<li><strong>P2657 [SCOI2009] windy 数</strong></li>
+</ul>
+<p>数位 dp</p>
+<h3 id="section-12">21/01/25</h3>
+<ul>
+<li>Codeforces Round #697 (Div. 3)</li>
+</ul>
+<p>A+B+C+E，是否 fst 未知</p>
+<h3 id="section-13">21/01/26</h3>
+<ul>
+<li>Codeforces Round #697 (Div. 3)</li>
+</ul>
+<p>没有 fst，A+B+C+E</p>
+<ul>
+<li><strong>P3455 [POI2007]ZAP-Queries</strong></li>
+<li><strong>P2522 [HAOI2011]Problem b</strong></li>
+<li><strong>P2257 YY的GCD</strong></li>
+</ul>
+<p>莫比乌斯反演</p>
+<h3 id="section-14">21/01/27</h3>
+<ul>
+<li><strong>P4213 【模板】杜教筛（Sum）</strong></li>
+</ul>
+<p>杜教筛</p>
+<h3 id="section-15">21/01/28</h3>
+<ul>
+<li><strong>Codeforces Round #698 (Div. 2)</strong></li>
+</ul>
+<p>A + B，菜的我直接爬</p>
+<h3 id="section-16">21/01/29</h3>
+<ul>
+<li><strong>P3803 【模板】多项式乘法（FFT）</strong></li>
+</ul>
+<p>FFT 板子</p>
+<ul>
+<li><strong>P1919 【模板】A*B Problem升级版（FFT快速傅里叶）</strong></li>
+</ul>
+<p>FFT 实现高精度乘法</p>
+<ul>
+<li><strong>Educational Codeforces Round 103</strong></li>
+</ul>
+<p>菜的抠脚依旧 A + B，C 没调出来</p>
+<h3 id="section-17">21/01/30</h3>
+<ul>
+<li><strong>P3338 [ZJOI2014]力</strong></li>
+</ul>
+<p>转化式子之后使用 FFT</p>
+<ul>
+<li><strong>P3312 [SDOI2014]数表</strong></li>
+</ul>
+<p>莫反 + 树状数组，比较巧妙</p>
+<ul>
+<li><strong>P3377 【模板】左偏树（可并堆）</strong></li>
+</ul>
+<p>左偏树模板</p>
+<h3 id="section-18">21/01/31</h3>
+<ul>
+<li><strong>P3723 [AH2017/HNOI2017]礼物</strong></li>
+</ul>
+<p>FFT/NTT 加速卷积</p>
+<ul>
+<li><strong>P2224 [HNOI2001]产品加工</strong></li>
+</ul>
+<p>奇葩的状态定义：https://imyangty.com/oi/1298</p>
+</section>
+<footer class="article-footer">
+<section class="article-tags">
+<a href="/tags/OI/">OI</a>
+</section>
+<section class="article-copyright">
+<svg class="icon icon-tabler icon-tabler-copyright" fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+<path d="M0 0h24v24H0z" stroke="none"></path>
+<circle cx="12" cy="12" r="9"></circle>
+<path d="M14.5 9a3.5 4 0 1 0 0 6"></path>
+</svg>
+<span>Licensed under CC BY-NC-SA 4.0</span>
+</section>
+</footer>
+<link crossorigin="anonymous" href="https://cdn.jsdelivr.net/npm/katex@0.13.13/dist/katex.min.css" integrity="sha384-RZU/ijkSsFbcmivfdRBQDtwuwVqK7GMOw6IMvKyeWL2K5UAlyp6WonmB8m7Jd0Hn" rel="stylesheet"/><script crossorigin="anonymous" defer="" integrity="sha384-pK1WpvzWVBQiP0/GjnvRxV4mOb0oxFuyRxJlk6vVw146n3egcN5C925NCP7a7BY8" src="https://cdn.jsdelivr.net/npm/katex@0.13.13/dist/katex.min.js">
+</script><script crossorigin="anonymous" defer="" integrity="sha384-vZTG03m+2yp6N6BNi5iM4rW4oIwk5DfcNdFfxkk9ZWpDriOkXX8voJBFrAO7MpVl" src="https://cdn.jsdelivr.net/npm/katex@0.13.13/dist/contrib/auto-render.min.js">
+</script><script>
+    window.addEventListener("DOMContentLoaded", () => {
+        renderMathInElement(document.querySelector(`.article-content`), {
+            delimiters: [
+                { left: "$$", right: "$$", display: true },
+                { left: "$", right: "$", display: false },
+                { left: "\\(", right: "\\)", display: false },
+                { left: "\\[", right: "\\]", display: true }
+            ]
+        });})
+</script>
+</article>
+<aside class="related-contents--wrapper">
+<h2 class="section-title">相关文章</h2>
+<div class="related-contents">
+<div class="flex article-list--tile">
+<article class="has-image">
+<a href="/sol-luogu-p5468/">
+<div class="article-image">
+<img data-hash="https://yangty-pic.oss-cn-beijing.aliyuncs.com/bg01.webp" data-key="" loading="lazy" src="https://yangty-pic.oss-cn-beijing.aliyuncs.com/bg01.webp"/>
+</div>
+<div class="article-details">
+<h2 class="article-title">P5468 [NOI2019] 回家路线</h2>
+</div>
+</a>
+</article>
+<article class="has-image">
+<a href="/travels-noi2022/">
+<div class="article-image">
+<img data-hash="https://yangty-pic.oss-cn-beijing.aliyuncs.com/bg01.webp" data-key="" loading="lazy" src="https://yangty-pic.oss-cn-beijing.aliyuncs.com/bg01.webp"/>
+</div>
+<div class="article-details">
+<h2 class="article-title">NOI2022 游记</h2>
+</div>
+</a>
+</article>
+<article class="has-image">
+<a href="/sol-cf715b/">
+<div class="article-image">
+<img data-hash="https://yangty-pic.oss-cn-beijing.aliyuncs.com/bg57.webp" data-key="" loading="lazy" src="https://yangty-pic.oss-cn-beijing.aliyuncs.com/bg57.webp"/>
+</div>
+<div class="article-details">
+<h2 class="article-title">CF715B Complete The Graph</h2>
+</div>
+</a>
+</article>
+<article class="has-image">
+<a href="/sol-agc027d/">
+<div class="article-image">
+<img data-hash="https://yangty-pic.oss-cn-beijing.aliyuncs.com/bg01.webp" data-key="" loading="lazy" src="https://yangty-pic.oss-cn-beijing.aliyuncs.com/bg01.webp"/>
+</div>
+<div class="article-details">
+<h2 class="article-title">AGC027D - Modulo Matrix</h2>
+</div>
+</a>
+</article>
+<article class="has-image">
+<a href="/sol-luogu-p5305/">
+<div class="article-image">
+<img data-hash="https://yangty-pic.oss-cn-beijing.aliyuncs.com/bg32.webp" data-key="" loading="lazy" src="https://yangty-pic.oss-cn-beijing.aliyuncs.com/bg32.webp"/>
+</div>
+<div class="article-details">
+<h2 class="article-title">P5305 [GXOI/GZOI2019]旧词</h2>
+</div>
+</a>
+</article>
+</div>
+</div>
+</aside>
+<footer class="site-footer">
+<section class="copyright">
+        © 
+        
+            2019 - 
+        
+        2024 清烛的博客
+    </section>
+<section class="powerby">
+        Built with <a href="https://gohugo.io/" rel="noopener" target="_blank">Hugo</a> <br/>
+        主题 <b><a data-version="3.11.0" href="https://github.com/CaiJimmy/hugo-theme-stack" rel="noopener" target="_blank">Stack</a></b> 由 <a href="https://jimmycai.com" rel="noopener" target="_blank">Jimmy</a> 设计
+    </section>
+</footer>
+<div aria-hidden="true" class="pswp" role="dialog" tabindex="-1">
+<div class="pswp__bg"></div>
+<div class="pswp__scroll-wrap">
+<div class="pswp__container">
+<div class="pswp__item"></div>
+<div class="pswp__item"></div>
+<div class="pswp__item"></div>
+</div>
+<div class="pswp__ui pswp__ui--hidden">
+<div class="pswp__top-bar">
+<div class="pswp__counter"></div>
+<button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+<button class="pswp__button pswp__button--share" title="Share"></button>
+<button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+<button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+<div class="pswp__preloader">
+<div class="pswp__preloader__icn">
+<div class="pswp__preloader__cut">
+<div class="pswp__preloader__donut"></div>
+</div>
+</div>
+</div>
+</div>
+<div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+<div class="pswp__share-tooltip"></div>
+</div>
+<button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+</button>
+<button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+</button>
+<div class="pswp__caption">
+<div class="pswp__caption__center"></div>
+</div>
+</div>
+</div>
+</div><script crossorigin="anonymous" defer="" integrity="sha256-ePwmChbbvXbsO02lbM3HoHbSHTHFAeChekF1xKJdleo=" src="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe.min.js">
+</script><script crossorigin="anonymous" defer="" integrity="sha256-UKkzOn/w1mBxRmLLGrSeyB4e1xbrp4xylgAWb3M42pU=" src="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe-ui-default.min.js">
+</script><link crossorigin="anonymous" href="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/default-skin/default-skin.css" integrity="sha256-c0uckgykQ9v5k+IqViZOZKc47Jn7KQil4/MP3ySA3F8=" rel="stylesheet"/><link crossorigin="anonymous" href="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe.css" integrity="sha256-SBLU4vv6CA6lHsZ1XyTdhyjJxCjPif/TRkjnsyGAGnE=" rel="stylesheet"/>
+</main>
+</div>
+<script crossorigin="anonymous" integrity="sha256-5NovOZc4iwiAWTYIFiIM7DxKUXKWvpVEuMEPLzcm5/g=" src="https://cdn.jsdelivr.net/npm/node-vibrant@3.1.5/dist/vibrant.min.js">
+</script><script defer="" src="/ts/main.js" type="text/javascript"></script>
+<script>
+    (function () {
+        const customFont = document.createElement('link');
+        customFont.href = "https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&display=swap";
+
+        customFont.type = "text/css";
+        customFont.rel = "stylesheet";
+
+        document.head.appendChild(customFont);
+    }());
+</script>
+</body>
+</html>

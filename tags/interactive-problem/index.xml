@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+    <channel>
+        <title>交互题 on 清烛的博客</title>
+        <link>https://oi.imyangty.com/tags/interactive-problem/</link>
+        <description>Recent content in 交互题 on 清烛的博客</description>
+        <generator>Hugo -- gohugo.io</generator>
+        <language>zh-CN</language>
+        <lastBuildDate>Sun, 30 Jan 2022 18:04:55 +0800</lastBuildDate><atom:link href="https://oi.imyangty.com/tags/interactive-problem/index.xml" rel="self" type="application/rss+xml" /><item>
+        <title>P5884 [IOI2014]game 游戏</title>
+        <link>https://oi.imyangty.com/sol-luogu-p5884/</link>
+        <pubDate>Sun, 30 Jan 2022 18:04:55 +0800</pubDate>
+        
+        <guid>https://oi.imyangty.com/sol-luogu-p5884/</guid>
+        <description>&lt;img src="https://yangty-pic.oss-cn-beijing.aliyuncs.com/bg19.webp" alt="Featured image of post P5884 [IOI2014]game 游戏" /&gt;&lt;h2 id=&#34;description&#34;&gt;Description&lt;/h2&gt;
+&lt;p&gt;交互题。&lt;/p&gt;
+&lt;p&gt;TW 有航空网，可抽象为 &lt;span class=&#34;math inline&#34;&gt;\(0,\cdots, n - 1\)&lt;/span&gt; 编号点的无向图，A 问 B 这张图是否连通，B 想做游戏来回答他。&lt;/p&gt;
+&lt;p&gt;A 可以问 &lt;span class=&#34;math inline&#34;&gt;\((u,v)\)&lt;/span&gt; 边是否存在，B 会立刻回答这个问题。A 一共会问 &lt;span class=&#34;math inline&#34;&gt;\(n(n - 1)/2\)&lt;/span&gt; 个问题，可以知道的是在问完最后一个问题后 A 就会知道其是否连通。B 的目标是动态构造这张图，让 A 在问最后一个问题之前还不知道整张图是否连通。&lt;/p&gt;
+&lt;p&gt;具体地，实现 &lt;code&gt;void initialize(int n)&lt;/code&gt; 和 &lt;code&gt;int hasEdge(int u, int v)&lt;/code&gt; 两个函数帮助 B 获胜。&lt;/p&gt;
+&lt;h2 id=&#34;solution&#34;&gt;Solution&lt;/h2&gt;
+&lt;p&gt;在询问最后一条边之前图应该是形成了两个连通块，而且两个连通块之间的点都没有任何连边。那么对于非强制在线的情况，只需要构造一张完全图然后把最后一个点抠掉即可。然后这题就做完了。&lt;/p&gt;
+&lt;p&gt;但是对于原题，我们是不知道他最后一个询问会是什么的，所以上面这个做法明显行不通。&lt;/p&gt;
+&lt;p&gt;我们考虑将这个图构造成一棵树，并且在最后的询问再给出树边。&lt;/p&gt;
+&lt;p&gt;也就是说，一个点到其他点中的最后一条边的时候再连上。&lt;/p&gt;
+&lt;h2 id=&#34;implementation&#34;&gt;Implementation&lt;/h2&gt;
+&lt;div class=&#34;sourceCode&#34; id=&#34;cb1&#34;&gt;&lt;pre class=&#34;sourceCode cpp&#34;&gt;&lt;code class=&#34;sourceCode cpp&#34;&gt;&lt;span id=&#34;cb1-1&#34;&gt;&lt;a href=&#34;#cb1-1&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;&lt;span class=&#34;pp&#34;&gt;#include &lt;/span&gt;&lt;span class=&#34;im&#34;&gt;&amp;quot;game.h&amp;quot;&lt;/span&gt;&lt;/span&gt;
+&lt;span id=&#34;cb1-2&#34;&gt;&lt;a href=&#34;#cb1-2&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;&lt;/span&gt;
+&lt;span id=&#34;cb1-3&#34;&gt;&lt;a href=&#34;#cb1-3&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;&lt;span class=&#34;at&#34;&gt;const&lt;/span&gt; &lt;span class=&#34;dt&#34;&gt;int&lt;/span&gt; maxn = &lt;span class=&#34;dv&#34;&gt;1505&lt;/span&gt;;&lt;/span&gt;
+&lt;span id=&#34;cb1-4&#34;&gt;&lt;a href=&#34;#cb1-4&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;&lt;span class=&#34;dt&#34;&gt;int&lt;/span&gt; cnt[maxn];&lt;/span&gt;
+&lt;span id=&#34;cb1-5&#34;&gt;&lt;a href=&#34;#cb1-5&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;&lt;span class=&#34;dt&#34;&gt;int&lt;/span&gt; max(&lt;span class=&#34;dt&#34;&gt;int&lt;/span&gt; a, &lt;span class=&#34;dt&#34;&gt;int&lt;/span&gt; b) {&lt;span class=&#34;cf&#34;&gt;return&lt;/span&gt; a &amp;gt; b ? a : b;}&lt;/span&gt;
+&lt;span id=&#34;cb1-6&#34;&gt;&lt;a href=&#34;#cb1-6&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;&lt;/span&gt;
+&lt;span id=&#34;cb1-7&#34;&gt;&lt;a href=&#34;#cb1-7&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;&lt;span class=&#34;dt&#34;&gt;void&lt;/span&gt; initialize(&lt;span class=&#34;dt&#34;&gt;int&lt;/span&gt; n) {}&lt;/span&gt;
+&lt;span id=&#34;cb1-8&#34;&gt;&lt;a href=&#34;#cb1-8&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;&lt;/span&gt;
+&lt;span id=&#34;cb1-9&#34;&gt;&lt;a href=&#34;#cb1-9&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;&lt;span class=&#34;dt&#34;&gt;int&lt;/span&gt; hasEdge(&lt;span class=&#34;dt&#34;&gt;int&lt;/span&gt; u, &lt;span class=&#34;dt&#34;&gt;int&lt;/span&gt; v) {&lt;span class=&#34;cf&#34;&gt;return&lt;/span&gt; ++cnt[max(u, v)] == max(u, v);}&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+</description>
+        </item>
+        
+    </channel>
+</rss>

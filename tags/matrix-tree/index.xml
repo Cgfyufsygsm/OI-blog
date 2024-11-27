@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+    <channel>
+        <title>矩阵树定理 on 清烛的博客</title>
+        <link>https://oi.imyangty.com/tags/matrix-tree/</link>
+        <description>Recent content in 矩阵树定理 on 清烛的博客</description>
+        <generator>Hugo -- gohugo.io</generator>
+        <language>zh-CN</language>
+        <lastBuildDate>Thu, 24 Mar 2022 15:31:08 +0800</lastBuildDate><atom:link href="https://oi.imyangty.com/tags/matrix-tree/index.xml" rel="self" type="application/rss+xml" /><item>
+        <title>P2144 [FJOI2007]轮状病毒</title>
+        <link>https://oi.imyangty.com/sol-luogu-p2144/</link>
+        <pubDate>Sat, 19 Feb 2022 12:20:49 +0800</pubDate>
+        
+        <guid>https://oi.imyangty.com/sol-luogu-p2144/</guid>
+        <description>&lt;img src="https://yangty-pic.oss-cn-beijing.aliyuncs.com/bg39.webp" alt="Featured image of post P2144 [FJOI2007]轮状病毒" /&gt;&lt;h2 id=&#34;description&#34;&gt;Description&lt;/h2&gt;
+&lt;p&gt;轮状病毒有很多变种。许多轮状病毒都是由一个轮状基产生。一个n轮状基由圆环上n个不同的基原子和圆心的一个核原子构成。2个原子之间的边表示这2个原子之间的信息通道，如图1。&lt;/p&gt;
+&lt;p&gt;n轮状病毒的产生规律是在n轮状基中删除若干边，使各原子之间有唯一一条信息通道。例如，共有16个不同的3轮状病毒，入图2所示。&lt;/p&gt;
+&lt;p&gt;给定n(N&amp;lt;=100)，编程计算有多少个不同的n轮状病毒。&lt;/p&gt;
+&lt;h2 id=&#34;solution&#34;&gt;Solution&lt;/h2&gt;
+&lt;p&gt;一看就是统计生成树个数，上矩阵树定理。&lt;/p&gt;
+&lt;p&gt;&lt;span class=&#34;math inline&#34;&gt;\(n\)&lt;/span&gt; 轮状病毒的 &lt;span class=&#34;math inline&#34;&gt;\(n + 1\)&lt;/span&gt; 阶 Kirchhoff 矩阵应为 &lt;span class=&#34;math display&#34;&gt;\[
+\begin{bmatrix}
+n &amp;amp; -1 &amp;amp; -1 &amp;amp; -1 &amp;amp; \cdots &amp;amp; -1 &amp;amp; -1\\
+-1 &amp;amp; 3 &amp;amp; -1 &amp;amp; 0 &amp;amp; \cdots &amp;amp; 0 &amp;amp; -1\\
+-1 &amp;amp; -1 &amp;amp; 3 &amp;amp; -1 &amp;amp; \cdots &amp;amp; 0 &amp;amp; 0\\
+-1 &amp;amp; 0 &amp;amp; -1 &amp;amp; 3 &amp;amp; \cdots &amp;amp; 0 &amp;amp; 0\\
+\vdots &amp;amp;\vdots &amp;amp; \vdots &amp;amp; \vdots &amp;amp; \ddots &amp;amp; \vdots &amp;amp; \vdots\\
+-1 &amp;amp; 0 &amp;amp; 0 &amp;amp; 0 &amp;amp; \cdots &amp;amp; 3 &amp;amp; -1\\
+-1 &amp;amp; -1 &amp;amp; 0 &amp;amp; 0 &amp;amp; \cdots &amp;amp; -1 &amp;amp; 3
+\end{bmatrix}
+\]&lt;/span&gt; 但是这个矩阵不是很好直接高斯消元求 &lt;span class=&#34;math inline&#34;&gt;\(n\)&lt;/span&gt; 阶子式的值，因为高精度运算比较麻烦，我们尝试观察性质。&lt;/p&gt;
+&lt;p&gt;发现第一行和第一列删掉之后长得很漂亮： &lt;span class=&#34;math display&#34;&gt;\[
+\boldsymbol M _n = \begin{bmatrix}
+3 &amp;amp; -1 &amp;amp; 0 &amp;amp; \cdots &amp;amp; 0 &amp;amp; -1\\
+-1 &amp;amp; 3 &amp;amp; -1 &amp;amp; \cdots &amp;amp; 0 &amp;amp; 0\\
+0 &amp;amp; -1 &amp;amp; 3 &amp;amp; \cdots &amp;amp; 0 &amp;amp; 0\\
+\vdots &amp;amp; \vdots &amp;amp; \vdots &amp;amp; \ddots &amp;amp; \vdots &amp;amp; \vdots\\
+0 &amp;amp; 0 &amp;amp; 0 &amp;amp; \cdots &amp;amp; 3 &amp;amp; -1\\
+-1 &amp;amp; 0 &amp;amp; 0 &amp;amp; \cdots &amp;amp; -1 &amp;amp; 3
+\end{bmatrix}
+\]&lt;/span&gt; 把他按照第一列展开之后可以得到 &lt;span class=&#34;math display&#34;&gt;\[
+\det\boldsymbol M_n = 3\det\begin{bmatrix}
+3 &amp;amp; -1 &amp;amp; \cdots &amp;amp; 0 &amp;amp; 0\\
+-1 &amp;amp; 3 &amp;amp; \cdots &amp;amp; 0 &amp;amp; 0\\
+\vdots &amp;amp; \vdots &amp;amp; \ddots &amp;amp; \vdots &amp;amp; \vdots\\
+0 &amp;amp; 0 &amp;amp; \cdots &amp;amp; 3 &amp;amp; -1\\
+0 &amp;amp; 0 &amp;amp; \cdots &amp;amp; -1 &amp;amp; 3
+\end{bmatrix}
++ \det\begin{bmatrix}
+-1 &amp;amp; 0 &amp;amp; \cdots &amp;amp; 0 &amp;amp; -1\\
+-1 &amp;amp; 3 &amp;amp; \cdots &amp;amp; 0 &amp;amp; 0\\
+\vdots &amp;amp; \vdots &amp;amp; \ddots &amp;amp; \vdots &amp;amp; \vdots\\
+0 &amp;amp; 0 &amp;amp; \cdots &amp;amp; 3 &amp;amp; -1\\
+0 &amp;amp; 0 &amp;amp; \cdots &amp;amp; -1 &amp;amp; 3
+\end{bmatrix}
+ \\+ (-1)^n\det\begin{bmatrix}
+ -1 &amp;amp; 0 &amp;amp; \cdots &amp;amp; 0 &amp;amp; -1\\
+3 &amp;amp; -1 &amp;amp; \cdots &amp;amp; 0 &amp;amp; 0\\
+-1 &amp;amp; 3 &amp;amp; \cdots &amp;amp; 0 &amp;amp; 0\\
+\vdots &amp;amp; \vdots &amp;amp; \ddots &amp;amp; \vdots &amp;amp; \vdots\\
+0 &amp;amp; 0 &amp;amp; \cdots &amp;amp; 3 &amp;amp; -1\\
+ \end{bmatrix}
+\]&lt;/span&gt; 将其记作 &lt;span class=&#34;math display&#34;&gt;\[
+\det\boldsymbol M_n = 3d_{n - 1} + a_{n - 1} + (-1)^nb_{n-1}
+\]&lt;/span&gt; 由于 &lt;span class=&#34;math inline&#34;&gt;\(d_{n}\)&lt;/span&gt; 是三对角行列式，所以展开 &lt;span class=&#34;math inline&#34;&gt;\(d_{n}\)&lt;/span&gt; 可以得到 &lt;span class=&#34;math inline&#34;&gt;\(d_{n} = 3d_{n - 1} - d_{n - 2}\)&lt;/span&gt;。展开 &lt;span class=&#34;math inline&#34;&gt;\(a_n\)&lt;/span&gt; 可以得到 &lt;span class=&#34;math inline&#34;&gt;\(a_n = -d_{n - 1} -1\)&lt;/span&gt;，按第一行展开 &lt;span class=&#34;math inline&#34;&gt;\(b_n\)&lt;/span&gt; 可得到 &lt;span class=&#34;math inline&#34;&gt;\((-1)^nb_{n} = -d_{n - 1} - 1\)&lt;/span&gt;。代入上面公式可得到 &lt;span class=&#34;math display&#34;&gt;\[
+\det\boldsymbol M_n = 3d_{n - 1} - 2d_{n - 2} - 2
+\]&lt;/span&gt; 而 &lt;span class=&#34;math inline&#34;&gt;\(d_n = 3d_{n - 1} - d_{n - 2}\)&lt;/span&gt;，所以待定系数法一波可以推出 &lt;span class=&#34;math display&#34;&gt;\[
+\det\boldsymbol M_n = 3\det\boldsymbol M_{n - 1} - \det\boldsymbol M_{n - 2} + 2
+\]&lt;/span&gt; 可以直接递推也可以直接矩阵快速幂。&lt;/p&gt;
+&lt;p&gt;需要高精度，不放代码了。&lt;/p&gt;
+&lt;p&gt;过程：设 &lt;span class=&#34;math inline&#34;&gt;\(\det\boldsymbol M_n = f_n\)&lt;/span&gt;，则设 &lt;span class=&#34;math inline&#34;&gt;\(f_n = \alpha f_{n - 1} + \beta f_{n - 2} + \gamma\)&lt;/span&gt;，有 &lt;span class=&#34;math display&#34;&gt;\[
+\begin{cases}
+3d_{n - 1} - 2d_{n - 2} - 2 = \alpha(3d_{n - 2} - 2d_{n - 3} - 2) + \beta(3d_{n - 3} - 2d_{n - 4} - 2) + \gamma\\
+d_n = 3d_{n - 1} - d_{n - 2}
+\end{cases}
+\]&lt;/span&gt; 化简一下左侧 &lt;span class=&#34;math display&#34;&gt;\[
+\begin{aligned}
+3d_{n-1}-2d_{n-2}-2&amp;amp;=3(3d_{n-2}-d_{n-3}) - 2(3d_{n-3} - d_{n - 4})-2\\
+&amp;amp;= 3(3(3d_{n - 3} - d_{n - 4}) - d_{n - 3}) - 2(3d_{n - 3} - d_{n - 4})-2\\
+&amp;amp;= 7(3d_{n-3} -d_{n - 4})  -3d_{n-3}-2\\
+&amp;amp;= 18d_{n-3} - 7d_{n-4}-2
+\end{aligned}
+\]&lt;/span&gt; 化简右侧： &lt;span class=&#34;math display&#34;&gt;\[
+\begin{aligned}
+&amp;amp;\alpha(3d_{n - 2} - 2d_{n - 3} - 2) + \beta(3d_{n - 3} - 2d_{n - 4} - 2) + \gamma\\
+=&amp;amp;\alpha(7d_{n-3} - 3d_{n-4} - 2) + \beta(3d_{n - 3} - 2d_{n - 4} - 2) + \gamma\\
+=&amp;amp;(7\alpha + 3\beta)d_{n - 3} - (3\alpha + 2\beta)d_{n - 4} - 2\alpha - 2\beta + \gamma
+\end{aligned}
+\]&lt;/span&gt; 于是有了 &lt;span class=&#34;math display&#34;&gt;\[
+\begin{cases}
+7\alpha + 3\beta = 18\\
+3\alpha + 2\beta = 7\\
+2\alpha + 2\beta - \gamma = 2
+\end{cases}
+\]&lt;/span&gt; 解出来 &lt;span class=&#34;math display&#34;&gt;\[
+\begin{cases}
+\alpha = 3\\
+\beta = -1\\
+\gamma = 2
+\end{cases}
+\]&lt;/span&gt; &lt;del&gt;真恶心&lt;/del&gt;。&lt;/p&gt;
+</description>
+        </item>
+        
+    </channel>
+</rss>

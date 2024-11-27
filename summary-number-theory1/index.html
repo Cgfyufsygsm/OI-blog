@@ -1,0 +1,1273 @@
+<!DOCTYPE html>
+<html dir="ltr" lang="zh-CN">
+<head><meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1" name="viewport"/><meta content="自己的总结，既适合新手入门也适合省选复习。文章可能很长，善用 TOC 进行跳转。
+主要分为若干个板块，可能中间会有难度较高的内容，可以跳读。
+前置常用技巧 较难归类的但是非常实用的小技巧。
+常见符号 下文使用时将不加说明。
+求和/求积符号： \[ \begin{aligned} \sum_{i = 1}^n f(i) &amp;amp;= f(1) + f(2) + \cdots f(n)\\ \prod_{i =1}^nf(i) &amp;amp;= f(1)\times f(2)\times \cdots\times f(n)\\ \sum_{p(x)\text{ is true}}f(x) &amp;amp;= f(x_1) + f(x_2) + \cdots\text{for all }x_i\text{ that meet the proposition} \end{aligned} \] 艾弗森括号： \[ [P] = \begin{cases} 1,&amp;amp;\text{if the proposition } P \text{ is true}\\ 0,&amp;amp;\text{if the proposition } P \text{ is false} \end{cases} \] 集合的表示： \[ S = \{x:P\} \] 表示满足条件 \(P\) 的 \(x\) 构成的集合。" name="description"/><title>数论复习 1（简单数论）</title>
+<link href="https://oi.imyangty.com/summary-number-theory1/" rel="canonical"/>
+<link href="/scss/style.min.a5821f3d3ab84ce5a0ac21477e347a2e0ca00292e398d16c5e8e36ded6e35a23.css" rel="stylesheet"/><meta content="数论复习 1（简单数论）" property="og:title"/>
+<meta content="自己的总结，既适合新手入门也适合省选复习。文章可能很长，善用 TOC 进行跳转。
+主要分为若干个板块，可能中间会有难度较高的内容，可以跳读。
+前置常用技巧 较难归类的但是非常实用的小技巧。
+常见符号 下文使用时将不加说明。
+求和/求积符号： \[ \begin{aligned} \sum_{i = 1}^n f(i) &amp;amp;= f(1) + f(2) + \cdots f(n)\\ \prod_{i =1}^nf(i) &amp;amp;= f(1)\times f(2)\times \cdots\times f(n)\\ \sum_{p(x)\text{ is true}}f(x) &amp;amp;= f(x_1) + f(x_2) + \cdots\text{for all }x_i\text{ that meet the proposition} \end{aligned} \] 艾弗森括号： \[ [P] = \begin{cases} 1,&amp;amp;\text{if the proposition } P \text{ is true}\\ 0,&amp;amp;\text{if the proposition } P \text{ is false} \end{cases} \] 集合的表示： \[ S = \{x:P\} \] 表示满足条件 \(P\) 的 \(x\) 构成的集合。" property="og:description"/>
+<meta content="https://oi.imyangty.com/summary-number-theory1/" property="og:url"/>
+<meta content="清烛的博客" property="og:site_name"/>
+<meta content="article" property="og:type"/><meta content="Post" property="article:section"/><meta content="OI" property="article:tag"/><meta content="笔记" property="article:tag"/><meta content="2021-08-12T14:49:34+08:00" property="article:published_time"/><meta content="2021-08-12T14:49:34+08:00" property="article:modified_time"/><meta content="https://yangty-pic.oss-cn-beijing.aliyuncs.com/bg16.webp" property="og:image"/>
+<meta content="数论复习 1（简单数论）" name="twitter:title"/>
+<meta content="自己的总结，既适合新手入门也适合省选复习。文章可能很长，善用 TOC 进行跳转。
+主要分为若干个板块，可能中间会有难度较高的内容，可以跳读。
+前置常用技巧 较难归类的但是非常实用的小技巧。
+常见符号 下文使用时将不加说明。
+求和/求积符号： \[ \begin{aligned} \sum_{i = 1}^n f(i) &amp;amp;= f(1) + f(2) + \cdots f(n)\\ \prod_{i =1}^nf(i) &amp;amp;= f(1)\times f(2)\times \cdots\times f(n)\\ \sum_{p(x)\text{ is true}}f(x) &amp;amp;= f(x_1) + f(x_2) + \cdots\text{for all }x_i\text{ that meet the proposition} \end{aligned} \] 艾弗森括号： \[ [P] = \begin{cases} 1,&amp;amp;\text{if the proposition } P \text{ is true}\\ 0,&amp;amp;\text{if the proposition } P \text{ is false} \end{cases} \] 集合的表示： \[ S = \{x:P\} \] 表示满足条件 \(P\) 的 \(x\) 构成的集合。" name="twitter:description"/><meta content="summary_large_image" name="twitter:card"/>
+<meta content="https://yangty-pic.oss-cn-beijing.aliyuncs.com/bg16.webp" name="twitter:image"/>
+<link href="https://q1.qlogo.cn/g?b=qq&amp;nk=375836877&amp;s=5" rel="shortcut icon"/>
+<link href="https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.5.1/build/styles/github-dark-dimmed.min.css" rel="stylesheet"/>
+<script src="https://cdn.jsdelivr.net/gh/highlightjs/cdn-release/build/highlight.min.js"></script>
+<script>hljs.highlightAll();</script>
+</head>
+<body class="article-page">
+<script>
+        (function() {
+            const colorSchemeKey = 'StackColorScheme';
+            if(!localStorage.getItem(colorSchemeKey)){
+                localStorage.setItem(colorSchemeKey, "auto");
+            }
+        })();
+    </script><script>
+    (function() {
+        const colorSchemeKey = 'StackColorScheme';
+        const colorSchemeItem = localStorage.getItem(colorSchemeKey);
+        const supportDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches === true;
+
+        if (colorSchemeItem == 'dark' || colorSchemeItem === 'auto' && supportDarkMode) {
+            
+
+            document.documentElement.dataset.scheme = 'dark';
+        } else {
+            document.documentElement.dataset.scheme = 'light';
+        }
+    })();
+</script>
+<div class="container main-container flex on-phone--column extended"><aside class="sidebar left-sidebar sticky">
+<button aria-label="切换菜单" class="hamburger hamburger--spin" id="toggle-menu" type="button">
+<span class="hamburger-box">
+<span class="hamburger-inner"></span>
+</span>
+</button>
+<header>
+<figure class="site-avatar">
+<a href="/">
+<img alt="Avatar" class="site-logo" height="300" loading="lazy" src="/img/avatar_huea3ce2119467b51fdd2a81393644a76d_51594_300x0_resize_q75_box.jpg" width="300"/>
+</a>
+<span class="emoji">😅</span>
+</figure>
+<div class="site-meta">
+<h1 class="site-name"><a href="/">清烛的博客</a></h1>
+<h2 class="site-description">烟火已谢，笙歌未停</h2>
+</div>
+</header><ol class="social-menu">
+<li>
+<a href="mailto:i@imyangty.com" target="_blank" title="email">
+<svg class="icon icon-tabler icon-tabler-mail" fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" viewbox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+<path d="M0 0h24v24H0z" fill="none" stroke="none"></path>
+<rect height="14" rx="2" width="18" x="3" y="5"></rect>
+<polyline points="3 7 12 13 21 7"></polyline>
+</svg>
+</a>
+</li>
+<li>
+<a href="https://github.com/Cgfyufsygsm" target="_blank" title="GitHub">
+<svg class="icon icon-tabler icon-tabler-brand-github" fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+<path d="M0 0h24v24H0z" fill="none" stroke="none"></path>
+<path d="M9 19c-4.3 1.4 -4.3 -2.5 -6 -3m12 5v-3.5c0 -1 .1 -1.4 -.5 -2c2.8 -.3 5.5 -1.4 5.5 -6a4.6 4.6 0 0 0 -1.3 -3.2a4.2 4.2 0 0 0 -.1 -3.2s-1.1 -.3 -3.5 1.3a12.3 12.3 0 0 0 -6.2 0c-2.4 -1.6 -3.5 -1.3 -3.5 -1.3a4.2 4.2 0 0 0 -.1 3.2a4.6 4.6 0 0 0 -1.3 3.2c0 4.6 2.7 5.7 5.5 6c-.6 .6 -.6 1.2 -.5 2v3.5"></path>
+</svg>
+</a>
+</li>
+<li>
+<a href="https://t.me/Cgfyufsygsm" target="_blank" title="Telegram">
+<svg class="icon icon-tabler icon-tabler-brand-telegram" fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" viewbox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+<path d="M0 0h24v24H0z" fill="none" stroke="none"></path>
+<path d="M15 10l-4 4l6 6l4 -16l-18 7l4 2l2 6l3 -4"></path>
+</svg>
+</a>
+</li>
+<li>
+<a href="https://twitter.com/Cgfyufsygsm" target="_blank" title="Twitter">
+<svg class="icon icon-tabler icon-tabler-brand-twitter" fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+<path d="M0 0h24v24H0z" fill="none" stroke="none"></path>
+<path d="M22 4.01c-1 .49 -1.98 .689 -3 .99c-1.121 -1.265 -2.783 -1.335 -4.38 -.737s-2.643 2.06 -2.62 3.737v1c-3.245 .083 -6.135 -1.395 -8 -4c0 0 -4.182 7.433 4 11c-1.872 1.247 -3.739 2.088 -6 2c3.308 1.803 6.913 2.423 10.034 1.517c3.58 -1.04 6.522 -3.723 7.651 -7.742a13.84 13.84 0 0 0 .497 -3.753c-.002 -.249 1.51 -2.772 1.818 -4.013z"></path>
+</svg>
+</a>
+</li>
+</ol><ol class="menu" id="main-menu">
+<li>
+<a href="/">
+<svg class="icon icon-tabler icon-tabler-home" fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+<path d="M0 0h24v24H0z" stroke="none"></path>
+<polyline points="5 12 3 12 12 3 21 12 19 12"></polyline>
+<path d="M5 12v7a2 2 0 0 0 2 2h10a2 2 0 0 0 2 -2v-7"></path>
+<path d="M9 21v-6a2 2 0 0 1 2 -2h2a2 2 0 0 1 2 2v6"></path>
+</svg>
+<span>主页</span>
+</a>
+</li>
+<li>
+<a href="/about/">
+<svg class="icon icon-tabler icon-tabler-user" fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+<path d="M0 0h24v24H0z" stroke="none"></path>
+<circle cx="12" cy="7" r="4"></circle>
+<path d="M6 21v-2a4 4 0 0 1 4 -4h4a4 4 0 0 1 4 4v2"></path>
+</svg>
+<span>关于</span>
+</a>
+</li>
+<li>
+<a href="/idx/">
+<svg class="icon icon-tabler icon-tabler-hash" fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+<path d="M0 0h24v24H0z" stroke="none"></path>
+<line x1="5" x2="19" y1="9" y2="9"></line>
+<line x1="5" x2="19" y1="15" y2="15"></line>
+<line x1="11" x2="7" y1="4" y2="20"></line>
+<line x1="17" x2="13" y1="4" y2="20"></line>
+</svg>
+<span>导航</span>
+</a>
+</li>
+<li>
+<a href="/archives/">
+<svg class="icon icon-tabler icon-tabler-archive" fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+<path d="M0 0h24v24H0z" stroke="none"></path>
+<rect height="4" rx="2" width="18" x="3" y="4"></rect>
+<path d="M5 8v10a2 2 0 0 0 2 2h10a2 2 0 0 0 2 -2v-10"></path>
+<line x1="10" x2="14" y1="12" y2="12"></line>
+</svg>
+<span>归档</span>
+</a>
+</li>
+<li>
+<a href="/search/">
+<svg class="icon icon-tabler icon-tabler-search" fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+<path d="M0 0h24v24H0z" stroke="none"></path>
+<circle cx="10" cy="10" r="7"></circle>
+<line x1="21" x2="15" y1="21" y2="15"></line>
+</svg>
+<span>搜索</span>
+</a>
+</li>
+<li>
+<a href="/friends/">
+<svg class="icon icon-tabler icon-tabler-link" fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+<path d="M0 0h24v24H0z" stroke="none"></path>
+<path d="M10 14a3.5 3.5 0 0 0 5 0l4 -4a3.5 3.5 0 0 0 -5 -5l-.5 .5"></path>
+<path d="M14 10a3.5 3.5 0 0 0 -5 0l-4 4a3.5 3.5 0 0 0 5 5l.5 -.5"></path>
+</svg>
+<span>友链</span>
+</a>
+</li>
+<li>
+<a href="https://blog.imyangty.com" target="_blank">
+<svg class="icon icon-tabler icon-tabler-home" fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+<path d="M0 0h24v24H0z" stroke="none"></path>
+<polyline points="5 12 3 12 12 3 21 12 19 12"></polyline>
+<path d="M5 12v7a2 2 0 0 0 2 2h10a2 2 0 0 0 2 -2v-7"></path>
+<path d="M9 21v-6a2 2 0 0 1 2 -2h2a2 2 0 0 1 2 2v6"></path>
+</svg>
+<span>主博客</span>
+</a>
+</li>
+<div class="menu-bottom-section">
+<li id="dark-mode-toggle">
+<svg class="icon icon-tabler icon-tabler-toggle-left" fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+<path d="M0 0h24v24H0z" stroke="none"></path>
+<circle cx="8" cy="12" r="2"></circle>
+<rect height="12" rx="6" width="20" x="2" y="6"></rect>
+</svg>
+<svg class="icon icon-tabler icon-tabler-toggle-right" fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+<path d="M0 0h24v24H0z" stroke="none"></path>
+<circle cx="16" cy="12" r="2"></circle>
+<rect height="12" rx="6" width="20" x="2" y="6"></rect>
+</svg>
+<span>暗色模式</span>
+</li>
+</div>
+</ol>
+</aside>
+<main class="main full-width">
+<article class="has-image main-article">
+<header class="article-header">
+<div class="article-image">
+<a href="/summary-number-theory1/">
+<img alt="Featured image of post 数论复习 1（简单数论）" loading="lazy" src="https://yangty-pic.oss-cn-beijing.aliyuncs.com/bg16.webp"/>
+</a>
+</div>
+<div class="article-details">
+<header class="article-category">
+<a href="/categories/oi/">
+                OI
+            </a>
+<a href="/categories/summary/">
+                总结
+            </a>
+</header>
+<div class="article-title-wrapper">
+<h2 class="article-title">
+<a href="/summary-number-theory1/">数论复习 1（简单数论）</a>
+</h2>
+</div>
+<footer class="article-time">
+<div>
+<svg class="icon icon-tabler icon-tabler-calendar-time" fill="none" height="56" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="56" xmlns="http://www.w3.org/2000/svg">
+<path d="M0 0h24v24H0z" stroke="none"></path>
+<path d="M11.795 21h-6.795a2 2 0 0 1 -2 -2v-12a2 2 0 0 1 2 -2h12a2 2 0 0 1 2 2v4"></path>
+<circle cx="18" cy="18" r="4"></circle>
+<path d="M15 3v4"></path>
+<path d="M7 3v4"></path>
+<path d="M3 11h16"></path>
+<path d="M18 16.496v1.504l1 1"></path>
+</svg>
+<time class="article-time--published">Aug 12, 2021</time>
+</div>
+<div>
+<svg class="icon icon-tabler icon-tabler-clock" fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+<path d="M0 0h24v24H0z" stroke="none"></path>
+<circle cx="12" cy="12" r="9"></circle>
+<polyline points="12 7 12 12 15 15"></polyline>
+</svg>
+<time class="article-time--reading">
+                    阅读时长: 23 分钟
+                </time>
+</div>
+</footer>
+</div>
+</header>
+<section class="article-content">
+<p>自己的总结，既适合新手入门也适合省选复习。文章可能很长，善用 TOC 进行跳转。</p>
+<p>主要分为若干个板块，可能中间会有难度较高的内容，可以跳读。</p>
+<h2 id="前置常用技巧">前置常用技巧</h2>
+<p>较难归类的但是非常实用的小技巧。</p>
+<h3 id="常见符号">常见符号</h3>
+<p>下文使用时将不加说明。</p>
+<p>求和/求积符号： <span class="math display">\[
+\begin{aligned}
+\sum_{i = 1}^n f(i) &amp;= f(1) + f(2) + \cdots f(n)\\
+\prod_{i =1}^nf(i) &amp;= f(1)\times f(2)\times \cdots\times f(n)\\
+\sum_{p(x)\text{ is true}}f(x) &amp;= f(x_1) + f(x_2) + \cdots\text{for all }x_i\text{ that meet the proposition}
+\end{aligned}
+\]</span> 艾弗森括号： <span class="math display">\[
+[P] = 
+\begin{cases}
+1,&amp;\text{if the proposition } P \text{ is true}\\
+0,&amp;\text{if the proposition } P \text{ is false}
+\end{cases}
+\]</span> 集合的表示： <span class="math display">\[
+S = \{x:P\}
+\]</span> 表示满足条件 <span class="math inline">\(P\)</span> 的 <span class="math inline">\(x\)</span> 构成的集合。</p>
+<h3 id="龟速乘快速乘">龟速乘/快速乘</h3>
+<p>有些毒瘤题会存在形如 <code>ll * ll % ll</code> 的操作，直接乘是会溢出出去的，在开不了 <code>__int128</code> 的时候只能考虑这两种方法。</p>
+<p>龟速乘是指像做快速幂一样，只不过是乘法换加法，思想是一样的：</p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode cpp"><code class="sourceCode cpp"><span id="cb1-1"><a aria-hidden="true" href="#cb1-1"></a>ll mul(ll a, ll b, ll mod) {</span>
+<span id="cb1-2"><a aria-hidden="true" href="#cb1-2"></a>    ll ans = <span class="dv">0</span>, x = a;</span>
+<span id="cb1-3"><a aria-hidden="true" href="#cb1-3"></a>    b = (b + mod) % mod, a = (a + mod) % mod;</span>
+<span id="cb1-4"><a aria-hidden="true" href="#cb1-4"></a>    <span class="cf">for</span> (; b; b &gt;&gt;= <span class="dv">1</span><span class="bu">ll</span>) {</span>
+<span id="cb1-5"><a aria-hidden="true" href="#cb1-5"></a>        <span class="cf">if</span> (b &amp; <span class="dv">1</span><span class="bu">ll</span>)</span>
+<span id="cb1-6"><a aria-hidden="true" href="#cb1-6"></a>            ans = (ans + x) % mod;</span>
+<span id="cb1-7"><a aria-hidden="true" href="#cb1-7"></a>        x = (x &lt;&lt; <span class="dv">1</span>) % mod;</span>
+<span id="cb1-8"><a aria-hidden="true" href="#cb1-8"></a>    }</span>
+<span id="cb1-9"><a aria-hidden="true" href="#cb1-9"></a>    <span class="cf">return</span> ans;</span>
+<span id="cb1-10"><a aria-hidden="true" href="#cb1-10"></a>}</span></code></pre></div>
+<p>而快速乘则是利用了 <code>long double</code> 的神奇性质，一行就可以搞定：</p>
+<div class="sourceCode" id="cb2"><pre class="sourceCode cpp"><code class="sourceCode cpp"><span id="cb2-1"><a aria-hidden="true" href="#cb2-1"></a><span class="kw">typedef</span> <span class="dt">long</span> <span class="dt">long</span> ll;</span>
+<span id="cb2-2"><a aria-hidden="true" href="#cb2-2"></a><span class="kw">typedef</span> <span class="dt">long</span> <span class="dt">double</span> ldb;</span>
+<span id="cb2-3"><a aria-hidden="true" href="#cb2-3"></a></span>
+<span id="cb2-4"><a aria-hidden="true" href="#cb2-4"></a>il ll mul(ll a, ll b, ll mod) {</span>
+<span id="cb2-5"><a aria-hidden="true" href="#cb2-5"></a>    <span class="cf">return</span> (a * b - (ll)((ldb)a / mod * b) * mod + mod) % mod;</span>
+<span id="cb2-6"><a aria-hidden="true" href="#cb2-6"></a>}</span></code></pre></div>
+<p>还未经过实测，但是模数很大时建议不使用，容易掉精度。</p>
+<p>其原理即为 <span class="math display">\[
+a\times b\equiv a\times b - \left\lfloor\frac{a\times b}{p}\right\rfloor p\pmod p
+\]</span></p>
+<p>upd：解禁了 <code>__int128</code> 之后这个东西应该是没必要了。。</p>
+<h3 id="光速幂">光速幂</h3>
+<p>由于快速幂怎么样都会带一个 <span class="math inline">\(\log\)</span>，在部分时限卡得很紧的题目中仍会 TLE，故引入该 trick。</p>
+<p>其适用于模数固定，底数固定的情况。例：<span class="math inline">\(a^b\bmod p\)</span>，其中 <span class="math inline">\(a\)</span> 和 <span class="math inline">\(p\)</span> 不变。</p>
+<p>原理为分段打表。首先 <span class="math inline">\(p\)</span> 如果为质数的话就欧拉定理降个幂，然后设指数上界为 <span class="math inline">\(m\)</span>，考虑 <span class="math inline">\(\sqrt m\)</span> 为阈值，处理出 <span class="math inline">\(a^0, a^1, \cdots, a^{\sqrt m}\)</span>，然后再处理出 <span class="math inline">\(a^0, a^{\sqrt m}, a^{2\sqrt m}, \cdots, a^{\sqrt m \times \sqrt m}\)</span>。</p>
+<p>这样就可以 <span class="math inline">\(O(1)\)</span> 回答询问。代码很好写，不放了。</p>
+<h3 id="底函数顶函数">底函数/顶函数</h3>
+<p>记 <span class="math inline">\(\lfloor x\rfloor\)</span> 表示 <span class="math inline">\(x\)</span> 向下取整，<span class="math inline">\(\lceil x\rceil\)</span> 表示 <span class="math inline">\(x\)</span> 向上取整。</p>
+<p>那么有常见放缩：<span class="math inline">\(\lfloor x\rfloor \le x\le \lceil x\rceil\)</span>。</p>
+<blockquote>
+<p>关键性质 <span class="math inline">\(1\)</span>：若 <span class="math inline">\(f(x)\)</span> 是单增函数，且 <span class="math inline">\(f(x)\in\mathbb Z\implies x\in\mathbb Z\)</span>，则 <span class="math display">\[
+\lfloor f(\lfloor x\rfloor )\rfloor = \lfloor f(x)\rfloor\land \lceil f(\lceil x\rceil )\rceil = \lceil f(x)\rceil
+\]</span> 具体证明可以画出函数图像来脑补一下。</p>
+</blockquote>
+<p>这于是告诉了我们，对于正整数 <span class="math inline">\(n\)</span>，有 <span class="math inline">\(\lfloor\lfloor x / m\rfloor/n\rfloor = \lfloor x / mn\rfloor\)</span>，这个结论在后文推导莫比乌斯反演题目的时候很有用。</p>
+<p>另外，对于底函数，有</p>
+<blockquote>
+<p>关键性质 <span class="math inline">\(2\)</span>：对于正整数 <span class="math inline">\(n\)</span> 和 <span class="math inline">\(x\)</span>，若令 <span class="math inline">\(y = \displaystyle\left\lfloor\frac{n}{\lfloor\frac nx\rfloor}\right\rfloor\)</span>，则 <span class="math inline">\(\forall i\in[x, y]\)</span> 有 <span class="math inline">\(\lfloor n / i\rfloor = \lfloor n / x\rfloor\)</span>。（整除分块）</p>
+<p>具体证明见下文。</p>
+</blockquote>
+<h3 id="数学基础">数学基础</h3>
+<p>对数函数：若 <span class="math inline">\(a^x = b\)</span>，其中 <span class="math inline">\(a&gt;0\land a\ne1,b&gt;0\)</span>，则 <span class="math inline">\(\log_ab = x\)</span>。一般地记 <span class="math inline">\(\ln x = \log_{\mathrm e}x\)</span>，<span class="math inline">\(\lg x = \log_{10}x\)</span>。</p>
+<p>对数函数的运算性质： <span class="math display">\[
+\begin{aligned}
+\log_ab &amp;= \frac{\log_cb}{\log_ca}&amp;\text{换底公式}\\
+\log_ab\log_bc &amp;= \log_ac\\
+\log_a{xy} &amp;= \log_a x + \log_ay&amp;\text{化乘为加}\\
+\end{aligned}
+\]</span> 复杂度分析时一般忽略底数（因为也就是常数级别的差距）。</p>
+<p>另外给出几个常见和式的估算：</p>
+<ul>
+<li><span class="math inline">\(A(n) =\displaystyle 1 + \frac{1}{\sqrt 2} + \frac{1}{\sqrt 3} + \cdots + \frac{1}{\sqrt n}\)</span>，放缩或者积分逼近有 <span class="math inline">\(A(n) = \Theta(\sqrt n)\)</span>。</li>
+<li><span class="math inline">\(B(n) = 1 + \sqrt 2+ \sqrt 3+\cdots + \sqrt n\)</span>，积分逼近有 <span class="math inline">\(B(n) = \Theta(n\sqrt n)\)</span>。</li>
+<li>调和级数求和 <span class="math inline">\(H(n) = \displaystyle 1 + \frac12 + \frac 13 + \cdots \frac 1n\)</span>，积分逼近或放缩有 <span class="math inline">\(H(n) = \Theta(\ln n)\)</span>。</li>
+</ul>
+<p>还有一些很重要的公式：</p>
+<ul>
+<li>等差数列前缀和：<span class="math inline">\(S(n) = \dfrac{(a_1 + a_n)n}{2}\)</span>。</li>
+<li>等比数列前缀和：<span class="math inline">\(S(n) = \dfrac{a_1(1 - q^n)}{1 - q}\)</span>。</li>
+<li>一些常见的前缀和：
+<ul>
+<li><span class="math inline">\(1+2+\cdots+n = \dfrac{n(n+1)}{2}\)</span>。</li>
+<li><span class="math inline">\(1^2+2^2+\cdots+n^2 = \dfrac{n(n+1)(2n+1)}{6}\)</span>。</li>
+<li><span class="math inline">\(1^3 + 2^3 + \cdots + n^3 = \left(\dfrac{n(n+1)}{2}\right)^2\)</span>。</li>
+</ul></li>
+</ul>
+<h2 id="数论基础">数论基础</h2>
+<p>一些很基础的内容，大体了解之后再开始下面的深入学习。</p>
+<h3 id="整除">整除</h3>
+<p>设 <span class="math inline">\(a,b\in Z\)</span>，其中 <span class="math inline">\(a\ne 0\)</span>。若 <span class="math inline">\(\exists q\in Z\)</span> 使得 <span class="math inline">\(b = aq\)</span>，则说 <span class="math inline">\(b\)</span> 可以被 <span class="math inline">\(a\)</span> 整除，记作 <span class="math inline">\(a\mid b\)</span>。<span class="math inline">\(a\)</span> 为 <span class="math inline">\(b\)</span> 的约数，<span class="math inline">\(b\)</span> 为 <span class="math inline">\(a\)</span> 的倍数。</p>
+<p>具有如下性质：</p>
+<ul>
+<li>传递性：<span class="math inline">\(a\mid b\land b\mid c\implies a\mid c\)</span></li>
+<li><span class="math inline">\(a\mid b\land a\mid c\iff \forall x,y\in Z, a\mid xb + yc\)</span></li>
+</ul>
+<h3 id="带余除法">带余除法</h3>
+<p>一般来说，令 <span class="math inline">\(a,b\in Z\)</span>，其中 <span class="math inline">\(a\ne 0\)</span>，则一定存在<strong>唯一确定</strong>的一组整数 <span class="math inline">\(q\)</span> 和 <span class="math inline">\(r\)</span> 满足 <span class="math display">\[
+b = qa + r,0\le r &lt; |a|
+\]</span> 称为带余除法，<span class="math inline">\(q\)</span> 为商，<span class="math inline">\(r\)</span> 为余数。</p>
+<p>注意，<span class="math inline">\(r\)</span> 只能取 <span class="math inline">\(\{0, 1, \cdots, a - 1\}\)</span> 中的数字。在 C++ 中，使用 <code>a % b</code> 语句得到 <span class="math inline">\(a\)</span> 除以 <span class="math inline">\(b\)</span> 的余数。</p>
+<h3 id="lcm-与-gcd">LCM 与 GCD</h3>
+<p>LCM，GCD 的详细定义见下文。</p>
+<p>互素：</p>
+<ul>
+<li>若 <span class="math inline">\(\gcd(a_1, a_2) = 1\)</span>，则称 <span class="math inline">\(a_1\)</span> 与 <span class="math inline">\(a_2\)</span> 互素（既约/互质），记作 <span class="math inline">\(a_1\perp a_2\)</span>。</li>
+<li>若 <span class="math inline">\(\gcd(a_1,\cdots, a_n) = 1\)</span>，则称 <span class="math inline">\(a_1,\cdots, a_n\)</span> 互素。</li>
+<li>多个整数互素并不代表他们一定两两互素。</li>
+</ul>
+<h3 id="质数">质数</h3>
+<p>质数：令 <span class="math inline">\(a\neq 0,\pm 1\)</span>，若 <span class="math inline">\(a\)</span> 除了 <span class="math inline">\(\pm 1\)</span> 和 <span class="math inline">\(\pm a\)</span> 外无其他约数，则称 <span class="math inline">\(a\)</span> 为质数。</p>
+<p>合数：令 <span class="math inline">\(a\neq 0,\pm 1\)</span>，若 <span class="math inline">\(a\)</span> 不是质数，则为合数。</p>
+<p>以下的质数一般指正质数。</p>
+<ul>
+<li>大于 <span class="math inline">\(1\)</span> 的整数 <span class="math inline">\(a\)</span> 为合数等价于 <span class="math inline">\(a = d\times e\)</span>，其中 $1&lt; d,e &lt;a $。</li>
+<li>偶质数只有 <span class="math inline">\(2\)</span>。</li>
+<li>质数有无限个，证明考虑反证法。</li>
+<li>对于合数 <span class="math inline">\(a\)</span>，一定存在质数 <span class="math inline">\(p \le \sqrt a\)</span> 使得 <span class="math inline">\(p\mid a\)</span>。</li>
+</ul>
+<h3 id="算术基本定理唯一分解定理">算术基本定理（唯一分解定理）</h3>
+<p>正整数 <span class="math inline">\(a\)</span> 必能表示成如下形式： <span class="math display">\[
+a = p_1^{\alpha_1}p_2^{\alpha_2}\cdots p_k^{\alpha_k}
+\]</span> 其中 <span class="math inline">\(p_i\)</span> 为质数，上式为 <span class="math inline">\(a\)</span> 的标准质因子分解式。</p>
+<h3 id="同余">同余</h3>
+<p>设整数 <span class="math inline">\(m\neq 0\)</span>，<span class="math inline">\(m\mid a - b\)</span>，则称在模 <span class="math inline">\(m\)</span> 意义下，<span class="math inline">\(a\)</span> 与 <span class="math inline">\(b\)</span> 同余，记作 <span class="math display">\[
+a\equiv b\pmod m
+\]</span> 一般来说模数都是正整数。</p>
+<p>性质：</p>
+<ul>
+<li>自反性：<span class="math inline">\(a\equiv a\pmod m\)</span>。</li>
+<li>对称性：<span class="math inline">\(a\equiv b\pmod m\iff b\equiv a\pmod m\)</span>。</li>
+<li>传递性：<span class="math inline">\(a\equiv b\pmod m\land b\equiv c\pmod m\implies a\equiv c\pmod m\)</span>。</li>
+<li>线性运算：若 <span class="math inline">\(a\equiv b\pmod m\)</span>，<span class="math inline">\(c\equiv d\pmod m\)</span>，则
+<ul>
+<li><span class="math inline">\(a\pm c\equiv b\pm d\pmod m\)</span>。（加减上）</li>
+<li><span class="math inline">\(ac\equiv bd\pmod m\)</span>。乘法可以但是<strong>除法不行</strong>。</li>
+</ul></li>
+<li>若 <span class="math inline">\(a\equiv b\pmod m\)</span>，则 <span class="math inline">\(ak\equiv bk\pmod {mk}\)</span>，其中 <span class="math inline">\(k\neq 0\)</span>。</li>
+<li><strong>除法的情况</strong>：<span class="math inline">\(k\mid a\land k\mid b\land k\mid m\)</span>：若 <span class="math inline">\(a\equiv b\pmod m\)</span>，则 <span class="math inline">\(\dfrac ak\equiv \dfrac bk\pmod{\dfrac mk}\)</span>。</li>
+</ul>
+<p>乘法逆元见下。</p>
+<p>一般在写程序时应用：</p>
+<div class="sourceCode" id="cb3"><pre class="sourceCode cpp"><code class="sourceCode cpp"><span id="cb3-1"><a aria-hidden="true" href="#cb3-1"></a>(a + b) % p = (a % p + b % p) % p</span>
+<span id="cb3-2"><a aria-hidden="true" href="#cb3-2"></a>(a * b) % p = (a % p) * (b % p) % p</span></code></pre></div>
+<p>这就是为什么很多题目要求我们对很大的答案可以取模输出。</p>
+<h3 id="数论函数">数论函数</h3>
+<p>定义域为 <span class="math inline">\(\mathbf N^*\)</span>，值域为 <span class="math inline">\(\mathbf C\)</span> 的函数（可看作数列）。</p>
+<p>积性函数：若 <span class="math inline">\(f(1) = 1\)</span>，且 <span class="math inline">\(\forall x\perp y\)</span> 都有 <span class="math inline">\(f(xy) = f(x)f(y)\)</span>，则称 <span class="math inline">\(f(n)\)</span> 为积性函数。</p>
+<p>完全积性：若 <span class="math inline">\(f(1) = 1\)</span>，且 <span class="math inline">\(\forall x,y\)</span> 都有 <span class="math inline">\(f(xy) = f(x)f(y)\)</span>，则称 <span class="math inline">\(f(n)\)</span> 为完全积性函数。</p>
+<p>若 <span class="math inline">\(f(x)\)</span> 和 <span class="math inline">\(g(x)\)</span> 为积性函数，则下列函数也是积性（易证）： <span class="math display">\[
+\begin{aligned}
+h(x) &amp;= f(x^p)\\
+h(x) &amp;= f^p(x)\\
+h(x) &amp;= f(x)g(x)\\
+h(x) &amp;= f(x)*g(x) = \sum_{d\mid x}f(d)g(\frac xd)
+\end{aligned}
+\]</span> 积性函数一般可以指导我们干这样的事情，令 <span class="math inline">\(x = \prod p_i^{\alpha_i}\)</span>（标准分解式） <span class="math display">\[
+F(x) = \prod F(p_i^{\alpha_i})
+\]</span> 这个性质很关键，可以解决很多问题。</p>
+<p>常见的函数：</p>
+<ul>
+<li>单位函数：<span class="math inline">\(\epsilon(n) = [n = 1]\)</span>，完全积性。</li>
+<li>幂函数：<span class="math inline">\(\operatorname{id}_k(n) = n^k\)</span>，<span class="math inline">\(\operatorname{id}_1\)</span> 一般记作 <span class="math inline">\(\operatorname{id}\)</span>，完全积性。</li>
+<li>常数函数：<span class="math inline">\(1(n) = 1\)</span>，完全积性。</li>
+<li>除数函数：<span class="math inline">\(\sigma_k(n) = \sum_{d\mid n}d^k\)</span>，<span class="math inline">\(\sigma_0(n)\)</span> 一般记作 <span class="math inline">\(d(n)\)</span> 或 <span class="math inline">\(\tau(n)\)</span>，表示约数个数。<span class="math inline">\(\sigma_1(n)\)</span> 一般记作 <span class="math inline">\(\sigma(n)\)</span>，表示约数之和，积性。</li>
+<li>欧拉函数：<span class="math inline">\([1, n]\)</span> 内与 <span class="math inline">\(n\)</span> 互质的数的个数：<span class="math inline">\(\varphi(n) = \sum_{i = 1}^{n - 1}[i\perp n]\)</span>，积性。</li>
+<li>莫比乌斯函数：<span class="math inline">\(\mu(n) = \begin{cases}1&amp;n = 1\\0&amp;\exists d &gt; 1\land d^2\mid n\\(-1)^{\omega(n)}&amp;\text{otherwise}\end{cases}\)</span>，其中 <span class="math inline">\(\omega(n)\)</span> 表示 <span class="math inline">\(n\)</span> 的本质不同质因子个数。</li>
+</ul>
+<p>欧拉函数的性质下文会提到，莫比乌斯函数会在莫反一节进一步展开。</p>
+<p><strong>几乎所有的积性函数</strong>都可以使用 <span class="math inline">\(O(n)\)</span> 线性筛，详见下文线性筛部分。</p>
+<h2 id="最大公约数相关">最大公约数相关</h2>
+<h3 id="基础性质">基础性质</h3>
+<p><span class="math inline">\(\gcd(a, b)\)</span> 表示 <span class="math inline">\(a\)</span> 和 <span class="math inline">\(b\)</span> 的最大公约数，其相当于在每个质因子的幂次上面取 <span class="math inline">\(\min\)</span>。<span class="math inline">\(\operatorname{lcm}(a, b)\)</span> 表示 <span class="math inline">\(a\)</span> 和 <span class="math inline">\(b\)</span> 的最小公倍数，相当于取 <span class="math inline">\(\max\)</span>。</p>
+<p>即： <span class="math display">\[
+\begin{aligned}
+a &amp;= \prod p_i^{x_i}\\
+b &amp;= \prod p_i^{y_i}\\
+\gcd(a, b) &amp;= \prod p_i^{\min(x_i, y_i)}\\
+\operatorname{lcm}(a, b) &amp;= \prod p_i^{\max(x_1, y_i)}
+\end{aligned}
+\]</span> 于是我们可以得到下面的一个关键性质（常用于 <span class="math inline">\(\gcd\)</span> 和 <span class="math inline">\(\operatorname{lcm}\)</span> 的互化）： <span class="math display">\[
+\gcd(a,b) \times \operatorname{lcm}(a,b) = a\times b
+\]</span> 对于多个数，相当于就是 <span class="math inline">\(\gcd(a,\gcd(b, c))\)</span>，道理是一样的。</p>
+<h3 id="欧几里得算法辗转相除法">欧几里得算法（辗转相除法）</h3>
+<p>考虑求 <span class="math inline">\(\gcd(a,b)\)</span>。结论： <span class="math display">\[
+\gcd(a,b) = \gcd(b, a\bmod b)
+\]</span> 考虑进行证明：</p>
+<ul>
+<li>若 <span class="math inline">\(a &lt; b\)</span>，则 <span class="math inline">\(\gcd(b, a\bmod b) = \gcd(b, a)\)</span>，显然得证。</li>
+<li>否则，设 <span class="math inline">\(a = qb + r\)</span>，其中 <span class="math inline">\(0\le r &lt; b\)</span>，显然 <span class="math inline">\(r = a\bmod b\)</span>，<span class="math inline">\(\forall d\mid a, d\mid b\)</span>，都有 <span class="math inline">\(d\mid (a - qb)\)</span>，即 <span class="math inline">\(d\mid r\)</span>，相当于 <span class="math inline">\(a,b\)</span> 和 <span class="math inline">\(r, b\)</span> 的公因数集合是一样的。其 gcd 自然相等，得证。</li>
+</ul>
+<p>递归写法，因为 <span class="math inline">\(\gcd(a, 0) = a\)</span>，所以递归终止条件是 <span class="math inline">\(b = 0\)</span>。</p>
+<div class="sourceCode" id="cb4"><pre class="sourceCode cpp"><code class="sourceCode cpp"><span id="cb4-1"><a aria-hidden="true" href="#cb4-1"></a><span class="dt">int</span> gcd(<span class="dt">int</span> a, <span class="dt">int</span> b) {<span class="cf">return</span> !b ? a : gcd(b, a % b);}</span></code></pre></div>
+<p>时间复杂度：由于若 <span class="math inline">\(a \ge b\)</span>，则 <span class="math inline">\(a\bmod b\)</span> 一次至少可以让 <span class="math inline">\(a\)</span> 折半，<span class="math inline">\(a&lt;b\)</span> 的下一步必然是 <span class="math inline">\(a\ge b\)</span>，故时间复杂度为 <span class="math inline">\(O(\log n)\)</span>。上界很松，但 <span class="math inline">\(\gcd(Fib_i, Fib_{i + 1})\)</span> 可以将其卡满。</p>
+<h3 id="stein-算法更相减损术">Stein 算法（更相减损术）</h3>
+<blockquote>
+<p>例题 <span class="math inline">\(1\)</span>：<a href="https://www.luogu.com.cn/problem/P2152">P2152 [SDOI2009]SuperGCD</a></p>
+<p>求 <span class="math inline">\(a, b\le 10^{10000}\)</span> 的最大公约数。</p>
+</blockquote>
+<p>直接使用辗转相除法的话，时间复杂度会炸的很恼火（因为高精除法较慢），而单纯辗转相减又容易遇到一些不优的情况。所以考虑二进制优化： <span class="math display">\[
+\forall a,b\in \mathbf N, a \ge b\implies \gcd(a, b) = \gcd(a, a - b) = \gcd(b, a - b)
+\]</span> 并且 <span class="math display">\[
+\gcd(2a, 2b) = 2\gcd(a, b)
+\]</span> 注意到减两次就一定会遇到偶数，可以除以 <span class="math inline">\(2\)</span>，因此复杂度为 <span class="math inline">\(\log^2\)</span> 级别（单次运算 <span class="math inline">\(\log\)</span>）。套用该算法并使用压位高精便可通过本题。</p>
+<h3 id="拓展欧几里得">拓展欧几里得</h3>
+<p>主要用于求解 <span class="math inline">\(ax + by = c\)</span> 的整数不定方程相关问题。</p>
+<p>一部分线性同余方程可以等价转化为上式求解。</p>
+<h4 id="求解过程">求解过程</h4>
+<p>由下文裴蜀定理可知，$(a,b)c $ 时方程才有解。现在不妨先解决方程 <span class="math inline">\(ax + by = \gcd(a, b)\)</span>，解出答案后扩大相应倍数即可。</p>
+<p>设 <span class="math display">\[
+\begin{aligned}
+ax_1 + by_1 &amp;= \gcd(a, b)\\
+bx_2 + (a\bmod b)y_2 &amp;= \gcd(b, a\bmod b)
+\end{aligned}
+\]</span> 由于 <span class="math inline">\((a, b) = (b, a\bmod b)\)</span>，故 <span class="math display">\[
+\begin{aligned}
+ax_1 + by_1 &amp;= bx_2 + (a\bmod b)y_2\\
+ax_1 + by_1 &amp;= bx_2 + (a - b\lfloor\frac ab\rfloor)y_2\\
+ax_1 + by_1 &amp;= bx_2 + ay_2 - b(\lfloor\frac ab\rfloor y_2)\\
+ax_1 + by_1 &amp;= ay_2 + b(x_2 - \lfloor\frac ab\rfloor y_2)
+\end{aligned}
+\]</span> 所以 <span class="math inline">\(x_1 = y_2\)</span>，<span class="math inline">\(y_1 = x_2 - \lfloor\frac ab\rfloor y_2\)</span>。写成代码就是：</p>
+<div class="sourceCode" id="cb5"><pre class="sourceCode cpp"><code class="sourceCode cpp"><span id="cb5-1"><a aria-hidden="true" href="#cb5-1"></a><span class="dt">int</span> exgcd(<span class="dt">int</span> a, <span class="dt">int</span> b, <span class="dt">int</span> &amp;x, <span class="dt">int</span> &amp;y) {</span>
+<span id="cb5-2"><a aria-hidden="true" href="#cb5-2"></a>    <span class="cf">if</span> (!b) {</span>
+<span id="cb5-3"><a aria-hidden="true" href="#cb5-3"></a>        x = <span class="dv">1</span>, y = <span class="dv">0</span>;</span>
+<span id="cb5-4"><a aria-hidden="true" href="#cb5-4"></a>        <span class="cf">return</span> a;</span>
+<span id="cb5-5"><a aria-hidden="true" href="#cb5-5"></a>    }</span>
+<span id="cb5-6"><a aria-hidden="true" href="#cb5-6"></a>    <span class="dt">int</span> d = exgcd(b, a % b, y, x);</span>
+<span id="cb5-7"><a aria-hidden="true" href="#cb5-7"></a>    y -= a / b * x;</span>
+<span id="cb5-8"><a aria-hidden="true" href="#cb5-8"></a>    <span class="cf">return</span> d;</span>
+<span id="cb5-9"><a aria-hidden="true" href="#cb5-9"></a>}</span></code></pre></div>
+<p>边界条件显然有 <span class="math inline">\(a\times 1 + 0\times b = a\)</span>。</p>
+<p>这样子解出来的一组解是 <span class="math inline">\(ax + by = \gcd(a, b)\)</span> 的一组特解 <span class="math inline">\((x_0, y_0)\)</span>。回代一下原方程： <span class="math display">\[
+\begin{aligned}
+ax_0 + by_0 &amp;= \gcd(a, b)\\
+a\cdot\frac{cx_0}{\gcd(a, b)} + b\cdot\frac{cy_0}{\gcd(a, b)} &amp;= c
+\end{aligned}
+\]</span> 所以原方程的特解 <span class="math inline">\(x^*\)</span> 和 <span class="math inline">\(y^*\)</span> 为 <span class="math display">\[
+x^* =\frac{cx_0}{\gcd(a, b)}, y^* =\frac{cy_0}{\gcd(a, b)}
+\]</span></p>
+<h4 id="构造通解">构造通解</h4>
+<p>设任意 <span class="math inline">\(d\in\mathbf Q\)</span>，则 <span class="math display">\[
+a(x^* + db) + b(y^* - da) = c
+\]</span> 必然是成立的。通解需要保证 <span class="math inline">\(x^* + db\)</span> 与 <span class="math inline">\(y^* - da\)</span> 都为整数，所以通解的形式为： <span class="math display">\[
+x = x^* + s\cdot\frac{b}{\gcd(a, b)}\\
+y = y^* - s\cdot\frac{a}{\gcd(a, b)}
+\]</span> 其中 <span class="math inline">\(s\in \mathbf Z\)</span>。</p>
+<p>我们是不是就可以知道，<span class="math inline">\(x\)</span> 和 <span class="math inline">\(y\)</span> 是负相关的。其实我们将其表示的直线画在坐标系里面就会发现这是显然的。</p>
+<blockquote>
+<p>例题 <span class="math inline">\(2\)</span>：<a href="https://www.luogu.com.cn/problem/P1082">P1082 [NOIP2012 提高组] 同余方程</a></p>
+<p>求 <span class="math inline">\(ax\equiv 1 \pmod b\)</span> 的最小正整数解。<span class="math inline">\(2\le a,b\le 2\times 10^9\)</span>，保证有解。</p>
+</blockquote>
+<p>稍微转化一下问题，引入另一个未知量 <span class="math inline">\(y\)</span> 得到 <span class="math inline">\(ax + by = 1\)</span>，用 exgcd 解一组特解，然后由 <span class="math inline">\(x = x^* + s\cdot b\)</span> 得到答案为 <span class="math inline">\(x\bmod b\)</span>。</p>
+<blockquote>
+<p>例题 <span class="math inline">\(3\)</span>：<a href="https://www.luogu.com.cn/problem/P1516">P1516 青蛙的约会</a></p>
+<p>长度为 <span class="math inline">\(L\)</span> 的首尾相接的数轴上有两只青蛙，坐标分别为 <span class="math inline">\(x\)</span>，<span class="math inline">\(y\)</span>，分别每次能往前跳 <span class="math inline">\(m\)</span> 和 <span class="math inline">\(n\)</span> 个单位长度，求最少跳几次后相遇。</p>
+</blockquote>
+<p>不难得到题目需要我们解如下关于 <span class="math inline">\(k\)</span> 的方程的最小正整数解： $x+kmy+knL $ 化简可得到 <span class="math inline">\((m-n)k\equiv y-x\pmod L\)</span> 也就是说，我们只要找得到方程 <span class="math inline">\((m-n)k+Lj=y-x\)</span> （其中 <span class="math inline">\(j\in\mathbb{Z}\)</span>）的最小正整数解即可，直接上 exgcd。</p>
+<blockquote>
+<p>例题 <span class="math inline">\(4\)</span>​：<a href="https://www.luogu.com.cn/problem/P5656">P5656 【模板】二元一次不定方程 (exgcd)</a></p>
+<p>给定不定方程 <span class="math inline">\(ax + by = c\)</span>，其中 <span class="math inline">\(a,b,c\in\mathbf Z\)</span>。若无整数解，输出 <span class="math inline">\(-1\)</span>；若有正整数解，输出其数量，所有<strong>正整数解</strong>中 <span class="math inline">\(x\)</span> 的最小值/最大值以及 <span class="math inline">\(y\)</span> 的最小值/最大值；若无正整数解，输出所有<strong>整数解</strong>中 <span class="math inline">\(x\)</span> 的最小正整数值和 <span class="math inline">\(y\)</span> 的最小正整数值。</p>
+</blockquote>
+<p>无解直接判 <span class="math inline">\(\gcd(a,b)\)</span> 是否整除 <span class="math inline">\(c\)</span> 即可。</p>
+<p>然后不妨令上文中的 <span class="math inline">\(\dfrac{b}{\gcd(a,b)}\)</span> 为 <span class="math inline">\(d_x\)</span>，<span class="math inline">\(\dfrac{a}{\gcd(a,b)}\)</span> 为 <span class="math inline">\(d_y\)</span>，则 <span class="math inline">\(x = x^* + sd_x\)</span>，<span class="math inline">\(y = y^* - sd_y\)</span>。对于正整数解的限制就列不等式： <span class="math display">\[
+\begin{aligned}
+x^* + sd_x&gt; 0 &amp;\implies s \ge \left\lceil\frac{-x^* + 1}{d_x}\right\rceil\\
+y^* - sd_y&gt;0 &amp;\implies s\le \left\lfloor\frac{y^* - 1}{d_y} \right\rfloor
+\end{aligned}
+\]</span> 界出来了就可以直接判合法的 <span class="math inline">\(s\)</span> 是否存在了。<span class="math inline">\(s\)</span> 取最大对应 <span class="math inline">\(x\)</span> 最大，<span class="math inline">\(y\)</span> 最小，反之亦然。于是本题得到了解决。</p>
+<h4 id="值域分析">值域分析</h4>
+<p>对于 <span class="math inline">\(ax + by = \gcd(a,b)\)</span> 的特解 <span class="math inline">\((x^*, y^*)\)</span>，有如下关于值域的结论：</p>
+<p>若 <span class="math inline">\(b\ne 0\)</span>，则 <span class="math inline">\(x^*\)</span> 和 <span class="math inline">\(y^*\)</span> 必满足 <span class="math inline">\(|x|\le b\)</span>，<span class="math inline">\(|y|\le a\)</span>。归纳证明：</p>
+<ul>
+<li><p><span class="math inline">\(\gcd(a,b) = b\)</span> 时，必然在下一层停止递归。此时 <span class="math inline">\(x^* = 0, y^* = 1\)</span>，显然 <span class="math inline">\(a,b\ge 1\ge |x^*|, |y^*|\)</span>。</p></li>
+<li><p><span class="math inline">\(\gcd(a,b) \ne b\)</span> 时，设 <span class="math inline">\(|x_2|\le (a\bmod b),|y_2|\le b\)</span>。</p>
+<p>由于 <span class="math inline">\(x^* = y_2\)</span>，<span class="math inline">\(y^* = x_2 - \lfloor a / b\rfloor y_2\)</span>，故 <span class="math inline">\(|x^*| = |y_2|\le b\)</span>。</p>
+<p>而 <span class="math inline">\(|y^*| \le |x_2| + |\lfloor a / b\rfloor\cdot y_2|\le (a\bmod b) + \lfloor a / b\rfloor y_2\le a - \lfloor a/ b\rfloor(b - |y_2|)\le a\)</span>。证毕。</p></li>
+</ul>
+<p>所以，exgcd 解出来的解<del>铁定是不会爆值域的</del>。</p>
+<h3 id="裴蜀定理">裴蜀定理</h3>
+<p>对于两个数的情况：<span class="math inline">\(\forall a, b\in \mathbf Z\)</span>，令 <span class="math inline">\(\gcd(a, b) = d\)</span>，则 <span class="math inline">\(\forall x,y\in\mathbf Z\)</span>，都有 <span class="math display">\[
+d\mid ax + by
+\]</span> 特别的，<span class="math inline">\(\exists x, y\in\mathbf Z\)</span> 使得 <span class="math display">\[
+ax + by = d
+\]</span> 证明：考虑若 <span class="math inline">\(ax + by = d\)</span> 成立，则 <span class="math inline">\(ax + by = sd\)</span>（其中 <span class="math inline">\(s\in \mathbb Z\)</span>）也是成立的。所以先证明 <span class="math inline">\(ax + by = d\)</span> 成立。</p>
+<p>然后，假设其成立，则我们可以两边同时除以 <span class="math inline">\(d\)</span>，得到 <span class="math inline">\(a'x + b'y = 1\)</span>，故我们证明其成立即可。</p>
+<p>我们构造一个解：回顾辗转相除法，设每次模出来的余数为 <span class="math inline">\(r_i\)</span>，则我们有： <span class="math display">\[
+(a_1, b_1) = (b_1, r_1) = (r_1, r_2) = \cdots (r_{n - 1}, r_n) = 1
+\]</span> 展开辗转相除过程中的运算： <span class="math display">\[
+\begin{aligned}
+a_1 &amp;= q_1b_1 + r_1\\
+b_1 &amp;= q_2r_1 + r_2\\
+r_1 &amp;= q_3r_2 + r_3\\
+&amp;\cdots\\
+r_{n - 3} &amp;= q_{n - 1}r_{n - 2} + r_{n - 1}\\
+r_{n - 2} &amp;= q_{n}r_{n - 1} + r_n\\
+r_{n - 1} &amp;= q_{n + 1}r_n
+\end{aligned}
+\]</span> 辗转相除到最后，<span class="math inline">\(r_n = 1\)</span>，将所有的 <span class="math inline">\(q\)</span> 换成 <span class="math inline">\(x\)</span> 的形式： <span class="math display">\[
+r_{n - 2} = x_nr_{n - 1} + 1
+\]</span></p>
+<p><span class="math display">\[
+r_{n - 2} - r_{n - 1}x_n = 1
+\]</span></p>
+<p>然后将倒数第三个式子 <span class="math inline">\(r_{n - 1} = r_{n - 3} - x_{n - 1}r_{n - 2}\)</span> 代入，则 <span class="math display">\[
+r_{n - 3}x_1 -  x_{n - 1}x_nr_{n - 2}  = r_{n - 2} - 1
+\]</span> 整理得 <span class="math display">\[
+(1 + x_{n -1}x_n)r_{n - 2} - x_nr_{n - 3} = 1
+\]</span> 一步步回代，就可以得到 <span class="math inline">\(ax+ by = 1\)</span> 的形式。</p>
+<p>拓展到 <span class="math inline">\(n\)</span> 个整数上，令 <span class="math inline">\(a_1,\cdots,a_n\in\mathbb Z\)</span>，令 <span class="math inline">\(\gcd\{a_1,\cdots, a_n\} = d\)</span>，则 <span class="math inline">\(\forall x_i\in \mathbb Z\)</span>，都有 <span class="math display">\[
+d\mid \sum_{i = 1}^na_ix_i
+\]</span> &gt; 例题 <span class="math inline">\(5\)</span>：<a href="https://www.luogu.com.cn/problem/P4549">P4549 【模板】裴蜀定理</a> &gt; &gt; 给定 <span class="math inline">\(n\le 20\)</span> 个元素，值域 <span class="math inline">\([-10^5, 10^5]\)</span> 的整数序列 <span class="math inline">\(A\)</span>，求一组整数 <span class="math inline">\(X\)</span> 满足 <span class="math inline">\(\displaystyle\sum_{i=1}^nA_iX_i\)</span> 大于 <span class="math inline">\(0\)</span> 且最小，输出这个最小值。</p>
+<p>由于 <span class="math inline">\(\gcd\{A_i\}\mid \sum A_iX_i\)</span>，所以 <span class="math inline">\(\gcd\{A_i\}\)</span> 即为答案。</p>
+<h3 id="基于值域预处理的快速-gcd">基于值域预处理的快速 GCD</h3>
+<blockquote>
+<p>例题 <span class="math inline">\(6\)</span>：<a href="https://www.luogu.com.cn/problem/P5435">P5435 基于值域预处理的快速 GCD</a></p>
+<p>给定 <span class="math inline">\(n\le 5000\)</span> 以及 <span class="math inline">\(a_{1,\cdots, n}\)</span> 和 <span class="math inline">\(b_{1,\cdots, n}\)</span>。值域 <span class="math inline">\(10^6\)</span>，对所有 <span class="math inline">\((i,j)\)</span> 求出 <span class="math inline">\(\gcd(a_i, b_j)\)</span>。输出格式见原题。</p>
+</blockquote>
+<p>这是一个当询问 gcd 的次数巨大多而值域 <span class="math inline">\(N\)</span> 有限（<span class="math inline">\(10^6\)</span> 级别左右）时，可以 <span class="math inline">\(O(N)\)</span> 预处理，<span class="math inline">\(O(1)\)</span> 回答单次询问的神奇方法。有些时候可以拯救你的常数。</p>
+<p>定义一个数集 <span class="math inline">\(\{a_1, \cdots, a_k\}\)</span> 为 <span class="math inline">\(n\)</span> 的分解当 <span class="math inline">\(\prod_{i =1}^ka_i = n\)</span>。</p>
+<p>引理：可以将值域内的每个数 <span class="math inline">\(n\)</span> 分解为 <span class="math inline">\(\{a, b, c\}\)</span>，且 <span class="math inline">\(a,b,c\le \sqrt n\)</span> 或为质数。下面默认 <span class="math inline">\(a\le b\le c\)</span>。</p>
+<p>证明：不妨设 <span class="math inline">\(c\)</span> 不为质数且 <span class="math inline">\(c&gt; \sqrt n\)</span>。那么 <span class="math inline">\(c\)</span> 显然可以分解为 <span class="math inline">\(\{d, e\}\)</span> 且 <span class="math inline">\(d\le e\land d\le \sqrt n\)</span>。而 <span class="math inline">\(a\times b= \dfrac nc&lt; \sqrt n\)</span>， 所以有 <span class="math inline">\(n\)</span> 的分解 <span class="math inline">\(\{d, ab, e\}\)</span>，于是乎可以这样一直分解下去到合法为止。</p>
+<p>然后对于询问 <span class="math inline">\(\gcd(x, y)\)</span>，我们就分解 <span class="math inline">\(x = abc\)</span>，分开考虑其贡献。<span class="math inline">\(a\)</span> 对答案的贡献为 <span class="math inline">\(\gcd(a, y) = \gcd(a, y\bmod a)\)</span>，然后将 <span class="math inline">\(y\)</span> 除掉 <span class="math inline">\(\gcd(a, y)\)</span> 防止重复统计贡献，然后对 <span class="math inline">\(b\)</span> 和 <span class="math inline">\(c\)</span> 做同样的事情就可以了。</p>
+<p>现在的问题是如何在 <span class="math inline">\(O(N)\)</span> 的时间内计算出每个数的分解。</p>
+<p>方法：对于 <span class="math inline">\(x = 1\)</span>，显然为 <span class="math inline">\(\{1, 1, 1\}\)</span>；对于 <span class="math inline">\(x\ge 2\)</span>，找到 <span class="math inline">\(x\)</span> 的最小质因子 <span class="math inline">\(p\)</span> 以及 <span class="math inline">\(\dfrac xp\)</span> 的合法分解 <span class="math inline">\(\{a_0, b_0, c_0\}\)</span>，则 <span class="math inline">\(x\)</span> 的一种合法分解为 <span class="math inline">\(\{a_0p, b_0, c_0\}\)</span> 的升序排序。</p>
+<p>证明：</p>
+<ul>
+<li><span class="math inline">\(x\)</span> 为质数时显然成立，为 <span class="math inline">\(\{1, 1, x\}\)</span>。</li>
+<li><span class="math inline">\(p\le\sqrt[4]x\)</span> 时，由于 <span class="math inline">\(a_0\le\sqrt[3]{\dfrac{x}{p}}\)</span>，故 <span class="math inline">\(a_op\le \sqrt x\)</span>。</li>
+<li><span class="math inline">\(p &gt; \sqrt[4]x\)</span> 时：
+<ul>
+<li><span class="math inline">\(a_0 = 1\)</span> 时，有 <span class="math inline">\(a_0p = p\le \sqrt x\)</span>。</li>
+<li><span class="math inline">\(a_0\ne 1\)</span> 时，由于 <span class="math inline">\(x\)</span> 不为素数，所以 <span class="math inline">\(\dfrac xp\)</span> 的最小质因子 <span class="math inline">\(q\)</span> 即为 <span class="math inline">\(x\)</span> 的第二小质因子，一定 <span class="math inline">\(\ge p\)</span>。我们又可以知道 <span class="math inline">\(p \le q\le a_0\le b_0\le c_0\)</span>，所以 <span class="math inline">\(pa_0b_0c_0 &gt; (\sqrt[4]x)^4 = x\)</span> 与 <span class="math inline">\(pa_0b_0c_0 = x\)</span> 矛盾，故该情况不存在。</li>
+</ul></li>
+</ul>
+<p>那么线性筛的时候顺带用最小质因子更新，预处理 <span class="math inline">\(\sqrt N\)</span> 范围的 <span class="math inline">\(\gcd\)</span> 数组即可。代码如下：</p>
+<div class="sourceCode" id="cb6"><pre class="sourceCode cpp"><code class="sourceCode cpp"><span id="cb6-1"><a aria-hidden="true" href="#cb6-1"></a><span class="at">const</span> <span class="dt">int</span> N = <span class="fl">1e6</span>, T = <span class="fl">1e3</span>, maxn = <span class="dv">5005</span>;</span>
+<span id="cb6-2"><a aria-hidden="true" href="#cb6-2"></a><span class="dt">int</span> isp[N + <span class="dv">5</span>], p[N + <span class="dv">5</span>], cnt;</span>
+<span id="cb6-3"><a aria-hidden="true" href="#cb6-3"></a><span class="dt">int</span> fac[N + <span class="dv">5</span>][<span class="dv">3</span>], _gcd[T + <span class="dv">5</span>][T + <span class="dv">5</span>];</span>
+<span id="cb6-4"><a aria-hidden="true" href="#cb6-4"></a></span>
+<span id="cb6-5"><a aria-hidden="true" href="#cb6-5"></a><span class="dt">void</span> sieve() {</span>
+<span id="cb6-6"><a aria-hidden="true" href="#cb6-6"></a>    fac[<span class="dv">1</span>][<span class="dv">0</span>] = fac[<span class="dv">1</span>][<span class="dv">1</span>] = fac[<span class="dv">1</span>][<span class="dv">2</span>] = <span class="dv">1</span>;</span>
+<span id="cb6-7"><a aria-hidden="true" href="#cb6-7"></a>    FOR(i, <span class="dv">2</span>, N) {</span>
+<span id="cb6-8"><a aria-hidden="true" href="#cb6-8"></a>        <span class="cf">if</span> (!isp[i]) p[++cnt] = i, fac[i][<span class="dv">0</span>] = fac[i][<span class="dv">1</span>] = <span class="dv">1</span>, fac[i][<span class="dv">2</span>] = i;</span>
+<span id="cb6-9"><a aria-hidden="true" href="#cb6-9"></a>        <span class="cf">for</span> (<span class="dt">int</span> j = <span class="dv">1</span>; i * p[j] &lt;= N &amp;&amp; j &lt;= cnt; ++j) {</span>
+<span id="cb6-10"><a aria-hidden="true" href="#cb6-10"></a>            <span class="dt">int</span> tmp = i * p[j];</span>
+<span id="cb6-11"><a aria-hidden="true" href="#cb6-11"></a>            isp[tmp] = <span class="dv">1</span>;</span>
+<span id="cb6-12"><a aria-hidden="true" href="#cb6-12"></a>            fac[tmp][<span class="dv">0</span>] = fac[i][<span class="dv">0</span>] * p[j];</span>
+<span id="cb6-13"><a aria-hidden="true" href="#cb6-13"></a>            fac[tmp][<span class="dv">1</span>] = fac[i][<span class="dv">1</span>], fac[tmp][<span class="dv">2</span>] = fac[i][<span class="dv">2</span>];</span>
+<span id="cb6-14"><a aria-hidden="true" href="#cb6-14"></a>            <span class="cf">if</span> (fac[tmp][<span class="dv">0</span>] &gt; fac[tmp][<span class="dv">1</span>]) myswap(fac[tmp][<span class="dv">0</span>], fac[tmp][<span class="dv">1</span>]);</span>
+<span id="cb6-15"><a aria-hidden="true" href="#cb6-15"></a>            <span class="cf">if</span> (fac[tmp][<span class="dv">1</span>] &gt; fac[tmp][<span class="dv">2</span>]) myswap(fac[tmp][<span class="dv">1</span>], fac[tmp][<span class="dv">2</span>]);</span>
+<span id="cb6-16"><a aria-hidden="true" href="#cb6-16"></a>            <span class="cf">if</span> (i % p[j] == <span class="dv">0</span>) <span class="cf">break</span>;</span>
+<span id="cb6-17"><a aria-hidden="true" href="#cb6-17"></a>        }</span>
+<span id="cb6-18"><a aria-hidden="true" href="#cb6-18"></a>    }</span>
+<span id="cb6-19"><a aria-hidden="true" href="#cb6-19"></a>    FOR(i, <span class="dv">0</span>, T) _gcd[i][<span class="dv">0</span>] = _gcd[<span class="dv">0</span>][i] = i;</span>
+<span id="cb6-20"><a aria-hidden="true" href="#cb6-20"></a>    FOR(i, <span class="dv">1</span>, T)</span>
+<span id="cb6-21"><a aria-hidden="true" href="#cb6-21"></a>        FOR(j, <span class="dv">1</span>, i)</span>
+<span id="cb6-22"><a aria-hidden="true" href="#cb6-22"></a>            _gcd[i][j] = _gcd[j][i] = _gcd[j][i % j];</span>
+<span id="cb6-23"><a aria-hidden="true" href="#cb6-23"></a>    <span class="cf">return</span>;</span>
+<span id="cb6-24"><a aria-hidden="true" href="#cb6-24"></a>}</span>
+<span id="cb6-25"><a aria-hidden="true" href="#cb6-25"></a></span>
+<span id="cb6-26"><a aria-hidden="true" href="#cb6-26"></a><span class="dt">int</span> gcd(<span class="dt">int</span> x, <span class="dt">int</span> y) {</span>
+<span id="cb6-27"><a aria-hidden="true" href="#cb6-27"></a>    <span class="dt">int</span> ans = <span class="dv">1</span>;</span>
+<span id="cb6-28"><a aria-hidden="true" href="#cb6-28"></a>    FOR(i, <span class="dv">0</span>, <span class="dv">2</span>) {</span>
+<span id="cb6-29"><a aria-hidden="true" href="#cb6-29"></a>        <span class="dt">int</span> d;</span>
+<span id="cb6-30"><a aria-hidden="true" href="#cb6-30"></a>        <span class="cf">if</span> (fac[x][i] &lt;= T) d = _gcd[fac[x][i]][y % fac[x][i]];</span>
+<span id="cb6-31"><a aria-hidden="true" href="#cb6-31"></a>        <span class="cf">else</span> <span class="cf">if</span> (y % fac[x][i] == <span class="dv">0</span>) d = fac[x][i];</span>
+<span id="cb6-32"><a aria-hidden="true" href="#cb6-32"></a>        <span class="cf">else</span> d = <span class="dv">1</span>;</span>
+<span id="cb6-33"><a aria-hidden="true" href="#cb6-33"></a>        y /= d;</span>
+<span id="cb6-34"><a aria-hidden="true" href="#cb6-34"></a>        ans *= d;</span>
+<span id="cb6-35"><a aria-hidden="true" href="#cb6-35"></a>    }</span>
+<span id="cb6-36"><a aria-hidden="true" href="#cb6-36"></a>    <span class="cf">return</span> ans;</span>
+<span id="cb6-37"><a aria-hidden="true" href="#cb6-37"></a>}</span></code></pre></div>
+<h3 id="类欧几里得算法">类欧几里得算法</h3>
+<p>是一个比较阴间的东西。详细全文见<a href="/note-akin-euclidean-algo">类欧学习笔记</a>。该算法由洪华敦（SkyDec）于 WC2016 员交提出。递归过程类似于辗转相除，故称为”类“欧几里得。一般可以求直线下整点之类的问题。</p>
+<p>不是很重要的板块，大致了解其推导思想即可。</p>
+<h4 id="基本形式">基本形式</h4>
+若令 <span class="math display">\[
+f(a, b, c, n) = \sum_{i = 0}^n\left\lfloor\frac{ai + b}{c} \right\rfloor
+\]</span> 则若我们令 <span class="math inline">\(m = \displaystyle\left\lfloor\frac{an + b}{c}\right\rfloor\)</span>，有 $$ f(a, b, c, n) =
+<span class="math display">\[\begin{cases}
+\displaystyle \frac{n(n + 1)}{2}\left\lfloor\frac ac\right\rfloor + (n + 1)\left\lfloor\frac bc\right\rfloor + f(a\bmod c, b\bmod c, c, n) &amp; a\ge c\lor b\ge c\\
+\displaystyle nm - f(c, c - b - 1, a, m - 1)&amp;\text{otherwise}
+
+\end{cases}\]</span>
+<p>$$ 而 <span class="math inline">\(f(a, b, c, n)\)</span> 的意义即为直线 <span class="math inline">\(y = \dfrac{ai + b}{c}\)</span> 下方整点的个数。</p>
+<h4 id="简要推导">简要推导</h4>
+<p>该问题较为复杂，不妨一步步考虑起。假设 <span class="math inline">\(a\ge c\lor b\ge c\)</span>，则我们可以先将 <span class="math inline">\(a\)</span> 和 <span class="math inline">\(b\)</span> 对 <span class="math inline">\(c\)</span> 取模，即 <span class="math display">\[
+\begin{aligned}
+f(a, b, c, n) &amp;= \sum_{i = 0}^n\left\lfloor\frac{ai + b}{c}\right\rfloor\\
+&amp;= \sum_{i = 0}^n\left\lfloor\frac{(\left\lfloor\frac a c\right\rfloor c + a\bmod c)i + \left\lfloor\frac b c\right\rfloor c + b\bmod c}{c}\right\rfloor\\
+&amp;= \frac{n(n + 1)}{2}\left\lfloor\frac ac\right\rfloor + (n + 1)\left\lfloor\frac bc\right\rfloor + f(a\bmod c, b\bmod c, c, n)
+\end{aligned}
+\]</span> 然后问题就变成了 <span class="math inline">\(a,b&lt; c\)</span> 的形式。</p>
+<p>先考虑拆分贡献，将 $ $ 拆成 <span class="math inline">\(\displaystyle\sum_{j = 0}^{\left\lfloor\frac{ai + b}{c} \right\rfloor - 1}1\)</span> 的形式，随后调换求和顺序，使得 <span class="math inline">\(j\)</span> 不受 <span class="math inline">\(i\)</span> 限制，<span class="math inline">\(\displaystyle\sum_{j = 0}^{\left\lfloor\frac{an + b}{c} \right\rfloor}\sum_{i = 0}^n\left[j &lt; \left\lfloor\frac{ai + b}{c} \right\rfloor\right]\)</span>，之后就是化简这个不等式，不等式的化简过程如下： <span class="math display">\[
+\begin{aligned}
+&amp;j &lt; \left\lfloor\frac{ai + b}{c} \right\rfloor\\
+\iff &amp; j + 1\le\left\lfloor\frac{ai + b}{c} \right\rfloor\\
+\iff &amp; j + 1\le \frac{ai + b}{c}\\
+\iff &amp; j c + c\le ai + b\\
+\iff &amp; jc + c - b\le ai\\
+\iff &amp; jc + c - b - 1 &lt; ai\\
+\iff &amp; \left\lfloor\frac{jc + c - b - 1}{a}\right\rfloor &lt; i
+\end{aligned}
+\]</span> 中间用到了几步比较巧妙的放缩。然后 <span class="math inline">\(i\)</span> 就没了，令 <span class="math inline">\(\displaystyle m = \left\lfloor\frac{an + b}{c}\right\rfloor\)</span>，则 <span class="math inline">\(\displaystyle f(a, b, c, n) = \sum_{j = 0}^{m - 1}\left(n - \left\lfloor\frac{jc + c - b - 1}{a}\right\rfloor\right)\)</span>，拆开来发现其实其就是一个子问题。所以得到答案 <span class="math inline">\(\displaystyle f(a, b, c, n) = nm - f(c, c - b - 1, a, m - 1)\)</span>。</p>
+<p>写成代码就是下面这样，边界是 <span class="math inline">\(a = 0\)</span>：</p>
+<div class="sourceCode" id="cb7"><pre class="sourceCode cpp"><code class="sourceCode cpp"><span id="cb7-1"><a aria-hidden="true" href="#cb7-1"></a><span class="dt">int</span> f(<span class="dt">int</span> a, <span class="dt">int</span> b, <span class="dt">int</span> c, <span class="dt">int</span> n) {</span>
+<span id="cb7-2"><a aria-hidden="true" href="#cb7-2"></a>    <span class="cf">if</span> (!a) <span class="cf">return</span> b / c * (n + <span class="dv">1</span>);</span>
+<span id="cb7-3"><a aria-hidden="true" href="#cb7-3"></a>    <span class="cf">if</span> (a &gt;= c || b &gt;= c) <span class="cf">return</span> n * (n + <span class="dv">1</span>) / <span class="dv">2</span> * (a / c) + (n + <span class="dv">1</span>) * (b / c) + f(a % c, b % c, c, n);</span>
+<span id="cb7-4"><a aria-hidden="true" href="#cb7-4"></a>    <span class="dt">int</span> m = (a * n + b) / c;</span>
+<span id="cb7-5"><a aria-hidden="true" href="#cb7-5"></a>    <span class="cf">return</span> n * m - f(c, c - b - <span class="dv">1</span>, a, m - <span class="dv">1</span>);</span>
+<span id="cb7-6"><a aria-hidden="true" href="#cb7-6"></a>}</span></code></pre></div>
+<h4 id="扩展形式">扩展形式</h4>
+<p><span class="math display">\[
+\begin{aligned}
+g(a, b, c, n) &amp;= \sum_{i = 0}^ni\left\lfloor\frac{ai + b}{c}\right\rfloor\\
+h(a, b, c, n) &amp;= \sum_{i = 0}^n\left\lfloor\frac{ai + b}{c}\right\rfloor^2\\
+\end{aligned}
+\]</span></p>
+<p>这两个函数的计算大同小异。都是分别考虑 <span class="math inline">\(a\ge c\lor b\ge c\)</span> 并取模化简，然后一步步化简式子化成子问题。</p>
+<p>直接放结论： <span class="math display">\[
+g(a,b,c,n) = \begin{cases}
+\displaystyle\left\lfloor\frac ac\right\rfloor\frac{n(n + 1)(2n + 1)}{6} + \left\lfloor\frac bc\right\rfloor\frac{n(n + 1)}{2} + g(a\bmod c, b\bmod c, c, n) &amp; a\ge c\lor b\ge c\\
+\displaystyle\frac 12\left(mn(n + 1) - h(c, c - b - 1, a, m - 1) - f(c, c - b - 1, a, m - 1) \right)&amp;\text{otherwise}
+\end{cases}
+\]</span> 很阴间。 <span class="math display">\[
+h(a, b, c, n) =
+\begin{cases}
+\begin{aligned}
+&amp;\left\lfloor\frac ac\right\rfloor^2\frac{n(n + 1)(2n + 1)}{6} + n(n + 1)\left\lfloor\frac ac\right\rfloor\left\lfloor\frac bc\right\rfloor + (n + 1)\left\lfloor\frac bc\right\rfloor^2 + \\&amp;+2\left\lfloor\frac ac\right\rfloor g(a\bmod c, b\bmod c, c, n) + 2\left\lfloor\frac bc\right\rfloor f(a\bmod c, b\bmod c, c, n) \\
+&amp;+ h(a\bmod c, b\bmod c, c, n)
+\end{aligned}&amp;a\ge c\lor b\ge c\\\\\\
+nm(m + 1) - 2g(c, c - b - 1, a, m - 1)\\
+- 2f(c, c - b - 1, m - 1) - f(a, b, c, n)&amp;\text{otherwise}
+\end{cases}
+\]</span></p>
+<h4 id="应用">应用</h4>
+<blockquote>
+<p>例题 <span class="math inline">\(7\)</span>：<a href="https://www.luogu.com.cn/problem/P5170">P5170 【模板】类欧几里得算法</a></p>
+<p>求上文的 <span class="math inline">\(f,g,h\)</span>。</p>
+</blockquote>
+<p>写在一起，一起递归计算即可。</p>
+<blockquote>
+<p>例题 <span class="math inline">\(8\)</span>：<a href="https://www.luogu.com.cn/problem/P5171">P5171 Earthquake</a></p>
+<p>给定 <span class="math inline">\(1\le a,b\le 10^9\)</span> 和 <span class="math inline">\(0\le c\le \min(a,b)\times 10^9\)</span>。求 <span class="math inline">\(ax + by\le c\)</span> 的非负整数解个数。</p>
+</blockquote>
+<p>稍加转化：<span class="math inline">\(ax+by\le c\implies y\le \displaystyle\left\lfloor\frac{c - ax}{b}\right\rfloor\)</span>。所以实际上要求的就是 <span class="math inline">\(\displaystyle\sum_{i=0}^{\lfloor a/c\rfloor}1 + \left\lfloor\frac{c - ai}{b}\right\rfloor\)</span>。</p>
+<p>发现 <span class="math inline">\(-ai\)</span> 的形式无法直接处理，那么就考虑在分子加上 <span class="math inline">\(bi\)</span> 然后在外面减掉 <span class="math inline">\(\lfloor bi / b\rfloor = i\)</span>。假设 <span class="math inline">\(b &gt; a\)</span>（若不满足就 swap 之）可以得到 <span class="math display">\[
+\sum_{i=0}^{\lfloor c / a\rfloor}\left\lfloor\frac{(b - a)i + c}{b} \right\rfloor - \frac{\lfloor c /a\rfloor\times (\lfloor c / a\rfloor + 1)}{2} + \lfloor c / a\rfloor
+\]</span> 前半截直接类欧，后半截直接算。</p>
+<blockquote>
+<p>例题 <span class="math inline">\(9\)</span>：<a href="https://www.luogu.com.cn/problem/CF1098E">CF1098E Fedya the Potter</a></p>
+</blockquote>
+<blockquote>
+<p>例题 <span class="math inline">\(10\)</span>：<a href="https://www.luogu.com.cn/problem/CF1182F">CF1182F Maximum Sine</a></p>
+</blockquote>
+<h2 id="素数">素数</h2>
+<h3 id="简介">简介</h3>
+<p>定义见上文。</p>
+<p>关于素数密度，有如下重要结论：设小于等于 <span class="math inline">\(x\)</span> 的素数有 <span class="math inline">\(\pi(x)\)</span> 个，则 <span class="math display">\[
+\pi(x)\sim\frac{n}{\ln n}
+\]</span> 估计素数个数上很有用。</p>
+<h3 id="筛法">筛法</h3>
+<p>想要找出 <span class="math inline">\([1, n]\)</span> 内所有的数字，一般有如下两种方法：</p>
+<h4 id="eratosthenes-筛法">Eratosthenes 筛法</h4>
+<p>一般称为埃筛。思想：合数的倍数一定是合数，而质数的 <span class="math inline">\(\ge 2\)</span> 倍数一定是合数。</p>
+<p>所以算法流程就是，当碰到一个质数时，标记其全部倍数。当碰到合数时直接跳过不管。</p>
+<p>时间复杂度为 <span class="math inline">\(O(n\log\log n)\)</span>，暂时不要求掌握其证明。</p>
+<p>埃筛的应用其实有限，但是在 Dirichlet 前缀和还是运用到了其思想的。</p>
+<h4 id="欧拉线性筛">欧拉线性筛</h4>
+<p>上面的埃筛虽然实际跑的不慢，但当 <span class="math inline">\(n\)</span> 达到 <span class="math inline">\(10^7\)</span> 以至 <span class="math inline">\(10^8\)</span> 级别时仍然会显得很吃力。</p>
+<p>我们考虑，如果每个合数只被其最小的质因子筛去，是不是时间复杂度就是 <span class="math inline">\(O(n)\)</span> 了。</p>
+<p>算法流程：</p>
+<ul>
+<li>遇到一个没被筛过的数时，其肯定为质数，标记一下。</li>
+<li>然后枚举已经有过的素数 <span class="math inline">\(p_j\)</span>，标记 <span class="math inline">\(i\times p_j\)</span> 为合数，<strong>当 <span class="math inline">\(p_j\mid i\)</span> 时结束循环</strong>。</li>
+</ul>
+<p>即</p>
+<div class="sourceCode" id="cb8"><pre class="sourceCode cpp"><code class="sourceCode cpp"><span id="cb8-1"><a aria-hidden="true" href="#cb8-1"></a>FOR(i, <span class="dv">2</span>, n) {</span>
+<span id="cb8-2"><a aria-hidden="true" href="#cb8-2"></a>    <span class="cf">if</span> (!isp[i]) pri[++cnt] = i;</span>
+<span id="cb8-3"><a aria-hidden="true" href="#cb8-3"></a>    <span class="cf">for</span> (<span class="dt">int</span> j = <span class="dv">1</span>; j &lt;= cnt &amp;&amp; i * pri[j] &lt;= n; ++j) {</span>
+<span id="cb8-4"><a aria-hidden="true" href="#cb8-4"></a>        isp[i * pri[j]] = <span class="dv">1</span>;</span>
+<span id="cb8-5"><a aria-hidden="true" href="#cb8-5"></a>        <span class="cf">if</span> (!(i % pri[j])) <span class="cf">break</span>;</span>
+<span id="cb8-6"><a aria-hidden="true" href="#cb8-6"></a>    }</span>
+<span id="cb8-7"><a aria-hidden="true" href="#cb8-7"></a>}</span></code></pre></div>
+<p>解释一下这样做的原理：我们注意到 <span class="math inline">\(p_j\mid i\)</span> 时，<span class="math inline">\(p_j\)</span> 一定是 <span class="math inline">\(i\times p_j\)</span> 的最小质因子，因为如果存在更小的，一定会被先枚举到。由于一个合数需要被其最小质因子筛去，所以此时需要结束循环。</p>
+<p>本方法不仅可以筛质数，还可以求很多积性函数的值。<strong>每个合数都被其最小质因子筛去</strong>这一关键性质决定了其极强的扩展性，详见下文筛法部分。</p>
+<h3 id="素性测试">素性测试</h3>
+<h4 id="暴力判断">暴力判断</h4>
+<p>我们可以 <span class="math inline">\(O(\sqrt n)\)</span> 来判断单个数是不是质数。</p>
+<p>涉及到多个数的判断的话可以使用线性筛。</p>
+<p>但是如果数很大（<span class="math inline">\(10^{18}\)</span> 级别）的话我们还是需要使用<em>概率性素性测试</em>通过牺牲一部分正确率来换取更高的效率。</p>
+<h4 id="fermat-素性测试">Fermat 素性测试</h4>
+<p>根据下文提到的费马小定理，对于质数 <span class="math inline">\(p\)</span> 和正整数 <span class="math inline">\(a &lt; p\)</span> 一定有 <span class="math inline">\(a^{p - 1}\equiv 1\pmod p\)</span>，所以为了判断 <span class="math inline">\(n\)</span> 的素性，可以不断选取 <span class="math inline">\([2, n - 1]\)</span> 中的基 <span class="math inline">\(a\)</span> 然后判断是否有 <span class="math inline">\(a^{n - 1}\equiv 1\)</span>。</p>
+<p>但是由于费马小定理的逆定理不存在，所以上述方法可能会错误判断。例如若 <span class="math inline">\(a^{n - 1}\equiv 1\pmod n\)</span> 但 <span class="math inline">\(n\)</span> 不是素数，则称 <span class="math inline">\(n\)</span> 为以 <span class="math inline">\(a\)</span> 为底的伪素数。同时还存在一类合数满足 <span class="math inline">\(\forall a\perp n\)</span> 都有 <span class="math inline">\(a^{n -1}\equiv 1\)</span> 成立，这样的数被称为<em>卡迈克尔数</em>。</p>
+<h4 id="miller-rabin-素性测试">Miller-Rabin 素性测试</h4>
+<p>实战中可以使用的一种高效素数判断方法，对 <span class="math inline">\(n\)</span> 进行 <span class="math inline">\(k\)</span> 轮测试的复杂度为 <span class="math inline">\(O(k\log^3n)\)</span>，且基本不会出错。</p>
+<p>二次探测定理：若 <span class="math inline">\(p\)</span> 为奇素数，则 <span class="math inline">\(x^2\equiv 1\pmod p\)</span> 的解为 <span class="math inline">\(x\equiv \pm1\pmod p\)</span>。证明考虑移项出 <span class="math inline">\((x + 1)(x - 1) \equiv 0\)</span> 即可。</p>
+<p>那么我们就将 Fermat 素性测试和二次探测定理联合起来使用，考虑将 <span class="math inline">\(n - 1\)</span> 分解成 <span class="math inline">\(u\times 2^t\)</span>，然后先求出 <span class="math inline">\(a^u\pmod n\)</span>，之后对他进行 <span class="math inline">\(t\)</span> 次平方操作，若中途发现非平凡平方根则其不是素数，否则通过本轮测试。</p>
+<p>取 <span class="math inline">\(A = \{2,3,5,7,11,13,17,19,23\}\)</span> 便可通过绝大部分数据。<del><strong>给我背板子！</strong></del></p>
+<div class="sourceCode" id="cb9"><pre class="sourceCode cpp"><code class="sourceCode cpp"><span id="cb9-1"><a aria-hidden="true" href="#cb9-1"></a><span class="pp">#include </span><span class="im">&lt;bits/stdc++.h&gt;</span></span>
+<span id="cb9-2"><a aria-hidden="true" href="#cb9-2"></a><span class="pp">#define FOR</span>(i,<span class="pp"> </span>a,<span class="pp"> </span>b)<span class="pp"> </span><span class="cf">for</span><span class="pp"> </span>(<span class="dt">int</span><span class="pp"> </span>i<span class="pp"> </span>=<span class="pp"> </span>(a);<span class="pp"> </span>i<span class="pp"> </span>&lt;=<span class="pp"> </span>(b);<span class="pp"> </span>++i)</span>
+<span id="cb9-3"><a aria-hidden="true" href="#cb9-3"></a></span>
+<span id="cb9-4"><a aria-hidden="true" href="#cb9-4"></a><span class="kw">using</span> <span class="kw">namespace</span> std;</span>
+<span id="cb9-5"><a aria-hidden="true" href="#cb9-5"></a><span class="kw">using</span> ll = <span class="dt">long</span> <span class="dt">long</span>;</span>
+<span id="cb9-6"><a aria-hidden="true" href="#cb9-6"></a><span class="at">const</span> ll a[<span class="dv">10</span>] = {<span class="dv">2</span>, <span class="dv">3</span>, <span class="dv">5</span>, <span class="dv">7</span>, <span class="dv">11</span>, <span class="dv">13</span>, <span class="dv">17</span>, <span class="dv">19</span>, <span class="dv">23</span>};</span>
+<span id="cb9-7"><a aria-hidden="true" href="#cb9-7"></a></span>
+<span id="cb9-8"><a aria-hidden="true" href="#cb9-8"></a>ll qPow(ll base, ll exp, ll mod) {</span>
+<span id="cb9-9"><a aria-hidden="true" href="#cb9-9"></a>    ll ret = <span class="dv">1</span>;</span>
+<span id="cb9-10"><a aria-hidden="true" href="#cb9-10"></a>    <span class="cf">for</span> (; exp; exp &gt;&gt;= <span class="dv">1</span>, base = <span class="dt">__int128</span>(base) * base % mod)</span>
+<span id="cb9-11"><a aria-hidden="true" href="#cb9-11"></a>        <span class="cf">if</span> (exp &amp; <span class="dv">1</span>) ret = <span class="dt">__int128</span>(ret) * base % mod;</span>
+<span id="cb9-12"><a aria-hidden="true" href="#cb9-12"></a>    <span class="cf">return</span> ret;</span>
+<span id="cb9-13"><a aria-hidden="true" href="#cb9-13"></a>}</span>
+<span id="cb9-14"><a aria-hidden="true" href="#cb9-14"></a></span>
+<span id="cb9-15"><a aria-hidden="true" href="#cb9-15"></a><span class="dt">bool</span> isPrime(ll n) {</span>
+<span id="cb9-16"><a aria-hidden="true" href="#cb9-16"></a>    FOR(i, <span class="dv">0</span>, <span class="dv">8</span>) <span class="cf">if</span> (n == a[i]) <span class="cf">return</span> <span class="kw">true</span>;</span>
+<span id="cb9-17"><a aria-hidden="true" href="#cb9-17"></a>    <span class="cf">if</span> (n &lt; <span class="dv">2</span> || !(n &amp; <span class="dv">1</span>)) <span class="cf">return</span> <span class="kw">false</span>;</span>
+<span id="cb9-18"><a aria-hidden="true" href="#cb9-18"></a>    ll t = <span class="dv">0</span>, u = n - <span class="dv">1</span>, j;</span>
+<span id="cb9-19"><a aria-hidden="true" href="#cb9-19"></a>    <span class="cf">while</span> (!(u &amp; <span class="dv">1</span>)) u &gt;&gt;= <span class="dv">1</span>, ++t;</span>
+<span id="cb9-20"><a aria-hidden="true" href="#cb9-20"></a>    FOR(i, <span class="dv">0</span>, <span class="dv">8</span>) {</span>
+<span id="cb9-21"><a aria-hidden="true" href="#cb9-21"></a>        ll v = qPow(a[i], u, n);</span>
+<span id="cb9-22"><a aria-hidden="true" href="#cb9-22"></a>        <span class="cf">if</span> (v == <span class="dv">1</span>) <span class="cf">continue</span>;</span>
+<span id="cb9-23"><a aria-hidden="true" href="#cb9-23"></a>        <span class="cf">for</span> (j = <span class="dv">1</span>; j &lt;= t; ++j) {</span>
+<span id="cb9-24"><a aria-hidden="true" href="#cb9-24"></a>            <span class="cf">if</span> (v == n - <span class="dv">1</span>) <span class="cf">break</span>;</span>
+<span id="cb9-25"><a aria-hidden="true" href="#cb9-25"></a>            v = <span class="dt">__int128</span>(v) * v % n;</span>
+<span id="cb9-26"><a aria-hidden="true" href="#cb9-26"></a>        }</span>
+<span id="cb9-27"><a aria-hidden="true" href="#cb9-27"></a>        <span class="cf">if</span> (j &gt; t) <span class="cf">return</span> <span class="kw">false</span>;</span>
+<span id="cb9-28"><a aria-hidden="true" href="#cb9-28"></a>    }</span>
+<span id="cb9-29"><a aria-hidden="true" href="#cb9-29"></a>    <span class="cf">return</span> <span class="kw">true</span>;</span>
+<span id="cb9-30"><a aria-hidden="true" href="#cb9-30"></a>}</span>
+<span id="cb9-31"><a aria-hidden="true" href="#cb9-31"></a></span>
+<span id="cb9-32"><a aria-hidden="true" href="#cb9-32"></a><span class="dt">int</span> main() {</span>
+<span id="cb9-33"><a aria-hidden="true" href="#cb9-33"></a>    ll x;</span>
+<span id="cb9-34"><a aria-hidden="true" href="#cb9-34"></a>    <span class="cf">while</span> (cin &gt;&gt; x) puts(isPrime(x) ? <span class="st">"Y"</span> : <span class="st">"N"</span>);</span>
+<span id="cb9-35"><a aria-hidden="true" href="#cb9-35"></a>    <span class="cf">return</span> <span class="dv">0</span>;</span>
+<span id="cb9-36"><a aria-hidden="true" href="#cb9-36"></a>}</span></code></pre></div>
+<h3 id="质因数分解">质因数分解</h3>
+<p>Pollard-Rho 会在 NOI 前重构。</p>
+<h4 id="朴素分解">朴素分解</h4>
+<p>最最最朴素的枚举因子然后 <span class="math inline">\(O(\sqrt n)\)</span> 的分解方法略。</p>
+<p>需注意：若提前打好了质数表，复杂度降为 <span class="math inline">\(\displaystyle O\left(\sqrt{\frac{n}{\ln n}}\right)\)</span>。</p>
+<p>当 <span class="math inline">\(n\)</span> 为 <span class="math inline">\(10^{18}\)</span> 级别时其显得无能为力。故我们还是考虑牺牲正确性来换取性能，考虑如何求出一个数的非平凡因子。</p>
+<p>有一个最朴素的随机算法：</p>
+<div class="sourceCode" id="cb10"><pre class="sourceCode cpp"><code class="sourceCode cpp"><span id="cb10-1"><a aria-hidden="true" href="#cb10-1"></a><span class="kw">template</span>&lt;<span class="kw">typename</span> T&gt; T rnd(T l, T r = <span class="dv">0</span>) {</span>
+<span id="cb10-2"><a aria-hidden="true" href="#cb10-2"></a>    <span class="at">static</span> mt19937 eng(<span class="dv">20041031</span>);</span>
+<span id="cb10-3"><a aria-hidden="true" href="#cb10-3"></a>    <span class="cf">if</span> (l &gt; r) swpa(l, r);</span>
+<span id="cb10-4"><a aria-hidden="true" href="#cb10-4"></a>    uniform_int_distribution&lt;T&gt; dis(l, r);</span>
+<span id="cb10-5"><a aria-hidden="true" href="#cb10-5"></a>    <span class="cf">return</span> dis(eng);</span>
+<span id="cb10-6"><a aria-hidden="true" href="#cb10-6"></a>}</span>
+<span id="cb10-7"><a aria-hidden="true" href="#cb10-7"></a></span>
+<span id="cb10-8"><a aria-hidden="true" href="#cb10-8"></a>ll findFact(ll n) {</span>
+<span id="cb10-9"><a aria-hidden="true" href="#cb10-9"></a>    <span class="cf">if</span> (isPrime(n)) <span class="cf">return</span> n;</span>
+<span id="cb10-10"><a aria-hidden="true" href="#cb10-10"></a>    ll x;</span>
+<span id="cb10-11"><a aria-hidden="true" href="#cb10-11"></a>    <span class="cf">do</span> x = rnd(<span class="dv">2</span>, n - <span class="dv">1</span>);</span>
+<span id="cb10-12"><a aria-hidden="true" href="#cb10-12"></a>    <span class="cf">while</span> (n % x);</span>
+<span id="cb10-13"><a aria-hidden="true" href="#cb10-13"></a>    <span class="cf">return</span> x;</span>
+<span id="cb10-14"><a aria-hidden="true" href="#cb10-14"></a>}</span></code></pre></div>
+<p>这个想法确实非常的蠢（类比猴子排序），但这确实是 Pollard-Rho 算法的基础。</p>
+<h4 id="生日悖论">生日悖论</h4>
+<p>一个房间里有 23 个人，则他们中有两人生日相同的概率超过一半，这应该是个很经典的 fun fact。</p>
+<p>这启示我们，对于一个 <span class="math inline">\([1, n]\)</span> 的随机整数生成器，生成序列中第一个重复数字前期望有 <span class="math inline">\(\sqrt{\dfrac{\pi n}{2}}\)</span> 个数，这里是<a href="https://www.zhihu.com/question/367513670/answer/991562741">证明</a>。</p>
+<p>这告诉我们，<strong>采用“组合随机采样”的方法，满足答案的组合比单体个数要多</strong>，所以可以提高正确率。回到原来的问题，发现一个很关键的性质：<span class="math inline">\(\forall k\in\mathbb N, \gcd(k,n)\mid n\)</span>。所以只要选到恰当的 <span class="math inline">\(k\)</span> 使得 <span class="math inline">\(\gcd(k, n) &gt; 1\)</span> 即可求得一个非平凡因子。关键是，这样的 <span class="math inline">\(k\)</span> 的个数还不少。</p>
+<p>不妨选一组数 <span class="math inline">\(x_1,\cdots, x_m\)</span>，若 <span class="math inline">\(\gcd(|x_i - x_j|, n)&gt; 1\)</span>，则我们可以直接返回 <span class="math inline">\(\gcd(|x_i - x_j|, n)\)</span>，而如何选数显得尤为必要。</p>
+<h4 id="伪随机函数">伪随机函数</h4>
+<p>Pollard-Rho 算法使用了些技巧，通过 <span class="math inline">\(f(x) = (x^2 + c)\bmod n\)</span> 来生成一个随机数序列 <span class="math inline">\(\{x_i\}\)</span>，其中 <span class="math inline">\(c\)</span> 为随机出来的常数。</p>
+<p>随机一个 <span class="math inline">\(x_1\)</span>，然后对于 <span class="math inline">\(i\ge 2\)</span>，<span class="math inline">\(x_i = f(x_{i - 1})\)</span>，可以近似认为他随机。但是会发现其会进入一个环（所以叫做 <span class="math inline">\(\rho\)</span> 算法）。例如取 <span class="math inline">\(c = 2, x_1 = 1\)</span> 的情况： <span class="math display">\[
+1,3,11,23,31, 11,23,31,\cdots
+\]</span> #### Floyd 判环</p>
+<p>“龟兔赛跑”。用两个数 <span class="math inline">\(t\)</span> 和 <span class="math inline">\(r\)</span>，初始时 <span class="math inline">\(t = r = 1\)</span>，然后每次兔子跳两格，乌龟走一步：<span class="math inline">\(x_t = x_i\)</span>，<span class="math inline">\(x_{r} = x_{2i}\)</span>。注意到他们迟早是会相遇的。</p>
+<p>所以可以写出如下代码：</p>
+<div class="sourceCode" id="cb11"><pre class="sourceCode cpp"><code class="sourceCode cpp"><span id="cb11-1"><a aria-hidden="true" href="#cb11-1"></a>ll findFact(ll n) {</span>
+<span id="cb11-2"><a aria-hidden="true" href="#cb11-2"></a>    ll c = rnd(<span class="dv">1</span>, n - <span class="dv">1</span>);</span>
+<span id="cb11-3"><a aria-hidden="true" href="#cb11-3"></a>    ll t = f(<span class="dv">0</span>, c, n), r = f(f(<span class="dv">0</span>, c, n), c, n);</span>
+<span id="cb11-4"><a aria-hidden="true" href="#cb11-4"></a>    <span class="cf">while</span> (t != r) {</span>
+<span id="cb11-5"><a aria-hidden="true" href="#cb11-5"></a>        ll d = gcd(myabs(t - r), n);</span>
+<span id="cb11-6"><a aria-hidden="true" href="#cb11-6"></a>        <span class="cf">if</span> (d &gt; <span class="dv">1</span>) <span class="cf">return</span> <span class="dv">1</span>;</span>
+<span id="cb11-7"><a aria-hidden="true" href="#cb11-7"></a>        t = f(t, c, n), r = f(f(r, c, n), c, n);</span>
+<span id="cb11-8"><a aria-hidden="true" href="#cb11-8"></a>    }</span>
+<span id="cb11-9"><a aria-hidden="true" href="#cb11-9"></a>    <span class="cf">return</span> n;</span>
+<span id="cb11-10"><a aria-hidden="true" href="#cb11-10"></a>}</span></code></pre></div>
+<h4 id="优化">优化</h4>
+<p>求 <span class="math inline">\(\gcd\)</span> 的个数太多了，求一次就是 <span class="math inline">\(O(\log n)\)</span>，需要优化。</p>
+<p>考虑若 <span class="math inline">\(\gcd(x, n)&gt;1\)</span> 则 <span class="math inline">\(\gcd(xy, n) &gt; 1\)</span>，更进一步的有 <span class="math inline">\(\gcd(xy\bmod n, n) &gt; 1\)</span>。所以可以将所有的 <span class="math inline">\(|t - r|\)</span> 在模意义下相乘，再做 <span class="math inline">\(\gcd\)</span>。</p>
+<p>考虑倍增以避免 <span class="math inline">\(\gcd\)</span> 过多或者在环上停留过久。</p>
+<div class="sourceCode" id="cb12"><pre class="sourceCode cpp"><code class="sourceCode cpp"><span id="cb12-1"><a aria-hidden="true" href="#cb12-1"></a>ll findFact(ll n) {</span>
+<span id="cb12-2"><a aria-hidden="true" href="#cb12-2"></a>    ll c = rnd(<span class="dv">1</span>, n - <span class="dv">1</span>);</span>
+<span id="cb12-3"><a aria-hidden="true" href="#cb12-3"></a>    ll s = <span class="dv">0</span>, t = <span class="dv">0</span>;</span>
+<span id="cb12-4"><a aria-hidden="true" href="#cb12-4"></a>    <span class="dt">int</span> step = <span class="dv">0</span>, goal = <span class="dv">1</span>;</span>
+<span id="cb12-5"><a aria-hidden="true" href="#cb12-5"></a>    ll val = <span class="dv">1</span>;</span>
+<span id="cb12-6"><a aria-hidden="true" href="#cb12-6"></a>    <span class="cf">for</span> (goal = <span class="dv">1</span>; ; goal &lt;&lt;= <span class="dv">1</span>, s = t, val = <span class="dv">1</span>) {</span>
+<span id="cb12-7"><a aria-hidden="true" href="#cb12-7"></a>        <span class="cf">for</span> (step = <span class="dv">1</span>; step &lt;= goal; ++step) {</span>
+<span id="cb12-8"><a aria-hidden="true" href="#cb12-8"></a>            t = f(t, c, n);</span>
+<span id="cb12-9"><a aria-hidden="true" href="#cb12-9"></a>            val = <span class="dt">__int128</span>(val) * myabs(t - s) % n;</span>
+<span id="cb12-10"><a aria-hidden="true" href="#cb12-10"></a>            <span class="cf">if</span> (step % <span class="dv">127</span> == <span class="dv">0</span>) {</span>
+<span id="cb12-11"><a aria-hidden="true" href="#cb12-11"></a>                ll d = gcd(val, n);</span>
+<span id="cb12-12"><a aria-hidden="true" href="#cb12-12"></a>                <span class="cf">if</span> (d &gt; <span class="dv">1</span>) <span class="cf">return</span> d;</span>
+<span id="cb12-13"><a aria-hidden="true" href="#cb12-13"></a>            }</span>
+<span id="cb12-14"><a aria-hidden="true" href="#cb12-14"></a>        }</span>
+<span id="cb12-15"><a aria-hidden="true" href="#cb12-15"></a>        ll d = gcd(val, n);</span>
+<span id="cb12-16"><a aria-hidden="true" href="#cb12-16"></a>        <span class="cf">if</span> (d &gt; <span class="dv">1</span>) <span class="cf">return</span> d;</span>
+<span id="cb12-17"><a aria-hidden="true" href="#cb12-17"></a>    }</span>
+<span id="cb12-18"><a aria-hidden="true" href="#cb12-18"></a>    <span class="cf">return</span> n;</span>
+<span id="cb12-19"><a aria-hidden="true" href="#cb12-19"></a>}</span></code></pre></div>
+<p>下面是 <a href="https://judge.yosupo.jp/problem/factorize">Library Checker 质因数分解</a>的模板实现：</p>
+<div class="sourceCode" id="cb13"><pre class="sourceCode cpp"><code class="sourceCode cpp"><span id="cb13-1"><a aria-hidden="true" href="#cb13-1"></a><span class="pp">#include </span><span class="im">&lt;bits/stdc++.h&gt;</span></span>
+<span id="cb13-2"><a aria-hidden="true" href="#cb13-2"></a><span class="pp">#define FOR</span>(i,<span class="pp"> </span>a,<span class="pp"> </span>b)<span class="pp"> </span><span class="cf">for</span><span class="pp"> </span>(<span class="dt">int</span><span class="pp"> </span>i<span class="pp"> </span>=<span class="pp"> </span>(a);<span class="pp"> </span>i<span class="pp"> </span>&lt;=<span class="pp"> </span>(b);<span class="pp"> </span>++i)</span>
+<span id="cb13-3"><a aria-hidden="true" href="#cb13-3"></a></span>
+<span id="cb13-4"><a aria-hidden="true" href="#cb13-4"></a><span class="kw">using</span> <span class="kw">namespace</span> std;</span>
+<span id="cb13-5"><a aria-hidden="true" href="#cb13-5"></a></span>
+<span id="cb13-6"><a aria-hidden="true" href="#cb13-6"></a><span class="kw">using</span> ll = <span class="dt">long</span> <span class="dt">long</span>;</span>
+<span id="cb13-7"><a aria-hidden="true" href="#cb13-7"></a><span class="at">const</span> ll a[<span class="dv">10</span>] = {<span class="dv">2</span>, <span class="dv">3</span>, <span class="dv">5</span>, <span class="dv">7</span>, <span class="dv">11</span>, <span class="dv">13</span>, <span class="dv">17</span>, <span class="dv">19</span>, <span class="dv">23</span>};</span>
+<span id="cb13-8"><a aria-hidden="true" href="#cb13-8"></a>vector&lt;ll&gt; ans;</span>
+<span id="cb13-9"><a aria-hidden="true" href="#cb13-9"></a></span>
+<span id="cb13-10"><a aria-hidden="true" href="#cb13-10"></a>ll qPow(ll base, ll exp, ll mod) {</span>
+<span id="cb13-11"><a aria-hidden="true" href="#cb13-11"></a>    ll ret = <span class="dv">1</span>;</span>
+<span id="cb13-12"><a aria-hidden="true" href="#cb13-12"></a>    <span class="cf">for</span> (; exp; exp &gt;&gt;= <span class="dv">1</span>, base = <span class="dt">__int128</span>(base) * base % mod)</span>
+<span id="cb13-13"><a aria-hidden="true" href="#cb13-13"></a>        <span class="cf">if</span> (exp &amp; <span class="dv">1</span>) ret = <span class="dt">__int128</span>(ret) * base % mod;</span>
+<span id="cb13-14"><a aria-hidden="true" href="#cb13-14"></a>    <span class="cf">return</span> ret;</span>
+<span id="cb13-15"><a aria-hidden="true" href="#cb13-15"></a>}</span>
+<span id="cb13-16"><a aria-hidden="true" href="#cb13-16"></a></span>
+<span id="cb13-17"><a aria-hidden="true" href="#cb13-17"></a><span class="dt">bool</span> isPrime(ll n) {</span>
+<span id="cb13-18"><a aria-hidden="true" href="#cb13-18"></a>    FOR(i, <span class="dv">0</span>, <span class="dv">8</span>) <span class="cf">if</span> (a[i] == n) <span class="cf">return</span> <span class="kw">true</span>;</span>
+<span id="cb13-19"><a aria-hidden="true" href="#cb13-19"></a>    <span class="cf">if</span> (n &lt; <span class="dv">2</span> || !(n &amp; <span class="dv">1</span>)) <span class="cf">return</span> <span class="kw">false</span>;</span>
+<span id="cb13-20"><a aria-hidden="true" href="#cb13-20"></a>    ll t = <span class="dv">0</span>, u = n - <span class="dv">1</span>;</span>
+<span id="cb13-21"><a aria-hidden="true" href="#cb13-21"></a>    <span class="cf">while</span> (!(u &amp; <span class="dv">1</span>)) u &gt;&gt;= <span class="dv">1</span>, ++t;</span>
+<span id="cb13-22"><a aria-hidden="true" href="#cb13-22"></a>    FOR(i, <span class="dv">0</span>, <span class="dv">8</span>) {</span>
+<span id="cb13-23"><a aria-hidden="true" href="#cb13-23"></a>        ll v = qPow(a[i], u, n), j;</span>
+<span id="cb13-24"><a aria-hidden="true" href="#cb13-24"></a>        <span class="cf">if</span> (v == <span class="dv">1</span>) <span class="cf">continue</span>;</span>
+<span id="cb13-25"><a aria-hidden="true" href="#cb13-25"></a>        <span class="cf">for</span> (j = <span class="dv">1</span>; j &lt;= t; ++j) {</span>
+<span id="cb13-26"><a aria-hidden="true" href="#cb13-26"></a>            <span class="cf">if</span> (v == n - <span class="dv">1</span>) <span class="cf">break</span>;</span>
+<span id="cb13-27"><a aria-hidden="true" href="#cb13-27"></a>            v = <span class="dt">__int128</span>(v) * v % n;</span>
+<span id="cb13-28"><a aria-hidden="true" href="#cb13-28"></a>        }</span>
+<span id="cb13-29"><a aria-hidden="true" href="#cb13-29"></a>        <span class="cf">if</span> (j &gt; t) <span class="cf">return</span> <span class="kw">false</span>;</span>
+<span id="cb13-30"><a aria-hidden="true" href="#cb13-30"></a>    }</span>
+<span id="cb13-31"><a aria-hidden="true" href="#cb13-31"></a>    <span class="cf">return</span> <span class="kw">true</span>;</span>
+<span id="cb13-32"><a aria-hidden="true" href="#cb13-32"></a>}</span>
+<span id="cb13-33"><a aria-hidden="true" href="#cb13-33"></a></span>
+<span id="cb13-34"><a aria-hidden="true" href="#cb13-34"></a>ll f(ll x, ll c, ll mod) {<span class="cf">return</span> (<span class="dt">__int128</span>(x) * x % mod + c) % mod;}</span>
+<span id="cb13-35"><a aria-hidden="true" href="#cb13-35"></a>ll rnd(ll l, ll r = <span class="dv">0</span>) {</span>
+<span id="cb13-36"><a aria-hidden="true" href="#cb13-36"></a>    <span class="at">static</span> mt19937_64 eng(<span class="dv">20041031</span>);</span>
+<span id="cb13-37"><a aria-hidden="true" href="#cb13-37"></a>    <span class="cf">if</span> (l &gt; r) swap(l, r);</span>
+<span id="cb13-38"><a aria-hidden="true" href="#cb13-38"></a>    uniform_int_distribution&lt;ll&gt; dis(l, r);</span>
+<span id="cb13-39"><a aria-hidden="true" href="#cb13-39"></a>    <span class="cf">return</span> dis(eng);</span>
+<span id="cb13-40"><a aria-hidden="true" href="#cb13-40"></a>}</span>
+<span id="cb13-41"><a aria-hidden="true" href="#cb13-41"></a></span>
+<span id="cb13-42"><a aria-hidden="true" href="#cb13-42"></a>ll pollardRho(ll n) {</span>
+<span id="cb13-43"><a aria-hidden="true" href="#cb13-43"></a>    ll c = rnd(<span class="dv">1</span>, n - <span class="dv">1</span>);</span>
+<span id="cb13-44"><a aria-hidden="true" href="#cb13-44"></a>    ll s = <span class="dv">0</span>, t = <span class="dv">0</span>, val = <span class="dv">1</span>;</span>
+<span id="cb13-45"><a aria-hidden="true" href="#cb13-45"></a>    <span class="dt">int</span> step = <span class="dv">0</span>, goal = <span class="dv">1</span>;</span>
+<span id="cb13-46"><a aria-hidden="true" href="#cb13-46"></a>    <span class="cf">for</span> (goal = <span class="dv">1</span>; ; goal &lt;&lt;= <span class="dv">1</span>, s = t, val = <span class="dv">1</span>) {</span>
+<span id="cb13-47"><a aria-hidden="true" href="#cb13-47"></a>        <span class="cf">for</span> (step = <span class="dv">1</span>; step &lt;= goal; ++step) {</span>
+<span id="cb13-48"><a aria-hidden="true" href="#cb13-48"></a>            t = f(t, c, n);</span>
+<span id="cb13-49"><a aria-hidden="true" href="#cb13-49"></a>            val = <span class="dt">__int128</span>(val) * <span class="fu">__builtin_llabs</span>(s - t) % n;</span>
+<span id="cb13-50"><a aria-hidden="true" href="#cb13-50"></a>            <span class="cf">if</span> (step % <span class="dv">127</span> == <span class="dv">0</span>) {</span>
+<span id="cb13-51"><a aria-hidden="true" href="#cb13-51"></a>                ll d = __gcd(val, n);</span>
+<span id="cb13-52"><a aria-hidden="true" href="#cb13-52"></a>                <span class="cf">if</span> (d &gt; <span class="dv">1</span>) <span class="cf">return</span> d;</span>
+<span id="cb13-53"><a aria-hidden="true" href="#cb13-53"></a>            }</span>
+<span id="cb13-54"><a aria-hidden="true" href="#cb13-54"></a>        }</span>
+<span id="cb13-55"><a aria-hidden="true" href="#cb13-55"></a>        ll d = __gcd(val, n);</span>
+<span id="cb13-56"><a aria-hidden="true" href="#cb13-56"></a>        <span class="cf">if</span> (d &gt; <span class="dv">1</span>) <span class="cf">return</span> d;</span>
+<span id="cb13-57"><a aria-hidden="true" href="#cb13-57"></a>    }</span>
+<span id="cb13-58"><a aria-hidden="true" href="#cb13-58"></a>}</span>
+<span id="cb13-59"><a aria-hidden="true" href="#cb13-59"></a></span>
+<span id="cb13-60"><a aria-hidden="true" href="#cb13-60"></a>vector&lt;ll&gt; work(ll n) {</span>
+<span id="cb13-61"><a aria-hidden="true" href="#cb13-61"></a>    <span class="cf">if</span> (n &lt; <span class="dv">2</span>) <span class="cf">return</span> {};</span>
+<span id="cb13-62"><a aria-hidden="true" href="#cb13-62"></a>    <span class="cf">if</span> (isPrime(n)) <span class="cf">return</span> {n};</span>
+<span id="cb13-63"><a aria-hidden="true" href="#cb13-63"></a>    ll p = n;</span>
+<span id="cb13-64"><a aria-hidden="true" href="#cb13-64"></a>    <span class="cf">while</span> (p &gt;= n) p = pollardRho(n);</span>
+<span id="cb13-65"><a aria-hidden="true" href="#cb13-65"></a>    vector&lt;ll&gt; tmp = work(p), ret;</span>
+<span id="cb13-66"><a aria-hidden="true" href="#cb13-66"></a>    <span class="cf">while</span> (n % p == <span class="dv">0</span>) {</span>
+<span id="cb13-67"><a aria-hidden="true" href="#cb13-67"></a>        <span class="cf">for</span> (<span class="kw">auto</span> &amp;x : tmp) ret.emplace_back(x);</span>
+<span id="cb13-68"><a aria-hidden="true" href="#cb13-68"></a>        n /= p;</span>
+<span id="cb13-69"><a aria-hidden="true" href="#cb13-69"></a>    }</span>
+<span id="cb13-70"><a aria-hidden="true" href="#cb13-70"></a>    tmp = work(n);</span>
+<span id="cb13-71"><a aria-hidden="true" href="#cb13-71"></a>    <span class="cf">for</span> (<span class="kw">auto</span> &amp;x : tmp) ret.emplace_back(x);</span>
+<span id="cb13-72"><a aria-hidden="true" href="#cb13-72"></a>    <span class="cf">return</span> ret;</span>
+<span id="cb13-73"><a aria-hidden="true" href="#cb13-73"></a>}</span>
+<span id="cb13-74"><a aria-hidden="true" href="#cb13-74"></a></span>
+<span id="cb13-75"><a aria-hidden="true" href="#cb13-75"></a><span class="dt">int</span> main() {</span>
+<span id="cb13-76"><a aria-hidden="true" href="#cb13-76"></a>    <span class="dt">int</span> T; cin &gt;&gt; T;</span>
+<span id="cb13-77"><a aria-hidden="true" href="#cb13-77"></a>    <span class="cf">while</span> (T--) {</span>
+<span id="cb13-78"><a aria-hidden="true" href="#cb13-78"></a>        ll n; cin &gt;&gt; n;</span>
+<span id="cb13-79"><a aria-hidden="true" href="#cb13-79"></a>        <span class="kw">auto</span> ans = work(n);</span>
+<span id="cb13-80"><a aria-hidden="true" href="#cb13-80"></a>        sort(ans.begin(), ans.end());</span>
+<span id="cb13-81"><a aria-hidden="true" href="#cb13-81"></a>        cout &lt;&lt; ans.size() &lt;&lt; <span class="ch">' '</span>;</span>
+<span id="cb13-82"><a aria-hidden="true" href="#cb13-82"></a>        <span class="cf">for</span> (<span class="kw">auto</span> &amp;x : ans) cout &lt;&lt; x &lt;&lt; <span class="ch">' '</span>;</span>
+<span id="cb13-83"><a aria-hidden="true" href="#cb13-83"></a>        cout &lt;&lt; endl;</span>
+<span id="cb13-84"><a aria-hidden="true" href="#cb13-84"></a>    }</span>
+<span id="cb13-85"><a aria-hidden="true" href="#cb13-85"></a>    <span class="cf">return</span> <span class="dv">0</span>;</span>
+<span id="cb13-86"><a aria-hidden="true" href="#cb13-86"></a>}</span></code></pre></div>
+<h3 id="反素数">反素数</h3>
+<h2 id="基础整除理论">基础整除理论</h2>
+<h3 id="同余类与剩余系">同余类与剩余系</h3>
+<p>同余类（也称剩余类），指全体整数按照对一个正整数的同余关系而分成的类。具体地，设 <span class="math inline">\(m\)</span> 为给定正整数，<span class="math inline">\(C_r(r = 0,1,\cdots, m -1)\)</span> 表示形如 <span class="math inline">\(qm + r\)</span> 的整数构成的集合，其中 <span class="math inline">\(q\in\mathbb Z\)</span>，则 <span class="math inline">\(C_0,\cdots, C_{m - 1}\)</span> 称为模 <span class="math inline">\(m\)</span> 的同余类。</p>
+<p>相当于，每个整数被包含在一个类中，且同一个类内的元素彼此模 <span class="math inline">\(m\)</span> 同余。</p>
+<p>设 <span class="math inline">\(a_0,\cdots, a_{m - 1}\)</span> 为 <span class="math inline">\(m\)</span> 个整数，当他们两两之间都不在同一个同余类中，我们就称其为模 <span class="math inline">\(m\)</span> 的一个<strong>完全剩余系</strong>。</p>
+<p>若剩余系内的每个元素均与 <span class="math inline">\(m\)</span> 互质，则称其为<strong>简化剩余系/缩系/既约剩余系</strong>。</p>
+<h3 id="乘法逆元">乘法逆元</h3>
+<h4 id="定义">定义</h4>
+<p>又叫做数论倒数。若 <span class="math inline">\(ax\equiv1\pmod p\)</span>，且 <span class="math inline">\(a\perp p\)</span>，则称 <span class="math inline">\(x\)</span> 为 <span class="math inline">\(a\)</span> 关于模 <span class="math inline">\(p\)</span> 的乘法逆元，记作 <span class="math inline">\(x = a^{-1}\)</span>。</p>
+<p>从群论的角度考虑的话：<span class="math inline">\(1\)</span> 为群 <span class="math inline">\((\mathbb Z_p, \times)\)</span> 的单位元，<span class="math inline">\(ax\equiv1\)</span> 即意味着 <span class="math inline">\(x\)</span> 为 <span class="math inline">\(a\)</span> 的逆元。</p>
+<p>一般来说，我们如果要计算 <span class="math inline">\(\dfrac ab\pmod p\)</span>， 那么我们可以考虑计算 <span class="math inline">\(a\times b^{-1}\pmod p\)</span>，这即为有理数取模的意义。</p>
+<h4 id="求单个逆元">求单个逆元</h4>
+<p>求逆元是一个很重要的话题，是做大多数组合题/数论题的基础。</p>
+<p>第一种方法是当 <span class="math inline">\(p\)</span> 为质数时，用下面提到的费马小定理可以得到 <span class="math display">\[
+a^{-1} \equiv a^{p - 2}\pmod p
+\]</span> 于是我们在模意义下求一个快速幂即可。</p>
+<p>第二种方法较为通用，我们列出方程 <span class="math inline">\(ax\equiv 1\pmod p\)</span>，然后转化为不定方程 <span class="math inline">\(ax + py = 1\)</span>，使用 exgcd 来求解 <span class="math inline">\(x\)</span> 的值。同时我们可以注意到，这个方程有解等价于 <span class="math inline">\(a\perp p\)</span>。故当 <span class="math inline">\(a\perp p\)</span> 时其关于模 <span class="math inline">\(p\)</span> 的逆元才存在。</p>
+<h4 id="线性求逆元">线性求逆元</h4>
+<p>有一个很重要的技巧：线性求 <span class="math inline">\([1, n]\)</span> 的逆元。我们如果每个单独的求的话，复杂度为 <span class="math inline">\(n\log n\)</span>，在 <span class="math inline">\(n\)</span> 为 <span class="math inline">\(10^7\)</span> 时显然是不够用的。</p>
+<p>令 <span class="math inline">\(p=ki+r\)</span>，其中 <span class="math inline">\(k=\lfloor \frac p i\rfloor\)</span>，<span class="math inline">\(r=p\bmod i\)</span>，且 <span class="math inline">\(1&lt;r&lt;i&lt;p\)</span>。则在模 <span class="math inline">\(p\)</span> 意义下有</p>
+<p><span class="math display">\[
+ki+r\equiv 0\pmod p
+\]</span></p>
+<p>两边同时乘以 <span class="math inline">\(r^{-1}i^{-1}\)</span>，则</p>
+<p><span class="math display">\[
+kr^{-1}+i^{-1}\equiv0\pmod p
+\]</span></p>
+<p>移项，</p>
+<p><span class="math display">\[
+i^{-1}\equiv-kr^{-1}\pmod p
+\]</span></p>
+<p>代入 <span class="math inline">\(k=\lfloor \frac p i\rfloor\)</span>，<span class="math inline">\(r=p\bmod i\)</span>，有</p>
+<p><span class="math display">\[
+i^{-1}\equiv -\lfloor \frac p i\rfloor(p\bmod i)^{-1}\pmod p
+\]</span></p>
+<p>由于要保证 <span class="math inline">\(i^{-1}&gt;0\)</span>，在最终式子的右边加上 <span class="math inline">\(p\)</span>（<span class="math inline">\(p\equiv 0\pmod p\)</span>），最终的式子就是：</p>
+<p><span class="math display">\[
+i^{-1}\equiv p-\lfloor \frac p i\rfloor(p\bmod i)^{-1}\pmod p
+\]</span></p>
+<p>令 <code>inv[i]</code> 表示 <span class="math inline">\(i^{-1}\)</span> 则递推式如下：</p>
+<div class="sourceCode" id="cb14"><pre class="sourceCode cpp"><code class="sourceCode cpp"><span id="cb14-1"><a aria-hidden="true" href="#cb14-1"></a><span class="cf">for</span> (<span class="dt">int</span> i = <span class="dv">2</span>; i &lt;= n; i++)</span>
+<span id="cb14-2"><a aria-hidden="true" href="#cb14-2"></a>    inv[i] = (p - p / i) * inv[p % i] % p;</span></code></pre></div>
+<p>事实上，这个东西没有必要记忆，在下文学习阶乘逆元后可以用更自然的方法求出来。本法的扩展性不如下面的方法强。</p>
+<h4 id="阶乘逆元">阶乘逆元</h4>
+<p>求组合数的时候经常用得到。</p>
+<p>首先可以把模意义下的阶乘全部求出来，然后快速幂求一下 <span class="math inline">\(n!\)</span> 的逆元。</p>
+<p>然后有 <span class="math display">\[
+(i!)^{-1} = (i + 1)\times((i + 1)!)^{-1}
+\]</span> 显然，不证。推就推完了。我们还可以得到 <span class="math inline">\(i^{-1} = (i - 1)!\times (i!)^{-1}\)</span>。</p>
+<p>这种方法非常好理解并且有较好的扩展性，一定要牢记。</p>
+<p>小小扩展一下：</p>
+<p><a href="https://www.luogu.com.cn/problem/P5431">P5431 【模板】乘法逆元 2</a>。</p>
+<p>实际上就是类似于阶乘逆元的方法。我们考虑求一个前缀积，然后给最后一个 <span class="math inline">\(s_n\)</span> 求一个逆元，之后就可以一步步倒推回去求出 <span class="math inline">\(a_i^{-1}\)</span>。</p>
+<h3 id="欧拉函数">欧拉函数</h3>
+<h4 id="定义-1">定义</h4>
+<p>Euler’s totient function，<span class="math inline">\(\varphi(n)\)</span>，表示 <span class="math inline">\([1, n]\)</span> 中和 <span class="math inline">\(n\)</span> 互质的数的个数。即 <span class="math display">\[
+\varphi(n) = \sum_{i = 1}^n[i\perp p]
+\]</span></p>
+<h4 id="性质">性质</h4>
+<ul>
+<li><p>欧拉函数是积性函数。</p></li>
+<li><p><span class="math inline">\(n = \sum_{d\mid n}\varphi(d)\)</span>。</p>
+<p>该点可以在下文中的莫比乌斯反演处进行进一步学习。</p></li>
+<li><p><span class="math inline">\(\forall n \gt 1\)</span>，<span class="math inline">\([1,n]\)</span> 中与 <span class="math inline">\(n\)</span> 互质的数之和为 <span class="math inline">\(n\varphi(n)/2\)</span>。简证：与 <span class="math inline">\(n\)</span> 不互质的数 <span class="math inline">\(x,n-x\)</span> 成对出现，所以平均值为 <span class="math inline">\(n/2\)</span>。</p></li>
+<li><p>若 <span class="math inline">\(n = p^k\)</span>（下文中若 <span class="math inline">\(p\)</span> 不加说明则默认为质数），则 <span class="math inline">\(\varphi(n) = p^k - p^{k - 1}\)</span>。</p>
+<p>证明考虑定义即可。<span class="math inline">\([1, p^k]\)</span> 中除了 <span class="math inline">\(p^{k} / p = p^{k - 1}\)</span> 个 <span class="math inline">\(p\)</span> 的倍数外都与 <span class="math inline">\(p^k\)</span> 互质。</p></li>
+<li><p><strong>单个欧拉函数的计算</strong>：令 <span class="math inline">\(n = \prod p_i^{c_i}\)</span>，则 <span class="math display">\[
+\varphi(n) = n\prod(1 - \frac{1}{p_i})
+\]</span> 证明：由欧拉函数的积性，我们可以得到 <span class="math display">\[
+\begin{aligned}
+\varphi(n) &amp;= \prod\varphi(p_i^{k_i})\\
+&amp;= \prod p_i^{k_i - 1}(p_i - 1)\\
+&amp;= \prod p_i^{k_i}(1 - \frac{1}{p_i})\\
+&amp;= n\prod(1 - \frac 1{p_i})
+\end{aligned}
+\]</span> 所以我们在求单个欧拉函数值时，可以用下面的代码：</p>
+<div class="sourceCode" id="cb15"><pre class="sourceCode cpp"><code class="sourceCode cpp"><span id="cb15-1"><a aria-hidden="true" href="#cb15-1"></a><span class="dt">int</span> phi(<span class="dt">int</span> n) {</span>
+<span id="cb15-2"><a aria-hidden="true" href="#cb15-2"></a>    <span class="dt">int</span> ans = n;</span>
+<span id="cb15-3"><a aria-hidden="true" href="#cb15-3"></a>    <span class="cf">for</span> (<span class="dt">int</span> i = <span class="dv">2</span>; i * i &lt;= n; ++i)</span>
+<span id="cb15-4"><a aria-hidden="true" href="#cb15-4"></a>        <span class="cf">if</span> (n % i == <span class="dv">0</span>) {</span>
+<span id="cb15-5"><a aria-hidden="true" href="#cb15-5"></a>            ans = ans / i * (i - <span class="dv">1</span>);</span>
+<span id="cb15-6"><a aria-hidden="true" href="#cb15-6"></a>            <span class="cf">while</span> (n % i == <span class="dv">0</span>) n /= i;</span>
+<span id="cb15-7"><a aria-hidden="true" href="#cb15-7"></a>        }</span>
+<span id="cb15-8"><a aria-hidden="true" href="#cb15-8"></a>    <span class="cf">if</span> (n &gt; <span class="dv">1</span>) ans = ans / n * (n - <span class="dv">1</span>);</span>
+<span id="cb15-9"><a aria-hidden="true" href="#cb15-9"></a>    <span class="cf">return</span> ans;</span>
+<span id="cb15-10"><a aria-hidden="true" href="#cb15-10"></a>}</span></code></pre></div></li>
+<li><p><strong>欧拉函数的线性筛法</strong>：</p>
+<ul>
+<li><p><span class="math inline">\(\varphi(1) = 1\)</span>。</p></li>
+<li><p>质数：<span class="math inline">\(\varphi(p) = p - 1\)</span>。</p></li>
+<li><p>合数：我们知道每个合数 <span class="math inline">\(n\)</span> 都是被其最小质因子 <span class="math inline">\(p\)</span> 筛掉的，设 <span class="math inline">\(n = n'p\)</span>。</p>
+<ul>
+<li><p>当 <span class="math inline">\(p\perp n'\)</span> 时，由欧拉函数的积性显然有 <span class="math inline">\(\varphi(n) = \varphi(n')(p - 1)\)</span>。</p></li>
+<li><p>当 <span class="math inline">\(p\not\perp n'\)</span> 时，则 <span class="math inline">\(p\)</span> 也是 <span class="math inline">\(n'\)</span> 的最小质因子，而且 <span class="math inline">\(n'\)</span> 包含了 <span class="math inline">\(n\)</span> 所有的质因子。 <span class="math display">\[
+\begin{aligned}
+\varphi(n) &amp;= n\prod\frac{p_i - 1}{p_i}\\
+&amp;= pn'\prod\frac{p_i - 1}{p_i}\\
+&amp;= p\varphi(n')
+\end{aligned}
+\]</span></p></li>
+</ul></li>
+</ul>
+<p>所以就可以按照如下的代码线性求出 <span class="math inline">\([1, n]\)</span> 的欧拉函数值。</p>
+<div class="sourceCode" id="cb16"><pre class="sourceCode cpp"><code class="sourceCode cpp"><span id="cb16-1"><a aria-hidden="true" href="#cb16-1"></a><span class="dt">void</span> init() {</span>
+<span id="cb16-2"><a aria-hidden="true" href="#cb16-2"></a>    phi[<span class="dv">1</span>] = <span class="dv">1</span>;</span>
+<span id="cb16-3"><a aria-hidden="true" href="#cb16-3"></a>    <span class="cf">for</span> (<span class="dt">int</span> i = <span class="dv">2</span>; i &lt;= maxn; ++i) {</span>
+<span id="cb16-4"><a aria-hidden="true" href="#cb16-4"></a>        <span class="cf">if</span> (!vis[i]) {</span>
+<span id="cb16-5"><a aria-hidden="true" href="#cb16-5"></a>            phi[i] = i - <span class="dv">1</span>;</span>
+<span id="cb16-6"><a aria-hidden="true" href="#cb16-6"></a>            p[++tot] = i;</span>
+<span id="cb16-7"><a aria-hidden="true" href="#cb16-7"></a>        }</span>
+<span id="cb16-8"><a aria-hidden="true" href="#cb16-8"></a>        <span class="cf">for</span> (<span class="dt">int</span> j = <span class="dv">1</span>; j &lt;= tot &amp;&amp; i * p[j] &lt;= maxn; ++j) {</span>
+<span id="cb16-9"><a aria-hidden="true" href="#cb16-9"></a>            vis[i * p[j]] = <span class="dv">1</span>;</span>
+<span id="cb16-10"><a aria-hidden="true" href="#cb16-10"></a>            <span class="cf">if</span> (i % p[j] == <span class="dv">0</span>) {</span>
+<span id="cb16-11"><a aria-hidden="true" href="#cb16-11"></a>                phi[i * p[j]] = p[j] * phi[i];</span>
+<span id="cb16-12"><a aria-hidden="true" href="#cb16-12"></a>                <span class="cf">break</span>;</span>
+<span id="cb16-13"><a aria-hidden="true" href="#cb16-13"></a>            }</span>
+<span id="cb16-14"><a aria-hidden="true" href="#cb16-14"></a>            phi[i * p[j]] = (p[j] - <span class="dv">1</span>) * phi[i];</span>
+<span id="cb16-15"><a aria-hidden="true" href="#cb16-15"></a>        }</span>
+<span id="cb16-16"><a aria-hidden="true" href="#cb16-16"></a>    }</span>
+<span id="cb16-17"><a aria-hidden="true" href="#cb16-17"></a>    <span class="cf">return</span>;</span>
+<span id="cb16-18"><a aria-hidden="true" href="#cb16-18"></a>}</span></code></pre></div></li>
+<li><p>欧拉函数的衰减速度是 <span class="math inline">\(O(\log)\)</span> 级别的。</p></li>
+</ul>
+<h4 id="应用-1">应用</h4>
+<ul>
+<li>（扩展）欧拉定理中有应用。</li>
+<li>在莫比乌斯反演中扮演重要角色。</li>
+<li>抓住欧拉函数与互质的关系。</li>
+</ul>
+<h3 id="欧拉定理">欧拉定理</h3>
+<h4 id="费马小定理">费马小定理</h4>
+<p>若 <span class="math inline">\(p\)</span> 为素数，且 <span class="math inline">\(a\perp p\)</span>，则 <span class="math inline">\(a^{p - 1}\equiv 1\pmod p\)</span>。</p>
+<p>另一个形式：<span class="math inline">\(a^p\equiv p\pmod p\)</span>。</p>
+<p>证明见下面的欧拉定理。这个东西最重要的用途就是求逆元，见上文。</p>
+<h4 id="欧拉定理-1">欧拉定理</h4>
+<p>若 <span class="math inline">\(a,n\in\mathbb{N}^+,a\perp n\)</span>，则 <span class="math display">\[
+a^{\varphi(n)}\equiv 1\pmod n
+\]</span></p>
+<p>证明：</p>
+<p>设 <span class="math inline">\(n\)</span> 的简化剩余系为 <span class="math inline">\(\lbrace\overline{a_1},\overline{a_2},\cdots,\overline{a_{\varphi(n)}} \rbrace\)</span>。对 <span class="math inline">\(\forall a_i, a_j\)</span>，若 <span class="math inline">\(aa_i\equiv aa_j\pmod n\)</span>，则 <span class="math inline">\(a(a_i-a_j)\equiv 0\pmod n\)</span>。因为 <span class="math inline">\(a\perp n\)</span>，所以 <span class="math inline">\(a_i\equiv a_j\)</span>。故当 <span class="math inline">\(a_i\not=a_j\)</span> 时，<span class="math inline">\(aa_i,aa_j\)</span> 也代表不同同余类。</p>
+<p>而简化剩余系关于模 <span class="math inline">\(n\)</span> 乘法运算封闭 ，所以简化剩余系 <span class="math inline">\(\lbrace\overline{a_1},\overline{a_2},\cdots,\overline{a_{\varphi(n)}} \rbrace\)</span> 与 <span class="math inline">\(\lbrace\overline{aa_1},\overline{aa_2},\cdots,\overline{aa_{\varphi(n)}} \rbrace\)</span> 是等价的。综上： <span class="math display">\[
+a^{\varphi(n)}a_1a_2\cdots a_{\varphi(n)}\equiv (aa_1)(aa_2)\cdots(aa_{\varphi(n)})\equiv a_1a_2\cdots a_{\varphi(n)}\equiv 1\pmod n
+\]</span> 欧拉定理得证。</p>
+<p>当 <span class="math inline">\(p\)</span> 为质数时，<span class="math inline">\(\varphi(p) = p - 1\)</span>，且只有 <span class="math inline">\(p\)</span> 的倍数与 <span class="math inline">\(p\)</span> 不互质。显然当 <span class="math inline">\(a\perp p\)</span> 时 <span class="math inline">\(a^{p - 1} \equiv 1\pmod n\)</span>，两边同乘 <span class="math inline">\(a\)</span> 得到费马小定理。而当 <span class="math inline">\(a\not\perp p\)</span> 时费马小定理显然成立。</p>
+<h4 id="扩展欧拉定理">扩展欧拉定理</h4>
+<p><span class="math display">\[
+a^b\equiv
+\begin{cases}
+a^{b\bmod \phi(m)}&amp;,a\perp m\\
+a^b&amp;,a\not\perp m\land b&lt;\phi(m)\\
+a^{b \bmod \phi(m) + \phi(m)}&amp;,a\not\perp m\land b \ge \phi(m)
+\end{cases}
+\pmod m
+\]</span></p>
+<p>常用于<strong>降幂</strong>，当指数特别大的时候可以降低指数。此处与欧拉定理不一样的是 <span class="math inline">\(a\)</span> 与 <span class="math inline">\(m\)</span> 无需互质。</p>
+<p>证明：</p>
+<p>设 <span class="math inline">\(m = p^r\times s\)</span>（<span class="math inline">\(\gcd(p,s) = 1\)</span>）。</p>
+<p>由欧拉定理得 <span class="math inline">\(p^{\phi(s)}\equiv 1\pmod s\)</span>，由欧拉函数积性得 <span class="math inline">\(\phi(m) = \phi(s)\phi(p^r)\)</span>。所以 <span class="math inline">\(p^{\phi(m)}\equiv 1\pmod s\)</span>。设 <span class="math inline">\(p^{\phi(m)}=ks + 1\)</span>，则 <span class="math inline">\(p^{\phi(m) + r} = km + p^r\)</span>，所以 <span class="math inline">\(p^{\phi(m) + r}\equiv p^r\pmod m\)</span>。</p>
+<p>当 <span class="math inline">\(b\ge r\)</span> 时，<span class="math inline">\(p^b\equiv p^{b - r}\times p^r\equiv p^{b - r}\times p^{\phi(m) + b}\pmod m\)</span>。</p>
+<p>因为 <span class="math inline">\(r\le \phi(p^r)\le \phi(m)\)</span>，所以当 <span class="math inline">\(b\ge 2\phi(m)\)</span> 时 <span class="math inline">\(b - \phi(m)\ge r\)</span>，所以 <span class="math inline">\(p^b\equiv p^{b - \phi(m)}\pmod m\)</span>，即 <span class="math inline">\(p^b\equiv p^{b\bmod \phi(m) + \phi(m)}\equiv m\)</span>。</p>
+<p>将 <span class="math inline">\(a\)</span> 质因数分解之后乘起来，就可以得到 <span class="math inline">\(a^b\equiv a^{b\bmod \phi(m) + \phi(m)}\pmod m\)</span>。</p>
+<p>但是需要注意当 <span class="math inline">\(b&lt;\phi(m)\)</span> 的时候上述结论不一定正确。</p>
+<h4 id="应用降幂塔">应用（降幂塔）</h4>
+<blockquote>
+<p>例题：<a href="https://www.luogu.com.cn/problem/P4139">P4139 上帝与集合的正确用法</a></p>
+<p><span class="math inline">\(T\le 10^3\)</span> 次询问，求 <span class="math inline">\(2^{\infty}\bmod p\)</span> 的值，<span class="math inline">\(p\le 10^7\)</span>。</p>
+</blockquote>
+<p>考虑使用扩展欧拉定理： <span class="math display">\[
+2^\infty\equiv 2^{2^\infty \bmod \phi(p) + \phi(p)}\pmod{\phi(p)}
+\]</span> 现在我们发现需要求的变成了 <span class="math inline">\(2^\infty\bmod \phi(p)\)</span>，这样子问题的规模就被缩小了，先线性筛出欧拉函数然后递归处理每组数据即可。返回的条件是 <span class="math inline">\(p = 1\)</span> 时返回 <span class="math inline">\(0\)</span>。时间复杂度</p>
+<div class="sourceCode" id="cb17"><pre class="sourceCode cpp"><code class="sourceCode cpp"><span id="cb17-1"><a aria-hidden="true" href="#cb17-1"></a><span class="dt">int</span> calc(<span class="dt">int</span> p)</span>
+<span id="cb17-2"><a aria-hidden="true" href="#cb17-2"></a>{</span>
+<span id="cb17-3"><a aria-hidden="true" href="#cb17-3"></a>    <span class="cf">if</span> (p == <span class="dv">1</span>) <span class="cf">return</span> <span class="dv">0</span>;</span>
+<span id="cb17-4"><a aria-hidden="true" href="#cb17-4"></a>    <span class="cf">return</span> qpow(<span class="dv">2</span>, calc(phi[p]) + phi[p], p);</span>
+<span id="cb17-5"><a aria-hidden="true" href="#cb17-5"></a>}</span></code></pre></div>
+<p><a href="https://www.luogu.com.cn/problem/CF906D">CF906D Power Tower</a>。本题也是扩展欧拉定理的应用，乍一看直接 dfs 处理的复杂度跑不过去，但考虑到 <span class="math inline">\(\phi(n)\)</span> 是 <span class="math inline">\(\log\)</span> 级别衰减的，所以不用担心跑不过去。</p>
+<p><a href="https://www.luogu.com.cn/problem/P3934">P3934 [Ynoi2016] 炸脖龙 I</a> 区间加，查询 <span class="math inline">\(a_l^{a_{l + 1}^{a_{l + 2}^{\cdots^{a_r}}}}\)</span>。同样只需要考虑 <span class="math inline">\(a_l\)</span> 后面的一小段，<span class="math inline">\(\phi\)</span> 值就会降到 <span class="math inline">\(1\)</span>。</p>
+<p><a href="https://www.luogu.com.cn/problem/P3747">P3747 [六省联考 2017] 相逢是问候</a> 每次操作将 <span class="math inline">\(a_i\)</span> 替换成 <span class="math inline">\(c^{a_i}\)</span>，区间求和。</p>
+</section>
+<footer class="article-footer">
+<section class="article-tags">
+<a href="/tags/OI/">OI</a>
+<a href="/tags/note/">笔记</a>
+</section>
+<section class="article-copyright">
+<svg class="icon icon-tabler icon-tabler-copyright" fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+<path d="M0 0h24v24H0z" stroke="none"></path>
+<circle cx="12" cy="12" r="9"></circle>
+<path d="M14.5 9a3.5 4 0 1 0 0 6"></path>
+</svg>
+<span>Licensed under CC BY-NC-SA 4.0</span>
+</section>
+</footer>
+<link crossorigin="anonymous" href="https://cdn.jsdelivr.net/npm/katex@0.13.13/dist/katex.min.css" integrity="sha384-RZU/ijkSsFbcmivfdRBQDtwuwVqK7GMOw6IMvKyeWL2K5UAlyp6WonmB8m7Jd0Hn" rel="stylesheet"/><script crossorigin="anonymous" defer="" integrity="sha384-pK1WpvzWVBQiP0/GjnvRxV4mOb0oxFuyRxJlk6vVw146n3egcN5C925NCP7a7BY8" src="https://cdn.jsdelivr.net/npm/katex@0.13.13/dist/katex.min.js">
+</script><script crossorigin="anonymous" defer="" integrity="sha384-vZTG03m+2yp6N6BNi5iM4rW4oIwk5DfcNdFfxkk9ZWpDriOkXX8voJBFrAO7MpVl" src="https://cdn.jsdelivr.net/npm/katex@0.13.13/dist/contrib/auto-render.min.js">
+</script><script>
+    window.addEventListener("DOMContentLoaded", () => {
+        renderMathInElement(document.querySelector(`.article-content`), {
+            delimiters: [
+                { left: "$$", right: "$$", display: true },
+                { left: "$", right: "$", display: false },
+                { left: "\\(", right: "\\)", display: false },
+                { left: "\\[", right: "\\]", display: true }
+            ]
+        });})
+</script>
+</article>
+<aside class="related-contents--wrapper">
+<h2 class="section-title">相关文章</h2>
+<div class="related-contents">
+<div class="flex article-list--tile">
+<article class="has-image">
+<a href="/note-gf/">
+<div class="article-image">
+<img data-hash="https://yangty-pic.oss-cn-beijing.aliyuncs.com/bg28.webp" data-key="" loading="lazy" src="https://yangty-pic.oss-cn-beijing.aliyuncs.com/bg28.webp"/>
+</div>
+<div class="article-details">
+<h2 class="article-title">生成函数胡扯</h2>
+</div>
+</a>
+</article>
+<article class="has-image">
+<a href="/note-set-power-series/">
+<div class="article-image">
+<img data-hash="https://yangty-pic.oss-cn-beijing.aliyuncs.com/bg39.webp" data-key="" loading="lazy" src="https://yangty-pic.oss-cn-beijing.aliyuncs.com/bg39.webp"/>
+</div>
+<div class="article-details">
+<h2 class="article-title">集合幂级数胡扯</h2>
+</div>
+</a>
+</article>
+<article class="has-image">
+<a href="/note-linear-basis/">
+<div class="article-image">
+<img data-hash="https://yangty-pic.oss-cn-beijing.aliyuncs.com/bg19.webp" data-key="" loading="lazy" src="https://yangty-pic.oss-cn-beijing.aliyuncs.com/bg19.webp"/>
+</div>
+<div class="article-details">
+<h2 class="article-title">线性基学习笔记</h2>
+</div>
+</a>
+</article>
+<article class="has-image">
+<a href="/note-wqs/">
+<div class="article-image">
+<img data-hash="https://yangty-pic.oss-cn-beijing.aliyuncs.com/bg28.webp" data-key="" loading="lazy" src="https://yangty-pic.oss-cn-beijing.aliyuncs.com/bg28.webp"/>
+</div>
+<div class="article-details">
+<h2 class="article-title">wqs 二分学习笔记</h2>
+</div>
+</a>
+</article>
+<article class="has-image">
+<a href="/note-builtin/">
+<div class="article-image">
+<img data-hash="https://yangty-pic.oss-cn-beijing.aliyuncs.com/bg9.webp" data-key="" loading="lazy" src="https://yangty-pic.oss-cn-beijing.aliyuncs.com/bg9.webp"/>
+</div>
+<div class="article-details">
+<h2 class="article-title">__builtin 系列函数总结</h2>
+</div>
+</a>
+</article>
+</div>
+</div>
+</aside>
+<footer class="site-footer">
+<section class="copyright">
+        © 
+        
+            2019 - 
+        
+        2024 清烛的博客
+    </section>
+<section class="powerby">
+        Built with <a href="https://gohugo.io/" rel="noopener" target="_blank">Hugo</a> <br/>
+        主题 <b><a data-version="3.11.0" href="https://github.com/CaiJimmy/hugo-theme-stack" rel="noopener" target="_blank">Stack</a></b> 由 <a href="https://jimmycai.com" rel="noopener" target="_blank">Jimmy</a> 设计
+    </section>
+</footer>
+<div aria-hidden="true" class="pswp" role="dialog" tabindex="-1">
+<div class="pswp__bg"></div>
+<div class="pswp__scroll-wrap">
+<div class="pswp__container">
+<div class="pswp__item"></div>
+<div class="pswp__item"></div>
+<div class="pswp__item"></div>
+</div>
+<div class="pswp__ui pswp__ui--hidden">
+<div class="pswp__top-bar">
+<div class="pswp__counter"></div>
+<button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+<button class="pswp__button pswp__button--share" title="Share"></button>
+<button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+<button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+<div class="pswp__preloader">
+<div class="pswp__preloader__icn">
+<div class="pswp__preloader__cut">
+<div class="pswp__preloader__donut"></div>
+</div>
+</div>
+</div>
+</div>
+<div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+<div class="pswp__share-tooltip"></div>
+</div>
+<button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+</button>
+<button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+</button>
+<div class="pswp__caption">
+<div class="pswp__caption__center"></div>
+</div>
+</div>
+</div>
+</div><script crossorigin="anonymous" defer="" integrity="sha256-ePwmChbbvXbsO02lbM3HoHbSHTHFAeChekF1xKJdleo=" src="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe.min.js">
+</script><script crossorigin="anonymous" defer="" integrity="sha256-UKkzOn/w1mBxRmLLGrSeyB4e1xbrp4xylgAWb3M42pU=" src="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe-ui-default.min.js">
+</script><link crossorigin="anonymous" href="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/default-skin/default-skin.css" integrity="sha256-c0uckgykQ9v5k+IqViZOZKc47Jn7KQil4/MP3ySA3F8=" rel="stylesheet"/><link crossorigin="anonymous" href="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe.css" integrity="sha256-SBLU4vv6CA6lHsZ1XyTdhyjJxCjPif/TRkjnsyGAGnE=" rel="stylesheet"/>
+</main>
+</div>
+<script crossorigin="anonymous" integrity="sha256-5NovOZc4iwiAWTYIFiIM7DxKUXKWvpVEuMEPLzcm5/g=" src="https://cdn.jsdelivr.net/npm/node-vibrant@3.1.5/dist/vibrant.min.js">
+</script><script defer="" src="/ts/main.js" type="text/javascript"></script>
+<script>
+    (function () {
+        const customFont = document.createElement('link');
+        customFont.href = "https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&display=swap";
+
+        customFont.type = "text/css";
+        customFont.rel = "stylesheet";
+
+        document.head.appendChild(customFont);
+    }());
+</script>
+</body>
+</html>

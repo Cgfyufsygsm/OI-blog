@@ -1,0 +1,585 @@
+<!DOCTYPE html>
+<html dir="ltr" lang="zh-CN">
+<head><meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1" name="viewport"/><meta content="题意 Alice 有 \(n\) 个字符串 \(\rm S_1,S_2,\dots,S_n\)，Bob 有一个字符串集合 \(\rm T\) ，一开始集合是空的。
+接下来会发生 \(q\) 个操作，操作有两种形式：
+1 P Bob 往自己的集合里添加了一个字符串 \(\rm P\)。 2 x Alice 询问 Bob，集合 \(\rm T\) 中有多少个字符串包含串 \(\rm S_x\) 我们称串 \(\rm A\) 包含串 \(\rm B\)，当且仅当 \(\rm B\) 是 \(\rm A\) 的子串）。 思路 观察到字符串集合 \(\rm T\) 是会发生变动的，不方便我们进行处理，所以对 \(\rm S_1,S_2,\dots,S_n\) 建立 AC 自动机。
+考虑对于每次加进来的字符串 \(\rm P\) 对答案产生的贡献。被 \(\rm P\) 包含的字符串的 \(\rm endpos\) 也就肯定在 fail 树上面，\(\rm endpos(P)\) 到根的路径上的每个点 \(u_1, u_2, \cdots u_k\) 到根的链上的点集并。" name="description"/><title>P5840 [COCI2015]Divljak</title>
+<link href="https://oi.imyangty.com/sol-luogu-p5840/" rel="canonical"/>
+<link href="/scss/style.min.a5821f3d3ab84ce5a0ac21477e347a2e0ca00292e398d16c5e8e36ded6e35a23.css" rel="stylesheet"/><meta content="P5840 [COCI2015]Divljak" property="og:title"/>
+<meta content="题意 Alice 有 \(n\) 个字符串 \(\rm S_1,S_2,\dots,S_n\)，Bob 有一个字符串集合 \(\rm T\) ，一开始集合是空的。
+接下来会发生 \(q\) 个操作，操作有两种形式：
+1 P Bob 往自己的集合里添加了一个字符串 \(\rm P\)。 2 x Alice 询问 Bob，集合 \(\rm T\) 中有多少个字符串包含串 \(\rm S_x\) 我们称串 \(\rm A\) 包含串 \(\rm B\)，当且仅当 \(\rm B\) 是 \(\rm A\) 的子串）。 思路 观察到字符串集合 \(\rm T\) 是会发生变动的，不方便我们进行处理，所以对 \(\rm S_1,S_2,\dots,S_n\) 建立 AC 自动机。
+考虑对于每次加进来的字符串 \(\rm P\) 对答案产生的贡献。被 \(\rm P\) 包含的字符串的 \(\rm endpos\) 也就肯定在 fail 树上面，\(\rm endpos(P)\) 到根的路径上的每个点 \(u_1, u_2, \cdots u_k\) 到根的链上的点集并。" property="og:description"/>
+<meta content="https://oi.imyangty.com/sol-luogu-p5840/" property="og:url"/>
+<meta content="清烛的博客" property="og:site_name"/>
+<meta content="article" property="og:type"/><meta content="Post" property="article:section"/><meta content="OI" property="article:tag"/><meta content="洛谷" property="article:tag"/><meta content="解题报告" property="article:tag"/><meta content="AC自动机" property="article:tag"/><meta content="树链剖分" property="article:tag"/><meta content="2021-06-24T22:12:52+08:00" property="article:published_time"/><meta content="2021-06-24T22:12:52+08:00" property="article:modified_time"/><meta content="https://yangty-pic.oss-cn-beijing.aliyuncs.com/bg18.webp" property="og:image"/>
+<meta content="P5840 [COCI2015]Divljak" name="twitter:title"/>
+<meta content="题意 Alice 有 \(n\) 个字符串 \(\rm S_1,S_2,\dots,S_n\)，Bob 有一个字符串集合 \(\rm T\) ，一开始集合是空的。
+接下来会发生 \(q\) 个操作，操作有两种形式：
+1 P Bob 往自己的集合里添加了一个字符串 \(\rm P\)。 2 x Alice 询问 Bob，集合 \(\rm T\) 中有多少个字符串包含串 \(\rm S_x\) 我们称串 \(\rm A\) 包含串 \(\rm B\)，当且仅当 \(\rm B\) 是 \(\rm A\) 的子串）。 思路 观察到字符串集合 \(\rm T\) 是会发生变动的，不方便我们进行处理，所以对 \(\rm S_1,S_2,\dots,S_n\) 建立 AC 自动机。
+考虑对于每次加进来的字符串 \(\rm P\) 对答案产生的贡献。被 \(\rm P\) 包含的字符串的 \(\rm endpos\) 也就肯定在 fail 树上面，\(\rm endpos(P)\) 到根的路径上的每个点 \(u_1, u_2, \cdots u_k\) 到根的链上的点集并。" name="twitter:description"/><meta content="summary_large_image" name="twitter:card"/>
+<meta content="https://yangty-pic.oss-cn-beijing.aliyuncs.com/bg18.webp" name="twitter:image"/>
+<link href="https://q1.qlogo.cn/g?b=qq&amp;nk=375836877&amp;s=5" rel="shortcut icon"/>
+<link href="https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.5.1/build/styles/github-dark-dimmed.min.css" rel="stylesheet"/>
+<script src="https://cdn.jsdelivr.net/gh/highlightjs/cdn-release/build/highlight.min.js"></script>
+<script>hljs.highlightAll();</script>
+</head>
+<body class="article-page">
+<script>
+        (function() {
+            const colorSchemeKey = 'StackColorScheme';
+            if(!localStorage.getItem(colorSchemeKey)){
+                localStorage.setItem(colorSchemeKey, "auto");
+            }
+        })();
+    </script><script>
+    (function() {
+        const colorSchemeKey = 'StackColorScheme';
+        const colorSchemeItem = localStorage.getItem(colorSchemeKey);
+        const supportDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches === true;
+
+        if (colorSchemeItem == 'dark' || colorSchemeItem === 'auto' && supportDarkMode) {
+            
+
+            document.documentElement.dataset.scheme = 'dark';
+        } else {
+            document.documentElement.dataset.scheme = 'light';
+        }
+    })();
+</script>
+<div class="container main-container flex on-phone--column extended"><aside class="sidebar left-sidebar sticky">
+<button aria-label="切换菜单" class="hamburger hamburger--spin" id="toggle-menu" type="button">
+<span class="hamburger-box">
+<span class="hamburger-inner"></span>
+</span>
+</button>
+<header>
+<figure class="site-avatar">
+<a href="/">
+<img alt="Avatar" class="site-logo" height="300" loading="lazy" src="/img/avatar_huea3ce2119467b51fdd2a81393644a76d_51594_300x0_resize_q75_box.jpg" width="300"/>
+</a>
+<span class="emoji">😅</span>
+</figure>
+<div class="site-meta">
+<h1 class="site-name"><a href="/">清烛的博客</a></h1>
+<h2 class="site-description">烟火已谢，笙歌未停</h2>
+</div>
+</header><ol class="social-menu">
+<li>
+<a href="mailto:i@imyangty.com" target="_blank" title="email">
+<svg class="icon icon-tabler icon-tabler-mail" fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" viewbox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+<path d="M0 0h24v24H0z" fill="none" stroke="none"></path>
+<rect height="14" rx="2" width="18" x="3" y="5"></rect>
+<polyline points="3 7 12 13 21 7"></polyline>
+</svg>
+</a>
+</li>
+<li>
+<a href="https://github.com/Cgfyufsygsm" target="_blank" title="GitHub">
+<svg class="icon icon-tabler icon-tabler-brand-github" fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+<path d="M0 0h24v24H0z" fill="none" stroke="none"></path>
+<path d="M9 19c-4.3 1.4 -4.3 -2.5 -6 -3m12 5v-3.5c0 -1 .1 -1.4 -.5 -2c2.8 -.3 5.5 -1.4 5.5 -6a4.6 4.6 0 0 0 -1.3 -3.2a4.2 4.2 0 0 0 -.1 -3.2s-1.1 -.3 -3.5 1.3a12.3 12.3 0 0 0 -6.2 0c-2.4 -1.6 -3.5 -1.3 -3.5 -1.3a4.2 4.2 0 0 0 -.1 3.2a4.6 4.6 0 0 0 -1.3 3.2c0 4.6 2.7 5.7 5.5 6c-.6 .6 -.6 1.2 -.5 2v3.5"></path>
+</svg>
+</a>
+</li>
+<li>
+<a href="https://t.me/Cgfyufsygsm" target="_blank" title="Telegram">
+<svg class="icon icon-tabler icon-tabler-brand-telegram" fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" viewbox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+<path d="M0 0h24v24H0z" fill="none" stroke="none"></path>
+<path d="M15 10l-4 4l6 6l4 -16l-18 7l4 2l2 6l3 -4"></path>
+</svg>
+</a>
+</li>
+<li>
+<a href="https://twitter.com/Cgfyufsygsm" target="_blank" title="Twitter">
+<svg class="icon icon-tabler icon-tabler-brand-twitter" fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+<path d="M0 0h24v24H0z" fill="none" stroke="none"></path>
+<path d="M22 4.01c-1 .49 -1.98 .689 -3 .99c-1.121 -1.265 -2.783 -1.335 -4.38 -.737s-2.643 2.06 -2.62 3.737v1c-3.245 .083 -6.135 -1.395 -8 -4c0 0 -4.182 7.433 4 11c-1.872 1.247 -3.739 2.088 -6 2c3.308 1.803 6.913 2.423 10.034 1.517c3.58 -1.04 6.522 -3.723 7.651 -7.742a13.84 13.84 0 0 0 .497 -3.753c-.002 -.249 1.51 -2.772 1.818 -4.013z"></path>
+</svg>
+</a>
+</li>
+</ol><ol class="menu" id="main-menu">
+<li>
+<a href="/">
+<svg class="icon icon-tabler icon-tabler-home" fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+<path d="M0 0h24v24H0z" stroke="none"></path>
+<polyline points="5 12 3 12 12 3 21 12 19 12"></polyline>
+<path d="M5 12v7a2 2 0 0 0 2 2h10a2 2 0 0 0 2 -2v-7"></path>
+<path d="M9 21v-6a2 2 0 0 1 2 -2h2a2 2 0 0 1 2 2v6"></path>
+</svg>
+<span>主页</span>
+</a>
+</li>
+<li>
+<a href="/about/">
+<svg class="icon icon-tabler icon-tabler-user" fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+<path d="M0 0h24v24H0z" stroke="none"></path>
+<circle cx="12" cy="7" r="4"></circle>
+<path d="M6 21v-2a4 4 0 0 1 4 -4h4a4 4 0 0 1 4 4v2"></path>
+</svg>
+<span>关于</span>
+</a>
+</li>
+<li>
+<a href="/idx/">
+<svg class="icon icon-tabler icon-tabler-hash" fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+<path d="M0 0h24v24H0z" stroke="none"></path>
+<line x1="5" x2="19" y1="9" y2="9"></line>
+<line x1="5" x2="19" y1="15" y2="15"></line>
+<line x1="11" x2="7" y1="4" y2="20"></line>
+<line x1="17" x2="13" y1="4" y2="20"></line>
+</svg>
+<span>导航</span>
+</a>
+</li>
+<li>
+<a href="/archives/">
+<svg class="icon icon-tabler icon-tabler-archive" fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+<path d="M0 0h24v24H0z" stroke="none"></path>
+<rect height="4" rx="2" width="18" x="3" y="4"></rect>
+<path d="M5 8v10a2 2 0 0 0 2 2h10a2 2 0 0 0 2 -2v-10"></path>
+<line x1="10" x2="14" y1="12" y2="12"></line>
+</svg>
+<span>归档</span>
+</a>
+</li>
+<li>
+<a href="/search/">
+<svg class="icon icon-tabler icon-tabler-search" fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+<path d="M0 0h24v24H0z" stroke="none"></path>
+<circle cx="10" cy="10" r="7"></circle>
+<line x1="21" x2="15" y1="21" y2="15"></line>
+</svg>
+<span>搜索</span>
+</a>
+</li>
+<li>
+<a href="/friends/">
+<svg class="icon icon-tabler icon-tabler-link" fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+<path d="M0 0h24v24H0z" stroke="none"></path>
+<path d="M10 14a3.5 3.5 0 0 0 5 0l4 -4a3.5 3.5 0 0 0 -5 -5l-.5 .5"></path>
+<path d="M14 10a3.5 3.5 0 0 0 -5 0l-4 4a3.5 3.5 0 0 0 5 5l.5 -.5"></path>
+</svg>
+<span>友链</span>
+</a>
+</li>
+<li>
+<a href="https://blog.imyangty.com" target="_blank">
+<svg class="icon icon-tabler icon-tabler-home" fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+<path d="M0 0h24v24H0z" stroke="none"></path>
+<polyline points="5 12 3 12 12 3 21 12 19 12"></polyline>
+<path d="M5 12v7a2 2 0 0 0 2 2h10a2 2 0 0 0 2 -2v-7"></path>
+<path d="M9 21v-6a2 2 0 0 1 2 -2h2a2 2 0 0 1 2 2v6"></path>
+</svg>
+<span>主博客</span>
+</a>
+</li>
+<div class="menu-bottom-section">
+<li id="dark-mode-toggle">
+<svg class="icon icon-tabler icon-tabler-toggle-left" fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+<path d="M0 0h24v24H0z" stroke="none"></path>
+<circle cx="8" cy="12" r="2"></circle>
+<rect height="12" rx="6" width="20" x="2" y="6"></rect>
+</svg>
+<svg class="icon icon-tabler icon-tabler-toggle-right" fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+<path d="M0 0h24v24H0z" stroke="none"></path>
+<circle cx="16" cy="12" r="2"></circle>
+<rect height="12" rx="6" width="20" x="2" y="6"></rect>
+</svg>
+<span>暗色模式</span>
+</li>
+</div>
+</ol>
+</aside>
+<main class="main full-width">
+<article class="has-image main-article">
+<header class="article-header">
+<div class="article-image">
+<a href="/sol-luogu-p5840/">
+<img alt="Featured image of post P5840 [COCI2015]Divljak" loading="lazy" src="https://yangty-pic.oss-cn-beijing.aliyuncs.com/bg18.webp"/>
+</a>
+</div>
+<div class="article-details">
+<header class="article-category">
+<a href="/categories/oi/">
+                OI
+            </a>
+<a href="/categories/tutorial/">
+                题解
+            </a>
+</header>
+<div class="article-title-wrapper">
+<h2 class="article-title">
+<a href="/sol-luogu-p5840/">P5840 [COCI2015]Divljak</a>
+</h2>
+</div>
+<footer class="article-time">
+<div>
+<svg class="icon icon-tabler icon-tabler-calendar-time" fill="none" height="56" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="56" xmlns="http://www.w3.org/2000/svg">
+<path d="M0 0h24v24H0z" stroke="none"></path>
+<path d="M11.795 21h-6.795a2 2 0 0 1 -2 -2v-12a2 2 0 0 1 2 -2h12a2 2 0 0 1 2 2v4"></path>
+<circle cx="18" cy="18" r="4"></circle>
+<path d="M15 3v4"></path>
+<path d="M7 3v4"></path>
+<path d="M3 11h16"></path>
+<path d="M18 16.496v1.504l1 1"></path>
+</svg>
+<time class="article-time--published">Jun 24, 2021</time>
+</div>
+<div>
+<svg class="icon icon-tabler icon-tabler-clock" fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+<path d="M0 0h24v24H0z" stroke="none"></path>
+<circle cx="12" cy="12" r="9"></circle>
+<polyline points="12 7 12 12 15 15"></polyline>
+</svg>
+<time class="article-time--reading">
+                    阅读时长: 3 分钟
+                </time>
+</div>
+</footer>
+</div>
+</header>
+<section class="article-content">
+<h2 id="题意">题意</h2>
+<p>Alice 有 <span class="math inline">\(n\)</span> 个字符串 <span class="math inline">\(\rm S_1,S_2,\dots,S_n\)</span>，Bob 有一个字符串集合 <span class="math inline">\(\rm T\)</span> ，一开始集合是空的。</p>
+<p>接下来会发生 <span class="math inline">\(q\)</span> 个操作，操作有两种形式：</p>
+<ol type="1">
+<li><code>1 P</code> Bob 往自己的集合里添加了一个字符串 <span class="math inline">\(\rm P\)</span>。</li>
+<li><code>2 x</code> Alice 询问 Bob，集合 <span class="math inline">\(\rm T\)</span> 中有多少个字符串包含串 <span class="math inline">\(\rm S_x\)</span> 我们称串 <span class="math inline">\(\rm A\)</span> 包含串 <span class="math inline">\(\rm B\)</span>，当且仅当 <span class="math inline">\(\rm B\)</span> 是 <span class="math inline">\(\rm A\)</span> 的子串）。</li>
+</ol>
+<h2 id="思路">思路</h2>
+<p>观察到字符串集合 <span class="math inline">\(\rm T\)</span> 是会发生变动的，不方便我们进行处理，所以对 <span class="math inline">\(\rm S_1,S_2,\dots,S_n\)</span> 建立 AC 自动机。</p>
+<p>考虑对于每次加进来的字符串 <span class="math inline">\(\rm P\)</span> 对答案产生的贡献。被 <span class="math inline">\(\rm P\)</span> 包含的字符串的 <span class="math inline">\(\rm endpos\)</span> 也就肯定在 fail 树上面，<span class="math inline">\(\rm endpos(P)\)</span> 到根的路径上的每个点 <span class="math inline">\(u_1, u_2, \cdots u_k\)</span> 到根的链上的点集并。</p>
+<p>把 <span class="math inline">\(u_1, u_2, \cdots u_k\)</span> 按照 dfs 序排序，然后</p>
+<ul>
+<li><span class="math inline">\(\forall 1 \le i\le k\)</span>，将 <span class="math inline">\(u_i\)</span> 到根的链上所有节点答案 <span class="math inline">\(+1\)</span></li>
+<li><span class="math inline">\(\forall 1 &lt; i \le k\)</span>，将 <span class="math inline">\(\mathrm{lca}(u_{i - 1}, u_i)\)</span> 到根的链上所有节点答案 <span class="math inline">\(-1\)</span></li>
+</ul>
+<p>正确性可以通过手玩进行验证。</p>
+<p>然后要查询 <span class="math inline">\(\rm S_x\)</span> 就是查询单点 <span class="math inline">\(\rm endpos(S_x)\)</span> 的值。树链修改，单点查询，可以使用树上差分让其变为单点修改，子树查询（参见 LOJ dfs 序模板）。</p>
+<p>在 dfs 序上维护一个树状数组就可以了。</p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode cpp"><code class="sourceCode cpp"><span id="cb1-1"><a aria-hidden="true" href="#cb1-1"></a><span class="pp">#include </span><span class="im">&lt;cstdio&gt;</span></span>
+<span id="cb1-2"><a aria-hidden="true" href="#cb1-2"></a><span class="pp">#include </span><span class="im">&lt;cstring&gt;</span></span>
+<span id="cb1-3"><a aria-hidden="true" href="#cb1-3"></a><span class="pp">#include </span><span class="im">&lt;algorithm&gt;</span></span>
+<span id="cb1-4"><a aria-hidden="true" href="#cb1-4"></a><span class="pp">#define FOR</span>(i,<span class="pp"> </span>a,<span class="pp"> </span>b)<span class="pp"> </span><span class="cf">for</span><span class="pp"> </span>(<span class="dt">int</span><span class="pp"> </span>i<span class="pp"> </span>=<span class="pp"> </span>a;<span class="pp"> </span>i<span class="pp"> </span>&lt;=<span class="pp"> </span>b;<span class="pp"> </span>++i)</span>
+<span id="cb1-5"><a aria-hidden="true" href="#cb1-5"></a><span class="pp">#define il </span><span class="kw">inline</span></span>
+<span id="cb1-6"><a aria-hidden="true" href="#cb1-6"></a><span class="pp">#define lowbit</span>(x)<span class="pp"> </span>(x<span class="pp"> </span>&amp;<span class="pp"> </span>-x)</span>
+<span id="cb1-7"><a aria-hidden="true" href="#cb1-7"></a></span>
+<span id="cb1-8"><a aria-hidden="true" href="#cb1-8"></a><span class="kw">template</span>&lt;<span class="kw">typename</span> T&gt; il <span class="dt">void</span> swap(T &amp;a, T &amp;b)</span>
+<span id="cb1-9"><a aria-hidden="true" href="#cb1-9"></a>{</span>
+<span id="cb1-10"><a aria-hidden="true" href="#cb1-10"></a>    T t = a;</span>
+<span id="cb1-11"><a aria-hidden="true" href="#cb1-11"></a>    a = b, b = t;</span>
+<span id="cb1-12"><a aria-hidden="true" href="#cb1-12"></a>    <span class="cf">return</span>;</span>
+<span id="cb1-13"><a aria-hidden="true" href="#cb1-13"></a>}</span>
+<span id="cb1-14"><a aria-hidden="true" href="#cb1-14"></a></span>
+<span id="cb1-15"><a aria-hidden="true" href="#cb1-15"></a><span class="at">const</span> <span class="dt">int</span> maxn = <span class="fl">2e6</span> + <span class="dv">5</span>;</span>
+<span id="cb1-16"><a aria-hidden="true" href="#cb1-16"></a><span class="dt">int</span> n, q, tot, pos[maxn];</span>
+<span id="cb1-17"><a aria-hidden="true" href="#cb1-17"></a><span class="dt">char</span> s[maxn];</span>
+<span id="cb1-18"><a aria-hidden="true" href="#cb1-18"></a></span>
+<span id="cb1-19"><a aria-hidden="true" href="#cb1-19"></a><span class="kw">struct</span> node</span>
+<span id="cb1-20"><a aria-hidden="true" href="#cb1-20"></a>{</span>
+<span id="cb1-21"><a aria-hidden="true" href="#cb1-21"></a>    <span class="dt">int</span> ch[<span class="dv">26</span>], end, fail;</span>
+<span id="cb1-22"><a aria-hidden="true" href="#cb1-22"></a>} t[maxn];</span>
+<span id="cb1-23"><a aria-hidden="true" href="#cb1-23"></a></span>
+<span id="cb1-24"><a aria-hidden="true" href="#cb1-24"></a><span class="dt">void</span> insert(<span class="dt">char</span> *s, <span class="dt">int</span> id)</span>
+<span id="cb1-25"><a aria-hidden="true" href="#cb1-25"></a>{</span>
+<span id="cb1-26"><a aria-hidden="true" href="#cb1-26"></a>    <span class="dt">int</span> u = <span class="dv">0</span>, len = strlen(s + <span class="dv">1</span>);</span>
+<span id="cb1-27"><a aria-hidden="true" href="#cb1-27"></a>    FOR(i, <span class="dv">1</span>, len)</span>
+<span id="cb1-28"><a aria-hidden="true" href="#cb1-28"></a>    {</span>
+<span id="cb1-29"><a aria-hidden="true" href="#cb1-29"></a>        <span class="dt">int</span> c = s[i] - <span class="ch">'a'</span>;</span>
+<span id="cb1-30"><a aria-hidden="true" href="#cb1-30"></a>        <span class="cf">if</span> (!t[u].ch[c]) t[u].ch[c] = ++tot;</span>
+<span id="cb1-31"><a aria-hidden="true" href="#cb1-31"></a>        u = t[u].ch[c];</span>
+<span id="cb1-32"><a aria-hidden="true" href="#cb1-32"></a>    }</span>
+<span id="cb1-33"><a aria-hidden="true" href="#cb1-33"></a>    pos[id] = u;</span>
+<span id="cb1-34"><a aria-hidden="true" href="#cb1-34"></a>    <span class="cf">return</span>;</span>
+<span id="cb1-35"><a aria-hidden="true" href="#cb1-35"></a>}</span>
+<span id="cb1-36"><a aria-hidden="true" href="#cb1-36"></a></span>
+<span id="cb1-37"><a aria-hidden="true" href="#cb1-37"></a><span class="dt">int</span> head[maxn], to[maxn &lt;&lt; <span class="dv">1</span>], nxt[maxn &lt;&lt; <span class="dv">1</span>], cnte;</span>
+<span id="cb1-38"><a aria-hidden="true" href="#cb1-38"></a><span class="pp">#define GO</span>(u)<span class="pp"> </span><span class="cf">for</span><span class="pp"> </span>(<span class="dt">int</span><span class="pp"> </span>i<span class="pp"> </span>=<span class="pp"> </span>head[u],<span class="pp"> </span>v<span class="pp"> </span>=<span class="pp"> </span>to[i];<span class="pp"> </span>i;<span class="pp"> </span>i<span class="pp"> </span>=<span class="pp"> </span>nxt[i],<span class="pp"> </span>v<span class="pp"> </span>=<span class="pp"> </span>to[i])</span>
+<span id="cb1-39"><a aria-hidden="true" href="#cb1-39"></a></span>
+<span id="cb1-40"><a aria-hidden="true" href="#cb1-40"></a><span class="dt">void</span> addEdge(<span class="dt">int</span> u, <span class="dt">int</span> v)</span>
+<span id="cb1-41"><a aria-hidden="true" href="#cb1-41"></a>{</span>
+<span id="cb1-42"><a aria-hidden="true" href="#cb1-42"></a>    to[++cnte] = v;</span>
+<span id="cb1-43"><a aria-hidden="true" href="#cb1-43"></a>    nxt[cnte] = head[u];</span>
+<span id="cb1-44"><a aria-hidden="true" href="#cb1-44"></a>    head[u] = cnte;</span>
+<span id="cb1-45"><a aria-hidden="true" href="#cb1-45"></a>    <span class="cf">return</span>;</span>
+<span id="cb1-46"><a aria-hidden="true" href="#cb1-46"></a>}</span>
+<span id="cb1-47"><a aria-hidden="true" href="#cb1-47"></a></span>
+<span id="cb1-48"><a aria-hidden="true" href="#cb1-48"></a><span class="dt">void</span> buildAC()</span>
+<span id="cb1-49"><a aria-hidden="true" href="#cb1-49"></a>{</span>
+<span id="cb1-50"><a aria-hidden="true" href="#cb1-50"></a>    <span class="at">static</span> <span class="dt">int</span> q[maxn], head = <span class="dv">1</span>, tail = <span class="dv">0</span>;</span>
+<span id="cb1-51"><a aria-hidden="true" href="#cb1-51"></a>    FOR(c, <span class="dv">0</span>, <span class="dv">25</span>)</span>
+<span id="cb1-52"><a aria-hidden="true" href="#cb1-52"></a>        <span class="cf">if</span> (t[<span class="dv">0</span>].ch[c])</span>
+<span id="cb1-53"><a aria-hidden="true" href="#cb1-53"></a>            q[++tail] = t[<span class="dv">0</span>].ch[c], addEdge(<span class="dv">0</span>, t[<span class="dv">0</span>].ch[c]);</span>
+<span id="cb1-54"><a aria-hidden="true" href="#cb1-54"></a>    <span class="cf">while</span> (head &lt;= tail)</span>
+<span id="cb1-55"><a aria-hidden="true" href="#cb1-55"></a>    {</span>
+<span id="cb1-56"><a aria-hidden="true" href="#cb1-56"></a>        <span class="dt">int</span> u = q[head++];</span>
+<span id="cb1-57"><a aria-hidden="true" href="#cb1-57"></a>        FOR(c, <span class="dv">0</span>, <span class="dv">25</span>)</span>
+<span id="cb1-58"><a aria-hidden="true" href="#cb1-58"></a>            <span class="cf">if</span> (t[u].ch[c])</span>
+<span id="cb1-59"><a aria-hidden="true" href="#cb1-59"></a>                t[t[u].ch[c]].fail = t[t[u].fail].ch[c], addEdge(t[t[u].ch[c]].fail, t[u].ch[c]), q[++tail] = t[u].ch[c];</span>
+<span id="cb1-60"><a aria-hidden="true" href="#cb1-60"></a>            <span class="cf">else</span> t[u].ch[c] = t[t[u].fail].ch[c];</span>
+<span id="cb1-61"><a aria-hidden="true" href="#cb1-61"></a>    }</span>
+<span id="cb1-62"><a aria-hidden="true" href="#cb1-62"></a>    <span class="cf">return</span>;</span>
+<span id="cb1-63"><a aria-hidden="true" href="#cb1-63"></a>}</span>
+<span id="cb1-64"><a aria-hidden="true" href="#cb1-64"></a></span>
+<span id="cb1-65"><a aria-hidden="true" href="#cb1-65"></a><span class="dt">int</span> fa[maxn], dep[maxn], size[maxn], son[maxn];</span>
+<span id="cb1-66"><a aria-hidden="true" href="#cb1-66"></a><span class="dt">int</span> top[maxn], dfn[maxn], low[maxn], cntdfn;</span>
+<span id="cb1-67"><a aria-hidden="true" href="#cb1-67"></a></span>
+<span id="cb1-68"><a aria-hidden="true" href="#cb1-68"></a><span class="dt">void</span> dfs1(<span class="dt">int</span> u, <span class="dt">int</span> f)</span>
+<span id="cb1-69"><a aria-hidden="true" href="#cb1-69"></a>{</span>
+<span id="cb1-70"><a aria-hidden="true" href="#cb1-70"></a>    size[u] = <span class="dv">1</span>, dep[u] = dep[f] + <span class="dv">1</span>, fa[u] = f;</span>
+<span id="cb1-71"><a aria-hidden="true" href="#cb1-71"></a>    GO(u)</span>
+<span id="cb1-72"><a aria-hidden="true" href="#cb1-72"></a>    {</span>
+<span id="cb1-73"><a aria-hidden="true" href="#cb1-73"></a>        <span class="cf">if</span> (v == f) <span class="cf">continue</span>;</span>
+<span id="cb1-74"><a aria-hidden="true" href="#cb1-74"></a>        dfs1(v, u);</span>
+<span id="cb1-75"><a aria-hidden="true" href="#cb1-75"></a>        size[u] += size[v];</span>
+<span id="cb1-76"><a aria-hidden="true" href="#cb1-76"></a>        <span class="cf">if</span> (!son[u] || size[v] &gt; size[son[u]]) son[u] = v;</span>
+<span id="cb1-77"><a aria-hidden="true" href="#cb1-77"></a>    }</span>
+<span id="cb1-78"><a aria-hidden="true" href="#cb1-78"></a>    <span class="cf">return</span>;</span>
+<span id="cb1-79"><a aria-hidden="true" href="#cb1-79"></a>}</span>
+<span id="cb1-80"><a aria-hidden="true" href="#cb1-80"></a></span>
+<span id="cb1-81"><a aria-hidden="true" href="#cb1-81"></a><span class="dt">void</span> dfs2(<span class="dt">int</span> u, <span class="dt">int</span> topf)</span>
+<span id="cb1-82"><a aria-hidden="true" href="#cb1-82"></a>{</span>
+<span id="cb1-83"><a aria-hidden="true" href="#cb1-83"></a>    top[u] = topf, dfn[u] = ++cntdfn;</span>
+<span id="cb1-84"><a aria-hidden="true" href="#cb1-84"></a>    <span class="cf">if</span> (son[u]) dfs2(son[u], topf);</span>
+<span id="cb1-85"><a aria-hidden="true" href="#cb1-85"></a>    GO(u)</span>
+<span id="cb1-86"><a aria-hidden="true" href="#cb1-86"></a>    {</span>
+<span id="cb1-87"><a aria-hidden="true" href="#cb1-87"></a>        <span class="cf">if</span> (v == son[u] || v == fa[u]) <span class="cf">continue</span>;</span>
+<span id="cb1-88"><a aria-hidden="true" href="#cb1-88"></a>        dfs2(v, v);</span>
+<span id="cb1-89"><a aria-hidden="true" href="#cb1-89"></a>    }</span>
+<span id="cb1-90"><a aria-hidden="true" href="#cb1-90"></a>    low[u] = cntdfn;</span>
+<span id="cb1-91"><a aria-hidden="true" href="#cb1-91"></a>    <span class="cf">return</span>;</span>
+<span id="cb1-92"><a aria-hidden="true" href="#cb1-92"></a>}</span>
+<span id="cb1-93"><a aria-hidden="true" href="#cb1-93"></a></span>
+<span id="cb1-94"><a aria-hidden="true" href="#cb1-94"></a><span class="dt">int</span> getLCA(<span class="dt">int</span> u, <span class="dt">int</span> v)</span>
+<span id="cb1-95"><a aria-hidden="true" href="#cb1-95"></a>{</span>
+<span id="cb1-96"><a aria-hidden="true" href="#cb1-96"></a>    <span class="cf">while</span> (top[u] != top[v])</span>
+<span id="cb1-97"><a aria-hidden="true" href="#cb1-97"></a>    {</span>
+<span id="cb1-98"><a aria-hidden="true" href="#cb1-98"></a>        <span class="cf">if</span> (dep[top[u]] &lt; dep[top[v]]) swap(u, v);</span>
+<span id="cb1-99"><a aria-hidden="true" href="#cb1-99"></a>        u = fa[top[u]];</span>
+<span id="cb1-100"><a aria-hidden="true" href="#cb1-100"></a>    }</span>
+<span id="cb1-101"><a aria-hidden="true" href="#cb1-101"></a>    <span class="cf">return</span> dep[u] &lt; dep[v] ? u : v;</span>
+<span id="cb1-102"><a aria-hidden="true" href="#cb1-102"></a>}</span>
+<span id="cb1-103"><a aria-hidden="true" href="#cb1-103"></a></span>
+<span id="cb1-104"><a aria-hidden="true" href="#cb1-104"></a><span class="kw">struct</span> BIT</span>
+<span id="cb1-105"><a aria-hidden="true" href="#cb1-105"></a>{</span>
+<span id="cb1-106"><a aria-hidden="true" href="#cb1-106"></a>    <span class="dt">int</span> f[maxn];</span>
+<span id="cb1-107"><a aria-hidden="true" href="#cb1-107"></a>    <span class="dt">void</span> modify(<span class="dt">int</span> x, <span class="dt">int</span> d)</span>
+<span id="cb1-108"><a aria-hidden="true" href="#cb1-108"></a>    {</span>
+<span id="cb1-109"><a aria-hidden="true" href="#cb1-109"></a>        <span class="cf">for</span> (; x &lt;= cntdfn + <span class="dv">3</span>; x += lowbit(x))</span>
+<span id="cb1-110"><a aria-hidden="true" href="#cb1-110"></a>            f[x] += d;</span>
+<span id="cb1-111"><a aria-hidden="true" href="#cb1-111"></a>        <span class="cf">return</span>;</span>
+<span id="cb1-112"><a aria-hidden="true" href="#cb1-112"></a>    }</span>
+<span id="cb1-113"><a aria-hidden="true" href="#cb1-113"></a>    <span class="dt">int</span> query(<span class="dt">int</span> x)</span>
+<span id="cb1-114"><a aria-hidden="true" href="#cb1-114"></a>    {</span>
+<span id="cb1-115"><a aria-hidden="true" href="#cb1-115"></a>        <span class="dt">int</span> ret = <span class="dv">0</span>;</span>
+<span id="cb1-116"><a aria-hidden="true" href="#cb1-116"></a>        <span class="cf">for</span> (; x; x -= lowbit(x))</span>
+<span id="cb1-117"><a aria-hidden="true" href="#cb1-117"></a>            ret += f[x];</span>
+<span id="cb1-118"><a aria-hidden="true" href="#cb1-118"></a>        <span class="cf">return</span> ret;</span>
+<span id="cb1-119"><a aria-hidden="true" href="#cb1-119"></a>    }</span>
+<span id="cb1-120"><a aria-hidden="true" href="#cb1-120"></a>    il <span class="dt">int</span> query(<span class="dt">int</span> x, <span class="dt">int</span> y) {<span class="cf">return</span> query(y) - query(x - <span class="dv">1</span>);}</span>
+<span id="cb1-121"><a aria-hidden="true" href="#cb1-121"></a>} bit;</span>
+<span id="cb1-122"><a aria-hidden="true" href="#cb1-122"></a></span>
+<span id="cb1-123"><a aria-hidden="true" href="#cb1-123"></a>il <span class="dt">bool</span> cmp(<span class="dt">int</span> a, <span class="dt">int</span> b) {<span class="cf">return</span> dfn[a] &lt; dfn[b];}</span>
+<span id="cb1-124"><a aria-hidden="true" href="#cb1-124"></a></span>
+<span id="cb1-125"><a aria-hidden="true" href="#cb1-125"></a><span class="dt">void</span> solve(<span class="dt">char</span> *s)</span>
+<span id="cb1-126"><a aria-hidden="true" href="#cb1-126"></a>{</span>
+<span id="cb1-127"><a aria-hidden="true" href="#cb1-127"></a>    <span class="at">static</span> <span class="dt">int</span> tmp[maxn];</span>
+<span id="cb1-128"><a aria-hidden="true" href="#cb1-128"></a>    <span class="dt">int</span> u = <span class="dv">0</span>, len = strlen(s + <span class="dv">1</span>), cnt = <span class="dv">0</span>;</span>
+<span id="cb1-129"><a aria-hidden="true" href="#cb1-129"></a>    FOR(i, <span class="dv">1</span>, len)</span>
+<span id="cb1-130"><a aria-hidden="true" href="#cb1-130"></a>        u = t[u].ch[s[i] - <span class="ch">'a'</span>], tmp[++cnt] = u;</span>
+<span id="cb1-131"><a aria-hidden="true" href="#cb1-131"></a>    <span class="bu">std::</span>sort(tmp + <span class="dv">1</span>, tmp + cnt + <span class="dv">1</span>, cmp);</span>
+<span id="cb1-132"><a aria-hidden="true" href="#cb1-132"></a>    cnt = <span class="bu">std::</span>unique(tmp + <span class="dv">1</span>, tmp + cnt + <span class="dv">1</span>) - tmp - <span class="dv">1</span>;</span>
+<span id="cb1-133"><a aria-hidden="true" href="#cb1-133"></a>    FOR(i, <span class="dv">1</span>, cnt)</span>
+<span id="cb1-134"><a aria-hidden="true" href="#cb1-134"></a>    {</span>
+<span id="cb1-135"><a aria-hidden="true" href="#cb1-135"></a>        bit.modify(dfn[tmp[i]], <span class="dv">1</span>);</span>
+<span id="cb1-136"><a aria-hidden="true" href="#cb1-136"></a>        <span class="cf">if</span> (i &gt; <span class="dv">1</span>) bit.modify(dfn[getLCA(tmp[i], tmp[i - <span class="dv">1</span>])], -<span class="dv">1</span>);</span>
+<span id="cb1-137"><a aria-hidden="true" href="#cb1-137"></a>    }</span>
+<span id="cb1-138"><a aria-hidden="true" href="#cb1-138"></a>    <span class="cf">return</span>;</span>
+<span id="cb1-139"><a aria-hidden="true" href="#cb1-139"></a>}</span>
+<span id="cb1-140"><a aria-hidden="true" href="#cb1-140"></a></span>
+<span id="cb1-141"><a aria-hidden="true" href="#cb1-141"></a><span class="dt">int</span> main()</span>
+<span id="cb1-142"><a aria-hidden="true" href="#cb1-142"></a>{</span>
+<span id="cb1-143"><a aria-hidden="true" href="#cb1-143"></a>    scanf(<span class="st">"</span><span class="sc">%d</span><span class="st">"</span>, &amp;n);</span>
+<span id="cb1-144"><a aria-hidden="true" href="#cb1-144"></a>    FOR(i, <span class="dv">1</span>, n)</span>
+<span id="cb1-145"><a aria-hidden="true" href="#cb1-145"></a>    {</span>
+<span id="cb1-146"><a aria-hidden="true" href="#cb1-146"></a>        scanf(<span class="st">"</span><span class="sc">%s</span><span class="st">"</span>, s + <span class="dv">1</span>);</span>
+<span id="cb1-147"><a aria-hidden="true" href="#cb1-147"></a>        insert(s, i);</span>
+<span id="cb1-148"><a aria-hidden="true" href="#cb1-148"></a>    }</span>
+<span id="cb1-149"><a aria-hidden="true" href="#cb1-149"></a>    buildAC();</span>
+<span id="cb1-150"><a aria-hidden="true" href="#cb1-150"></a>    dfs1(<span class="dv">0</span>, -<span class="dv">1</span>);</span>
+<span id="cb1-151"><a aria-hidden="true" href="#cb1-151"></a>    dfs2(<span class="dv">0</span>, <span class="dv">0</span>);</span>
+<span id="cb1-152"><a aria-hidden="true" href="#cb1-152"></a>    scanf(<span class="st">"</span><span class="sc">%d</span><span class="st">"</span>, &amp;q);</span>
+<span id="cb1-153"><a aria-hidden="true" href="#cb1-153"></a>    <span class="cf">while</span> (q--)</span>
+<span id="cb1-154"><a aria-hidden="true" href="#cb1-154"></a>    {</span>
+<span id="cb1-155"><a aria-hidden="true" href="#cb1-155"></a>        <span class="dt">int</span> op;</span>
+<span id="cb1-156"><a aria-hidden="true" href="#cb1-156"></a>        scanf(<span class="st">"</span><span class="sc">%d</span><span class="st">"</span>, &amp;op);</span>
+<span id="cb1-157"><a aria-hidden="true" href="#cb1-157"></a>        <span class="cf">if</span> (op == <span class="dv">1</span>)</span>
+<span id="cb1-158"><a aria-hidden="true" href="#cb1-158"></a>            scanf(<span class="st">"</span><span class="sc">%s</span><span class="st">"</span>, s + <span class="dv">1</span>), solve(s);</span>
+<span id="cb1-159"><a aria-hidden="true" href="#cb1-159"></a>        <span class="cf">else</span></span>
+<span id="cb1-160"><a aria-hidden="true" href="#cb1-160"></a>        {</span>
+<span id="cb1-161"><a aria-hidden="true" href="#cb1-161"></a>            <span class="dt">int</span> x;</span>
+<span id="cb1-162"><a aria-hidden="true" href="#cb1-162"></a>            scanf(<span class="st">"</span><span class="sc">%d</span><span class="st">"</span>, &amp;x);</span>
+<span id="cb1-163"><a aria-hidden="true" href="#cb1-163"></a>            printf(<span class="st">"</span><span class="sc">%d\n</span><span class="st">"</span>, bit.query(dfn[pos[x]], low[pos[x]]));</span>
+<span id="cb1-164"><a aria-hidden="true" href="#cb1-164"></a>        }</span>
+<span id="cb1-165"><a aria-hidden="true" href="#cb1-165"></a>    }</span>
+<span id="cb1-166"><a aria-hidden="true" href="#cb1-166"></a>    <span class="cf">return</span> <span class="dv">0</span>;</span>
+<span id="cb1-167"><a aria-hidden="true" href="#cb1-167"></a>}</span></code></pre></div>
+</section>
+<footer class="article-footer">
+<section class="article-tags">
+<a href="/tags/OI/">OI</a>
+<a href="/tags/luogu/">洛谷</a>
+<a href="/tags/solution/">解题报告</a>
+<a href="/tags/acam/">AC自动机</a>
+<a href="/tags/hld/">树链剖分</a>
+</section>
+<section class="article-copyright">
+<svg class="icon icon-tabler icon-tabler-copyright" fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+<path d="M0 0h24v24H0z" stroke="none"></path>
+<circle cx="12" cy="12" r="9"></circle>
+<path d="M14.5 9a3.5 4 0 1 0 0 6"></path>
+</svg>
+<span>Licensed under CC BY-NC-SA 4.0</span>
+</section>
+</footer>
+<link crossorigin="anonymous" href="https://cdn.jsdelivr.net/npm/katex@0.13.13/dist/katex.min.css" integrity="sha384-RZU/ijkSsFbcmivfdRBQDtwuwVqK7GMOw6IMvKyeWL2K5UAlyp6WonmB8m7Jd0Hn" rel="stylesheet"/><script crossorigin="anonymous" defer="" integrity="sha384-pK1WpvzWVBQiP0/GjnvRxV4mOb0oxFuyRxJlk6vVw146n3egcN5C925NCP7a7BY8" src="https://cdn.jsdelivr.net/npm/katex@0.13.13/dist/katex.min.js">
+</script><script crossorigin="anonymous" defer="" integrity="sha384-vZTG03m+2yp6N6BNi5iM4rW4oIwk5DfcNdFfxkk9ZWpDriOkXX8voJBFrAO7MpVl" src="https://cdn.jsdelivr.net/npm/katex@0.13.13/dist/contrib/auto-render.min.js">
+</script><script>
+    window.addEventListener("DOMContentLoaded", () => {
+        renderMathInElement(document.querySelector(`.article-content`), {
+            delimiters: [
+                { left: "$$", right: "$$", display: true },
+                { left: "$", right: "$", display: false },
+                { left: "\\(", right: "\\)", display: false },
+                { left: "\\[", right: "\\]", display: true }
+            ]
+        });})
+</script>
+</article>
+<aside class="related-contents--wrapper">
+<h2 class="section-title">相关文章</h2>
+<div class="related-contents">
+<div class="flex article-list--tile">
+<article class="has-image">
+<a href="/sol-luogu-p5305/">
+<div class="article-image">
+<img data-hash="https://yangty-pic.oss-cn-beijing.aliyuncs.com/bg32.webp" data-key="" loading="lazy" src="https://yangty-pic.oss-cn-beijing.aliyuncs.com/bg32.webp"/>
+</div>
+<div class="article-details">
+<h2 class="article-title">P5305 [GXOI/GZOI2019]旧词</h2>
+</div>
+</a>
+</article>
+<article class="has-image">
+<a href="/sol-luogu-p5468/">
+<div class="article-image">
+<img data-hash="https://yangty-pic.oss-cn-beijing.aliyuncs.com/bg01.webp" data-key="" loading="lazy" src="https://yangty-pic.oss-cn-beijing.aliyuncs.com/bg01.webp"/>
+</div>
+<div class="article-details">
+<h2 class="article-title">P5468 [NOI2019] 回家路线</h2>
+</div>
+</a>
+</article>
+<article class="has-image">
+<a href="/sol-luogu-p3544/">
+<div class="article-image">
+<img data-hash="https://yangty-pic.oss-cn-beijing.aliyuncs.com/bg68.webp" data-key="" loading="lazy" src="https://yangty-pic.oss-cn-beijing.aliyuncs.com/bg68.webp"/>
+</div>
+<div class="article-details">
+<h2 class="article-title">P3544 [POI2012]BEZ-Minimalist Security</h2>
+</div>
+</a>
+</article>
+<article class="has-image">
+<a href="/sol-luogu-p4689/">
+<div class="article-image">
+<img data-hash="https://yangty-pic.oss-cn-beijing.aliyuncs.com/bg67.webp" data-key="" loading="lazy" src="https://yangty-pic.oss-cn-beijing.aliyuncs.com/bg67.webp"/>
+</div>
+<div class="article-details">
+<h2 class="article-title">P4689 [Ynoi2016] 这是我自己的发明</h2>
+</div>
+</a>
+</article>
+<article class="has-image">
+<a href="/sol-luogu-p3242/">
+<div class="article-image">
+<img data-hash="https://yangty-pic.oss-cn-beijing.aliyuncs.com/bg5.webp" data-key="" loading="lazy" src="https://yangty-pic.oss-cn-beijing.aliyuncs.com/bg5.webp"/>
+</div>
+<div class="article-details">
+<h2 class="article-title">P3242 [HNOI2015] 接水果</h2>
+</div>
+</a>
+</article>
+</div>
+</div>
+</aside>
+<footer class="site-footer">
+<section class="copyright">
+        © 
+        
+            2019 - 
+        
+        2024 清烛的博客
+    </section>
+<section class="powerby">
+        Built with <a href="https://gohugo.io/" rel="noopener" target="_blank">Hugo</a> <br/>
+        主题 <b><a data-version="3.11.0" href="https://github.com/CaiJimmy/hugo-theme-stack" rel="noopener" target="_blank">Stack</a></b> 由 <a href="https://jimmycai.com" rel="noopener" target="_blank">Jimmy</a> 设计
+    </section>
+</footer>
+<div aria-hidden="true" class="pswp" role="dialog" tabindex="-1">
+<div class="pswp__bg"></div>
+<div class="pswp__scroll-wrap">
+<div class="pswp__container">
+<div class="pswp__item"></div>
+<div class="pswp__item"></div>
+<div class="pswp__item"></div>
+</div>
+<div class="pswp__ui pswp__ui--hidden">
+<div class="pswp__top-bar">
+<div class="pswp__counter"></div>
+<button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+<button class="pswp__button pswp__button--share" title="Share"></button>
+<button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+<button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+<div class="pswp__preloader">
+<div class="pswp__preloader__icn">
+<div class="pswp__preloader__cut">
+<div class="pswp__preloader__donut"></div>
+</div>
+</div>
+</div>
+</div>
+<div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+<div class="pswp__share-tooltip"></div>
+</div>
+<button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+</button>
+<button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+</button>
+<div class="pswp__caption">
+<div class="pswp__caption__center"></div>
+</div>
+</div>
+</div>
+</div><script crossorigin="anonymous" defer="" integrity="sha256-ePwmChbbvXbsO02lbM3HoHbSHTHFAeChekF1xKJdleo=" src="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe.min.js">
+</script><script crossorigin="anonymous" defer="" integrity="sha256-UKkzOn/w1mBxRmLLGrSeyB4e1xbrp4xylgAWb3M42pU=" src="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe-ui-default.min.js">
+</script><link crossorigin="anonymous" href="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/default-skin/default-skin.css" integrity="sha256-c0uckgykQ9v5k+IqViZOZKc47Jn7KQil4/MP3ySA3F8=" rel="stylesheet"/><link crossorigin="anonymous" href="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe.css" integrity="sha256-SBLU4vv6CA6lHsZ1XyTdhyjJxCjPif/TRkjnsyGAGnE=" rel="stylesheet"/>
+</main>
+</div>
+<script crossorigin="anonymous" integrity="sha256-5NovOZc4iwiAWTYIFiIM7DxKUXKWvpVEuMEPLzcm5/g=" src="https://cdn.jsdelivr.net/npm/node-vibrant@3.1.5/dist/vibrant.min.js">
+</script><script defer="" src="/ts/main.js" type="text/javascript"></script>
+<script>
+    (function () {
+        const customFont = document.createElement('link');
+        customFont.href = "https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&display=swap";
+
+        customFont.type = "text/css";
+        customFont.rel = "stylesheet";
+
+        document.head.appendChild(customFont);
+    }());
+</script>
+</body>
+</html>

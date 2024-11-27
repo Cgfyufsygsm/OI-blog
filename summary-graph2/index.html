@@ -1,0 +1,598 @@
+<!DOCTYPE html>
+<html dir="ltr" lang="zh-CN">
+<head><meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1" name="viewport"/><meta content="前言 省选 + NOI 复习。
+全凭个人喜好来搞。
+不会写的很严谨，实战导向型。
+本文内容概览：
+同余最短路 Kruskal重构树 最小直径生成树 斯坦纳树 Prufer序列 支配树 最小树形图 弦图（咕咕咕） 同余最短路 Kruskal 重构树 定义 考虑 Kruskal 算法的过程，我们会从小到大加边。考虑依此构建出一棵“重构树”。具体地：
+新建 \(n\) 个集合，每个集合初始有一个点，权为 \(0\)。 对于 Kruskal 的每一次成功的加边，都建一个辅助点，点权为对应边的边权，同时将边端点所在的两个集合的根节点连向辅助点，然后将其合并成一个集合，辅助点为根。 这样 \(n - 1\) 轮下来我们会得到恰有 \(n\) 个叶子节点的二叉树，同时每个非叶子节点都恰好有两个儿子。这棵树就叫做 Kruskal 重构树。 性质 以下性质基于依照“最小生成树”构建的重构树：
+该树为一个大根堆。 对于原图中任意两点 \(x\)、\(y\)，其所有简单路径上最大边权的最小值 = 最小生成树上两点间简单路径的最大值 = 重构树上两者 LCA 的权值。 同理，到 \(x\) 的简单路径上最大边权的最小值 \(\le v\) 的所有点 \(y\) 均在 Kruskal 重构树上的某棵子树内，且恰好为这棵子树的所有叶子节点。倍增找到点权 \(\le v\) 的 \(x\) 的最浅的祖先即可。 Kruskal 重构树一般用于解决瓶颈路一类的问题。
+应用 例题 \(1\)：P7834 [ONTAK2010] Peaks 加强版" name="description"/><title>图论复习 2（高级图论）</title>
+<link href="https://oi.imyangty.com/summary-graph2/" rel="canonical"/>
+<link href="/scss/style.min.a5821f3d3ab84ce5a0ac21477e347a2e0ca00292e398d16c5e8e36ded6e35a23.css" rel="stylesheet"/><meta content="图论复习 2（高级图论）" property="og:title"/>
+<meta content="前言 省选 + NOI 复习。
+全凭个人喜好来搞。
+不会写的很严谨，实战导向型。
+本文内容概览：
+同余最短路 Kruskal重构树 最小直径生成树 斯坦纳树 Prufer序列 支配树 最小树形图 弦图（咕咕咕） 同余最短路 Kruskal 重构树 定义 考虑 Kruskal 算法的过程，我们会从小到大加边。考虑依此构建出一棵“重构树”。具体地：
+新建 \(n\) 个集合，每个集合初始有一个点，权为 \(0\)。 对于 Kruskal 的每一次成功的加边，都建一个辅助点，点权为对应边的边权，同时将边端点所在的两个集合的根节点连向辅助点，然后将其合并成一个集合，辅助点为根。 这样 \(n - 1\) 轮下来我们会得到恰有 \(n\) 个叶子节点的二叉树，同时每个非叶子节点都恰好有两个儿子。这棵树就叫做 Kruskal 重构树。 性质 以下性质基于依照“最小生成树”构建的重构树：
+该树为一个大根堆。 对于原图中任意两点 \(x\)、\(y\)，其所有简单路径上最大边权的最小值 = 最小生成树上两点间简单路径的最大值 = 重构树上两者 LCA 的权值。 同理，到 \(x\) 的简单路径上最大边权的最小值 \(\le v\) 的所有点 \(y\) 均在 Kruskal 重构树上的某棵子树内，且恰好为这棵子树的所有叶子节点。倍增找到点权 \(\le v\) 的 \(x\) 的最浅的祖先即可。 Kruskal 重构树一般用于解决瓶颈路一类的问题。
+应用 例题 \(1\)：P7834 [ONTAK2010] Peaks 加强版" property="og:description"/>
+<meta content="https://oi.imyangty.com/summary-graph2/" property="og:url"/>
+<meta content="清烛的博客" property="og:site_name"/>
+<meta content="article" property="og:type"/><meta content="Post" property="article:section"/><meta content="OI" property="article:tag"/><meta content="笔记" property="article:tag"/><meta content="Prufer序列" property="article:tag"/><meta content="同余最短路" property="article:tag"/><meta content="Kruskal重构树" property="article:tag"/><meta content="2022-02-19T13:25:46+08:00" property="article:published_time"/><meta content="2022-02-19T13:25:46+08:00" property="article:modified_time"/><meta content="https://yangty-pic.oss-cn-beijing.aliyuncs.com/bg10.webp" property="og:image"/>
+<meta content="图论复习 2（高级图论）" name="twitter:title"/>
+<meta content="前言 省选 + NOI 复习。
+全凭个人喜好来搞。
+不会写的很严谨，实战导向型。
+本文内容概览：
+同余最短路 Kruskal重构树 最小直径生成树 斯坦纳树 Prufer序列 支配树 最小树形图 弦图（咕咕咕） 同余最短路 Kruskal 重构树 定义 考虑 Kruskal 算法的过程，我们会从小到大加边。考虑依此构建出一棵“重构树”。具体地：
+新建 \(n\) 个集合，每个集合初始有一个点，权为 \(0\)。 对于 Kruskal 的每一次成功的加边，都建一个辅助点，点权为对应边的边权，同时将边端点所在的两个集合的根节点连向辅助点，然后将其合并成一个集合，辅助点为根。 这样 \(n - 1\) 轮下来我们会得到恰有 \(n\) 个叶子节点的二叉树，同时每个非叶子节点都恰好有两个儿子。这棵树就叫做 Kruskal 重构树。 性质 以下性质基于依照“最小生成树”构建的重构树：
+该树为一个大根堆。 对于原图中任意两点 \(x\)、\(y\)，其所有简单路径上最大边权的最小值 = 最小生成树上两点间简单路径的最大值 = 重构树上两者 LCA 的权值。 同理，到 \(x\) 的简单路径上最大边权的最小值 \(\le v\) 的所有点 \(y\) 均在 Kruskal 重构树上的某棵子树内，且恰好为这棵子树的所有叶子节点。倍增找到点权 \(\le v\) 的 \(x\) 的最浅的祖先即可。 Kruskal 重构树一般用于解决瓶颈路一类的问题。
+应用 例题 \(1\)：P7834 [ONTAK2010] Peaks 加强版" name="twitter:description"/><meta content="summary_large_image" name="twitter:card"/>
+<meta content="https://yangty-pic.oss-cn-beijing.aliyuncs.com/bg10.webp" name="twitter:image"/>
+<link href="https://q1.qlogo.cn/g?b=qq&amp;nk=375836877&amp;s=5" rel="shortcut icon"/>
+<link href="https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.5.1/build/styles/github-dark-dimmed.min.css" rel="stylesheet"/>
+<script src="https://cdn.jsdelivr.net/gh/highlightjs/cdn-release/build/highlight.min.js"></script>
+<script>hljs.highlightAll();</script>
+</head>
+<body class="article-page">
+<script>
+        (function() {
+            const colorSchemeKey = 'StackColorScheme';
+            if(!localStorage.getItem(colorSchemeKey)){
+                localStorage.setItem(colorSchemeKey, "auto");
+            }
+        })();
+    </script><script>
+    (function() {
+        const colorSchemeKey = 'StackColorScheme';
+        const colorSchemeItem = localStorage.getItem(colorSchemeKey);
+        const supportDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches === true;
+
+        if (colorSchemeItem == 'dark' || colorSchemeItem === 'auto' && supportDarkMode) {
+            
+
+            document.documentElement.dataset.scheme = 'dark';
+        } else {
+            document.documentElement.dataset.scheme = 'light';
+        }
+    })();
+</script>
+<div class="container main-container flex on-phone--column extended"><aside class="sidebar left-sidebar sticky">
+<button aria-label="切换菜单" class="hamburger hamburger--spin" id="toggle-menu" type="button">
+<span class="hamburger-box">
+<span class="hamburger-inner"></span>
+</span>
+</button>
+<header>
+<figure class="site-avatar">
+<a href="/">
+<img alt="Avatar" class="site-logo" height="300" loading="lazy" src="/img/avatar_huea3ce2119467b51fdd2a81393644a76d_51594_300x0_resize_q75_box.jpg" width="300"/>
+</a>
+<span class="emoji">😅</span>
+</figure>
+<div class="site-meta">
+<h1 class="site-name"><a href="/">清烛的博客</a></h1>
+<h2 class="site-description">烟火已谢，笙歌未停</h2>
+</div>
+</header><ol class="social-menu">
+<li>
+<a href="mailto:i@imyangty.com" target="_blank" title="email">
+<svg class="icon icon-tabler icon-tabler-mail" fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" viewbox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+<path d="M0 0h24v24H0z" fill="none" stroke="none"></path>
+<rect height="14" rx="2" width="18" x="3" y="5"></rect>
+<polyline points="3 7 12 13 21 7"></polyline>
+</svg>
+</a>
+</li>
+<li>
+<a href="https://github.com/Cgfyufsygsm" target="_blank" title="GitHub">
+<svg class="icon icon-tabler icon-tabler-brand-github" fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+<path d="M0 0h24v24H0z" fill="none" stroke="none"></path>
+<path d="M9 19c-4.3 1.4 -4.3 -2.5 -6 -3m12 5v-3.5c0 -1 .1 -1.4 -.5 -2c2.8 -.3 5.5 -1.4 5.5 -6a4.6 4.6 0 0 0 -1.3 -3.2a4.2 4.2 0 0 0 -.1 -3.2s-1.1 -.3 -3.5 1.3a12.3 12.3 0 0 0 -6.2 0c-2.4 -1.6 -3.5 -1.3 -3.5 -1.3a4.2 4.2 0 0 0 -.1 3.2a4.6 4.6 0 0 0 -1.3 3.2c0 4.6 2.7 5.7 5.5 6c-.6 .6 -.6 1.2 -.5 2v3.5"></path>
+</svg>
+</a>
+</li>
+<li>
+<a href="https://t.me/Cgfyufsygsm" target="_blank" title="Telegram">
+<svg class="icon icon-tabler icon-tabler-brand-telegram" fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" viewbox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+<path d="M0 0h24v24H0z" fill="none" stroke="none"></path>
+<path d="M15 10l-4 4l6 6l4 -16l-18 7l4 2l2 6l3 -4"></path>
+</svg>
+</a>
+</li>
+<li>
+<a href="https://twitter.com/Cgfyufsygsm" target="_blank" title="Twitter">
+<svg class="icon icon-tabler icon-tabler-brand-twitter" fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+<path d="M0 0h24v24H0z" fill="none" stroke="none"></path>
+<path d="M22 4.01c-1 .49 -1.98 .689 -3 .99c-1.121 -1.265 -2.783 -1.335 -4.38 -.737s-2.643 2.06 -2.62 3.737v1c-3.245 .083 -6.135 -1.395 -8 -4c0 0 -4.182 7.433 4 11c-1.872 1.247 -3.739 2.088 -6 2c3.308 1.803 6.913 2.423 10.034 1.517c3.58 -1.04 6.522 -3.723 7.651 -7.742a13.84 13.84 0 0 0 .497 -3.753c-.002 -.249 1.51 -2.772 1.818 -4.013z"></path>
+</svg>
+</a>
+</li>
+</ol><ol class="menu" id="main-menu">
+<li>
+<a href="/">
+<svg class="icon icon-tabler icon-tabler-home" fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+<path d="M0 0h24v24H0z" stroke="none"></path>
+<polyline points="5 12 3 12 12 3 21 12 19 12"></polyline>
+<path d="M5 12v7a2 2 0 0 0 2 2h10a2 2 0 0 0 2 -2v-7"></path>
+<path d="M9 21v-6a2 2 0 0 1 2 -2h2a2 2 0 0 1 2 2v6"></path>
+</svg>
+<span>主页</span>
+</a>
+</li>
+<li>
+<a href="/about/">
+<svg class="icon icon-tabler icon-tabler-user" fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+<path d="M0 0h24v24H0z" stroke="none"></path>
+<circle cx="12" cy="7" r="4"></circle>
+<path d="M6 21v-2a4 4 0 0 1 4 -4h4a4 4 0 0 1 4 4v2"></path>
+</svg>
+<span>关于</span>
+</a>
+</li>
+<li>
+<a href="/idx/">
+<svg class="icon icon-tabler icon-tabler-hash" fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+<path d="M0 0h24v24H0z" stroke="none"></path>
+<line x1="5" x2="19" y1="9" y2="9"></line>
+<line x1="5" x2="19" y1="15" y2="15"></line>
+<line x1="11" x2="7" y1="4" y2="20"></line>
+<line x1="17" x2="13" y1="4" y2="20"></line>
+</svg>
+<span>导航</span>
+</a>
+</li>
+<li>
+<a href="/archives/">
+<svg class="icon icon-tabler icon-tabler-archive" fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+<path d="M0 0h24v24H0z" stroke="none"></path>
+<rect height="4" rx="2" width="18" x="3" y="4"></rect>
+<path d="M5 8v10a2 2 0 0 0 2 2h10a2 2 0 0 0 2 -2v-10"></path>
+<line x1="10" x2="14" y1="12" y2="12"></line>
+</svg>
+<span>归档</span>
+</a>
+</li>
+<li>
+<a href="/search/">
+<svg class="icon icon-tabler icon-tabler-search" fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+<path d="M0 0h24v24H0z" stroke="none"></path>
+<circle cx="10" cy="10" r="7"></circle>
+<line x1="21" x2="15" y1="21" y2="15"></line>
+</svg>
+<span>搜索</span>
+</a>
+</li>
+<li>
+<a href="/friends/">
+<svg class="icon icon-tabler icon-tabler-link" fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+<path d="M0 0h24v24H0z" stroke="none"></path>
+<path d="M10 14a3.5 3.5 0 0 0 5 0l4 -4a3.5 3.5 0 0 0 -5 -5l-.5 .5"></path>
+<path d="M14 10a3.5 3.5 0 0 0 -5 0l-4 4a3.5 3.5 0 0 0 5 5l.5 -.5"></path>
+</svg>
+<span>友链</span>
+</a>
+</li>
+<li>
+<a href="https://blog.imyangty.com" target="_blank">
+<svg class="icon icon-tabler icon-tabler-home" fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+<path d="M0 0h24v24H0z" stroke="none"></path>
+<polyline points="5 12 3 12 12 3 21 12 19 12"></polyline>
+<path d="M5 12v7a2 2 0 0 0 2 2h10a2 2 0 0 0 2 -2v-7"></path>
+<path d="M9 21v-6a2 2 0 0 1 2 -2h2a2 2 0 0 1 2 2v6"></path>
+</svg>
+<span>主博客</span>
+</a>
+</li>
+<div class="menu-bottom-section">
+<li id="dark-mode-toggle">
+<svg class="icon icon-tabler icon-tabler-toggle-left" fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+<path d="M0 0h24v24H0z" stroke="none"></path>
+<circle cx="8" cy="12" r="2"></circle>
+<rect height="12" rx="6" width="20" x="2" y="6"></rect>
+</svg>
+<svg class="icon icon-tabler icon-tabler-toggle-right" fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+<path d="M0 0h24v24H0z" stroke="none"></path>
+<circle cx="16" cy="12" r="2"></circle>
+<rect height="12" rx="6" width="20" x="2" y="6"></rect>
+</svg>
+<span>暗色模式</span>
+</li>
+</div>
+</ol>
+</aside>
+<main class="main full-width">
+<article class="has-image main-article">
+<header class="article-header">
+<div class="article-image">
+<a href="/summary-graph2/">
+<img alt="Featured image of post 图论复习 2（高级图论）" loading="lazy" src="https://yangty-pic.oss-cn-beijing.aliyuncs.com/bg10.webp"/>
+</a>
+</div>
+<div class="article-details">
+<div class="article-title-wrapper">
+<h2 class="article-title">
+<a href="/summary-graph2/">图论复习 2（高级图论）</a>
+</h2>
+</div>
+<footer class="article-time">
+<div>
+<svg class="icon icon-tabler icon-tabler-calendar-time" fill="none" height="56" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="56" xmlns="http://www.w3.org/2000/svg">
+<path d="M0 0h24v24H0z" stroke="none"></path>
+<path d="M11.795 21h-6.795a2 2 0 0 1 -2 -2v-12a2 2 0 0 1 2 -2h12a2 2 0 0 1 2 2v4"></path>
+<circle cx="18" cy="18" r="4"></circle>
+<path d="M15 3v4"></path>
+<path d="M7 3v4"></path>
+<path d="M3 11h16"></path>
+<path d="M18 16.496v1.504l1 1"></path>
+</svg>
+<time class="article-time--published">Feb 19, 2022</time>
+</div>
+<div>
+<svg class="icon icon-tabler icon-tabler-clock" fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+<path d="M0 0h24v24H0z" stroke="none"></path>
+<circle cx="12" cy="12" r="9"></circle>
+<polyline points="12 7 12 12 15 15"></polyline>
+</svg>
+<time class="article-time--reading">
+                    阅读时长: 4 分钟
+                </time>
+</div>
+</footer>
+</div>
+</header>
+<section class="article-content">
+<h2 id="前言">前言</h2>
+<p>省选 + NOI 复习。</p>
+<p>全凭个人喜好来搞。</p>
+<p>不会写的很严谨，实战导向型。</p>
+<p>本文内容概览：</p>
+<ul>
+<li>同余最短路</li>
+<li>Kruskal重构树</li>
+<li>最小直径生成树</li>
+<li>斯坦纳树</li>
+<li>Prufer序列</li>
+<li>支配树</li>
+<li>最小树形图</li>
+<li>弦图（咕咕咕）</li>
+</ul>
+<h2 id="同余最短路">同余最短路</h2>
+<h2 id="kruskal-重构树">Kruskal 重构树</h2>
+<h3 id="定义">定义</h3>
+<p>考虑 Kruskal 算法的过程，我们会从小到大加边。考虑依此构建出一棵“重构树”。具体地：</p>
+<ul>
+<li>新建 <span class="math inline">\(n\)</span> 个集合，每个集合初始有一个点，权为 <span class="math inline">\(0\)</span>。</li>
+<li>对于 Kruskal 的每一次成功的加边，都建一个辅助点，点权为对应边的边权，同时将边端点所在的两个集合的根节点连向辅助点，然后将其合并成一个集合，辅助点为根。</li>
+<li>这样 <span class="math inline">\(n - 1\)</span> 轮下来我们会得到<strong>恰有 <span class="math inline">\(n\)</span> 个叶子节点的二叉树</strong>，同时每个非叶子节点都恰好有两个儿子。这棵树就叫做 Kruskal 重构树。</li>
+</ul>
+<h3 id="性质">性质</h3>
+<p>以下性质基于依照“最小生成树”构建的重构树：</p>
+<ul>
+<li>该树为一个大根堆。</li>
+<li>对于原图中任意两点 <span class="math inline">\(x\)</span>、<span class="math inline">\(y\)</span>，其所有简单路径上最大边权的最小值 = 最小生成树上两点间简单路径的最大值 = <strong>重构树上两者 LCA 的权值</strong>。</li>
+<li>同理，到 <span class="math inline">\(x\)</span> 的简单路径上最大边权的最小值 <span class="math inline">\(\le v\)</span> 的所有点 <span class="math inline">\(y\)</span> 均在 Kruskal 重构树上的某棵子树内，且恰好为这棵子树的所有叶子节点。倍增找到点权 <span class="math inline">\(\le v\)</span> 的 <span class="math inline">\(x\)</span> 的最浅的祖先即可。</li>
+</ul>
+<p><strong>Kruskal 重构树一般用于解决瓶颈路一类的问题</strong>。</p>
+<h3 id="应用">应用</h3>
+<blockquote>
+<p>例题 <span class="math inline">\(1\)</span>：<a href="https://www.luogu.com.cn/problem/P7834">P7834 [ONTAK2010] Peaks 加强版</a></p>
+<p>给定一张 <span class="math inline">\(n\)</span> 个点、<span class="math inline">\(m\)</span> 条边的无向图，第 <span class="math inline">\(i\)</span> 个点的权值为 <span class="math inline">\(a_i\)</span>，边有边权。</p>
+<p>有 <span class="math inline">\(q\)</span> 组询问，每组询问给定三个整数 <span class="math inline">\(u, x, k\)</span>，求从 <span class="math inline">\(u\)</span> 开始只经过权值 <span class="math inline">\(\leq x\)</span> 的边所能到达的权值第 <span class="math inline">\(k\)</span> 大的点的权值，如果不存在输出 <span class="math inline">\(-1\)</span>，<span class="math inline">\(1 \leq n \leq 10^5\)</span>，<span class="math inline">\(0 \leq m, q \leq 5 \times 10^5\)</span>，<span class="math inline">\(1 \leq a, b \leq n\)</span>，<span class="math inline">\(1 \leq a_i, v \leq 10^9\)</span>，<span class="math inline">\(0 \leq u', x', k' &lt; 2^{31}\)</span>。<strong>强制在线</strong>。</p>
+</blockquote>
+<p>离线版本貌似可以用线段树合并之类的技巧直接水过，注意到询问的是类似于瓶颈路的形式，考虑 Kruskal 重构树。首先候选点一定在某个子树内，那么先倍增找到这个子树的根节点，然后求子树内第 <span class="math inline">\(k\)</span> 大的叶子节点可以拿主席树啥的随便水水就过了。</p>
+<blockquote>
+<p>例题 <span class="math inline">\(2\)</span>：<a href="https://www.luogu.com.cn/problem/P4768">P4768 [NOI2018] 归程</a></p>
+<p>设定较长，见原题面。</p>
+</blockquote>
+<p>首先注意到我们要最小化的是步行的路程，所以预先处理所有节点到 <span class="math inline">\(1\)</span> 的 <span class="math inline">\(l\)</span> 意义下的最短路。</p>
+<p>那么剩下的问题就变为，求出从 <span class="math inline">\(v\)</span> 开始只经过权值 <span class="math inline">\(a \ge S\)</span> 的边，能到达的点的 <span class="math inline">\(dis\)</span> 的最小值。那么就按最大生成树构造 Kruskal 重构树然后预处理子树内 <span class="math inline">\(dis\)</span> 最小值即可。</p>
+<p>不愧是 NOI 签到题。<del>虽然但是快读缓冲区开小了直接导致调了一个下午 <img src="https://啧.tk/px"/></del></p>
+<h2 id="最小直径生成树">最小直径生成树</h2>
+<p>最小直径生成树，指的是一张无向图的所有生成树中，直径最小的那一棵生成树。</p>
+<p><strong>图的绝对中心</strong>可以存在于一条边上或某个结点上，该中心到所有点的最短距离的最大值最小。根据其定义，到绝对中心距离最远的节点至少有 <span class="math inline">\(2\)</span> 个。</p>
+<p>考虑用全源最短路算法（Floyd 或 <span class="math inline">\(n\)</span> 轮 Dijkstra）求出两两点对间的最短路 <span class="math inline">\(d(i, j)\)</span>，<span class="math inline">\(rk(i, j)\)</span> 记录 <span class="math inline">\(i\)</span> 到其他节点中第 <span class="math inline">\(j\)</span> 小的点。</p>
+<ul>
+<li><p>图的绝对中心可能在某个点上，考虑用离距离预选节点最远的节点来更新答案，即 <span class="math display">\[
+ans\leftarrow\min(ans, d(i, rk(i, n))\times 2)
+\]</span> 该情况比较简单。</p></li>
+<li><p>图的绝对中心也可能在某条边上，若在边 <span class="math inline">\((u, v, w)\)</span> 上取距离 <span class="math inline">\(u\)</span> 为 <span class="math inline">\(x\)</span> 的点作为预选点，则点 <span class="math inline">\(i\)</span> 到预选点的距离则为 <span class="math inline">\(\min(d(u, i) + x, d(v, i) + w - x)\)</span>。这是一个分段函数（并且先上升后降低，斜率绝对值相同），然后对于图上的所有节点，如下图（来自 OI-Wiki）：</p>
+<p><img src="https://oiwiki.org/graph/images/mdst-plot2.svg"/></p>
+<p>这些折线交点中的最低点的横坐标就是图的绝对中心的位置。</p>
+<p>考虑如何求这个位置。因为所有直线的斜率是相同的，所以考虑将 <span class="math inline">\(d(u, i)\)</span> 降序排序后从大到小扫，当出现 <span class="math inline">\(d(v, rk(u, i))&gt;\max_{j=i+1}^n\{d(v, rk(u, j))\}\)</span> 的情况时，更新答案： <span class="math display">\[
+ans\leftarrow\min(ans, d(u, rk(u, i))+\max_{j=i+1}^nd(v, rk(u, j))+w(u,v))
+\]</span></p></li>
+</ul>
+<p>于是我们找到了图的绝对中心，可以完成 <a href="https://www.luogu.com.cn/problem/CF266D">CF266D BerDonalds</a> 和 <a href="https://www.luogu.com.cn/problem/SP735">SP735 MDST - Minimum Diameter Spanning Tree</a>。</p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode cpp"><code class="sourceCode cpp"><span id="cb1-1"><a aria-hidden="true" href="#cb1-1"></a><span class="at">const</span> <span class="dt">int</span> maxn = <span class="dv">1005</span>;</span>
+<span id="cb1-2"><a aria-hidden="true" href="#cb1-2"></a><span class="dt">int</span> n, dis[maxn][maxn], rk[maxn][maxn];</span>
+<span id="cb1-3"><a aria-hidden="true" href="#cb1-3"></a>vector&lt;<span class="dt">int</span>&gt; G[maxn];</span>
+<span id="cb1-4"><a aria-hidden="true" href="#cb1-4"></a></span>
+<span id="cb1-5"><a aria-hidden="true" href="#cb1-5"></a><span class="dt">void</span> dijkstra(<span class="dt">int</span> s, <span class="dt">int</span> (&amp;dis)[maxn]) {</span>
+<span id="cb1-6"><a aria-hidden="true" href="#cb1-6"></a>    <span class="at">static</span> <span class="dt">bool</span> vis[maxn];</span>
+<span id="cb1-7"><a aria-hidden="true" href="#cb1-7"></a>    memset(dis, <span class="bn">0x3f</span>, <span class="kw">sizeof</span> dis);</span>
+<span id="cb1-8"><a aria-hidden="true" href="#cb1-8"></a>    memset(vis, <span class="dv">0</span>, <span class="kw">sizeof</span> vis);</span>
+<span id="cb1-9"><a aria-hidden="true" href="#cb1-9"></a>    priority_queue&lt;pair&lt;<span class="dt">int</span>, <span class="dt">int</span>&gt;, vector&lt;pair&lt;<span class="dt">int</span>, <span class="dt">int</span>&gt; &gt;, greater&lt;pair&lt;<span class="dt">int</span>, <span class="dt">int</span>&gt; &gt; &gt; q;</span>
+<span id="cb1-10"><a aria-hidden="true" href="#cb1-10"></a>    q.push({<span class="dv">0</span>, s}), dis[s] = <span class="dv">0</span>;</span>
+<span id="cb1-11"><a aria-hidden="true" href="#cb1-11"></a>    <span class="cf">while</span> (!q.empty()) {</span>
+<span id="cb1-12"><a aria-hidden="true" href="#cb1-12"></a>        <span class="dt">int</span> u = q.top().second; q.pop();</span>
+<span id="cb1-13"><a aria-hidden="true" href="#cb1-13"></a>        <span class="cf">if</span> (vis[u]) <span class="cf">continue</span>;</span>
+<span id="cb1-14"><a aria-hidden="true" href="#cb1-14"></a>        vis[u] = <span class="dv">1</span>;</span>
+<span id="cb1-15"><a aria-hidden="true" href="#cb1-15"></a>        <span class="cf">for</span> (<span class="kw">auto</span> &amp;v : G[u]) {</span>
+<span id="cb1-16"><a aria-hidden="true" href="#cb1-16"></a>            <span class="cf">if</span> (dis[u] + <span class="dv">1</span> &lt; dis[v]) {</span>
+<span id="cb1-17"><a aria-hidden="true" href="#cb1-17"></a>                dis[v] = dis[u] + <span class="dv">1</span>;</span>
+<span id="cb1-18"><a aria-hidden="true" href="#cb1-18"></a>                q.push({dis[v], v});</span>
+<span id="cb1-19"><a aria-hidden="true" href="#cb1-19"></a>            }</span>
+<span id="cb1-20"><a aria-hidden="true" href="#cb1-20"></a>        }</span>
+<span id="cb1-21"><a aria-hidden="true" href="#cb1-21"></a>    }</span>
+<span id="cb1-22"><a aria-hidden="true" href="#cb1-22"></a>    <span class="cf">return</span>;</span>
+<span id="cb1-23"><a aria-hidden="true" href="#cb1-23"></a>}</span>
+<span id="cb1-24"><a aria-hidden="true" href="#cb1-24"></a></span>
+<span id="cb1-25"><a aria-hidden="true" href="#cb1-25"></a><span class="dt">int</span> main() {</span>
+<span id="cb1-26"><a aria-hidden="true" href="#cb1-26"></a>    <span class="dt">int</span> T; read(T);</span>
+<span id="cb1-27"><a aria-hidden="true" href="#cb1-27"></a>    <span class="cf">while</span> (T--) {</span>
+<span id="cb1-28"><a aria-hidden="true" href="#cb1-28"></a>        read(n);</span>
+<span id="cb1-29"><a aria-hidden="true" href="#cb1-29"></a>        <span class="dt">int</span> ans = <span class="fl">2e9</span>;</span>
+<span id="cb1-30"><a aria-hidden="true" href="#cb1-30"></a>        FOR(i, <span class="dv">1</span>, n) {</span>
+<span id="cb1-31"><a aria-hidden="true" href="#cb1-31"></a>            vector&lt;<span class="dt">int</span>&gt;().swap(G[i]);</span>
+<span id="cb1-32"><a aria-hidden="true" href="#cb1-32"></a>            <span class="dt">int</span> cnt; read(cnt), read(cnt);</span>
+<span id="cb1-33"><a aria-hidden="true" href="#cb1-33"></a>            FOR(j, <span class="dv">1</span>, cnt) {</span>
+<span id="cb1-34"><a aria-hidden="true" href="#cb1-34"></a>                <span class="dt">int</span> v; read(v);</span>
+<span id="cb1-35"><a aria-hidden="true" href="#cb1-35"></a>                G[i].push_back(v);</span>
+<span id="cb1-36"><a aria-hidden="true" href="#cb1-36"></a>            }</span>
+<span id="cb1-37"><a aria-hidden="true" href="#cb1-37"></a>        }</span>
+<span id="cb1-38"><a aria-hidden="true" href="#cb1-38"></a>        FOR(i, <span class="dv">1</span>, n) dijkstra(i, dis[i]);</span>
+<span id="cb1-39"><a aria-hidden="true" href="#cb1-39"></a>        FOR(u, <span class="dv">1</span>, n) {</span>
+<span id="cb1-40"><a aria-hidden="true" href="#cb1-40"></a>            FOR(j, <span class="dv">1</span>, n) rk[u][j] = j;</span>
+<span id="cb1-41"><a aria-hidden="true" href="#cb1-41"></a>            sort(rk[u] + <span class="dv">1</span>, rk[u] + n + <span class="dv">1</span>, [u](<span class="at">const</span> <span class="dt">int</span> &amp;a, <span class="at">const</span> <span class="dt">int</span> &amp;b) {<span class="cf">return</span> dis[u][a] &lt; dis[u][b];});</span>
+<span id="cb1-42"><a aria-hidden="true" href="#cb1-42"></a>            chkmin(ans, dis[u][rk[u][n]] &lt;&lt; <span class="dv">1</span>);</span>
+<span id="cb1-43"><a aria-hidden="true" href="#cb1-43"></a>        }</span>
+<span id="cb1-44"><a aria-hidden="true" href="#cb1-44"></a>        FOR(u, <span class="dv">1</span>, n) {</span>
+<span id="cb1-45"><a aria-hidden="true" href="#cb1-45"></a>            <span class="cf">for</span> (<span class="kw">auto</span> v : G[u]) {</span>
+<span id="cb1-46"><a aria-hidden="true" href="#cb1-46"></a>                <span class="dt">int</span> pos = n;</span>
+<span id="cb1-47"><a aria-hidden="true" href="#cb1-47"></a>                DEC(j, n - <span class="dv">1</span>, <span class="dv">1</span>) {</span>
+<span id="cb1-48"><a aria-hidden="true" href="#cb1-48"></a>                    <span class="cf">if</span> (dis[v][rk[u][j]] &gt; dis[v][rk[u][pos]]) {</span>
+<span id="cb1-49"><a aria-hidden="true" href="#cb1-49"></a>                        chkmin(ans, dis[u][rk[u][j]] + dis[v][rk[u][pos]] + <span class="dv">1</span>);</span>
+<span id="cb1-50"><a aria-hidden="true" href="#cb1-50"></a>                        pos = j;</span>
+<span id="cb1-51"><a aria-hidden="true" href="#cb1-51"></a>                    }</span>
+<span id="cb1-52"><a aria-hidden="true" href="#cb1-52"></a>                }</span>
+<span id="cb1-53"><a aria-hidden="true" href="#cb1-53"></a>            }</span>
+<span id="cb1-54"><a aria-hidden="true" href="#cb1-54"></a>        }</span>
+<span id="cb1-55"><a aria-hidden="true" href="#cb1-55"></a>        print(ans);</span>
+<span id="cb1-56"><a aria-hidden="true" href="#cb1-56"></a>    }</span>
+<span id="cb1-57"><a aria-hidden="true" href="#cb1-57"></a>    <span class="cf">return</span> output(), <span class="dv">0</span>;</span>
+<span id="cb1-58"><a aria-hidden="true" href="#cb1-58"></a>}</span></code></pre></div>
+<p>然后我们容易知道，<strong>MDST 的直径中点就是图的绝对中心</strong>，要构造这样一个生成树，只需要从绝对中心出发然后构造一棵最短路树即可。</p>
+<h2 id="支配树">支配树</h2>
+<h2 id="prufer-序列">Prufer 序列</h2>
+<h3 id="前言-1">前言</h3>
+<p>将 <span class="math inline">\(n\)</span> 个节点的无根树与长度为 <span class="math inline">\(n-2\)</span>，值域 <span class="math inline">\([1, n]\)</span> 的序列建立双射。</p>
+<p>支持 <span class="math inline">\(O(n)\)</span> 从树构造 Prufer 序列，也支持 <span class="math inline">\(O(n)\)</span> 从序列还原树。</p>
+<h3 id="构造">构造</h3>
+<p>每次选择一个编号最小的叶节点并删掉他，然后在序列中记录下它连接到的那个点，重复 <span class="math inline">\(n-2\)</span> 次之后就只剩下一个点。</p>
+<p>用堆可以轻松 <span class="math inline">\(O(n\log n)\)</span>。使用一个指针维护最小值可以做到 <span class="math inline">\(O(n)\)</span>。具体地，记录一个指向编号最小的叶子节点，每次删掉它之后，如果产生了新的叶子节点并且编号比指针指向的更小，则直接继续删掉，否则自增找到下一个编号最小的叶节点。</p>
+<p>然后不难发现一个点的度数就是在 Prufer 序列中的出现次数 <span class="math inline">\(-1\)</span>，所以可以根据 Prufer 序列求出每个点的度。</p>
+<p>还原的时候找到一个编号最小的度数为 <span class="math inline">\(1\)</span> 的节点，将该节点与当前 Prufer 序列遍历到的点相连，然后同时减掉这两个点的度数，类似地如果产生了新的度数为 <span class="math inline">\(1\)</span> 的点就接着继续搞。</p>
+<p><a href="https://www.luogu.com.cn/problem/P6086">洛谷模板题</a>代码：</p>
+<div class="sourceCode" id="cb2"><pre class="sourceCode cpp"><code class="sourceCode cpp"><span id="cb2-1"><a aria-hidden="true" href="#cb2-1"></a><span class="pp">#include </span><span class="im">&lt;bits/stdc++.h&gt;</span></span>
+<span id="cb2-2"><a aria-hidden="true" href="#cb2-2"></a><span class="pp">#define FOR</span>(i,<span class="pp"> </span>a,<span class="pp"> </span>b)<span class="pp"> </span><span class="cf">for</span><span class="pp"> </span>(<span class="dt">int</span><span class="pp"> </span>i<span class="pp"> </span>=<span class="pp"> </span>(a);<span class="pp"> </span>i<span class="pp"> </span>&lt;=<span class="pp"> </span>(b);<span class="pp"> </span>++i)</span>
+<span id="cb2-3"><a aria-hidden="true" href="#cb2-3"></a></span>
+<span id="cb2-4"><a aria-hidden="true" href="#cb2-4"></a><span class="kw">using</span> <span class="kw">namespace</span> std;</span>
+<span id="cb2-5"><a aria-hidden="true" href="#cb2-5"></a><span class="at">const</span> <span class="dt">int</span> maxn = <span class="fl">5e6</span> + <span class="dv">5</span>;</span>
+<span id="cb2-6"><a aria-hidden="true" href="#cb2-6"></a><span class="dt">int</span> n, m, f[maxn], p[maxn], d[maxn];</span>
+<span id="cb2-7"><a aria-hidden="true" href="#cb2-7"></a><span class="dt">long</span> <span class="dt">long</span> ans = <span class="dv">0</span>;</span>
+<span id="cb2-8"><a aria-hidden="true" href="#cb2-8"></a></span>
+<span id="cb2-9"><a aria-hidden="true" href="#cb2-9"></a><span class="dt">void</span> solve1() {</span>
+<span id="cb2-10"><a aria-hidden="true" href="#cb2-10"></a>    FOR(i, <span class="dv">1</span>, n - <span class="dv">1</span>) cin &gt;&gt; f[i], ++d[f[i]];</span>
+<span id="cb2-11"><a aria-hidden="true" href="#cb2-11"></a>    <span class="cf">for</span> (<span class="dt">int</span> i = <span class="dv">1</span>, j = <span class="dv">1</span>; i &lt;= n - <span class="dv">2</span>; ++i, ++j) {</span>
+<span id="cb2-12"><a aria-hidden="true" href="#cb2-12"></a>        <span class="cf">while</span> (d[j]) ++j;</span>
+<span id="cb2-13"><a aria-hidden="true" href="#cb2-13"></a>        p[i] = f[j];</span>
+<span id="cb2-14"><a aria-hidden="true" href="#cb2-14"></a>        <span class="cf">while</span> (i &lt;= n - <span class="dv">2</span> &amp;&amp; !--d[p[i]] &amp;&amp; p[i] &lt; j) p[i + <span class="dv">1</span>] = f[p[i]], ++i;</span>
+<span id="cb2-15"><a aria-hidden="true" href="#cb2-15"></a>    }</span>
+<span id="cb2-16"><a aria-hidden="true" href="#cb2-16"></a>    FOR(i, <span class="dv">1</span>, n - <span class="dv">2</span>) ans ^= <span class="dv">1</span><span class="bu">ll</span> * i * p[i];</span>
+<span id="cb2-17"><a aria-hidden="true" href="#cb2-17"></a>    <span class="cf">return</span>;</span>
+<span id="cb2-18"><a aria-hidden="true" href="#cb2-18"></a>}</span>
+<span id="cb2-19"><a aria-hidden="true" href="#cb2-19"></a></span>
+<span id="cb2-20"><a aria-hidden="true" href="#cb2-20"></a><span class="dt">void</span> solve2() {</span>
+<span id="cb2-21"><a aria-hidden="true" href="#cb2-21"></a>    FOR(i, <span class="dv">1</span>, n - <span class="dv">2</span>) cin &gt;&gt; p[i], ++d[p[i]];</span>
+<span id="cb2-22"><a aria-hidden="true" href="#cb2-22"></a>    p[n - <span class="dv">1</span>] = n; <span class="co">// 特判</span></span>
+<span id="cb2-23"><a aria-hidden="true" href="#cb2-23"></a>    <span class="cf">for</span> (<span class="dt">int</span> i = <span class="dv">1</span>, j = <span class="dv">1</span>; i &lt; n; ++i, ++j) {</span>
+<span id="cb2-24"><a aria-hidden="true" href="#cb2-24"></a>        <span class="cf">while</span> (d[j]) ++j;</span>
+<span id="cb2-25"><a aria-hidden="true" href="#cb2-25"></a>        f[j] = p[i];</span>
+<span id="cb2-26"><a aria-hidden="true" href="#cb2-26"></a>        <span class="cf">while</span> (i &lt; n &amp;&amp; !--d[p[i]] &amp;&amp; p[i] &lt; j) f[p[i]] = p[i + <span class="dv">1</span>], ++i;</span>
+<span id="cb2-27"><a aria-hidden="true" href="#cb2-27"></a>    }</span>
+<span id="cb2-28"><a aria-hidden="true" href="#cb2-28"></a>    FOR(i, <span class="dv">1</span>, n - <span class="dv">1</span>) ans ^= <span class="dv">1</span><span class="bu">ll</span> * i * f[i];</span>
+<span id="cb2-29"><a aria-hidden="true" href="#cb2-29"></a>    <span class="cf">return</span>;</span>
+<span id="cb2-30"><a aria-hidden="true" href="#cb2-30"></a>}</span>
+<span id="cb2-31"><a aria-hidden="true" href="#cb2-31"></a></span>
+<span id="cb2-32"><a aria-hidden="true" href="#cb2-32"></a><span class="dt">int</span> main() {</span>
+<span id="cb2-33"><a aria-hidden="true" href="#cb2-33"></a>    ios::sync_with_stdio(<span class="kw">false</span>);</span>
+<span id="cb2-34"><a aria-hidden="true" href="#cb2-34"></a>    cin &gt;&gt; n &gt;&gt; m;</span>
+<span id="cb2-35"><a aria-hidden="true" href="#cb2-35"></a>    <span class="cf">if</span> (m == <span class="dv">1</span>) solve1();</span>
+<span id="cb2-36"><a aria-hidden="true" href="#cb2-36"></a>    <span class="cf">else</span> solve2();</span>
+<span id="cb2-37"><a aria-hidden="true" href="#cb2-37"></a>    cout &lt;&lt; ans &lt;&lt; endl;</span>
+<span id="cb2-38"><a aria-hidden="true" href="#cb2-38"></a>    <span class="cf">return</span> <span class="dv">0</span>;</span>
+<span id="cb2-39"><a aria-hidden="true" href="#cb2-39"></a>}</span></code></pre></div>
+<h3 id="性质-1">性质</h3>
+<ul>
+<li><p>根据 Prufer 序列的构造过程，一个点在 Prufer 序列中出现次数为其度数 <span class="math inline">\(-1\)</span>。</p></li>
+<li><p>最后剩余的两个点中一定有一个的编号为 <span class="math inline">\(n\)</span>，因为无论如何树中至少存在两个叶子节点，<span class="math inline">\(n\)</span> 永远不会被删掉，其编号不可能是最小的。</p></li>
+<li><p><span class="math inline">\(n\)</span> 个点组成的无根树的数量是 <span class="math inline">\(n^{n-2}\)</span>，<a href="http://www.matrix67.com/blog/archives/682">证明</a>。</p></li>
+<li><p><span class="math inline">\(n\)</span> 个点组成的<strong>有根树</strong>的数量是 <span class="math inline">\(n^{n-1}\)</span>，考虑在上面的基础上定根。</p></li>
+<li><p><span class="math inline">\(n\)</span> 个有度数要求 <span class="math inline">\(d_i\)</span> 的节点的有标号无根树有 <span class="math display">\[
+\frac{(n-2)!}{\prod(d_i - 1)!}
+\]</span> 种，由上面的性质不难推出。</p></li>
+</ul>
+<h3 id="应用-1">应用</h3>
+<p>感觉 Prufer 序列本身没有什么特别要注意的，主要都是计数。</p>
+<blockquote>
+<p>例题 <span class="math inline">\(1\)</span>：<a href="https://www.luogu.com.cn/problem/CF156D">CF156D Clues</a></p>
+<p>给定 <span class="math inline">\(1\le n\le 10^5\)</span> 个点，<span class="math inline">\(0\le m\le 10^5\)</span> 条边的有标号无向图，其有 <span class="math inline">\(k\)</span> 个连通块，求添加 <span class="math inline">\(k - 1\)</span> 条边使得整张图联通的方案数，答案对 <span class="math inline">\(1\le p\le 10^9\)</span> 取模。</p>
+</blockquote>
+<p>先考虑其有 <span class="math inline">\(k\)</span> 个点，则我们发现必须枚举 <span class="math inline">\(d_i\)</span> 序列： <span class="math display">\[
+\sum_{d_i\ge1,\sum_{i=1}^k d_i = 2k-2}\binom{k-2}{d_1 - 1, d_2 - 1,\cdots, d_n - 1}\prod_{i=1}^ns_i^{d_i}
+\]</span> 考虑多项式定理 <span class="math display">\[
+(x_1+x_2+\cdots +x_n)^m = \sum_{k_i\ge 0,\sum_{i=1}^nk_i=m}\binom{m}{k_1,k_2,\cdots, k_n}\prod_{i=1}^nx_i^{k_{i}}
+\]</span> 令 <span class="math inline">\(e_i = d_i - 1\)</span>，则原式化简为 <span class="math display">\[
+(s_1+s_2+\cdots s_k)^{k-2}\prod_{i=1}^ks_k = \sum_{e_i\ge 0,\sum_{i=1}^ke_i = k-2}\binom{k-2}{e_1,\cdots, e_k}\prod_{i=1}^ks_k^{e_i}
+\]</span> 所以答案为 <span class="math inline">\(n^{k-2}\displaystyle\prod_{i=1}^ks_k\)</span>。</p>
+</section>
+<footer class="article-footer">
+<section class="article-tags">
+<a href="/tags/OI/">OI</a>
+<a href="/tags/note/">笔记</a>
+<a href="/tags/prufer/">Prufer序列</a>
+<a href="/tags/%E5%90%8C%E4%BD%99%E6%9C%80%E7%9F%AD%E8%B7%AF/">同余最短路</a>
+<a href="/tags/kruskal-reconstruct-tree/">Kruskal重构树</a>
+</section>
+<section class="article-copyright">
+<svg class="icon icon-tabler icon-tabler-copyright" fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+<path d="M0 0h24v24H0z" stroke="none"></path>
+<circle cx="12" cy="12" r="9"></circle>
+<path d="M14.5 9a3.5 4 0 1 0 0 6"></path>
+</svg>
+<span>Licensed under CC BY-NC-SA 4.0</span>
+</section>
+</footer>
+<link crossorigin="anonymous" href="https://cdn.jsdelivr.net/npm/katex@0.13.13/dist/katex.min.css" integrity="sha384-RZU/ijkSsFbcmivfdRBQDtwuwVqK7GMOw6IMvKyeWL2K5UAlyp6WonmB8m7Jd0Hn" rel="stylesheet"/><script crossorigin="anonymous" defer="" integrity="sha384-pK1WpvzWVBQiP0/GjnvRxV4mOb0oxFuyRxJlk6vVw146n3egcN5C925NCP7a7BY8" src="https://cdn.jsdelivr.net/npm/katex@0.13.13/dist/katex.min.js">
+</script><script crossorigin="anonymous" defer="" integrity="sha384-vZTG03m+2yp6N6BNi5iM4rW4oIwk5DfcNdFfxkk9ZWpDriOkXX8voJBFrAO7MpVl" src="https://cdn.jsdelivr.net/npm/katex@0.13.13/dist/contrib/auto-render.min.js">
+</script><script>
+    window.addEventListener("DOMContentLoaded", () => {
+        renderMathInElement(document.querySelector(`.article-content`), {
+            delimiters: [
+                { left: "$$", right: "$$", display: true },
+                { left: "$", right: "$", display: false },
+                { left: "\\(", right: "\\)", display: false },
+                { left: "\\[", right: "\\]", display: true }
+            ]
+        });})
+</script>
+</article>
+<aside class="related-contents--wrapper">
+<h2 class="section-title">相关文章</h2>
+<div class="related-contents">
+<div class="flex article-list--tile">
+<article class="has-image">
+<a href="/note-gf/">
+<div class="article-image">
+<img data-hash="https://yangty-pic.oss-cn-beijing.aliyuncs.com/bg28.webp" data-key="" loading="lazy" src="https://yangty-pic.oss-cn-beijing.aliyuncs.com/bg28.webp"/>
+</div>
+<div class="article-details">
+<h2 class="article-title">生成函数胡扯</h2>
+</div>
+</a>
+</article>
+<article class="has-image">
+<a href="/note-set-power-series/">
+<div class="article-image">
+<img data-hash="https://yangty-pic.oss-cn-beijing.aliyuncs.com/bg39.webp" data-key="" loading="lazy" src="https://yangty-pic.oss-cn-beijing.aliyuncs.com/bg39.webp"/>
+</div>
+<div class="article-details">
+<h2 class="article-title">集合幂级数胡扯</h2>
+</div>
+</a>
+</article>
+<article class="has-image">
+<a href="/note-linear-basis/">
+<div class="article-image">
+<img data-hash="https://yangty-pic.oss-cn-beijing.aliyuncs.com/bg19.webp" data-key="" loading="lazy" src="https://yangty-pic.oss-cn-beijing.aliyuncs.com/bg19.webp"/>
+</div>
+<div class="article-details">
+<h2 class="article-title">线性基学习笔记</h2>
+</div>
+</a>
+</article>
+<article class="has-image">
+<a href="/note-wqs/">
+<div class="article-image">
+<img data-hash="https://yangty-pic.oss-cn-beijing.aliyuncs.com/bg28.webp" data-key="" loading="lazy" src="https://yangty-pic.oss-cn-beijing.aliyuncs.com/bg28.webp"/>
+</div>
+<div class="article-details">
+<h2 class="article-title">wqs 二分学习笔记</h2>
+</div>
+</a>
+</article>
+<article class="has-image">
+<a href="/note-builtin/">
+<div class="article-image">
+<img data-hash="https://yangty-pic.oss-cn-beijing.aliyuncs.com/bg9.webp" data-key="" loading="lazy" src="https://yangty-pic.oss-cn-beijing.aliyuncs.com/bg9.webp"/>
+</div>
+<div class="article-details">
+<h2 class="article-title">__builtin 系列函数总结</h2>
+</div>
+</a>
+</article>
+</div>
+</div>
+</aside>
+<footer class="site-footer">
+<section class="copyright">
+        © 
+        
+            2019 - 
+        
+        2024 清烛的博客
+    </section>
+<section class="powerby">
+        Built with <a href="https://gohugo.io/" rel="noopener" target="_blank">Hugo</a> <br/>
+        主题 <b><a data-version="3.11.0" href="https://github.com/CaiJimmy/hugo-theme-stack" rel="noopener" target="_blank">Stack</a></b> 由 <a href="https://jimmycai.com" rel="noopener" target="_blank">Jimmy</a> 设计
+    </section>
+</footer>
+<div aria-hidden="true" class="pswp" role="dialog" tabindex="-1">
+<div class="pswp__bg"></div>
+<div class="pswp__scroll-wrap">
+<div class="pswp__container">
+<div class="pswp__item"></div>
+<div class="pswp__item"></div>
+<div class="pswp__item"></div>
+</div>
+<div class="pswp__ui pswp__ui--hidden">
+<div class="pswp__top-bar">
+<div class="pswp__counter"></div>
+<button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+<button class="pswp__button pswp__button--share" title="Share"></button>
+<button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+<button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+<div class="pswp__preloader">
+<div class="pswp__preloader__icn">
+<div class="pswp__preloader__cut">
+<div class="pswp__preloader__donut"></div>
+</div>
+</div>
+</div>
+</div>
+<div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+<div class="pswp__share-tooltip"></div>
+</div>
+<button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+</button>
+<button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+</button>
+<div class="pswp__caption">
+<div class="pswp__caption__center"></div>
+</div>
+</div>
+</div>
+</div><script crossorigin="anonymous" defer="" integrity="sha256-ePwmChbbvXbsO02lbM3HoHbSHTHFAeChekF1xKJdleo=" src="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe.min.js">
+</script><script crossorigin="anonymous" defer="" integrity="sha256-UKkzOn/w1mBxRmLLGrSeyB4e1xbrp4xylgAWb3M42pU=" src="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe-ui-default.min.js">
+</script><link crossorigin="anonymous" href="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/default-skin/default-skin.css" integrity="sha256-c0uckgykQ9v5k+IqViZOZKc47Jn7KQil4/MP3ySA3F8=" rel="stylesheet"/><link crossorigin="anonymous" href="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe.css" integrity="sha256-SBLU4vv6CA6lHsZ1XyTdhyjJxCjPif/TRkjnsyGAGnE=" rel="stylesheet"/>
+</main>
+</div>
+<script crossorigin="anonymous" integrity="sha256-5NovOZc4iwiAWTYIFiIM7DxKUXKWvpVEuMEPLzcm5/g=" src="https://cdn.jsdelivr.net/npm/node-vibrant@3.1.5/dist/vibrant.min.js">
+</script><script defer="" src="/ts/main.js" type="text/javascript"></script>
+<script>
+    (function () {
+        const customFont = document.createElement('link');
+        customFont.href = "https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&display=swap";
+
+        customFont.type = "text/css";
+        customFont.rel = "stylesheet";
+
+        document.head.appendChild(customFont);
+    }());
+</script>
+</body>
+</html>

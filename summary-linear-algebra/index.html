@@ -1,0 +1,773 @@
+<!DOCTYPE html>
+<html dir="ltr" lang="zh-CN">
+<head><meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1" name="viewport"/><meta content="先阐述基本的线代知识，再写 OI 的应用。
+前言 其实一直想拉一个系统的线代学习笔记的，但是发现力不从心。
+随缘记一下 lol。
+高斯消元 背不住怎么办怎么办怎么办怎么办怎么办怎么办怎么办。
+方程求解 例题 \(1\)：P2455 [SDOI2006]线性方程组
+已知 \(n\) 元线性一次方程组
+\[ \begin{cases} a_{1, 1} x_1 + a_{1, 2} x_2 + \cdots + a_{1, n} x_n = b_1 \\ a_{2, 1} x_1 + a_{2, 2} x_2 + \cdots + a_{2, n} x_n = b_2 \\ \cdots \\ a_{n,1} x_1 + a_{n, 2} x_2 + \cdots + a_{n, n} x_n = b_n \end{cases} \]
+如果有唯一解，则输出解（小数点后保留两位小数）。如果方程组无解输出 \(-1\)；如果有无穷多实数解，输出 \(0\)。\(1 \le n \le 50\)。对于 \(\forall 1\le i, j \le n\)，有 \(|a_{i, j}| \le 100\)，\(|b_i| \le 300\)。" name="description"/><title>线性代数复习笔记</title>
+<link href="https://oi.imyangty.com/summary-linear-algebra/" rel="canonical"/>
+<link href="/scss/style.min.a5821f3d3ab84ce5a0ac21477e347a2e0ca00292e398d16c5e8e36ded6e35a23.css" rel="stylesheet"/><meta content="线性代数复习笔记" property="og:title"/>
+<meta content="先阐述基本的线代知识，再写 OI 的应用。
+前言 其实一直想拉一个系统的线代学习笔记的，但是发现力不从心。
+随缘记一下 lol。
+高斯消元 背不住怎么办怎么办怎么办怎么办怎么办怎么办怎么办。
+方程求解 例题 \(1\)：P2455 [SDOI2006]线性方程组
+已知 \(n\) 元线性一次方程组
+\[ \begin{cases} a_{1, 1} x_1 + a_{1, 2} x_2 + \cdots + a_{1, n} x_n = b_1 \\ a_{2, 1} x_1 + a_{2, 2} x_2 + \cdots + a_{2, n} x_n = b_2 \\ \cdots \\ a_{n,1} x_1 + a_{n, 2} x_2 + \cdots + a_{n, n} x_n = b_n \end{cases} \]
+如果有唯一解，则输出解（小数点后保留两位小数）。如果方程组无解输出 \(-1\)；如果有无穷多实数解，输出 \(0\)。\(1 \le n \le 50\)。对于 \(\forall 1\le i, j \le n\)，有 \(|a_{i, j}| \le 100\)，\(|b_i| \le 300\)。" property="og:description"/>
+<meta content="https://oi.imyangty.com/summary-linear-algebra/" property="og:url"/>
+<meta content="清烛的博客" property="og:site_name"/>
+<meta content="article" property="og:type"/><meta content="Post" property="article:section"/><meta content="OI" property="article:tag"/><meta content="笔记" property="article:tag"/><meta content="行列式" property="article:tag"/><meta content="高斯消元" property="article:tag"/><meta content="矩阵乘法" property="article:tag"/><meta content="2021-08-12T17:29:39+08:00" property="article:published_time"/><meta content="2021-08-12T17:29:39+08:00" property="article:modified_time"/><meta content="https://yangty-pic.oss-cn-beijing.aliyuncs.com/bg13.webp" property="og:image"/>
+<meta content="线性代数复习笔记" name="twitter:title"/>
+<meta content="先阐述基本的线代知识，再写 OI 的应用。
+前言 其实一直想拉一个系统的线代学习笔记的，但是发现力不从心。
+随缘记一下 lol。
+高斯消元 背不住怎么办怎么办怎么办怎么办怎么办怎么办怎么办。
+方程求解 例题 \(1\)：P2455 [SDOI2006]线性方程组
+已知 \(n\) 元线性一次方程组
+\[ \begin{cases} a_{1, 1} x_1 + a_{1, 2} x_2 + \cdots + a_{1, n} x_n = b_1 \\ a_{2, 1} x_1 + a_{2, 2} x_2 + \cdots + a_{2, n} x_n = b_2 \\ \cdots \\ a_{n,1} x_1 + a_{n, 2} x_2 + \cdots + a_{n, n} x_n = b_n \end{cases} \]
+如果有唯一解，则输出解（小数点后保留两位小数）。如果方程组无解输出 \(-1\)；如果有无穷多实数解，输出 \(0\)。\(1 \le n \le 50\)。对于 \(\forall 1\le i, j \le n\)，有 \(|a_{i, j}| \le 100\)，\(|b_i| \le 300\)。" name="twitter:description"/><meta content="summary_large_image" name="twitter:card"/>
+<meta content="https://yangty-pic.oss-cn-beijing.aliyuncs.com/bg13.webp" name="twitter:image"/>
+<link href="https://q1.qlogo.cn/g?b=qq&amp;nk=375836877&amp;s=5" rel="shortcut icon"/>
+<link href="https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.5.1/build/styles/github-dark-dimmed.min.css" rel="stylesheet"/>
+<script src="https://cdn.jsdelivr.net/gh/highlightjs/cdn-release/build/highlight.min.js"></script>
+<script>hljs.highlightAll();</script>
+</head>
+<body class="article-page">
+<script>
+        (function() {
+            const colorSchemeKey = 'StackColorScheme';
+            if(!localStorage.getItem(colorSchemeKey)){
+                localStorage.setItem(colorSchemeKey, "auto");
+            }
+        })();
+    </script><script>
+    (function() {
+        const colorSchemeKey = 'StackColorScheme';
+        const colorSchemeItem = localStorage.getItem(colorSchemeKey);
+        const supportDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches === true;
+
+        if (colorSchemeItem == 'dark' || colorSchemeItem === 'auto' && supportDarkMode) {
+            
+
+            document.documentElement.dataset.scheme = 'dark';
+        } else {
+            document.documentElement.dataset.scheme = 'light';
+        }
+    })();
+</script>
+<div class="container main-container flex on-phone--column extended"><aside class="sidebar left-sidebar sticky">
+<button aria-label="切换菜单" class="hamburger hamburger--spin" id="toggle-menu" type="button">
+<span class="hamburger-box">
+<span class="hamburger-inner"></span>
+</span>
+</button>
+<header>
+<figure class="site-avatar">
+<a href="/">
+<img alt="Avatar" class="site-logo" height="300" loading="lazy" src="/img/avatar_huea3ce2119467b51fdd2a81393644a76d_51594_300x0_resize_q75_box.jpg" width="300"/>
+</a>
+<span class="emoji">😅</span>
+</figure>
+<div class="site-meta">
+<h1 class="site-name"><a href="/">清烛的博客</a></h1>
+<h2 class="site-description">烟火已谢，笙歌未停</h2>
+</div>
+</header><ol class="social-menu">
+<li>
+<a href="mailto:i@imyangty.com" target="_blank" title="email">
+<svg class="icon icon-tabler icon-tabler-mail" fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" viewbox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+<path d="M0 0h24v24H0z" fill="none" stroke="none"></path>
+<rect height="14" rx="2" width="18" x="3" y="5"></rect>
+<polyline points="3 7 12 13 21 7"></polyline>
+</svg>
+</a>
+</li>
+<li>
+<a href="https://github.com/Cgfyufsygsm" target="_blank" title="GitHub">
+<svg class="icon icon-tabler icon-tabler-brand-github" fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+<path d="M0 0h24v24H0z" fill="none" stroke="none"></path>
+<path d="M9 19c-4.3 1.4 -4.3 -2.5 -6 -3m12 5v-3.5c0 -1 .1 -1.4 -.5 -2c2.8 -.3 5.5 -1.4 5.5 -6a4.6 4.6 0 0 0 -1.3 -3.2a4.2 4.2 0 0 0 -.1 -3.2s-1.1 -.3 -3.5 1.3a12.3 12.3 0 0 0 -6.2 0c-2.4 -1.6 -3.5 -1.3 -3.5 -1.3a4.2 4.2 0 0 0 -.1 3.2a4.6 4.6 0 0 0 -1.3 3.2c0 4.6 2.7 5.7 5.5 6c-.6 .6 -.6 1.2 -.5 2v3.5"></path>
+</svg>
+</a>
+</li>
+<li>
+<a href="https://t.me/Cgfyufsygsm" target="_blank" title="Telegram">
+<svg class="icon icon-tabler icon-tabler-brand-telegram" fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" viewbox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+<path d="M0 0h24v24H0z" fill="none" stroke="none"></path>
+<path d="M15 10l-4 4l6 6l4 -16l-18 7l4 2l2 6l3 -4"></path>
+</svg>
+</a>
+</li>
+<li>
+<a href="https://twitter.com/Cgfyufsygsm" target="_blank" title="Twitter">
+<svg class="icon icon-tabler icon-tabler-brand-twitter" fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+<path d="M0 0h24v24H0z" fill="none" stroke="none"></path>
+<path d="M22 4.01c-1 .49 -1.98 .689 -3 .99c-1.121 -1.265 -2.783 -1.335 -4.38 -.737s-2.643 2.06 -2.62 3.737v1c-3.245 .083 -6.135 -1.395 -8 -4c0 0 -4.182 7.433 4 11c-1.872 1.247 -3.739 2.088 -6 2c3.308 1.803 6.913 2.423 10.034 1.517c3.58 -1.04 6.522 -3.723 7.651 -7.742a13.84 13.84 0 0 0 .497 -3.753c-.002 -.249 1.51 -2.772 1.818 -4.013z"></path>
+</svg>
+</a>
+</li>
+</ol><ol class="menu" id="main-menu">
+<li>
+<a href="/">
+<svg class="icon icon-tabler icon-tabler-home" fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+<path d="M0 0h24v24H0z" stroke="none"></path>
+<polyline points="5 12 3 12 12 3 21 12 19 12"></polyline>
+<path d="M5 12v7a2 2 0 0 0 2 2h10a2 2 0 0 0 2 -2v-7"></path>
+<path d="M9 21v-6a2 2 0 0 1 2 -2h2a2 2 0 0 1 2 2v6"></path>
+</svg>
+<span>主页</span>
+</a>
+</li>
+<li>
+<a href="/about/">
+<svg class="icon icon-tabler icon-tabler-user" fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+<path d="M0 0h24v24H0z" stroke="none"></path>
+<circle cx="12" cy="7" r="4"></circle>
+<path d="M6 21v-2a4 4 0 0 1 4 -4h4a4 4 0 0 1 4 4v2"></path>
+</svg>
+<span>关于</span>
+</a>
+</li>
+<li>
+<a href="/idx/">
+<svg class="icon icon-tabler icon-tabler-hash" fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+<path d="M0 0h24v24H0z" stroke="none"></path>
+<line x1="5" x2="19" y1="9" y2="9"></line>
+<line x1="5" x2="19" y1="15" y2="15"></line>
+<line x1="11" x2="7" y1="4" y2="20"></line>
+<line x1="17" x2="13" y1="4" y2="20"></line>
+</svg>
+<span>导航</span>
+</a>
+</li>
+<li>
+<a href="/archives/">
+<svg class="icon icon-tabler icon-tabler-archive" fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+<path d="M0 0h24v24H0z" stroke="none"></path>
+<rect height="4" rx="2" width="18" x="3" y="4"></rect>
+<path d="M5 8v10a2 2 0 0 0 2 2h10a2 2 0 0 0 2 -2v-10"></path>
+<line x1="10" x2="14" y1="12" y2="12"></line>
+</svg>
+<span>归档</span>
+</a>
+</li>
+<li>
+<a href="/search/">
+<svg class="icon icon-tabler icon-tabler-search" fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+<path d="M0 0h24v24H0z" stroke="none"></path>
+<circle cx="10" cy="10" r="7"></circle>
+<line x1="21" x2="15" y1="21" y2="15"></line>
+</svg>
+<span>搜索</span>
+</a>
+</li>
+<li>
+<a href="/friends/">
+<svg class="icon icon-tabler icon-tabler-link" fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+<path d="M0 0h24v24H0z" stroke="none"></path>
+<path d="M10 14a3.5 3.5 0 0 0 5 0l4 -4a3.5 3.5 0 0 0 -5 -5l-.5 .5"></path>
+<path d="M14 10a3.5 3.5 0 0 0 -5 0l-4 4a3.5 3.5 0 0 0 5 5l.5 -.5"></path>
+</svg>
+<span>友链</span>
+</a>
+</li>
+<li>
+<a href="https://blog.imyangty.com" target="_blank">
+<svg class="icon icon-tabler icon-tabler-home" fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+<path d="M0 0h24v24H0z" stroke="none"></path>
+<polyline points="5 12 3 12 12 3 21 12 19 12"></polyline>
+<path d="M5 12v7a2 2 0 0 0 2 2h10a2 2 0 0 0 2 -2v-7"></path>
+<path d="M9 21v-6a2 2 0 0 1 2 -2h2a2 2 0 0 1 2 2v6"></path>
+</svg>
+<span>主博客</span>
+</a>
+</li>
+<div class="menu-bottom-section">
+<li id="dark-mode-toggle">
+<svg class="icon icon-tabler icon-tabler-toggle-left" fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+<path d="M0 0h24v24H0z" stroke="none"></path>
+<circle cx="8" cy="12" r="2"></circle>
+<rect height="12" rx="6" width="20" x="2" y="6"></rect>
+</svg>
+<svg class="icon icon-tabler icon-tabler-toggle-right" fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+<path d="M0 0h24v24H0z" stroke="none"></path>
+<circle cx="16" cy="12" r="2"></circle>
+<rect height="12" rx="6" width="20" x="2" y="6"></rect>
+</svg>
+<span>暗色模式</span>
+</li>
+</div>
+</ol>
+</aside>
+<main class="main full-width">
+<article class="has-image main-article">
+<header class="article-header">
+<div class="article-image">
+<a href="/summary-linear-algebra/">
+<img alt="Featured image of post 线性代数复习笔记" loading="lazy" src="https://yangty-pic.oss-cn-beijing.aliyuncs.com/bg13.webp"/>
+</a>
+</div>
+<div class="article-details">
+<header class="article-category">
+<a href="/categories/oi/">
+                OI
+            </a>
+<a href="/categories/summary/">
+                总结
+            </a>
+</header>
+<div class="article-title-wrapper">
+<h2 class="article-title">
+<a href="/summary-linear-algebra/">线性代数复习笔记</a>
+</h2>
+</div>
+<footer class="article-time">
+<div>
+<svg class="icon icon-tabler icon-tabler-calendar-time" fill="none" height="56" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="56" xmlns="http://www.w3.org/2000/svg">
+<path d="M0 0h24v24H0z" stroke="none"></path>
+<path d="M11.795 21h-6.795a2 2 0 0 1 -2 -2v-12a2 2 0 0 1 2 -2h12a2 2 0 0 1 2 2v4"></path>
+<circle cx="18" cy="18" r="4"></circle>
+<path d="M15 3v4"></path>
+<path d="M7 3v4"></path>
+<path d="M3 11h16"></path>
+<path d="M18 16.496v1.504l1 1"></path>
+</svg>
+<time class="article-time--published">Aug 12, 2021</time>
+</div>
+<div>
+<svg class="icon icon-tabler icon-tabler-clock" fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+<path d="M0 0h24v24H0z" stroke="none"></path>
+<circle cx="12" cy="12" r="9"></circle>
+<polyline points="12 7 12 12 15 15"></polyline>
+</svg>
+<time class="article-time--reading">
+                    阅读时长: 8 分钟
+                </time>
+</div>
+</footer>
+</div>
+</header>
+<section class="article-content">
+<p>先阐述基本的线代知识，再写 OI 的应用。</p>
+<h2 id="前言">前言</h2>
+<p>其实一直想拉一个系统的线代学习笔记的，但是发现力不从心。</p>
+<p>随缘记一下 lol。</p>
+<h2 id="高斯消元">高斯消元</h2>
+<p>背不住怎么办怎么办怎么办怎么办怎么办怎么办怎么办。</p>
+<h3 id="方程求解">方程求解</h3>
+<blockquote>
+<p>例题 <span class="math inline">\(1\)</span>：<a href="https://www.luogu.com.cn/problem/P2455">P2455 [SDOI2006]线性方程组</a></p>
+<p>已知 <span class="math inline">\(n\)</span> 元线性一次方程组</p>
+<p><span class="math display">\[
+\begin{cases} a_{1, 1} x_1 + a_{1, 2} x_2 + \cdots + a_{1, n} x_n = b_1 \\ a_{2, 1} x_1 + a_{2, 2} x_2 + \cdots + a_{2, n} x_n = b_2 \\ \cdots \\ a_{n,1} x_1 + a_{n, 2} x_2 + \cdots + a_{n, n} x_n = b_n \end{cases}
+\]</span></p>
+<p>如果有唯一解，则输出解（小数点后保留两位小数）。如果方程组无解输出 <span class="math inline">\(-1\)</span>；如果有无穷多实数解，输出 <span class="math inline">\(0\)</span>。<span class="math inline">\(1 \le n \le 50\)</span>。对于 <span class="math inline">\(\forall 1\le i, j \le n\)</span>，有 <span class="math inline">\(|a_{i, j}| \le 100\)</span>，<span class="math inline">\(|b_i| \le 300\)</span>。</p>
+</blockquote>
+<p>（因为高斯消元法的模板题比较水所以干脆来看看这个）</p>
+<p>首先，高斯消元的原理是将矩阵消成上三角矩阵（Gauss-Jordan 消元是消成对角矩阵），然后一步步从最下面的方程求出未知元的解然后回代。</p>
+<p>而本题中方程组不一定有解，具体地，对于方程组 <span class="math inline">\(\boldsymbol{A}\boldsymbol{x} = \boldsymbol{\beta}\)</span>，</p>
+<ul>
+<li>若 <span class="math inline">\(\mathrm R(\boldsymbol{A},\boldsymbol{\beta}) = \mathrm{R}(\boldsymbol A) = n\)</span>，则有唯一解；</li>
+<li>若 <span class="math inline">\(\mathrm R(\boldsymbol{A},\boldsymbol{\beta}) = \mathrm{R}(\boldsymbol A) &lt; n\)</span>，则有无穷组解；</li>
+<li>若 <span class="math inline">\(\mathrm R(\boldsymbol{A},\boldsymbol{\beta}) \ne \mathrm{R}(\boldsymbol A)\)</span>，则无解。</li>
+</ul>
+<p>此处写高斯-约旦消元的话，若发现某一列主元系数为 <span class="math inline">\(0\)</span> 我们就直接跳过这列，最后会剩下一些空行，判断右侧是否为 <span class="math inline">\(0\)</span> 即可。</p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode cpp"><code class="sourceCode cpp"><span id="cb1-1"><a aria-hidden="true" href="#cb1-1"></a><span class="kw">typedef</span> <span class="dt">double</span> db;</span>
+<span id="cb1-2"><a aria-hidden="true" href="#cb1-2"></a><span class="at">const</span> <span class="dt">int</span> maxn = <span class="dv">55</span>;</span>
+<span id="cb1-3"><a aria-hidden="true" href="#cb1-3"></a><span class="at">const</span> db EPS = <span class="fl">1e-8</span>;</span>
+<span id="cb1-4"><a aria-hidden="true" href="#cb1-4"></a><span class="dt">int</span> n;</span>
+<span id="cb1-5"><a aria-hidden="true" href="#cb1-5"></a>db a[maxn][maxn];</span>
+<span id="cb1-6"><a aria-hidden="true" href="#cb1-6"></a></span>
+<span id="cb1-7"><a aria-hidden="true" href="#cb1-7"></a><span class="dt">int</span> main() {</span>
+<span id="cb1-8"><a aria-hidden="true" href="#cb1-8"></a>    read(n);</span>
+<span id="cb1-9"><a aria-hidden="true" href="#cb1-9"></a>    FOR(i, <span class="dv">1</span>, n)</span>
+<span id="cb1-10"><a aria-hidden="true" href="#cb1-10"></a>        FOR(j, <span class="dv">1</span>, n + <span class="dv">1</span>)</span>
+<span id="cb1-11"><a aria-hidden="true" href="#cb1-11"></a>            read(a[i][j]);</span>
+<span id="cb1-12"><a aria-hidden="true" href="#cb1-12"></a>    </span>
+<span id="cb1-13"><a aria-hidden="true" href="#cb1-13"></a>    <span class="dt">int</span> line = <span class="dv">1</span>;</span>
+<span id="cb1-14"><a aria-hidden="true" href="#cb1-14"></a>    FOR(i, <span class="dv">1</span>, n) {</span>
+<span id="cb1-15"><a aria-hidden="true" href="#cb1-15"></a>        <span class="dt">int</span> r = line;</span>
+<span id="cb1-16"><a aria-hidden="true" href="#cb1-16"></a>        FOR(j, i + <span class="dv">1</span>, n)</span>
+<span id="cb1-17"><a aria-hidden="true" href="#cb1-17"></a>            <span class="cf">if</span> (fabs(a[j][i]) &gt; fabs(a[r][i])) r = j;</span>
+<span id="cb1-18"><a aria-hidden="true" href="#cb1-18"></a>        <span class="cf">if</span> (fabs(a[r][i]) &lt; EPS) <span class="cf">continue</span>;</span>
+<span id="cb1-19"><a aria-hidden="true" href="#cb1-19"></a>        <span class="bu">std::</span>swap(a[line], a[r]);</span>
+<span id="cb1-20"><a aria-hidden="true" href="#cb1-20"></a>        FOR(j, <span class="dv">1</span>, n) {</span>
+<span id="cb1-21"><a aria-hidden="true" href="#cb1-21"></a>            <span class="cf">if</span> (j == line) <span class="cf">continue</span>;</span>
+<span id="cb1-22"><a aria-hidden="true" href="#cb1-22"></a>            db mul = a[j][i] / a[line][i];</span>
+<span id="cb1-23"><a aria-hidden="true" href="#cb1-23"></a>            FOR(k, i + <span class="dv">1</span>, n + <span class="dv">1</span>)</span>
+<span id="cb1-24"><a aria-hidden="true" href="#cb1-24"></a>                a[j][k] -= mul * a[line][k];</span>
+<span id="cb1-25"><a aria-hidden="true" href="#cb1-25"></a>        }</span>
+<span id="cb1-26"><a aria-hidden="true" href="#cb1-26"></a>        ++line;</span>
+<span id="cb1-27"><a aria-hidden="true" href="#cb1-27"></a>    }</span>
+<span id="cb1-28"><a aria-hidden="true" href="#cb1-28"></a></span>
+<span id="cb1-29"><a aria-hidden="true" href="#cb1-29"></a>    <span class="cf">if</span> (line &lt;= n) {</span>
+<span id="cb1-30"><a aria-hidden="true" href="#cb1-30"></a>        <span class="cf">while</span> (line &lt;= n)</span>
+<span id="cb1-31"><a aria-hidden="true" href="#cb1-31"></a>            <span class="cf">if</span> (fabs(a[line++][n + <span class="dv">1</span>]) &gt; EPS)</span>
+<span id="cb1-32"><a aria-hidden="true" href="#cb1-32"></a>                <span class="cf">return</span> puts(<span class="st">"-1"</span>), <span class="dv">0</span>;</span>
+<span id="cb1-33"><a aria-hidden="true" href="#cb1-33"></a>        <span class="cf">return</span> puts(<span class="st">"0"</span>), <span class="dv">0</span>;</span>
+<span id="cb1-34"><a aria-hidden="true" href="#cb1-34"></a>    }</span>
+<span id="cb1-35"><a aria-hidden="true" href="#cb1-35"></a></span>
+<span id="cb1-36"><a aria-hidden="true" href="#cb1-36"></a>    FOR(i, <span class="dv">1</span>, n) {</span>
+<span id="cb1-37"><a aria-hidden="true" href="#cb1-37"></a>        printf(<span class="st">"x</span><span class="sc">%d</span><span class="st">="</span>, i);</span>
+<span id="cb1-38"><a aria-hidden="true" href="#cb1-38"></a>        <span class="cf">if</span> (fabs(a[i][n + <span class="dv">1</span>] / a[i][i]) &lt; EPS) puts(<span class="st">"0.00"</span>);</span>
+<span id="cb1-39"><a aria-hidden="true" href="#cb1-39"></a>        <span class="cf">else</span> printf(<span class="st">"</span><span class="sc">%.2lf\n</span><span class="st">"</span>, a[i][n + <span class="dv">1</span>] / a[i][i]);</span>
+<span id="cb1-40"><a aria-hidden="true" href="#cb1-40"></a>    }</span>
+<span id="cb1-41"><a aria-hidden="true" href="#cb1-41"></a>    <span class="cf">return</span> <span class="dv">0</span>;</span>
+<span id="cb1-42"><a aria-hidden="true" href="#cb1-42"></a>}</span></code></pre></div>
+<p>高斯消元同样可以处理异或方程组，即形如 <span class="math inline">\(a_1x_1~\mathrm{xor}~a_2x_2\cdots a_nx_n = 0/1\)</span> 类的方程。此类方程我们一般可以使用 <code>bitset</code> 来加速求解。</p>
+<blockquote>
+<p>例题 <span class="math inline">\(2\)</span>：<a href="https://www.luogu.com.cn/problem/P2447">P2447 [SDOI2010] 外星千足虫</a></p>
+<p>给定异或方程组，问解是否唯一，以及至少需要前多少个方程能确定所有解。<span class="math inline">\(n\le 1000\)</span>，<span class="math inline">\(m\le 2000\)</span>。</p>
+</blockquote>
+<p>一个元一个元的来消，若其系数为 <span class="math inline">\(0\)</span> 则说明其为自由元，方程解不唯一。</p>
+<p>然后的话由于要判断前多少个方程，所以可能需要记录一下最大值什么的。</p>
+<p>使用 <code>bitset</code> 来消元，时间复杂度 <span class="math inline">\(O(n^2m/w)\)</span>，可以通过本题。</p>
+<div class="sourceCode" id="cb2"><pre class="sourceCode cpp"><code class="sourceCode cpp"><span id="cb2-1"><a aria-hidden="true" href="#cb2-1"></a><span class="pp">#include </span><span class="im">&lt;bits/stdc++.h&gt;</span></span>
+<span id="cb2-2"><a aria-hidden="true" href="#cb2-2"></a><span class="pp">#define FOR</span>(i,<span class="pp"> </span>a,<span class="pp"> </span>b)<span class="pp"> </span><span class="cf">for</span><span class="pp"> </span>(<span class="dt">int</span><span class="pp"> </span>i<span class="pp"> </span>=<span class="pp"> </span>(a);<span class="pp"> </span>i<span class="pp"> </span>&lt;=<span class="pp"> </span>(b);<span class="pp"> </span>++i)</span>
+<span id="cb2-3"><a aria-hidden="true" href="#cb2-3"></a><span class="pp">#define DEC</span>(i,<span class="pp"> </span>a,<span class="pp"> </span>b)<span class="pp"> </span><span class="cf">for</span><span class="pp"> </span>(<span class="dt">int</span><span class="pp"> </span>i<span class="pp"> </span>=<span class="pp"> </span>(a);<span class="pp"> </span>i<span class="pp"> </span>&gt;=<span class="pp"> </span>(b);<span class="pp"> </span>--i)</span>
+<span id="cb2-4"><a aria-hidden="true" href="#cb2-4"></a></span>
+<span id="cb2-5"><a aria-hidden="true" href="#cb2-5"></a><span class="kw">using</span> <span class="kw">namespace</span> std;</span>
+<span id="cb2-6"><a aria-hidden="true" href="#cb2-6"></a></span>
+<span id="cb2-7"><a aria-hidden="true" href="#cb2-7"></a><span class="at">const</span> <span class="dt">int</span> maxn = <span class="fl">2e3</span> + <span class="dv">5</span>;</span>
+<span id="cb2-8"><a aria-hidden="true" href="#cb2-8"></a>bitset&lt;maxn&gt; a[maxn];</span>
+<span id="cb2-9"><a aria-hidden="true" href="#cb2-9"></a><span class="dt">char</span> s[maxn];</span>
+<span id="cb2-10"><a aria-hidden="true" href="#cb2-10"></a><span class="dt">int</span> n, m, tot, ans[maxn];</span>
+<span id="cb2-11"><a aria-hidden="true" href="#cb2-11"></a></span>
+<span id="cb2-12"><a aria-hidden="true" href="#cb2-12"></a><span class="dt">int</span> main() {</span>
+<span id="cb2-13"><a aria-hidden="true" href="#cb2-13"></a>    cin &gt;&gt; n &gt;&gt; m;</span>
+<span id="cb2-14"><a aria-hidden="true" href="#cb2-14"></a>    FOR(i, <span class="dv">1</span>, m) {</span>
+<span id="cb2-15"><a aria-hidden="true" href="#cb2-15"></a>        cin &gt;&gt; s + <span class="dv">1</span> &gt;&gt; s[n + <span class="dv">1</span>];</span>
+<span id="cb2-16"><a aria-hidden="true" href="#cb2-16"></a>        FOR(j, <span class="dv">1</span>, n + <span class="dv">1</span>) a[i][j] = s[j] - <span class="ch">'0'</span>;</span>
+<span id="cb2-17"><a aria-hidden="true" href="#cb2-17"></a>    }</span>
+<span id="cb2-18"><a aria-hidden="true" href="#cb2-18"></a>    FOR(i, <span class="dv">1</span>, n) {</span>
+<span id="cb2-19"><a aria-hidden="true" href="#cb2-19"></a>        <span class="dt">int</span> r = i;</span>
+<span id="cb2-20"><a aria-hidden="true" href="#cb2-20"></a>        <span class="cf">for</span> (; r &lt;= m &amp;&amp; !a[r][i]; ++r) ;</span>
+<span id="cb2-21"><a aria-hidden="true" href="#cb2-21"></a>        <span class="cf">if</span> (r == m + <span class="dv">1</span>) <span class="cf">return</span> puts(<span class="st">"Cannot Determine"</span>), <span class="dv">0</span>;</span>
+<span id="cb2-22"><a aria-hidden="true" href="#cb2-22"></a>        tot = max(tot, r);</span>
+<span id="cb2-23"><a aria-hidden="true" href="#cb2-23"></a>        swap(a[r], a[i]);</span>
+<span id="cb2-24"><a aria-hidden="true" href="#cb2-24"></a>        FOR(j, <span class="dv">1</span>, m) <span class="cf">if</span> (i != j &amp;&amp; a[j].test(i)) a[j] ^= a[i];</span>
+<span id="cb2-25"><a aria-hidden="true" href="#cb2-25"></a>    }</span>
+<span id="cb2-26"><a aria-hidden="true" href="#cb2-26"></a>    cout &lt;&lt; tot &lt;&lt; endl;</span>
+<span id="cb2-27"><a aria-hidden="true" href="#cb2-27"></a>    FOR(i, <span class="dv">1</span>, n) puts(a[i].test(n + <span class="dv">1</span>) ? <span class="st">"?y7M#"</span> : <span class="st">"Earth"</span>);</span>
+<span id="cb2-28"><a aria-hidden="true" href="#cb2-28"></a>    <span class="cf">return</span> <span class="dv">0</span>;</span>
+<span id="cb2-29"><a aria-hidden="true" href="#cb2-29"></a>}</span></code></pre></div>
+<h3 id="游走类问题">游走类问题</h3>
+<p>高斯消元最常见的应用之一，在一张图上随机游走，求期望一类的问题。我们可以很容易列出 dp 方程，但是由于 dp 之间会在图上<strong>交叉转移</strong>，所以需要使用高斯消元求解。</p>
+<blockquote>
+<p>例题 <span class="math inline">\(3\)</span>：<a href="https://www.luogu.com.cn/problem/P3232">P3232 [HNOI2013]游走</a></p>
+<p>无向连通图，<span class="math inline">\(n\)</span> 点 <span class="math inline">\(m\)</span> 边，<span class="math inline">\(2\le n\le 500\)</span>，<span class="math inline">\(1\le m\le 125000\)</span>。</p>
+<p>从 <span class="math inline">\(1\)</span> 号点开始随机游走，每一步等概率选一条出边，代价为边的编号。游走到 <span class="math inline">\(n\)</span> 时结束。请你给边标号，使得期望代价最小。</p>
+</blockquote>
+<p>首先，明显是求出每条边的期望经过次数然后贪心排序计算贡献。但是每条边的期望经过次数貌似不是很好弄，所以考虑求出每个点的期望经过次数。设为 <span class="math inline">\(f_i\)</span>，则有： <span class="math display">\[
+f_u = 
+\begin{cases}
+1 + \displaystyle\sum_{(u,v)\in E\land v\not=n}\frac{f_v}{\mathrm{deg}_v}&amp;u = 1\\
+\displaystyle\sum_{(u,v)\in E\land v\not=n}\frac{f_v}{\mathrm{deg}_v}&amp;\mathrm{else}
+\end{cases}
+\]</span> 这个东西可以使用高斯消元列出方程式来求解。</p>
+<p>解出来了之后考虑一条边 <span class="math inline">\(e_i = (u, v)\)</span> 的期望次数。不难发现其即为 <span class="math display">\[
+g_i = \frac{f_u}{\mathrm{deg}_u} + \frac{f_v}{\mathrm{deg}_v}
+\]</span> 所以求出来之后排序，贪心计算答案即可。</p>
+<blockquote>
+<p>例题 <span class="math inline">\(4\)</span>：<a href="https://www.luogu.com.cn/problem/P2973">P2973 [USACO10HOL]Driving Out the Piggies G</a></p>
+<p>一个无向图，节点 <span class="math inline">\(1\)</span> 有一个炸弹，在每个单位时间内，有 <span class="math inline">\(p/q\)</span> 的概率在这个节点炸掉，有 <span class="math inline">\(1-p/q\)</span> 的概率随机选择一条出去的路到其他的节点上。问最终炸弹在每个节点上爆炸的概率。</p>
+</blockquote>
+<p>设第 <span class="math inline">\(i\)</span> 个点期望经过次数为 <span class="math inline">\(f_i\)</span>，则在第 <span class="math inline">\(i\)</span> 个节点上爆炸的概率应该为 <span class="math inline">\(f_i\times p/q\)</span>，求 <span class="math inline">\(f_i\)</span> 即可。 <span class="math display">\[
+f_u = \begin{cases}
+1&amp;u=1\\
+\sum_{(u,v)\in E}\left(1 - \frac{p}{q}\right)\times \frac{f_v}{\mathrm{deg}_v}&amp;\text{otherwise}
+\end{cases}
+\]</span> 即：在 <span class="math inline">\(v\)</span> 时既要不爆炸也要在 <span class="math inline">\(\mathrm{deg_v}\)</span> 个出路中走到 <span class="math inline">\(u\)</span>。</p>
+<blockquote>
+<p>例题 <span class="math inline">\(5\)</span>：<a href="https://www.luogu.com.cn/problem/CF113D">CF113D Museum</a></p>
+<p><span class="math inline">\(n\le 22\)</span> 个点的无向图，两人初始分别位于点 <span class="math inline">\(a\)</span> 和 <span class="math inline">\(b\)</span>。两人随机游走，每个单位时间，在每个点处有 <span class="math inline">\(p_i\)</span> 的概率停留，有 <span class="math inline">\(1 - p_i\)</span> 的概率随机前往相邻点。两者在同一个点相遇时结束。</p>
+<p>对每个点询问其停在对应房间的概率。</p>
+</blockquote>
+<p>回顾当只有一个人的时候，求停在每个点的概率相当于是求每个点的期望次数。</p>
+<p>回到本题，由于点数很小，所以可以考虑将两个人的状态同时考虑进去，设 <span class="math inline">\(f_{i,j}\)</span> 表示两人分别位于 <span class="math inline">\((i, j)\)</span> 状态的期望经过次数。则由于 <span class="math inline">\((i, i)\)</span> 至多经过一次，所以 <span class="math inline">\(f_{i,i}\)</span> 即为答案。</p>
+<p>可以写出转移方程： <span class="math display">\[
+f_{i,j} = \sum_{(i,a)\in E}\sum_{(j,b)\in E} \frac{(1 - p_a)}{d_a}\frac{(1 - p_b)}{d_b}f_{a,b} + \sum_{(i,a)\in E}\frac{1-p_a}{d_a}p_jf_{a,j} + \sum_{(j,b)\in E} \frac{1-p_b}{d_b}p_if_{i,b} + p_ip_jf_{i,j}
+\]</span> 对于初始的 <span class="math inline">\(f_{a,b}\)</span> 还需要加一个常数 <span class="math inline">\(1\)</span>。</p>
+<p>于是直接高斯消元即可，时间复杂度 <span class="math inline">\(O(n^6)\)</span>。</p>
+<h3 id="band-matrix">Band Matrix</h3>
+<p>参考<a href="https://www.tonyyin.top/notes/gauss-elimination/">这篇博客</a>里的图：<img src="https://yangty-pic.oss-cn-beijing.aliyuncs.com/band_matrix.png"/></p>
+<p>白色部分都是 <span class="math inline">\(0\)</span>，红色部分有数，带宽为 <span class="math inline">\(d\)</span>。这种矩阵的消元复杂度可以优化至 <span class="math inline">\(O(nd^2)\)</span>。</p>
+<p>图中的绿色节点是主元，注意到对于 <span class="math inline">\(A_{i,i}\)</span>，其向下/右的有效数字个数均 <span class="math inline">\(\le d- 1\)</span>。所以假设现在要消第 <span class="math inline">\(i\)</span> 列，那么从第 <span class="math inline">\(i\)</span> 行开始向下枚举 <span class="math inline">\(d - 1\)</span> 行，每行往右消 <span class="math inline">\(d\)</span> 个数字，可以得到一个上三角矩阵。</p>
+<p>之后 <span class="math inline">\(O(n^2)\)</span> 回代即可。如果 <span class="math inline">\(n\)</span> 很大，空间开不下则可以进行映射或者用 <code>unordered_map</code>。</p>
+<p>由于基本不太可能出现无解情况所以不需要考虑无解的问题。</p>
+<blockquote>
+<p>例题 <span class="math inline">\(6\)</span>：<a href="https://www.luogu.com.cn/problem/CF963E">CF963E Circles of Waiting</a></p>
+<p>在平面直角坐标系上，有一个神奇的点，一开始在 <span class="math inline">\((0, 0)\)</span>。每秒钟这个点都会随机移动：如果它在 <span class="math inline">\((x, y)\)</span>，下一秒它在 <span class="math inline">\((x - 1, y)\)</span> 的概率是 <span class="math inline">\(p_1\)</span>，在 <span class="math inline">\((x, y - 1)\)</span> 的概率是 <span class="math inline">\(p_2\)</span>，在 <span class="math inline">\((x + 1, y)\)</span> 的概率是 <span class="math inline">\(p_3\)</span>，在 <span class="math inline">\((x, y + 1)\)</span> 的概率是 <span class="math inline">\(p_4\)</span>。保证 <span class="math inline">\(p_1 + p_2 + p_3 + p_4 = 1\)</span>，各次移动互不关联。</p>
+<p>求出这个点移动至距离原点距离为大于 <span class="math inline">\(R\)</span> 的点的期望步数。距离为欧几里得距离。<span class="math inline">\(R\le 50\)</span>。</p>
+</blockquote>
+<p>设 <span class="math inline">\(f(x,y)\)</span> 表示走出 <span class="math inline">\(&gt; R\)</span> 的点的期望步数，则 <span class="math display">\[
+f(x,y) = 1 + p_1f(x - 1, y) + p_2f(x, y - 1) + p_3f(x + 1, y) + p_4f(x, y + 1)
+\]</span> 注意到一共有 <span class="math inline">\(O(R^2)\)</span> 个状态，而裸的消元会变成 <span class="math inline">\(O(R^6)\)</span>，过不去。</p>
+<h2 id="行列式">行列式</h2>
+<h3 id="定义">定义</h3>
+<p>一个行列式是定义在一个方阵上的函数： <span class="math display">\[
+\det \boldsymbol A  = 
+\begin{vmatrix}
+a_{1, 1} &amp; a_{1, 2} &amp; \cdots &amp; a_{1, n}\\
+a_{2, 1} &amp; a_{2, 2} &amp; \cdots &amp; a_{2, n}\\
+\vdots &amp; \vdots &amp; &amp; \vdots\\
+a_{n, 1} &amp; a_{n, 2} &amp; \cdots &amp; a_{n, n}
+\end{vmatrix}
+\]</span> 返回的是一个数，例如 <span class="math inline">\(\begin{vmatrix}2 &amp; 1\\3 &amp; 4\end{vmatrix} = 5\)</span>。</p>
+<h4 id="定义形式-1逆序数">定义形式 1（逆序数）</h4>
+<p>定义 <span class="math inline">\(\operatorname{sgn}(P)\)</span> 为排列 <span class="math inline">\((p_1, p_2,\cdots, p_n)\)</span> 的逆序对数量，则行列式 <span class="math inline">\(\det\boldsymbol A\)</span> 的值定义为： <span class="math display">\[
+\det \boldsymbol A = \sum_{P}(-1)^{\operatorname{sgn}(P)}\prod_{i = 1}^na_{i, p_i}
+\]</span> 相当于每一行取不同的列相乘再乘上 <span class="math inline">\(-1\)</span> 的列的排列的逆序数次方然后加起来。</p>
+<p>或者 <span class="math display">\[
+\det \boldsymbol A = \sum_{P}(-1)^{\operatorname{sgn}(P)}\prod_{i = 1}^na_{p_i, i}
+\]</span> 其是等价的。</p>
+<h4 id="定义形式-2递归展开">定义形式 2（递归展开）</h4>
+<p>定义 <span class="math inline">\(\det\boldsymbol A\)</span> 划去 <span class="math inline">\(a_{i, j}\)</span> 所在的一行和一列后剩余元素按原来次序组成的行列式为元素 <span class="math inline">\(a_{i, j}\)</span> 的余子式，记为 <span class="math inline">\(M_{i, j}\)</span>。记 <span class="math inline">\((-1)^{i + j}M_{i, j}\)</span> 为 <span class="math inline">\(a_{i, j}\)</span> 的<strong>代数余子式</strong>，记为 <span class="math inline">\(A_{i, j}\)</span>，则递归定义行列式的值： <span class="math display">\[
+\det\boldsymbol A = \sum_{i = 1}^na_{i, 1}A_{i, 1}
+\]</span> 这是按第一列展开，当然也可以按任意行/任意列来展开。</p>
+<h3 id="常用运算性质">常用运算性质</h3>
+<blockquote>
+<p>性质 <span class="math inline">\(1\)</span>：<strong>上三角</strong>行列式/<strong>下三角</strong>行列式的值为<strong>对角线元素之积</strong>。</p>
+</blockquote>
+<p>证明：考虑行列式的第一种定义形式，不难发现其正确性。<strong>这条性质极其重要，其为我们快速求解行列式的值提供了可能。</strong></p>
+<blockquote>
+<p>性质 <span class="math inline">\(2\)</span>：某行/某列全为 <span class="math inline">\(0\)</span>，则行列式的值为 <span class="math inline">\(0\)</span>。</p>
+</blockquote>
+<p>证明：考虑行列式的第一种定义形式，不难发现其正确性。</p>
+<blockquote>
+<p>性质 <span class="math inline">\(3\)</span>：某行/某列乘上一个常数 <span class="math inline">\(c\)</span>，行列式的值等于原来的 <span class="math inline">\(c\)</span> 倍。</p>
+</blockquote>
+<p>证明：考虑行列式的第一种定义形式，发现每行都恰好对 <span class="math inline">\(\prod\)</span> 产生 <span class="math inline">\(c\)</span> 的贡献。</p>
+<blockquote>
+<p>性质 <span class="math inline">\(4\)</span>：交换行列式的两行/两列，行列式的值变为原来的相反数。</p>
+</blockquote>
+<p>证明：考虑行列式的第二种定义形式，归纳证明。</p>
+<blockquote>
+<p>性质 <span class="math inline">\(5\)</span>：若行列式的两行/两列成比例，则行列式的值为 <span class="math inline">\(0\)</span>。</p>
+</blockquote>
+<p>证明：由性质 <span class="math inline">\(3\)</span> 和性质 <span class="math inline">\(4\)</span> 可得有 <span class="math inline">\(\det \boldsymbol A = -\det \boldsymbol A = 0\)</span>。</p>
+<blockquote>
+<p>性质 <span class="math inline">\(6\)</span>：设 <span class="math inline">\(|\boldsymbol{A}|\)</span>，<span class="math inline">\(|\boldsymbol{B}|\)</span>，<span class="math inline">\(|\boldsymbol{C}|\)</span> 为三个 <span class="math inline">\(n\)</span> 阶行列式，其第 <span class="math inline">\((i,j)\)</span> 元素分别记为 <span class="math inline">\(a_{i,j}\)</span>，<span class="math inline">\(b_{i,j}\)</span>，<span class="math inline">\(c_{i,j}\)</span>。设其第 <span class="math inline">\(r\)</span> 行元素满足条件： <span class="math display">\[
+c_{r,j} = a_{r,j} + b_{r,j}\:(j = 1, 2,\cdots, n)
+\]</span> 且其他元素相同，则 <span class="math display">\[
+|\boldsymbol{C}| = |\boldsymbol{A}| + |\boldsymbol{B}|
+\]</span></p>
+</blockquote>
+<p>证明：用第二种形式归纳可证。</p>
+<blockquote>
+<p>性质 <span class="math inline">\(7\)</span>：<strong>将行列式的某行/某列乘上某个常数 <span class="math inline">\(c\)</span> 再加到另一行/列上，行列式的值不变</strong>。</p>
+</blockquote>
+<p>证明：由性质 <span class="math inline">\(5\)</span> 和性质 <span class="math inline">\(6\)</span> 推导出来。非常重要，是下面能用高斯消元求行列式的基础。</p>
+<h3 id="求法">求法</h3>
+<p>OI 中，使用高斯消元将行列式消为上三角行列式或对角行列式然后直接将对角线元素相乘，时间复杂度 <span class="math inline">\(O(n^3)\)</span>。</p>
+<p>模板题 <a href="https://www.luogu.com.cn/problem/P7112">洛谷 P7112 【模板】行列式求值</a>：</p>
+<div class="sourceCode" id="cb3"><pre class="sourceCode cpp"><code class="sourceCode cpp"><span id="cb3-1"><a aria-hidden="true" href="#cb3-1"></a><span class="pp">#include </span><span class="im">&lt;cstdio&gt;</span></span>
+<span id="cb3-2"><a aria-hidden="true" href="#cb3-2"></a><span class="pp">#include </span><span class="im">&lt;cctype&gt;</span></span>
+<span id="cb3-3"><a aria-hidden="true" href="#cb3-3"></a><span class="pp">#include </span><span class="im">&lt;algorithm&gt;</span></span>
+<span id="cb3-4"><a aria-hidden="true" href="#cb3-4"></a><span class="pp">#define FOR</span>(i,<span class="pp"> </span>a,<span class="pp"> </span>b)<span class="pp"> </span><span class="cf">for</span><span class="pp"> </span>(<span class="dt">int</span><span class="pp"> </span>i<span class="pp"> </span>=<span class="pp"> </span>a;<span class="pp"> </span>i<span class="pp"> </span>&lt;=<span class="pp"> </span>b;<span class="pp"> </span>++i)</span>
+<span id="cb3-5"><a aria-hidden="true" href="#cb3-5"></a><span class="pp">#define DEC</span>(i,<span class="pp"> </span>a,<span class="pp"> </span>b)<span class="pp"> </span><span class="cf">for</span><span class="pp"> </span>(<span class="dt">int</span><span class="pp"> </span>i<span class="pp"> </span>=<span class="pp"> </span>a;<span class="pp"> </span>i<span class="pp"> </span>&gt;=<span class="pp"> </span>b;<span class="pp"> </span>--i)</span>
+<span id="cb3-6"><a aria-hidden="true" href="#cb3-6"></a></span>
+<span id="cb3-7"><a aria-hidden="true" href="#cb3-7"></a><span class="kw">using</span> <span class="bu">std::</span>swap;</span>
+<span id="cb3-8"><a aria-hidden="true" href="#cb3-8"></a></span>
+<span id="cb3-9"><a aria-hidden="true" href="#cb3-9"></a><span class="dt">int</span> read() {</span>
+<span id="cb3-10"><a aria-hidden="true" href="#cb3-10"></a>    <span class="dt">int</span> s = <span class="dv">0</span>, x = <span class="dv">0</span>;</span>
+<span id="cb3-11"><a aria-hidden="true" href="#cb3-11"></a>    <span class="dt">char</span> c = getchar();</span>
+<span id="cb3-12"><a aria-hidden="true" href="#cb3-12"></a>    <span class="cf">while</span> (!isdigit(c))</span>
+<span id="cb3-13"><a aria-hidden="true" href="#cb3-13"></a>        x |= (c == <span class="ch">'-'</span>), c = getchar();</span>
+<span id="cb3-14"><a aria-hidden="true" href="#cb3-14"></a>    <span class="cf">while</span> (isdigit(c))</span>
+<span id="cb3-15"><a aria-hidden="true" href="#cb3-15"></a>        s = s * <span class="dv">10</span> + c - <span class="ch">'0'</span>, c = getchar();</span>
+<span id="cb3-16"><a aria-hidden="true" href="#cb3-16"></a>    <span class="cf">return</span> x ? -s : s;</span>
+<span id="cb3-17"><a aria-hidden="true" href="#cb3-17"></a>}</span>
+<span id="cb3-18"><a aria-hidden="true" href="#cb3-18"></a></span>
+<span id="cb3-19"><a aria-hidden="true" href="#cb3-19"></a><span class="at">const</span> <span class="dt">int</span> maxn = <span class="dv">605</span>;</span>
+<span id="cb3-20"><a aria-hidden="true" href="#cb3-20"></a></span>
+<span id="cb3-21"><a aria-hidden="true" href="#cb3-21"></a><span class="dt">int</span> a[maxn][maxn], n, mod;</span>
+<span id="cb3-22"><a aria-hidden="true" href="#cb3-22"></a></span>
+<span id="cb3-23"><a aria-hidden="true" href="#cb3-23"></a><span class="dt">int</span> main() {</span>
+<span id="cb3-24"><a aria-hidden="true" href="#cb3-24"></a>    n = read(), mod = read();</span>
+<span id="cb3-25"><a aria-hidden="true" href="#cb3-25"></a>    FOR(i, <span class="dv">1</span>, n)</span>
+<span id="cb3-26"><a aria-hidden="true" href="#cb3-26"></a>        FOR(j, <span class="dv">1</span>, n)</span>
+<span id="cb3-27"><a aria-hidden="true" href="#cb3-27"></a>        a[i][j] = read();</span>
+<span id="cb3-28"><a aria-hidden="true" href="#cb3-28"></a>    <span class="dt">int</span> ans = <span class="dv">1</span>, rev = <span class="dv">1</span>;</span>
+<span id="cb3-29"><a aria-hidden="true" href="#cb3-29"></a>    FOR(i, <span class="dv">1</span>, n)</span>
+<span id="cb3-30"><a aria-hidden="true" href="#cb3-30"></a>        FOR(j, i + <span class="dv">1</span>, n) {</span>
+<span id="cb3-31"><a aria-hidden="true" href="#cb3-31"></a>        <span class="cf">while</span> (a[i][i]) {</span>
+<span id="cb3-32"><a aria-hidden="true" href="#cb3-32"></a>            <span class="dt">int</span> div = a[j][i] / a[i][i];</span>
+<span id="cb3-33"><a aria-hidden="true" href="#cb3-33"></a>            FOR(k, i, n)</span>
+<span id="cb3-34"><a aria-hidden="true" href="#cb3-34"></a>                a[j][k] = (a[j][k] - <span class="dv">1</span><span class="bu">ll</span> * div * a[i][k] % mod + mod) % mod;</span>
+<span id="cb3-35"><a aria-hidden="true" href="#cb3-35"></a>            swap(a[i], a[j]), rev = -rev;</span>
+<span id="cb3-36"><a aria-hidden="true" href="#cb3-36"></a>        }</span>
+<span id="cb3-37"><a aria-hidden="true" href="#cb3-37"></a>        swap(a[i], a[j]), rev = -rev;</span>
+<span id="cb3-38"><a aria-hidden="true" href="#cb3-38"></a>    }</span>
+<span id="cb3-39"><a aria-hidden="true" href="#cb3-39"></a>    FOR(i, <span class="dv">1</span>, n) ans = <span class="dv">1</span><span class="bu">ll</span> * ans * a[i][i] % mod;</span>
+<span id="cb3-40"><a aria-hidden="true" href="#cb3-40"></a>    ans *= rev;</span>
+<span id="cb3-41"><a aria-hidden="true" href="#cb3-41"></a>    printf(<span class="st">"</span><span class="sc">%d\n</span><span class="st">"</span>, (ans + mod) % mod);</span>
+<span id="cb3-42"><a aria-hidden="true" href="#cb3-42"></a>    <span class="cf">return</span> <span class="dv">0</span>;</span>
+<span id="cb3-43"><a aria-hidden="true" href="#cb3-43"></a>}</span></code></pre></div>
+<p>注意每次交换行的时候行列式要变号。</p>
+<h2 id="matrix-tree-定理">Matrix-Tree 定理</h2>
+<p>利用行列式处理生成树计数相关的问题。</p>
+<h3 id="有向图以-1-为根的外向树">有向图以 1 为根的外向树</h3>
+<p>定义一个图 <span class="math inline">\(G(V,E)\)</span> 的基尔霍夫矩阵 <span class="math inline">\(L(G)\)</span> 为 <span class="math display">\[
+L(G)_{u,v} =
+\begin{cases}
+\sum_{i\in V}w_{i, u}&amp;u = v\\
+-w_{u,v}&amp;\text{otherwise}
+\end{cases}
+\]</span> 其中 <span class="math inline">\(w_{i,j}\)</span> 表示从 <span class="math inline">\(i\)</span> 到 <span class="math inline">\(j\)</span> 边的条数。意义就是主对角线上的元素为点的入度，剩余的为邻接矩阵取相反数。</p>
+<p>然后把第 <span class="math inline">\(1\)</span> 行和第 <span class="math inline">\(1\)</span> 列给去掉得到 <span class="math inline">\(L_1(G)\)</span>，则 <span class="math inline">\(\det L_1(G)\)</span> 为 <span class="math inline">\(G\)</span> 的以 <span class="math inline">\(1\)</span> 为根的外向生成树的个数。</p>
+<h3 id="有向图以-1-为根的内向树">有向图以 1 为根的内向树</h3>
+<p>类似地，把入度换成出度即可。</p>
+<h3 id="无向图的生成树">无向图的生成树</h3>
+<p>入度换为度数即可。注意此时去掉的列和行无关紧要，去掉任意的一行和一列得到的矩阵的行列式的值都是相等的。</p>
+<h3 id="加权的情况">加权的情况</h3>
+<p>定义一个生成树的权值为所有边权之积，则只需把邻接矩阵中边的条数换为边权即可。</p>
+<p>理解就是把边权看作重边的条数即可，根据乘法原理不难证明正确性。</p>
+<h3 id="证明">证明</h3>
+<p>见 <a href="https://loj.ac/d/2458">LOJ 上的一篇博客</a>。</p>
+<h2 id="lgv-lemma">LGV lemma</h2>
+<h2 id="best-定理">BEST 定理</h2>
+<h2 id="一些作者水平不够的时候写的奇怪东西">一些作者水平不够的时候写的奇怪东西</h2>
+<div class="sourceCode" id="cb4"><pre class="sourceCode markdown"><code class="sourceCode markdown"><span id="cb4-1"><a aria-hidden="true" href="#cb4-1"></a><span class="fu">## 直觉体验线性代数</span></span>
+<span id="cb4-2"><a aria-hidden="true" href="#cb4-2"></a></span>
+<span id="cb4-3"><a aria-hidden="true" href="#cb4-3"></a>大致拉一遍线性代数基础，建立直观直觉。</span>
+<span id="cb4-4"><a aria-hidden="true" href="#cb4-4"></a></span>
+<span id="cb4-5"><a aria-hidden="true" href="#cb4-5"></a><span class="fu">### 向量、向量空间</span></span>
+<span id="cb4-6"><a aria-hidden="true" href="#cb4-6"></a></span>
+<span id="cb4-7"><a aria-hidden="true" href="#cb4-7"></a>给定域 $F$，$F$ 上的向量空间 $V$ 是一个集合，上定义了数乘和加法运算：</span>
+<span id="cb4-8"><a aria-hidden="true" href="#cb4-8"></a></span>
+<span id="cb4-9"><a aria-hidden="true" href="#cb4-9"></a><span class="ss">- </span>$+:V+V\to V$，将 $V$ 中的一个元素 $\mathbf u$ 和一个元素 $\mathbf v$ 映射到 $V$ 中另一个元素，记作 $\mathbf u + \mathbf v$。</span>
+<span id="cb4-10"><a aria-hidden="true" href="#cb4-10"></a><span class="ss">- </span>$\cdot: F\times V\to V$，将 $F$ 中一个元素 $a$ 和 $V$ 中一个元素 $\mathbf v$ 变成 $V$ 中另一个元素，记作 $a\cdot \mathbf v$。</span>
+<span id="cb4-11"><a aria-hidden="true" href="#cb4-11"></a></span>
+<span id="cb4-12"><a aria-hidden="true" href="#cb4-12"></a>$F$ 的元素称为标量，$V$ 中的元素称为向量。且 $+$ 和 $\cdot$ 运算需满足八条公理：</span>
+<span id="cb4-13"><a aria-hidden="true" href="#cb4-13"></a></span>
+<span id="cb4-14"><a aria-hidden="true" href="#cb4-14"></a>| 公理                       | 说明                                                         |</span>
+<span id="cb4-15"><a aria-hidden="true" href="#cb4-15"></a>| -------------------------- | ------------------------------------------------------------ |</span>
+<span id="cb4-16"><a aria-hidden="true" href="#cb4-16"></a>| 向量加法的结合律           | $(\mathbf u + \mathbf v) + \mathbf w = \mathbf u + (\mathbf v + w)$ |</span>
+<span id="cb4-17"><a aria-hidden="true" href="#cb4-17"></a>| 向量加法的交换律           | $\mathbf u + \mathbf v = \mathbf v + \mathbf u$              |</span>
+<span id="cb4-18"><a aria-hidden="true" href="#cb4-18"></a>| 向量加法的单位元           | $\exists\mathbf 0\in V$ 使得 $\forall \mathbf u\in V$ 满足 $\mathbf u+\mathbf 0 = \mathbf u$，其中$\mathbf 0$ 被称为零向量 |</span>
+<span id="cb4-19"><a aria-hidden="true" href="#cb4-19"></a>| 向量加法的逆元             | $\forall\mathbf u\in V$ 都有逆元 $-\mathbf u$ 满足 $\mathbf u + (-\mathbf u) = \mathbf 0$ |</span>
+<span id="cb4-20"><a aria-hidden="true" href="#cb4-20"></a>| 标量乘法与标量的域乘法相容 | $a(b\mathbf v) = (ab)\mathbf v$                              |</span>
+<span id="cb4-21"><a aria-hidden="true" href="#cb4-21"></a>| 标量乘法的单位元           | $F$ 中存在乘法单位元 $1$ 满足 $1\mathbf u = \mathbf u$       |</span>
+<span id="cb4-22"><a aria-hidden="true" href="#cb4-22"></a>| 标量乘法对向量加法的分配律 | $a(\mathbf u + \mathbf v) = a\mathbf u + a\mathbf v$         |</span>
+<span id="cb4-23"><a aria-hidden="true" href="#cb4-23"></a>| 标量乘法对域加法的分配律   | $(a+b)\mathbf v = a\mathbf v + b\mathbf v$                   |</span>
+<span id="cb4-24"><a aria-hidden="true" href="#cb4-24"></a></span>
+<span id="cb4-25"><a aria-hidden="true" href="#cb4-25"></a>前四条说明了，$G = (V, +)$ 是一个交换群，后四条则是针对标量乘法。</span>
+<span id="cb4-26"><a aria-hidden="true" href="#cb4-26"></a></span>
+<span id="cb4-27"><a aria-hidden="true" href="#cb4-27"></a>在线性代数中，向量可以理解为若干坐标构成的一个有序元组。例如 $\boldsymbol v = \begin{bmatrix}x<span class="sc">\\</span>y<span class="sc">\\</span>z\end{bmatrix}$。具象化的，我们可以理解成一个若干维度空间中，从原点指向对应坐标的箭头。</span>
+<span id="cb4-28"><a aria-hidden="true" href="#cb4-28"></a></span>
+<span id="cb4-29"><a aria-hidden="true" href="#cb4-29"></a>最基础的向量运算包括加法和数乘：</span>
+<span id="cb4-30"><a aria-hidden="true" href="#cb4-30"></a>$$</span>
+<span id="cb4-31"><a aria-hidden="true" href="#cb4-31"></a>\begin{bmatrix}x_1<span class="sc">\\</span>y_1<span class="sc">\\</span>z_1\end{bmatrix}+\begin{bmatrix}x_2<span class="sc">\\</span>y_2<span class="sc">\\</span>z_2\end{bmatrix} = \begin{bmatrix}x_1 + x_2<span class="sc">\\</span>y_1 + y_2<span class="sc">\\</span>z_1 + z_2\end{bmatrix}</span>
+<span id="cb4-32"><a aria-hidden="true" href="#cb4-32"></a>$$</span>
+<span id="cb4-33"><a aria-hidden="true" href="#cb4-33"></a></span>
+<span id="cb4-34"><a aria-hidden="true" href="#cb4-34"></a>$$</span>
+<span id="cb4-35"><a aria-hidden="true" href="#cb4-35"></a>a\cdot \begin{bmatrix}x_1<span class="sc">\\</span>y_1<span class="sc">\\</span>z_1\end{bmatrix} = \begin{bmatrix}ax_1<span class="sc">\\</span>ay_1<span class="sc">\\</span>az_1\end{bmatrix}</span>
+<span id="cb4-36"><a aria-hidden="true" href="#cb4-36"></a>$$</span>
+<span id="cb4-37"><a aria-hidden="true" href="#cb4-37"></a></span>
+<span id="cb4-38"><a aria-hidden="true" href="#cb4-38"></a>几何意义就是箭头首尾相接和缩放。</span>
+<span id="cb4-39"><a aria-hidden="true" href="#cb4-39"></a></span>
+<span id="cb4-40"><a aria-hidden="true" href="#cb4-40"></a>同时，若 $\exist \lambda\in F$ 使得 $\mathbf u = \lambda \mathbf v$，则称 $\mathbf u$ 和 $\mathbf v$ 共线。向量的元素个数被称为其**维数**。</span>
+<span id="cb4-41"><a aria-hidden="true" href="#cb4-41"></a></span>
+<span id="cb4-42"><a aria-hidden="true" href="#cb4-42"></a><span class="fu">### 线性组合、张成空间和基底</span></span>
+<span id="cb4-43"><a aria-hidden="true" href="#cb4-43"></a></span>
+<span id="cb4-44"><a aria-hidden="true" href="#cb4-44"></a>对于向量空间 $V$ 上的 $n$ 个元素的向量组 $S=(\mathbf v_1, \cdots, \mathbf v_n)$，其线性组合是如下形式的向量：</span>
+<span id="cb4-45"><a aria-hidden="true" href="#cb4-45"></a>$$</span>
+<span id="cb4-46"><a aria-hidden="true" href="#cb4-46"></a>a_1\mathbf v_1 + \cdots + a_n\mathbf v_n</span>
+<span id="cb4-47"><a aria-hidden="true" href="#cb4-47"></a>$$</span>
+<span id="cb4-48"><a aria-hidden="true" href="#cb4-48"></a>其中 $a_i\in F$。</span>
+<span id="cb4-49"><a aria-hidden="true" href="#cb4-49"></a></span>
+<span id="cb4-50"><a aria-hidden="true" href="#cb4-50"></a>若存在不全为 $0$ 的 $a_i$ 使得 $a_1\mathbf v_1 + \cdots + a_n\mathbf v_n = 0$，则称该向量组**线性相关**，否则**线性无关**。</span>
+<span id="cb4-51"><a aria-hidden="true" href="#cb4-51"></a></span>
+<span id="cb4-52"><a aria-hidden="true" href="#cb4-52"></a><span class="at">&gt; 最直观的理解就是线性相关即为各个向量不“独立”，$\mathbf v_i$ 可以通过 $S$ 去掉 $\mathbf v_i$ 后剩余的向量线性组合得到。</span></span>
+<span id="cb4-53"><a aria-hidden="true" href="#cb4-53"></a></span>
+<span id="cb4-54"><a aria-hidden="true" href="#cb4-54"></a>对于向量组 $(\mathbf v_1,\cdots,\mathbf v_n)$，其所有线性组合构成的集合被称为 $(\mathbf v_1,\cdots, \mathbf v_n)$ 的**张成**，记作 $\operatorname{span}(\mathbf v_1,\cdots \mathbf v_n)$。</span>
+<span id="cb4-55"><a aria-hidden="true" href="#cb4-55"></a></span>
+<span id="cb4-56"><a aria-hidden="true" href="#cb4-56"></a><span class="at">&gt; 注意到一组线性相关的向量，去掉一个后张成空间不变。</span></span>
+<span id="cb4-57"><a aria-hidden="true" href="#cb4-57"></a></span>
+<span id="cb4-58"><a aria-hidden="true" href="#cb4-58"></a>若 $V$ 中的向量组 $\mathfrak B$ 既线性无关又能张成 $V$，则称其为 $V$ 的一组**基底**。</span>
+<span id="cb4-59"><a aria-hidden="true" href="#cb4-59"></a></span>
+<span id="cb4-60"><a aria-hidden="true" href="#cb4-60"></a>基底的性质：</span>
+<span id="cb4-61"><a aria-hidden="true" href="#cb4-61"></a></span>
+<span id="cb4-62"><a aria-hidden="true" href="#cb4-62"></a><span class="ss">- </span>$V$ 是 $\mathfrak B$ 的极小生成集，就是说只有 $\mathfrak B$ 能生成 $V$ ，而它的任何真子集都不能生成全部的向量空间。</span>
+<span id="cb4-63"><a aria-hidden="true" href="#cb4-63"></a><span class="ss">- </span>$\mathfrak B$ 是 $V$ 中线性无关向量的极大集合，就是说 $\mathfrak B$ 在 $V$ 中是线性无关集合，而且 $V$ 中没有其他线性无关集合包含它作为真子集。</span>
+<span id="cb4-64"><a aria-hidden="true" href="#cb4-64"></a><span class="ss">- </span>$V$ 中所有的向量都可以按唯一的方式表达为 $\mathfrak B$ 中向量的线性组合。如果基是有序的，则在这个线性组合中的系数提供了这个向量关于这个基的坐标。</span>
+<span id="cb4-65"><a aria-hidden="true" href="#cb4-65"></a></span>
+<span id="cb4-66"><a aria-hidden="true" href="#cb4-66"></a><span class="at">&gt; 理解一下：$((1, 0, 0), (0, 1, 0), (0, 0, 1))$ 就是三维空间内的一组基底。</span></span>
+<span id="cb4-67"><a aria-hidden="true" href="#cb4-67"></a></span>
+<span id="cb4-68"><a aria-hidden="true" href="#cb4-68"></a><span class="fu">### 矩阵与线性变换</span></span>
+<span id="cb4-69"><a aria-hidden="true" href="#cb4-69"></a></span>
+<span id="cb4-70"><a aria-hidden="true" href="#cb4-70"></a>形式上地，设 $V$ 和 $W$ 是相同域 $F$ 上的线性空间，则法则 $f:V\to W$ 被称为线性变换（又称线性映射），若对于 $\forall x,y\in V, a\in F$ 都有</span>
+<span id="cb4-71"><a aria-hidden="true" href="#cb4-71"></a></span>
+<span id="cb4-72"><a aria-hidden="true" href="#cb4-72"></a><span class="ss">- </span>可加性：$f(x + y) = f(x) + f(y)$。</span>
+<span id="cb4-73"><a aria-hidden="true" href="#cb4-73"></a><span class="ss">- </span>齐次性：$f(ax) = af(x)$。</span>
+<span id="cb4-74"><a aria-hidden="true" href="#cb4-74"></a></span>
+<span id="cb4-75"><a aria-hidden="true" href="#cb4-75"></a>下面我们视作 $V$ 为 $m$ 维，$W$ 为 $n$ 维，且都有选好的基。</span>
+<span id="cb4-76"><a aria-hidden="true" href="#cb4-76"></a></span>
+<span id="cb4-77"><a aria-hidden="true" href="#cb4-77"></a>则一个 $n\times m$ 的矩阵 $\boldsymbol M$ 可以描述一个 $V\to W$ 的线性变换。即我们拿一个 $n\times m$ 矩阵乘上一个 $m$ 维列向量（可以看作 $m\times 1$ 矩阵）$\mathbf v\in V$，会得到一个 $n$ 维列向量。（至于为什么下文会说明）</span>
+<span id="cb4-78"><a aria-hidden="true" href="#cb4-78"></a></span>
+<span id="cb4-79"><a aria-hidden="true" href="#cb4-79"></a>而线性变化的复合就可以用矩阵乘法来描述。</span>
+<span id="cb4-80"><a aria-hidden="true" href="#cb4-80"></a></span>
+<span id="cb4-81"><a aria-hidden="true" href="#cb4-81"></a><span class="fu">### 行列式</span></span></code></pre></div>
+</section>
+<footer class="article-footer">
+<section class="article-tags">
+<a href="/tags/OI/">OI</a>
+<a href="/tags/note/">笔记</a>
+<a href="/tags/det/">行列式</a>
+<a href="/tags/gauss-elimination/">高斯消元</a>
+<a href="/tags/matrix-multiplication/">矩阵乘法</a>
+</section>
+<section class="article-copyright">
+<svg class="icon icon-tabler icon-tabler-copyright" fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+<path d="M0 0h24v24H0z" stroke="none"></path>
+<circle cx="12" cy="12" r="9"></circle>
+<path d="M14.5 9a3.5 4 0 1 0 0 6"></path>
+</svg>
+<span>Licensed under CC BY-NC-SA 4.0</span>
+</section>
+</footer>
+<link crossorigin="anonymous" href="https://cdn.jsdelivr.net/npm/katex@0.13.13/dist/katex.min.css" integrity="sha384-RZU/ijkSsFbcmivfdRBQDtwuwVqK7GMOw6IMvKyeWL2K5UAlyp6WonmB8m7Jd0Hn" rel="stylesheet"/><script crossorigin="anonymous" defer="" integrity="sha384-pK1WpvzWVBQiP0/GjnvRxV4mOb0oxFuyRxJlk6vVw146n3egcN5C925NCP7a7BY8" src="https://cdn.jsdelivr.net/npm/katex@0.13.13/dist/katex.min.js">
+</script><script crossorigin="anonymous" defer="" integrity="sha384-vZTG03m+2yp6N6BNi5iM4rW4oIwk5DfcNdFfxkk9ZWpDriOkXX8voJBFrAO7MpVl" src="https://cdn.jsdelivr.net/npm/katex@0.13.13/dist/contrib/auto-render.min.js">
+</script><script>
+    window.addEventListener("DOMContentLoaded", () => {
+        renderMathInElement(document.querySelector(`.article-content`), {
+            delimiters: [
+                { left: "$$", right: "$$", display: true },
+                { left: "$", right: "$", display: false },
+                { left: "\\(", right: "\\)", display: false },
+                { left: "\\[", right: "\\]", display: true }
+            ]
+        });})
+</script>
+</article>
+<aside class="related-contents--wrapper">
+<h2 class="section-title">相关文章</h2>
+<div class="related-contents">
+<div class="flex article-list--tile">
+<article class="has-image">
+<a href="/note-linear-basis/">
+<div class="article-image">
+<img data-hash="https://yangty-pic.oss-cn-beijing.aliyuncs.com/bg19.webp" data-key="" loading="lazy" src="https://yangty-pic.oss-cn-beijing.aliyuncs.com/bg19.webp"/>
+</div>
+<div class="article-details">
+<h2 class="article-title">线性基学习笔记</h2>
+</div>
+</a>
+</article>
+<article class="has-image">
+<a href="/sol-luogu-p2144/">
+<div class="article-image">
+<img data-hash="https://yangty-pic.oss-cn-beijing.aliyuncs.com/bg39.webp" data-key="" loading="lazy" src="https://yangty-pic.oss-cn-beijing.aliyuncs.com/bg39.webp"/>
+</div>
+<div class="article-details">
+<h2 class="article-title">P2144 [FJOI2007]轮状病毒</h2>
+</div>
+</a>
+</article>
+<article class="has-image">
+<a href="/note-comb-number/">
+<div class="article-image">
+<img data-hash="https://yangty-pic.oss-cn-beijing.aliyuncs.com/bg10.webp" data-key="" loading="lazy" src="https://yangty-pic.oss-cn-beijing.aliyuncs.com/bg10.webp"/>
+</div>
+<div class="article-details">
+<h2 class="article-title">组合数求法小记</h2>
+</div>
+</a>
+</article>
+<article class="has-image">
+<a href="/note-ddp/">
+<div class="article-image">
+<img data-hash="https://yangty-pic.oss-cn-beijing.aliyuncs.com/bg12.webp" data-key="" loading="lazy" src="https://yangty-pic.oss-cn-beijing.aliyuncs.com/bg12.webp"/>
+</div>
+<div class="article-details">
+<h2 class="article-title">动态 DP 学习笔记</h2>
+</div>
+</a>
+</article>
+<article class="has-image">
+<a href="/note-gf/">
+<div class="article-image">
+<img data-hash="https://yangty-pic.oss-cn-beijing.aliyuncs.com/bg28.webp" data-key="" loading="lazy" src="https://yangty-pic.oss-cn-beijing.aliyuncs.com/bg28.webp"/>
+</div>
+<div class="article-details">
+<h2 class="article-title">生成函数胡扯</h2>
+</div>
+</a>
+</article>
+</div>
+</div>
+</aside>
+<footer class="site-footer">
+<section class="copyright">
+        © 
+        
+            2019 - 
+        
+        2024 清烛的博客
+    </section>
+<section class="powerby">
+        Built with <a href="https://gohugo.io/" rel="noopener" target="_blank">Hugo</a> <br/>
+        主题 <b><a data-version="3.11.0" href="https://github.com/CaiJimmy/hugo-theme-stack" rel="noopener" target="_blank">Stack</a></b> 由 <a href="https://jimmycai.com" rel="noopener" target="_blank">Jimmy</a> 设计
+    </section>
+</footer>
+<div aria-hidden="true" class="pswp" role="dialog" tabindex="-1">
+<div class="pswp__bg"></div>
+<div class="pswp__scroll-wrap">
+<div class="pswp__container">
+<div class="pswp__item"></div>
+<div class="pswp__item"></div>
+<div class="pswp__item"></div>
+</div>
+<div class="pswp__ui pswp__ui--hidden">
+<div class="pswp__top-bar">
+<div class="pswp__counter"></div>
+<button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+<button class="pswp__button pswp__button--share" title="Share"></button>
+<button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+<button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+<div class="pswp__preloader">
+<div class="pswp__preloader__icn">
+<div class="pswp__preloader__cut">
+<div class="pswp__preloader__donut"></div>
+</div>
+</div>
+</div>
+</div>
+<div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+<div class="pswp__share-tooltip"></div>
+</div>
+<button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+</button>
+<button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+</button>
+<div class="pswp__caption">
+<div class="pswp__caption__center"></div>
+</div>
+</div>
+</div>
+</div><script crossorigin="anonymous" defer="" integrity="sha256-ePwmChbbvXbsO02lbM3HoHbSHTHFAeChekF1xKJdleo=" src="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe.min.js">
+</script><script crossorigin="anonymous" defer="" integrity="sha256-UKkzOn/w1mBxRmLLGrSeyB4e1xbrp4xylgAWb3M42pU=" src="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe-ui-default.min.js">
+</script><link crossorigin="anonymous" href="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/default-skin/default-skin.css" integrity="sha256-c0uckgykQ9v5k+IqViZOZKc47Jn7KQil4/MP3ySA3F8=" rel="stylesheet"/><link crossorigin="anonymous" href="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe.css" integrity="sha256-SBLU4vv6CA6lHsZ1XyTdhyjJxCjPif/TRkjnsyGAGnE=" rel="stylesheet"/>
+</main>
+</div>
+<script crossorigin="anonymous" integrity="sha256-5NovOZc4iwiAWTYIFiIM7DxKUXKWvpVEuMEPLzcm5/g=" src="https://cdn.jsdelivr.net/npm/node-vibrant@3.1.5/dist/vibrant.min.js">
+</script><script defer="" src="/ts/main.js" type="text/javascript"></script>
+<script>
+    (function () {
+        const customFont = document.createElement('link');
+        customFont.href = "https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&display=swap";
+
+        customFont.type = "text/css";
+        customFont.rel = "stylesheet";
+
+        document.head.appendChild(customFont);
+    }());
+</script>
+</body>
+</html>

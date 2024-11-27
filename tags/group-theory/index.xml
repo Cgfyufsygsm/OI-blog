@@ -1,0 +1,280 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+    <channel>
+        <title>群论 on 清烛的博客</title>
+        <link>https://oi.imyangty.com/tags/group-theory/</link>
+        <description>Recent content in 群论 on 清烛的博客</description>
+        <generator>Hugo -- gohugo.io</generator>
+        <language>zh-CN</language>
+        <lastBuildDate>Sat, 02 Oct 2021 21:10:07 +0800</lastBuildDate><atom:link href="https://oi.imyangty.com/tags/group-theory/index.xml" rel="self" type="application/rss+xml" /><item>
+        <title>置换群计数相关</title>
+        <link>https://oi.imyangty.com/note-group/</link>
+        <pubDate>Sat, 02 Oct 2021 21:10:07 +0800</pubDate>
+        
+        <guid>https://oi.imyangty.com/note-group/</guid>
+        <description>&lt;img src="https://yangty-pic.oss-cn-beijing.aliyuncs.com/bg15.webp" alt="Featured image of post 置换群计数相关" /&gt;&lt;h2 id=&#34;前言&#34;&gt;前言&lt;/h2&gt;
+&lt;p&gt;自己的学习笔记，备忘。不包看懂，不包没错。&lt;/p&gt;
+&lt;p&gt;群计数类问题在实际应用时需要较多前置技能（e.g. 莫比乌斯反演，生成函数，排列组合，etc.）。&lt;/p&gt;
+&lt;h2 id=&#34;群论基础&#34;&gt;群论基础&lt;/h2&gt;
+&lt;p&gt;一个集合 &lt;span class=&#34;math inline&#34;&gt;\(G\)&lt;/span&gt; 和一个运算 &lt;span class=&#34;math inline&#34;&gt;\(\times\)&lt;/span&gt;，若满足满足如下四个性质，则称二元组 &lt;span class=&#34;math inline&#34;&gt;\((G, \times)\)&lt;/span&gt; 为一个群：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;封闭性：&lt;span class=&#34;math inline&#34;&gt;\(\forall a, b\in G, a\times b\in G\)&lt;/span&gt;。&lt;/li&gt;
+&lt;li&gt;结合律：&lt;span class=&#34;math inline&#34;&gt;\(\forall a, b, c\in G, (a\times b)\times c = a\times(b\times c)\)&lt;/span&gt;。&lt;/li&gt;
+&lt;li&gt;单位元：&lt;span class=&#34;math inline&#34;&gt;\(\exist e\in G, a\times e = e\times a = a\)&lt;/span&gt;，并且 &lt;span class=&#34;math inline&#34;&gt;\(e\)&lt;/span&gt; 唯一。&lt;/li&gt;
+&lt;li&gt;逆元：&lt;span class=&#34;math inline&#34;&gt;\(\forall a\in G, \exists a&amp;#39;\in G, a\times a&amp;#39; = a&amp;#39;\times a = e\)&lt;/span&gt;，并且 &lt;span class=&#34;math inline&#34;&gt;\(a&amp;#39;\)&lt;/span&gt; 唯一。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;集合 &lt;span class=&#34;math inline&#34;&gt;\(G\)&lt;/span&gt; 的大小 &lt;span class=&#34;math inline&#34;&gt;\(|G|\)&lt;/span&gt; 称为这个群的阶。&lt;/p&gt;
+&lt;p&gt;子群：&lt;span class=&#34;math inline&#34;&gt;\(H\)&lt;/span&gt; 为 &lt;span class=&#34;math inline&#34;&gt;\(G\)&lt;/span&gt; 的子集，并且 &lt;span class=&#34;math inline&#34;&gt;\((H, \times)\)&lt;/span&gt; 为群，则称 &lt;span class=&#34;math inline&#34;&gt;\((H,\times)\)&lt;/span&gt; 为 &lt;span class=&#34;math inline&#34;&gt;\((G,\times)\)&lt;/span&gt; 的子群，记为 &lt;span class=&#34;math inline&#34;&gt;\(H\le G\)&lt;/span&gt;。&lt;/p&gt;
+&lt;p&gt;陪集：令 &lt;span class=&#34;math inline&#34;&gt;\(H\le G\)&lt;/span&gt;，&lt;span class=&#34;math inline&#34;&gt;\(g\in G\)&lt;/span&gt;，&lt;span class=&#34;math inline&#34;&gt;\(gH = \{g\times h \mid h\in H\}\)&lt;/span&gt; 为 &lt;span class=&#34;math inline&#34;&gt;\(H\)&lt;/span&gt; 关于 &lt;span class=&#34;math inline&#34;&gt;\(G\)&lt;/span&gt; 内关于 &lt;span class=&#34;math inline&#34;&gt;\(g\)&lt;/span&gt; 的左陪集。右陪集同理，即为 &lt;span class=&#34;math inline&#34;&gt;\(Hg = \{h\times g\mid h\in H\}\)&lt;/span&gt;。&lt;/p&gt;
+&lt;p&gt;陪集有如下性质：&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;ol type=&#34;1&#34;&gt;
+&lt;li&gt;&lt;span class=&#34;math inline&#34;&gt;\(\forall g\in G\)&lt;/span&gt;，&lt;span class=&#34;math inline&#34;&gt;\(|H| = |Hg|\)&lt;/span&gt;&lt;/li&gt;
+&lt;/ol&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;由逆元唯一可得 &lt;span class=&#34;math inline&#34;&gt;\(h\times g_1\not= h\times g_2\)&lt;/span&gt;。&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;ol start=&#34;2&#34; type=&#34;1&#34;&gt;
+&lt;li&gt;&lt;span class=&#34;math inline&#34;&gt;\(\forall g\in G, g\in Hg\)&lt;/span&gt;&lt;/li&gt;
+&lt;/ol&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;考虑单位元 &lt;span class=&#34;math inline&#34;&gt;\(e\in H\)&lt;/span&gt;，&lt;span class=&#34;math inline&#34;&gt;\(e\times g = g\in Hg\)&lt;/span&gt;。&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;ol start=&#34;3&#34; type=&#34;1&#34;&gt;
+&lt;li&gt;&lt;span class=&#34;math inline&#34;&gt;\(Hg = H\iff g\in H\)&lt;/span&gt;&lt;/li&gt;
+&lt;/ol&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;封闭性。&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;ol start=&#34;4&#34; type=&#34;1&#34;&gt;
+&lt;li&gt;&lt;span class=&#34;math inline&#34;&gt;\(Ha = Hb\iff a\times b^{-1}\in H\)&lt;/span&gt;&lt;/li&gt;
+&lt;/ol&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;&lt;span class=&#34;math inline&#34;&gt;\(Ha = Hb\implies Ha\times b^{-1} = H\)&lt;/span&gt;，由性质 &lt;span class=&#34;math inline&#34;&gt;\(3\)&lt;/span&gt;，&lt;span class=&#34;math inline&#34;&gt;\(a\times b^{-1}\in H\)&lt;/span&gt;。&lt;/p&gt;
+&lt;p&gt;&lt;span class=&#34;math inline&#34;&gt;\(a\times b^{-1}\in H\implies Ha = Hb\)&lt;/span&gt; 显然。&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;ol start=&#34;5&#34; type=&#34;1&#34;&gt;
+&lt;li&gt;&lt;span class=&#34;math inline&#34;&gt;\(Ha\cap Hb\not= \varnothing\implies Ha = Hb\)&lt;/span&gt;&lt;/li&gt;
+&lt;/ol&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;这个性质告诉我们：&lt;strong&gt;一个子群 &lt;span class=&#34;math inline&#34;&gt;\(H\)&lt;/span&gt; 的陪集要么互不交要么两个相等&lt;/strong&gt;。&lt;/p&gt;
+&lt;p&gt;假设：&lt;span class=&#34;math inline&#34;&gt;\(c\in Ha \land c\in Hb\)&lt;/span&gt;，于是 &lt;span class=&#34;math inline&#34;&gt;\(\exists h_1, h_2\in H,h_1\times a = c, h_2\times b = c\)&lt;/span&gt;，故 &lt;span class=&#34;math inline&#34;&gt;\(ab^{-1} = h_2h_1^{-1}\in H\)&lt;/span&gt;，由性质 &lt;span class=&#34;math inline&#34;&gt;\(4\)&lt;/span&gt; 有 &lt;span class=&#34;math inline&#34;&gt;\(Ha = Hb\)&lt;/span&gt;。&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;ol start=&#34;6&#34; type=&#34;1&#34;&gt;
+&lt;li&gt;&lt;span class=&#34;math inline&#34;&gt;\(H\)&lt;/span&gt; 的全体右陪集的并是 &lt;span class=&#34;math inline&#34;&gt;\(G\)&lt;/span&gt;&lt;/li&gt;
+&lt;/ol&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;&lt;span class=&#34;math inline&#34;&gt;\(h\)&lt;/span&gt; 取单位元，&lt;span class=&#34;math inline&#34;&gt;\(g\)&lt;/span&gt; 取遍 &lt;span class=&#34;math inline&#34;&gt;\(G\)&lt;/span&gt; 中所有元素，并起来就一定是 &lt;span class=&#34;math inline&#34;&gt;\(G\)&lt;/span&gt;。&lt;/p&gt;
+&lt;h2 id=&#34;拉格朗日定理&#34;&gt;拉格朗日定理&lt;/h2&gt;
+&lt;p&gt;以下默认 &lt;span class=&#34;math inline&#34;&gt;\(G\le H\)&lt;/span&gt;，定义 &lt;span class=&#34;math inline&#34;&gt;\(G/H\)&lt;/span&gt; 为 &lt;span class=&#34;math inline&#34;&gt;\(G\)&lt;/span&gt; 中&lt;strong&gt;所有元素的左陪集&lt;/strong&gt;即 &lt;span class=&#34;math inline&#34;&gt;\(G/H = \{gH\mid g\in G\}\)&lt;/span&gt;。定义 &lt;span class=&#34;math inline&#34;&gt;\([G:H]\)&lt;/span&gt; 表示 &lt;span class=&#34;math inline&#34;&gt;\(G\)&lt;/span&gt; 中 &lt;span class=&#34;math inline&#34;&gt;\(H\)&lt;/span&gt; 不同陪集的数量。&lt;/p&gt;
+&lt;p&gt;拉格朗日定理：&lt;/p&gt;
+&lt;p&gt;对于有限群 &lt;span class=&#34;math inline&#34;&gt;\(G\)&lt;/span&gt; 和 &lt;span class=&#34;math inline&#34;&gt;\(H\)&lt;/span&gt;，若 &lt;span class=&#34;math inline&#34;&gt;\(H\le G\)&lt;/span&gt;，有 &lt;span class=&#34;math display&#34;&gt;\[
+|H|[G:H] = [G]
+\]&lt;/span&gt; 所有本质不同陪集互不交，且大小均为 &lt;span class=&#34;math inline&#34;&gt;\(|H|\)&lt;/span&gt;，并起来就是 &lt;span class=&#34;math inline&#34;&gt;\(G\)&lt;/span&gt;。所以不同陪集数量 &lt;span class=&#34;math inline&#34;&gt;\([G:H]\)&lt;/span&gt; 乘上 &lt;span class=&#34;math inline&#34;&gt;\(|H|\)&lt;/span&gt; 即为 &lt;span class=&#34;math inline&#34;&gt;\(|G|\)&lt;/span&gt;。&lt;/p&gt;
+&lt;h2 id=&#34;置换&#34;&gt;置换&lt;/h2&gt;
+&lt;p&gt;&lt;span class=&#34;math display&#34;&gt;\[
+\sigma = \begin{pmatrix}
+1 &amp;amp; 2 &amp;amp; 3 &amp;amp; 4 &amp;amp; 5\\
+2 &amp;amp; 5 &amp;amp; 4 &amp;amp; 3 &amp;amp; 1
+\end{pmatrix}
+\]&lt;/span&gt;&lt;/p&gt;
+&lt;p&gt;就是把上一行的排列变成下一行。&lt;/p&gt;
+&lt;p&gt;&lt;span class=&#34;math inline&#34;&gt;\(\sigma = (a_1, a_2, \cdots, a_n)\)&lt;/span&gt; 表示一个置换。两个置换可以合成。&lt;/p&gt;
+&lt;p&gt;&lt;span class=&#34;math inline&#34;&gt;\(\sigma\times a = \sigma(a) = (\sigma_{a_1}, \sigma_{a_2},\cdots,\sigma_{a_n})\)&lt;/span&gt;。&lt;/p&gt;
+&lt;p&gt;&lt;span class=&#34;math inline&#34;&gt;\(N = \{1, \cdots, n\}\)&lt;/span&gt;，令 &lt;span class=&#34;math inline&#34;&gt;\(M\)&lt;/span&gt; 为所有排列的集合，令 &lt;span class=&#34;math inline&#34;&gt;\(G = (M, \times)\)&lt;/span&gt;，则 &lt;span class=&#34;math inline&#34;&gt;\(G\)&lt;/span&gt; 为一置换群。&lt;/p&gt;
+&lt;p&gt;封闭性显然，结合律显然，单位元为 &lt;span class=&#34;math inline&#34;&gt;\((1, 2,\cdots, n)\)&lt;/span&gt;，逆元显然。&lt;/p&gt;
+&lt;p&gt;轮换：将置换用一张有向图表示，由于每个点的入度/出度都为 &lt;span class=&#34;math inline&#34;&gt;\(1\)&lt;/span&gt;，所以一定可以形成若干个环，例如置换： &lt;span class=&#34;math display&#34;&gt;\[
+\begin{pmatrix}
+1 &amp;amp; 2 &amp;amp; 3 &amp;amp; 4 &amp;amp; 5\\
+2 &amp;amp; 5 &amp;amp; 4 &amp;amp; 3 &amp;amp; 1
+\end{pmatrix}
+\]&lt;/span&gt; 就可以表示为 &lt;span class=&#34;math inline&#34;&gt;\((1, 2, 5)(3, 4)\)&lt;/span&gt;。置换用这些表示一定是一一对应的。&lt;/p&gt;
+&lt;h2 id=&#34;轨道与稳定子&#34;&gt;轨道与稳定子&lt;/h2&gt;
+&lt;p&gt;群作用：对于一个集合 &lt;span class=&#34;math inline&#34;&gt;\(M\)&lt;/span&gt; 和群 &lt;span class=&#34;math inline&#34;&gt;\(G\)&lt;/span&gt;，若给定一二元函数 &lt;span class=&#34;math inline&#34;&gt;\(\varphi(v, k)\)&lt;/span&gt;，其中 &lt;span class=&#34;math inline&#34;&gt;\(k\in M\)&lt;/span&gt;，&lt;span class=&#34;math inline&#34;&gt;\(v\in G\)&lt;/span&gt;，且 &lt;span class=&#34;math display&#34;&gt;\[
+\begin{aligned}
+\varphi(e, k) &amp;amp;= k\\
+\varphi(g, \varphi(s, k)) &amp;amp;= \varphi(g\times s, k)
+\end{aligned}
+\]&lt;/span&gt; 则称 &lt;span class=&#34;math inline&#34;&gt;\(G\)&lt;/span&gt; 作用于 &lt;span class=&#34;math inline&#34;&gt;\(M\)&lt;/span&gt;。&lt;/p&gt;
+&lt;p&gt;考虑作用于 &lt;span class=&#34;math inline&#34;&gt;\(X\)&lt;/span&gt; 上的 &lt;span class=&#34;math inline&#34;&gt;\(G\)&lt;/span&gt;，&lt;span class=&#34;math inline&#34;&gt;\(x\in X\)&lt;/span&gt; 的轨道是 &lt;span class=&#34;math inline&#34;&gt;\(x\)&lt;/span&gt; 通过 &lt;span class=&#34;math inline&#34;&gt;\(G\)&lt;/span&gt; 能转移到的元素的集合，记作 &lt;span class=&#34;math inline&#34;&gt;\(G(x)\)&lt;/span&gt;，方便起见记 &lt;span class=&#34;math inline&#34;&gt;\(g(x) = \varphi(g, x)\)&lt;/span&gt;。&lt;/p&gt;
+&lt;p&gt;稳定子：&lt;span class=&#34;math inline&#34;&gt;\(G^x = \{g\mid g\in G,g(x) = x\}\)&lt;/span&gt;。即为群 &lt;span class=&#34;math inline&#34;&gt;\(G\)&lt;/span&gt; 中满足 &lt;span class=&#34;math inline&#34;&gt;\(g(x) = x\)&lt;/span&gt; 的所有元素 &lt;span class=&#34;math inline&#34;&gt;\(g\)&lt;/span&gt;的集合。&lt;/p&gt;
+&lt;p&gt;轨道-稳定子定理： &lt;span class=&#34;math display&#34;&gt;\[
+|G^x|\times |G(x)| = |G|
+\]&lt;/span&gt; 可以证明 &lt;span class=&#34;math inline&#34;&gt;\(G^x\)&lt;/span&gt; 为 &lt;span class=&#34;math inline&#34;&gt;\(G\)&lt;/span&gt; 的一个子群，然后根据拉格朗日定理，&lt;span class=&#34;math inline&#34;&gt;\(|G^x|\times[G: G^x] = |G|\)&lt;/span&gt;，故现在需要证明 &lt;span class=&#34;math inline&#34;&gt;\([G:G^x] = |G(x)|\)&lt;/span&gt;。转化为证明存在从 &lt;span class=&#34;math inline&#34;&gt;\(G(x)\)&lt;/span&gt; 到 &lt;span class=&#34;math inline&#34;&gt;\(G^x\)&lt;/span&gt; 所有左陪集的双射。令 &lt;span class=&#34;math inline&#34;&gt;\(\varphi(g(x)) = gG^x\)&lt;/span&gt;，&lt;span class=&#34;math inline&#34;&gt;\(f\in G^x\)&lt;/span&gt;。&lt;/p&gt;
+&lt;p&gt;若 &lt;span class=&#34;math inline&#34;&gt;\(f(x) = g(x)\)&lt;/span&gt;，则 &lt;span class=&#34;math inline&#34;&gt;\(f\times g^{-1} = x = e(x)\in G^x\)&lt;/span&gt;，由于 &lt;span class=&#34;math inline&#34;&gt;\(f\times G^x = g\times G^x\)&lt;/span&gt;，故相同的 &lt;span class=&#34;math inline&#34;&gt;\(f(x)\)&lt;/span&gt; 可以对应相同的陪集。一一对应关系，得证。&lt;/p&gt;
+&lt;h2 id=&#34;burnside-引理&#34;&gt;Burnside 引理&lt;/h2&gt;
+&lt;p&gt;令 &lt;span class=&#34;math inline&#34;&gt;\(G\)&lt;/span&gt; 为一置换群，作用于 &lt;span class=&#34;math inline&#34;&gt;\(X\)&lt;/span&gt;。若 &lt;span class=&#34;math inline&#34;&gt;\(x, y\in X\)&lt;/span&gt; 在 &lt;span class=&#34;math inline&#34;&gt;\(G\)&lt;/span&gt; 作用下可以相等即 &lt;span class=&#34;math inline&#34;&gt;\(\exists f\in G,f(x) = y\)&lt;/span&gt;，则定义 &lt;span class=&#34;math inline&#34;&gt;\(x\)&lt;/span&gt; 和 &lt;span class=&#34;math inline&#34;&gt;\(y\)&lt;/span&gt; 属于一个等价类，不同的等价类数量为 &lt;span class=&#34;math display&#34;&gt;\[
+|X / G| = \frac{1}{|G|}\sum_{g\in G}X^g
+\]&lt;/span&gt; &lt;span class=&#34;math inline&#34;&gt;\(X^g\)&lt;/span&gt; 为 &lt;span class=&#34;math inline&#34;&gt;\(X\)&lt;/span&gt; 在 &lt;span class=&#34;math inline&#34;&gt;\(g\)&lt;/span&gt; 的作用下不动点的数量，即 &lt;span class=&#34;math inline&#34;&gt;\(|\{x\in X \mid g(x) = x\}|\)&lt;/span&gt;。&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;&lt;span class=&#34;math inline&#34;&gt;\(X\)&lt;/span&gt; 在群 &lt;span class=&#34;math inline&#34;&gt;\(G\)&lt;/span&gt; 作用下的等价类总数等于每个 &lt;span class=&#34;math inline&#34;&gt;\(g\)&lt;/span&gt; 作用于 &lt;span class=&#34;math inline&#34;&gt;\(X\)&lt;/span&gt; 的不动点数量的算术平均值。&lt;/strong&gt;&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;答案等于每个置换的不动点的平均数&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;证明：&lt;/p&gt;
+&lt;p&gt;因为每个元素属于且仅属于一个轨道，故 &lt;span class=&#34;math display&#34;&gt;\[
+|X / G| = \sum_{x \in X}\frac{1}{[G:G^x]}
+\]&lt;/span&gt; 而根据轨道-稳定子定理， &lt;span class=&#34;math display&#34;&gt;\[
+[G:G^x] = \frac{|G|}{|G^x|}
+\]&lt;/span&gt; 所以 &lt;span class=&#34;math display&#34;&gt;\[
+|X / G| = \sum_{x\in X}\frac{|G^x|}{|G|} = \frac{1}{|G|}\sum_{x\in X}|G^x|
+\]&lt;/span&gt; 而 &lt;span class=&#34;math inline&#34;&gt;\(\sum|G^x| = \sum X^g\)&lt;/span&gt;，得证。&lt;/p&gt;
+&lt;h2 id=&#34;polya-定理&#34;&gt;Polya 定理&lt;/h2&gt;
+&lt;p&gt;我们从例题 &lt;strong&gt;&lt;a href=&#34;https://www.luogu.com.cn/problem/P4980&#34;&gt;P4980 【模板】Pólya 定理&lt;/a&gt;&lt;/strong&gt; 出发：&lt;/p&gt;
+&lt;p&gt;我们不妨将本质不同的 &lt;span class=&#34;math inline&#34;&gt;\(n\)&lt;/span&gt; 元环看作在置换群 &lt;span class=&#34;math inline&#34;&gt;\(G = \{\text{rotate 0 time(s)}, \text{rotate 1 time(s) }, \cdots, \text{rotate }n - 1\text{ times}\}\)&lt;/span&gt; 的作用下，等价类的数量。&lt;/p&gt;
+&lt;p&gt;设集合 &lt;span class=&#34;math inline&#34;&gt;\(M\)&lt;/span&gt; 为所有初始的环构成的集合。&lt;/p&gt;
+&lt;p&gt;由 Burnside 引理得到答案为 &lt;span class=&#34;math display&#34;&gt;\[
+\frac{1}{|G|}\sum_{g\in G}M^g
+\]&lt;/span&gt; 然后依次考虑每个置换对答案的贡献。旋转 &lt;span class=&#34;math inline&#34;&gt;\(0\)&lt;/span&gt; 次的不动点显然为 &lt;span class=&#34;math inline&#34;&gt;\(n^n\)&lt;/span&gt; 个，所有集合都合法。&lt;/p&gt;
+&lt;p&gt;然后考虑旋转 &lt;span class=&#34;math inline&#34;&gt;\(k\)&lt;/span&gt; 次的不动点数量。不难发现其一定要有长度为 &lt;span class=&#34;math inline&#34;&gt;\(a\)&lt;/span&gt; 的循环节，其中 &lt;span class=&#34;math inline&#34;&gt;\(a\mid k\)&lt;/span&gt;。而且我们也知道 &lt;span class=&#34;math inline&#34;&gt;\(a\mid n\)&lt;/span&gt;，故循环节的长度为 &lt;span class=&#34;math inline&#34;&gt;\(\gcd(k, n)\)&lt;/span&gt;。&lt;/p&gt;
+&lt;p&gt;答案： &lt;span class=&#34;math display&#34;&gt;\[
+\frac{1}{n}\sum_{k = 0}^{n - 1}n^{\gcd(k, n)}
+\]&lt;/span&gt; 求这个东西就枚举 &lt;span class=&#34;math inline&#34;&gt;\(\gcd\)&lt;/span&gt; 就行了： &lt;span class=&#34;math display&#34;&gt;\[
+\begin{aligned}
+&amp;amp;\frac{1}{n}\sum_{k = 0}^{n - 1}n^{\gcd(k, n)}\\
+=&amp;amp;\frac{1}{n}\sum_{d\mid n}n^d\sum_{k = 1}^{\lfloor n / d\rfloor} [\gcd(k, \lfloor n / d\rfloor) = 1]\\
+=&amp;amp;\frac{1}{n}\sum_{d\mid n}n^d\varphi(\lfloor n / d\rfloor)
+\end{aligned}
+\]&lt;/span&gt; 做完了。&lt;/p&gt;
+&lt;p&gt;定义置换 &lt;span class=&#34;math inline&#34;&gt;\(g\)&lt;/span&gt; 的轮换环数为 &lt;span class=&#34;math inline&#34;&gt;\(c(g)\)&lt;/span&gt;，则 Polya 定理就是 &lt;span class=&#34;math display&#34;&gt;\[
+\frac{1}{|G|}\sum_{g\in G}m^{c(g)}
+\]&lt;/span&gt; &lt;span class=&#34;math inline&#34;&gt;\(m\)&lt;/span&gt; 为可用的颜色数。&lt;/p&gt;
+&lt;h2 id=&#34;例题分析&#34;&gt;例题分析&lt;/h2&gt;
+&lt;h3 id=&#34;p1446-hnoi2008cards&#34;&gt;P1446 [HNOI2008]Cards&lt;/h3&gt;
+&lt;p&gt;题意：要给 &lt;span class=&#34;math inline&#34;&gt;\(n\)&lt;/span&gt; 张牌染色，&lt;span class=&#34;math inline&#34;&gt;\(S_r\)&lt;/span&gt; 张红，&lt;span class=&#34;math inline&#34;&gt;\(S_g\)&lt;/span&gt; 张绿，&lt;span class=&#34;math inline&#34;&gt;\(S_b\)&lt;/span&gt; 张蓝。同时给定若干种洗牌法，保证为置换群，问本质不同的染色方案数。&lt;/p&gt;
+&lt;p&gt;Burnside 引理告诉我们要求出每个置换的不动点个数。我们注意到这里每个置换都可以分解为若干个轮换环，既然是不动点那么每个环内染的颜色必然就相同，我们用一个 &lt;span class=&#34;math inline&#34;&gt;\(f_{r, g,b}\)&lt;/span&gt; 类似背包的 dp 就可以轻松求出不动点个数。&lt;/p&gt;
+&lt;p&gt;然而一定要考虑单位置换的影响。&lt;/p&gt;
+&lt;div class=&#34;sourceCode&#34; id=&#34;cb1&#34;&gt;&lt;pre class=&#34;sourceCode cpp&#34;&gt;&lt;code class=&#34;sourceCode cpp&#34;&gt;&lt;span id=&#34;cb1-1&#34;&gt;&lt;a href=&#34;#cb1-1&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;&lt;span class=&#34;dt&#34;&gt;int&lt;/span&gt; n, Sr, Sb, Sg, m, &lt;span class=&#34;fu&#34;&gt;tr&lt;/span&gt;[&lt;span class=&#34;dv&#34;&gt;65&lt;/span&gt;], sz[&lt;span class=&#34;dv&#34;&gt;65&lt;/span&gt;], vis[&lt;span class=&#34;dv&#34;&gt;65&lt;/span&gt;];&lt;/span&gt;
+&lt;span id=&#34;cb1-2&#34;&gt;&lt;a href=&#34;#cb1-2&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;modint f[&lt;span class=&#34;dv&#34;&gt;65&lt;/span&gt;][&lt;span class=&#34;dv&#34;&gt;65&lt;/span&gt;][&lt;span class=&#34;dv&#34;&gt;65&lt;/span&gt;];&lt;/span&gt;
+&lt;span id=&#34;cb1-3&#34;&gt;&lt;a href=&#34;#cb1-3&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;&lt;/span&gt;
+&lt;span id=&#34;cb1-4&#34;&gt;&lt;a href=&#34;#cb1-4&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;modint calc() {&lt;/span&gt;
+&lt;span id=&#34;cb1-5&#34;&gt;&lt;a href=&#34;#cb1-5&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;    &lt;span class=&#34;dt&#34;&gt;int&lt;/span&gt; tot = &lt;span class=&#34;dv&#34;&gt;0&lt;/span&gt;;&lt;/span&gt;
+&lt;span id=&#34;cb1-6&#34;&gt;&lt;a href=&#34;#cb1-6&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;    FOR(i, &lt;span class=&#34;dv&#34;&gt;0&lt;/span&gt;, Sr) FOR(j, &lt;span class=&#34;dv&#34;&gt;0&lt;/span&gt;, Sb) FOR(k, &lt;span class=&#34;dv&#34;&gt;0&lt;/span&gt;, Sg) f[i][j][k] = &lt;span class=&#34;dv&#34;&gt;0&lt;/span&gt;;&lt;/span&gt;
+&lt;span id=&#34;cb1-7&#34;&gt;&lt;a href=&#34;#cb1-7&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;    FOR(i, &lt;span class=&#34;dv&#34;&gt;1&lt;/span&gt;, n) vis[i] = &lt;span class=&#34;dv&#34;&gt;0&lt;/span&gt;;&lt;/span&gt;
+&lt;span id=&#34;cb1-8&#34;&gt;&lt;a href=&#34;#cb1-8&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;    &lt;span class=&#34;cf&#34;&gt;for&lt;/span&gt; (&lt;span class=&#34;dt&#34;&gt;int&lt;/span&gt; i = &lt;span class=&#34;dv&#34;&gt;1&lt;/span&gt;, p, len; i &amp;lt;= n; ++i) {&lt;/span&gt;
+&lt;span id=&#34;cb1-9&#34;&gt;&lt;a href=&#34;#cb1-9&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;        &lt;span class=&#34;cf&#34;&gt;if&lt;/span&gt; (vis[i]) &lt;span class=&#34;cf&#34;&gt;continue&lt;/span&gt;;&lt;/span&gt;
+&lt;span id=&#34;cb1-10&#34;&gt;&lt;a href=&#34;#cb1-10&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;        len = &lt;span class=&#34;dv&#34;&gt;0&lt;/span&gt;, p = i;&lt;/span&gt;
+&lt;span id=&#34;cb1-11&#34;&gt;&lt;a href=&#34;#cb1-11&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;        &lt;span class=&#34;cf&#34;&gt;while&lt;/span&gt; (!vis[p]) {&lt;/span&gt;
+&lt;span id=&#34;cb1-12&#34;&gt;&lt;a href=&#34;#cb1-12&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;            vis[p] = &lt;span class=&#34;dv&#34;&gt;1&lt;/span&gt;;&lt;/span&gt;
+&lt;span id=&#34;cb1-13&#34;&gt;&lt;a href=&#34;#cb1-13&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;            ++len;&lt;/span&gt;
+&lt;span id=&#34;cb1-14&#34;&gt;&lt;a href=&#34;#cb1-14&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;            p = &lt;span class=&#34;fu&#34;&gt;tr&lt;/span&gt;[p];&lt;/span&gt;
+&lt;span id=&#34;cb1-15&#34;&gt;&lt;a href=&#34;#cb1-15&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;        }&lt;/span&gt;
+&lt;span id=&#34;cb1-16&#34;&gt;&lt;a href=&#34;#cb1-16&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;        sz[++tot] = len;&lt;/span&gt;
+&lt;span id=&#34;cb1-17&#34;&gt;&lt;a href=&#34;#cb1-17&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;    }&lt;/span&gt;
+&lt;span id=&#34;cb1-18&#34;&gt;&lt;a href=&#34;#cb1-18&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;    f[&lt;span class=&#34;dv&#34;&gt;0&lt;/span&gt;][&lt;span class=&#34;dv&#34;&gt;0&lt;/span&gt;][&lt;span class=&#34;dv&#34;&gt;0&lt;/span&gt;] = &lt;span class=&#34;dv&#34;&gt;1&lt;/span&gt;;&lt;/span&gt;
+&lt;span id=&#34;cb1-19&#34;&gt;&lt;a href=&#34;#cb1-19&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;    FOR(i, &lt;span class=&#34;dv&#34;&gt;1&lt;/span&gt;, tot) {&lt;/span&gt;
+&lt;span id=&#34;cb1-20&#34;&gt;&lt;a href=&#34;#cb1-20&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;        DEC(nr, Sr, &lt;span class=&#34;dv&#34;&gt;0&lt;/span&gt;) {&lt;/span&gt;
+&lt;span id=&#34;cb1-21&#34;&gt;&lt;a href=&#34;#cb1-21&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;            DEC(nb, Sb, &lt;span class=&#34;dv&#34;&gt;0&lt;/span&gt;) {&lt;/span&gt;
+&lt;span id=&#34;cb1-22&#34;&gt;&lt;a href=&#34;#cb1-22&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;                DEC(ng, Sg, &lt;span class=&#34;dv&#34;&gt;0&lt;/span&gt;) {&lt;/span&gt;
+&lt;span id=&#34;cb1-23&#34;&gt;&lt;a href=&#34;#cb1-23&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;                    &lt;span class=&#34;cf&#34;&gt;if&lt;/span&gt; (nr &amp;gt;= sz[i]) f[nr][nb][ng] += f[nr - sz[i]][nb][ng];&lt;/span&gt;
+&lt;span id=&#34;cb1-24&#34;&gt;&lt;a href=&#34;#cb1-24&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;                    &lt;span class=&#34;cf&#34;&gt;if&lt;/span&gt; (nb &amp;gt;= sz[i]) f[nr][nb][ng] += f[nr][nb - sz[i]][ng];&lt;/span&gt;
+&lt;span id=&#34;cb1-25&#34;&gt;&lt;a href=&#34;#cb1-25&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;                    &lt;span class=&#34;cf&#34;&gt;if&lt;/span&gt; (ng &amp;gt;= sz[i]) f[nr][nb][ng] += f[nr][nb][ng - sz[i]];&lt;/span&gt;
+&lt;span id=&#34;cb1-26&#34;&gt;&lt;a href=&#34;#cb1-26&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;                }&lt;/span&gt;
+&lt;span id=&#34;cb1-27&#34;&gt;&lt;a href=&#34;#cb1-27&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;            }&lt;/span&gt;
+&lt;span id=&#34;cb1-28&#34;&gt;&lt;a href=&#34;#cb1-28&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;        }&lt;/span&gt;
+&lt;span id=&#34;cb1-29&#34;&gt;&lt;a href=&#34;#cb1-29&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;    }&lt;/span&gt;
+&lt;span id=&#34;cb1-30&#34;&gt;&lt;a href=&#34;#cb1-30&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;    &lt;span class=&#34;cf&#34;&gt;return&lt;/span&gt; f[Sr][Sb][Sg];&lt;/span&gt;
+&lt;span id=&#34;cb1-31&#34;&gt;&lt;a href=&#34;#cb1-31&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;}&lt;/span&gt;
+&lt;span id=&#34;cb1-32&#34;&gt;&lt;a href=&#34;#cb1-32&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;&lt;/span&gt;
+&lt;span id=&#34;cb1-33&#34;&gt;&lt;a href=&#34;#cb1-33&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;&lt;span class=&#34;dt&#34;&gt;int&lt;/span&gt; main() {&lt;/span&gt;
+&lt;span id=&#34;cb1-34&#34;&gt;&lt;a href=&#34;#cb1-34&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;    read(Sr), read(Sb), read(Sg), read(m), read(mod);&lt;/span&gt;
+&lt;span id=&#34;cb1-35&#34;&gt;&lt;a href=&#34;#cb1-35&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;    modint ans = &lt;span class=&#34;dv&#34;&gt;0&lt;/span&gt;;&lt;/span&gt;
+&lt;span id=&#34;cb1-36&#34;&gt;&lt;a href=&#34;#cb1-36&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;    n = Sr + Sb + Sg;&lt;/span&gt;
+&lt;span id=&#34;cb1-37&#34;&gt;&lt;a href=&#34;#cb1-37&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;    &lt;span class=&#34;dt&#34;&gt;bool&lt;/span&gt; flag = &lt;span class=&#34;dv&#34;&gt;0&lt;/span&gt;;&lt;/span&gt;
+&lt;span id=&#34;cb1-38&#34;&gt;&lt;a href=&#34;#cb1-38&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;    FOR(i, &lt;span class=&#34;dv&#34;&gt;1&lt;/span&gt;, m) {&lt;/span&gt;
+&lt;span id=&#34;cb1-39&#34;&gt;&lt;a href=&#34;#cb1-39&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;        &lt;span class=&#34;dt&#34;&gt;bool&lt;/span&gt; tmp = &lt;span class=&#34;dv&#34;&gt;1&lt;/span&gt;;&lt;/span&gt;
+&lt;span id=&#34;cb1-40&#34;&gt;&lt;a href=&#34;#cb1-40&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;        FOR(j, &lt;span class=&#34;dv&#34;&gt;1&lt;/span&gt;, n) read(&lt;span class=&#34;fu&#34;&gt;tr&lt;/span&gt;[j]), tmp &amp;amp;= (&lt;span class=&#34;fu&#34;&gt;tr&lt;/span&gt;[j] == j);&lt;/span&gt;
+&lt;span id=&#34;cb1-41&#34;&gt;&lt;a href=&#34;#cb1-41&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;        ans += calc(), flag |= tmp;&lt;/span&gt;
+&lt;span id=&#34;cb1-42&#34;&gt;&lt;a href=&#34;#cb1-42&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;    }&lt;/span&gt;
+&lt;span id=&#34;cb1-43&#34;&gt;&lt;a href=&#34;#cb1-43&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;    &lt;span class=&#34;cf&#34;&gt;if&lt;/span&gt; (!flag) {&lt;/span&gt;
+&lt;span id=&#34;cb1-44&#34;&gt;&lt;a href=&#34;#cb1-44&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;        FOR(j, &lt;span class=&#34;dv&#34;&gt;1&lt;/span&gt;, n) &lt;span class=&#34;fu&#34;&gt;tr&lt;/span&gt;[j] = j;&lt;/span&gt;
+&lt;span id=&#34;cb1-45&#34;&gt;&lt;a href=&#34;#cb1-45&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;        ans += calc();&lt;/span&gt;
+&lt;span id=&#34;cb1-46&#34;&gt;&lt;a href=&#34;#cb1-46&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;    }&lt;/span&gt;
+&lt;span id=&#34;cb1-47&#34;&gt;&lt;a href=&#34;#cb1-47&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;    print(ans * qPow(m + (!flag), mod - &lt;span class=&#34;dv&#34;&gt;2&lt;/span&gt;));&lt;/span&gt;
+&lt;span id=&#34;cb1-48&#34;&gt;&lt;a href=&#34;#cb1-48&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;    &lt;span class=&#34;cf&#34;&gt;return&lt;/span&gt; output(), &lt;span class=&#34;dv&#34;&gt;0&lt;/span&gt;;&lt;/span&gt;
+&lt;span id=&#34;cb1-49&#34;&gt;&lt;a href=&#34;#cb1-49&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;}&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;h3 id=&#34;uva10601-cubes&#34;&gt;UVA10601 Cubes&lt;/h3&gt;
+&lt;p&gt;题意：给定 &lt;span class=&#34;math inline&#34;&gt;\(12\)&lt;/span&gt; 根等长，着色的木棒。问能构成的本质不同的正方体数量。颜色最多有 &lt;span class=&#34;math inline&#34;&gt;\(6\)&lt;/span&gt; 种。正方体 &lt;span class=&#34;math inline&#34;&gt;\(A\)&lt;/span&gt; 和 &lt;span class=&#34;math inline&#34;&gt;\(B\)&lt;/span&gt; 本质不同，当 &lt;span class=&#34;math inline&#34;&gt;\(A\)&lt;/span&gt; 不能通过旋转得到 &lt;span class=&#34;math inline&#34;&gt;\(B\)&lt;/span&gt;。&lt;/p&gt;
+&lt;p&gt;分析正方体的所有置换并拆成若干个轮换：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;恒等变换：即不动。分解为 &lt;span class=&#34;math inline&#34;&gt;\((1)^{12}\)&lt;/span&gt;。&lt;/li&gt;
+&lt;li&gt;以两个相对面中心连线为轴的 &lt;span class=&#34;math inline&#34;&gt;\(90^\circ\)&lt;/span&gt; 旋转：共有 &lt;span class=&#34;math inline&#34;&gt;\(3\times 2 = 6\)&lt;/span&gt; 种这样的置换。分解为 &lt;span class=&#34;math inline&#34;&gt;\((4)^3\)&lt;/span&gt;。&lt;/li&gt;
+&lt;li&gt;以两个相对面中心连线为轴的 &lt;span class=&#34;math inline&#34;&gt;\(180^\circ\)&lt;/span&gt; 旋转：共有 &lt;span class=&#34;math inline&#34;&gt;\(3\times 1 = 3\)&lt;/span&gt; 种这样的置换。分解为 &lt;span class=&#34;math inline&#34;&gt;\((2)^6\)&lt;/span&gt;。&lt;/li&gt;
+&lt;li&gt;以两个相对棱中心连线为轴的 &lt;span class=&#34;math inline&#34;&gt;\(180^\circ\)&lt;/span&gt; 旋转：共有 &lt;span class=&#34;math inline&#34;&gt;\(6\)&lt;/span&gt; 种这样的置换。分解为 &lt;span class=&#34;math inline&#34;&gt;\((1)^2(2)^5\)&lt;/span&gt;。&lt;/li&gt;
+&lt;li&gt;以两个相对顶点连线为轴的 &lt;span class=&#34;math inline&#34;&gt;\(120^\circ\)&lt;/span&gt; 旋转：共有 &lt;span class=&#34;math inline&#34;&gt;\(4\times 2 = 8\)&lt;/span&gt; 种这样的置换。分解为 &lt;span class=&#34;math inline&#34;&gt;\((3)^4\)&lt;/span&gt;。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;一共有 &lt;span class=&#34;math inline&#34;&gt;\(24\)&lt;/span&gt; 种这样的置换。&lt;/p&gt;
+&lt;p&gt;找不动点就是给这些环填上一样颜色的方案数。不难发现就是多重组合数，套公式算就行了。&lt;/p&gt;
+&lt;div class=&#34;sourceCode&#34; id=&#34;cb2&#34;&gt;&lt;pre class=&#34;sourceCode cpp&#34;&gt;&lt;code class=&#34;sourceCode cpp&#34;&gt;&lt;span id=&#34;cb2-1&#34;&gt;&lt;a href=&#34;#cb2-1&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;&lt;span class=&#34;kw&#34;&gt;typedef&lt;/span&gt; &lt;span class=&#34;dt&#34;&gt;long&lt;/span&gt; &lt;span class=&#34;dt&#34;&gt;long&lt;/span&gt; ll;&lt;/span&gt;
+&lt;span id=&#34;cb2-2&#34;&gt;&lt;a href=&#34;#cb2-2&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;&lt;span class=&#34;at&#34;&gt;const&lt;/span&gt; ll fac[&lt;span class=&#34;dv&#34;&gt;13&lt;/span&gt;] = {&lt;span class=&#34;dv&#34;&gt;1&lt;/span&gt;, &lt;span class=&#34;dv&#34;&gt;1&lt;/span&gt;, &lt;span class=&#34;dv&#34;&gt;2&lt;/span&gt;, &lt;span class=&#34;dv&#34;&gt;6&lt;/span&gt;, &lt;span class=&#34;dv&#34;&gt;24&lt;/span&gt;, &lt;span class=&#34;dv&#34;&gt;120&lt;/span&gt;, &lt;span class=&#34;dv&#34;&gt;720&lt;/span&gt;, &lt;span class=&#34;dv&#34;&gt;5040&lt;/span&gt;, &lt;span class=&#34;dv&#34;&gt;40320&lt;/span&gt;, &lt;span class=&#34;dv&#34;&gt;362880&lt;/span&gt;, &lt;span class=&#34;dv&#34;&gt;3628800&lt;/span&gt;, &lt;span class=&#34;dv&#34;&gt;39916800&lt;/span&gt;, &lt;span class=&#34;dv&#34;&gt;479001600&lt;/span&gt;};&lt;/span&gt;
+&lt;span id=&#34;cb2-3&#34;&gt;&lt;a href=&#34;#cb2-3&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;&lt;/span&gt;
+&lt;span id=&#34;cb2-4&#34;&gt;&lt;a href=&#34;#cb2-4&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;&lt;span class=&#34;dt&#34;&gt;int&lt;/span&gt; buc[&lt;span class=&#34;dv&#34;&gt;7&lt;/span&gt;];&lt;/span&gt;
+&lt;span id=&#34;cb2-5&#34;&gt;&lt;a href=&#34;#cb2-5&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;&lt;/span&gt;
+&lt;span id=&#34;cb2-6&#34;&gt;&lt;a href=&#34;#cb2-6&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;ll calc(&lt;span class=&#34;dt&#34;&gt;int&lt;/span&gt; x, &lt;span class=&#34;dt&#34;&gt;int&lt;/span&gt; sz) {&lt;/span&gt;
+&lt;span id=&#34;cb2-7&#34;&gt;&lt;a href=&#34;#cb2-7&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;    ll res = fac[sz / x];&lt;/span&gt;
+&lt;span id=&#34;cb2-8&#34;&gt;&lt;a href=&#34;#cb2-8&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;    FOR(i, &lt;span class=&#34;dv&#34;&gt;1&lt;/span&gt;, &lt;span class=&#34;dv&#34;&gt;6&lt;/span&gt;) {&lt;/span&gt;
+&lt;span id=&#34;cb2-9&#34;&gt;&lt;a href=&#34;#cb2-9&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;        &lt;span class=&#34;cf&#34;&gt;if&lt;/span&gt; (!(buc[i] % x)) res /= fac[buc[i] / x];&lt;/span&gt;
+&lt;span id=&#34;cb2-10&#34;&gt;&lt;a href=&#34;#cb2-10&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;        &lt;span class=&#34;cf&#34;&gt;else&lt;/span&gt; &lt;span class=&#34;cf&#34;&gt;return&lt;/span&gt; &lt;span class=&#34;dv&#34;&gt;0&lt;/span&gt;;&lt;/span&gt;
+&lt;span id=&#34;cb2-11&#34;&gt;&lt;a href=&#34;#cb2-11&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;    }&lt;/span&gt;
+&lt;span id=&#34;cb2-12&#34;&gt;&lt;a href=&#34;#cb2-12&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;    &lt;span class=&#34;cf&#34;&gt;return&lt;/span&gt; res;&lt;/span&gt;
+&lt;span id=&#34;cb2-13&#34;&gt;&lt;a href=&#34;#cb2-13&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;}&lt;/span&gt;
+&lt;span id=&#34;cb2-14&#34;&gt;&lt;a href=&#34;#cb2-14&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;&lt;/span&gt;
+&lt;span id=&#34;cb2-15&#34;&gt;&lt;a href=&#34;#cb2-15&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;&lt;span class=&#34;dt&#34;&gt;int&lt;/span&gt; main() {&lt;/span&gt;
+&lt;span id=&#34;cb2-16&#34;&gt;&lt;a href=&#34;#cb2-16&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;    &lt;span class=&#34;dt&#34;&gt;int&lt;/span&gt; T; read(T);&lt;/span&gt;
+&lt;span id=&#34;cb2-17&#34;&gt;&lt;a href=&#34;#cb2-17&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;    &lt;span class=&#34;cf&#34;&gt;while&lt;/span&gt; (T--) {&lt;/span&gt;
+&lt;span id=&#34;cb2-18&#34;&gt;&lt;a href=&#34;#cb2-18&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;        FOR(i, &lt;span class=&#34;dv&#34;&gt;1&lt;/span&gt;, &lt;span class=&#34;dv&#34;&gt;6&lt;/span&gt;) buc[i] = &lt;span class=&#34;dv&#34;&gt;0&lt;/span&gt;;&lt;/span&gt;
+&lt;span id=&#34;cb2-19&#34;&gt;&lt;a href=&#34;#cb2-19&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;        FOR(i, &lt;span class=&#34;dv&#34;&gt;1&lt;/span&gt;, &lt;span class=&#34;dv&#34;&gt;12&lt;/span&gt;) {&lt;/span&gt;
+&lt;span id=&#34;cb2-20&#34;&gt;&lt;a href=&#34;#cb2-20&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;            &lt;span class=&#34;dt&#34;&gt;int&lt;/span&gt; tmp; read(tmp);&lt;/span&gt;
+&lt;span id=&#34;cb2-21&#34;&gt;&lt;a href=&#34;#cb2-21&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;            ++buc[tmp];&lt;/span&gt;
+&lt;span id=&#34;cb2-22&#34;&gt;&lt;a href=&#34;#cb2-22&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;        }&lt;/span&gt;
+&lt;span id=&#34;cb2-23&#34;&gt;&lt;a href=&#34;#cb2-23&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;        ll ans = calc(&lt;span class=&#34;dv&#34;&gt;1&lt;/span&gt;, &lt;span class=&#34;dv&#34;&gt;12&lt;/span&gt;) + &lt;span class=&#34;dv&#34;&gt;6&lt;/span&gt; * calc(&lt;span class=&#34;dv&#34;&gt;4&lt;/span&gt;, &lt;span class=&#34;dv&#34;&gt;12&lt;/span&gt;) + &lt;span class=&#34;dv&#34;&gt;3&lt;/span&gt; * calc(&lt;span class=&#34;dv&#34;&gt;2&lt;/span&gt;, &lt;span class=&#34;dv&#34;&gt;12&lt;/span&gt;) + &lt;span class=&#34;dv&#34;&gt;8&lt;/span&gt; * calc(&lt;span class=&#34;dv&#34;&gt;3&lt;/span&gt;, &lt;span class=&#34;dv&#34;&gt;12&lt;/span&gt;);&lt;/span&gt;
+&lt;span id=&#34;cb2-24&#34;&gt;&lt;a href=&#34;#cb2-24&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;        FOR(i, &lt;span class=&#34;dv&#34;&gt;1&lt;/span&gt;, &lt;span class=&#34;dv&#34;&gt;6&lt;/span&gt;) {&lt;/span&gt;
+&lt;span id=&#34;cb2-25&#34;&gt;&lt;a href=&#34;#cb2-25&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;            &lt;span class=&#34;cf&#34;&gt;if&lt;/span&gt; (!buc[i]) &lt;span class=&#34;cf&#34;&gt;continue&lt;/span&gt;;&lt;/span&gt;
+&lt;span id=&#34;cb2-26&#34;&gt;&lt;a href=&#34;#cb2-26&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;            --buc[i];&lt;/span&gt;
+&lt;span id=&#34;cb2-27&#34;&gt;&lt;a href=&#34;#cb2-27&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;            FOR(j, &lt;span class=&#34;dv&#34;&gt;1&lt;/span&gt;, &lt;span class=&#34;dv&#34;&gt;6&lt;/span&gt;) {&lt;/span&gt;
+&lt;span id=&#34;cb2-28&#34;&gt;&lt;a href=&#34;#cb2-28&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;                &lt;span class=&#34;cf&#34;&gt;if&lt;/span&gt; (!buc[j]) &lt;span class=&#34;cf&#34;&gt;continue&lt;/span&gt;;&lt;/span&gt;
+&lt;span id=&#34;cb2-29&#34;&gt;&lt;a href=&#34;#cb2-29&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;                --buc[j];&lt;/span&gt;
+&lt;span id=&#34;cb2-30&#34;&gt;&lt;a href=&#34;#cb2-30&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;                ans += &lt;span class=&#34;dv&#34;&gt;6&lt;/span&gt; * calc(&lt;span class=&#34;dv&#34;&gt;2&lt;/span&gt;, &lt;span class=&#34;dv&#34;&gt;10&lt;/span&gt;);&lt;/span&gt;
+&lt;span id=&#34;cb2-31&#34;&gt;&lt;a href=&#34;#cb2-31&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;                ++buc[j];&lt;/span&gt;
+&lt;span id=&#34;cb2-32&#34;&gt;&lt;a href=&#34;#cb2-32&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;            }&lt;/span&gt;
+&lt;span id=&#34;cb2-33&#34;&gt;&lt;a href=&#34;#cb2-33&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;            ++buc[i];&lt;/span&gt;
+&lt;span id=&#34;cb2-34&#34;&gt;&lt;a href=&#34;#cb2-34&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;        }&lt;/span&gt;
+&lt;span id=&#34;cb2-35&#34;&gt;&lt;a href=&#34;#cb2-35&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;        print(ans / &lt;span class=&#34;dv&#34;&gt;24&lt;/span&gt;, &lt;span class=&#34;ch&#34;&gt;&amp;#39;&lt;/span&gt;&lt;span class=&#34;sc&#34;&gt;\n&lt;/span&gt;&lt;span class=&#34;ch&#34;&gt;&amp;#39;&lt;/span&gt;);&lt;/span&gt;
+&lt;span id=&#34;cb2-36&#34;&gt;&lt;a href=&#34;#cb2-36&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;    }&lt;/span&gt;
+&lt;span id=&#34;cb2-37&#34;&gt;&lt;a href=&#34;#cb2-37&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;    &lt;span class=&#34;cf&#34;&gt;return&lt;/span&gt; output(), &lt;span class=&#34;dv&#34;&gt;0&lt;/span&gt;;&lt;/span&gt;
+&lt;span id=&#34;cb2-38&#34;&gt;&lt;a href=&#34;#cb2-38&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;}&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;h3 id=&#34;p2561-ahoi2002黑白瓷砖&#34;&gt;P2561 [AHOI2002]黑白瓷砖&lt;/h3&gt;
+&lt;p&gt;题意：见题面。&lt;del&gt;虽然你在 OEIS 上搜一下样例也是可以做出来的但没必要&lt;/del&gt;&lt;/p&gt;
+&lt;p&gt;所有的置换一共有：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;单位置换；&lt;/li&gt;
+&lt;li&gt;旋转 &lt;span class=&#34;math inline&#34;&gt;\(120^\circ\)&lt;/span&gt; 和 &lt;span class=&#34;math inline&#34;&gt;\(240^\circ\)&lt;/span&gt;；&lt;/li&gt;
+&lt;li&gt;翻转一次；&lt;/li&gt;
+&lt;li&gt;旋转 &lt;span class=&#34;math inline&#34;&gt;\(120/240^\circ\)&lt;/span&gt; 并翻转一次。但是这相当于就是绕不同的对称轴翻转。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;共 &lt;span class=&#34;math inline&#34;&gt;\(6\)&lt;/span&gt; 种。&lt;/p&gt;
+&lt;p&gt;考虑对于一个特定的 &lt;span class=&#34;math inline&#34;&gt;\(n\)&lt;/span&gt;，寻找每个置换不动点的个数，分类讨论有点心烦。&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;单位置换：&lt;span class=&#34;math inline&#34;&gt;\((1)^{n(n + 1) / 2}\)&lt;/span&gt;。&lt;/li&gt;
+&lt;li&gt;旋转 &lt;span class=&#34;math inline&#34;&gt;\(120/240^\circ\)&lt;/span&gt;：这两个很对称就只考虑一个，不难发现当 &lt;span class=&#34;math inline&#34;&gt;\(n(n + 1) / 2\equiv 1\pmod 3\)&lt;/span&gt; 时，有一个中心，否则一定能形成若干个长度为 &lt;span class=&#34;math inline&#34;&gt;\(3\)&lt;/span&gt; 的轮换。而 &lt;span class=&#34;math inline&#34;&gt;\(n(n + 1)/2\equiv 1\iff n\equiv 1\pmod 3\)&lt;/span&gt;。&lt;/li&gt;
+&lt;li&gt;翻转：中轴上有 &lt;span class=&#34;math inline&#34;&gt;\(\lceil n / 2\rceil\)&lt;/span&gt; 个不动的，剩余形成若干个长度为 &lt;span class=&#34;math inline&#34;&gt;\(2\)&lt;/span&gt; 的轮换。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;然后，令 &lt;span class=&#34;math inline&#34;&gt;\(N = n(n + 1) / 2\)&lt;/span&gt;，我们就可以得到答案： &lt;span class=&#34;math display&#34;&gt;\[
+\frac{1}{6}\left(2^N + 2\times 2^{\lceil N / 3\rceil} + 3\times 2^{\frac{N - \lceil n / 2\rceil}{2} + \lceil n / 2 \rceil}\right)
+\]&lt;/span&gt; 要写高精度，比较烦。&lt;/p&gt;
+&lt;div class=&#34;sourceCode&#34; id=&#34;cb3&#34;&gt;&lt;pre class=&#34;sourceCode cpp&#34;&gt;&lt;code class=&#34;sourceCode cpp&#34;&gt;&lt;span id=&#34;cb3-1&#34;&gt;&lt;a href=&#34;#cb3-1&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;BigInt pow2[&lt;span class=&#34;dv&#34;&gt;450&lt;/span&gt;];&lt;/span&gt;
+&lt;span id=&#34;cb3-2&#34;&gt;&lt;a href=&#34;#cb3-2&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;&lt;/span&gt;
+&lt;span id=&#34;cb3-3&#34;&gt;&lt;a href=&#34;#cb3-3&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;&lt;span class=&#34;dt&#34;&gt;int&lt;/span&gt; main() {&lt;/span&gt;
+&lt;span id=&#34;cb3-4&#34;&gt;&lt;a href=&#34;#cb3-4&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;    pow2[&lt;span class=&#34;dv&#34;&gt;0&lt;/span&gt;] = &lt;span class=&#34;dv&#34;&gt;1&lt;/span&gt;;&lt;/span&gt;
+&lt;span id=&#34;cb3-5&#34;&gt;&lt;a href=&#34;#cb3-5&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;    FOR(i, &lt;span class=&#34;dv&#34;&gt;1&lt;/span&gt;, &lt;span class=&#34;dv&#34;&gt;420&lt;/span&gt;) pow2[i] = pow2[i - &lt;span class=&#34;dv&#34;&gt;1&lt;/span&gt;] * &lt;span class=&#34;dv&#34;&gt;2&lt;/span&gt;;&lt;/span&gt;
+&lt;span id=&#34;cb3-6&#34;&gt;&lt;a href=&#34;#cb3-6&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;    &lt;span class=&#34;dt&#34;&gt;int&lt;/span&gt; n; cin &amp;gt;&amp;gt; n;&lt;/span&gt;
+&lt;span id=&#34;cb3-7&#34;&gt;&lt;a href=&#34;#cb3-7&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;    &lt;span class=&#34;dt&#34;&gt;int&lt;/span&gt; N = n * (n + &lt;span class=&#34;dv&#34;&gt;1&lt;/span&gt;) / &lt;span class=&#34;dv&#34;&gt;2&lt;/span&gt;;&lt;/span&gt;
+&lt;span id=&#34;cb3-8&#34;&gt;&lt;a href=&#34;#cb3-8&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;    cout &amp;lt;&amp;lt; (pow2[N] + pow2[(N + &lt;span class=&#34;dv&#34;&gt;2&lt;/span&gt;) / &lt;span class=&#34;dv&#34;&gt;3&lt;/span&gt;] * &lt;span class=&#34;dv&#34;&gt;2&lt;/span&gt; + pow2[(N - (n + &lt;span class=&#34;dv&#34;&gt;1&lt;/span&gt;) / &lt;span class=&#34;dv&#34;&gt;2&lt;/span&gt;) / &lt;span class=&#34;dv&#34;&gt;2&lt;/span&gt; + (n + &lt;span class=&#34;dv&#34;&gt;1&lt;/span&gt;) / &lt;span class=&#34;dv&#34;&gt;2&lt;/span&gt;] * &lt;span class=&#34;dv&#34;&gt;3&lt;/span&gt;) / &lt;span class=&#34;dv&#34;&gt;6&lt;/span&gt; &amp;lt;&amp;lt; endl;&lt;/span&gt;
+&lt;span id=&#34;cb3-9&#34;&gt;&lt;a href=&#34;#cb3-9&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;    &lt;span class=&#34;cf&#34;&gt;return&lt;/span&gt; &lt;span class=&#34;dv&#34;&gt;0&lt;/span&gt;;&lt;/span&gt;
+&lt;span id=&#34;cb3-10&#34;&gt;&lt;a href=&#34;#cb3-10&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;}&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;h3 id=&#34;p4727-hnoi2009图的同构计数&#34;&gt;P4727 [HNOI2009]图的同构计数&lt;/h3&gt;
+&lt;h3 id=&#34;p4916-mtoi2018魔力环&#34;&gt;P4916 [MtOI2018]魔力环&lt;/h3&gt;
+</description>
+        </item>
+        
+    </channel>
+</rss>

@@ -1,0 +1,587 @@
+<!DOCTYPE html>
+<html dir="ltr" lang="zh-CN">
+<head><meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1" name="viewport"/><meta content="前言 11 月是水过来的，12 月活过 NOIP 之后要努力了。 第一周复习 NOIP，之后到寒假前全力冲刺弱的板块，起码达到提高组水平：
+贪心 二分 数论 组合计数 分治 dp 学习内容 Trie 平衡树（Treap、Splay、FHQ-Treap） exCRT 拉格朗日插值 整除分块 做题记录 20/12/01 P1052 过河 dp，需要对坐标轴上进行缩点，（特判 \(s=t\)）考虑如果一个石头无论如何可以被前面的石头不跳过，就直接缩，之后就是 \(f_i=\min_{j\in[s,t]}\lbrace f_{i-j}+[i为石子] \rbrace\)
+P3951 小凯的疑惑 打表找规律，答案为 \(ab-a-b\)，证明一下写
+SP666 VOCV - Con-Junctions 第一问直接照搬没有上司的舞会，第二问根据乘法原理和加法原理分类讨论即可
+P1099 树网的核 题面十分毒瘤的树形 dp，综合考察了直径的性质。https://imyangty.com/oi/1234
+20/12/02 P5664 Emiya 家今天的饭 计数 dp
+P5858 「SWTR-03」Golden Sword 线性 dp，设 \(f_{i,j}\) 为放入第 \(i\) 个元素后锅中有 \(j\) 个元素可达到的最大耐久值，显然有
+\[ f_{i,j}=\min_{k=\max(0,1-j)}^{\min(s,w+i-j)}\lbrace f_{i-1,j-1+k}+j\times a_i\rbrace \]
+其中 \(k\) 为我们要拿掉的元素数量。这样做复杂度可视为 \(O(nws)\)，单调队列稍加优化可达到 \(O(nw)\)
+20/12/03 P5017 摆渡车 斜率优化，在奇奇怪怪的问题上调了很久" name="description"/><title>2020年12月 OI学习记录</title>
+<link href="https://oi.imyangty.com/summary-2020-12/" rel="canonical"/>
+<link href="/scss/style.min.a5821f3d3ab84ce5a0ac21477e347a2e0ca00292e398d16c5e8e36ded6e35a23.css" rel="stylesheet"/><meta content="2020年12月 OI学习记录" property="og:title"/>
+<meta content="前言 11 月是水过来的，12 月活过 NOIP 之后要努力了。 第一周复习 NOIP，之后到寒假前全力冲刺弱的板块，起码达到提高组水平：
+贪心 二分 数论 组合计数 分治 dp 学习内容 Trie 平衡树（Treap、Splay、FHQ-Treap） exCRT 拉格朗日插值 整除分块 做题记录 20/12/01 P1052 过河 dp，需要对坐标轴上进行缩点，（特判 \(s=t\)）考虑如果一个石头无论如何可以被前面的石头不跳过，就直接缩，之后就是 \(f_i=\min_{j\in[s,t]}\lbrace f_{i-j}+[i为石子] \rbrace\)
+P3951 小凯的疑惑 打表找规律，答案为 \(ab-a-b\)，证明一下写
+SP666 VOCV - Con-Junctions 第一问直接照搬没有上司的舞会，第二问根据乘法原理和加法原理分类讨论即可
+P1099 树网的核 题面十分毒瘤的树形 dp，综合考察了直径的性质。https://imyangty.com/oi/1234
+20/12/02 P5664 Emiya 家今天的饭 计数 dp
+P5858 「SWTR-03」Golden Sword 线性 dp，设 \(f_{i,j}\) 为放入第 \(i\) 个元素后锅中有 \(j\) 个元素可达到的最大耐久值，显然有
+\[ f_{i,j}=\min_{k=\max(0,1-j)}^{\min(s,w+i-j)}\lbrace f_{i-1,j-1+k}+j\times a_i\rbrace \]
+其中 \(k\) 为我们要拿掉的元素数量。这样做复杂度可视为 \(O(nws)\)，单调队列稍加优化可达到 \(O(nw)\)
+20/12/03 P5017 摆渡车 斜率优化，在奇奇怪怪的问题上调了很久" property="og:description"/>
+<meta content="https://oi.imyangty.com/summary-2020-12/" property="og:url"/>
+<meta content="清烛的博客" property="og:site_name"/>
+<meta content="article" property="og:type"/><meta content="Post" property="article:section"/><meta content="OI" property="article:tag"/><meta content="2020-12-01T17:35:25+08:00" property="article:published_time"/><meta content="2020-12-01T17:35:25+08:00" property="article:modified_time"/><meta content="https://yangty-pic.oss-cn-beijing.aliyuncs.com/bg53.webp" property="og:image"/>
+<meta content="2020年12月 OI学习记录" name="twitter:title"/>
+<meta content="前言 11 月是水过来的，12 月活过 NOIP 之后要努力了。 第一周复习 NOIP，之后到寒假前全力冲刺弱的板块，起码达到提高组水平：
+贪心 二分 数论 组合计数 分治 dp 学习内容 Trie 平衡树（Treap、Splay、FHQ-Treap） exCRT 拉格朗日插值 整除分块 做题记录 20/12/01 P1052 过河 dp，需要对坐标轴上进行缩点，（特判 \(s=t\)）考虑如果一个石头无论如何可以被前面的石头不跳过，就直接缩，之后就是 \(f_i=\min_{j\in[s,t]}\lbrace f_{i-j}+[i为石子] \rbrace\)
+P3951 小凯的疑惑 打表找规律，答案为 \(ab-a-b\)，证明一下写
+SP666 VOCV - Con-Junctions 第一问直接照搬没有上司的舞会，第二问根据乘法原理和加法原理分类讨论即可
+P1099 树网的核 题面十分毒瘤的树形 dp，综合考察了直径的性质。https://imyangty.com/oi/1234
+20/12/02 P5664 Emiya 家今天的饭 计数 dp
+P5858 「SWTR-03」Golden Sword 线性 dp，设 \(f_{i,j}\) 为放入第 \(i\) 个元素后锅中有 \(j\) 个元素可达到的最大耐久值，显然有
+\[ f_{i,j}=\min_{k=\max(0,1-j)}^{\min(s,w+i-j)}\lbrace f_{i-1,j-1+k}+j\times a_i\rbrace \]
+其中 \(k\) 为我们要拿掉的元素数量。这样做复杂度可视为 \(O(nws)\)，单调队列稍加优化可达到 \(O(nw)\)
+20/12/03 P5017 摆渡车 斜率优化，在奇奇怪怪的问题上调了很久" name="twitter:description"/><meta content="summary_large_image" name="twitter:card"/>
+<meta content="https://yangty-pic.oss-cn-beijing.aliyuncs.com/bg53.webp" name="twitter:image"/>
+<link href="https://q1.qlogo.cn/g?b=qq&amp;nk=375836877&amp;s=5" rel="shortcut icon"/>
+<link href="https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.5.1/build/styles/github-dark-dimmed.min.css" rel="stylesheet"/>
+<script src="https://cdn.jsdelivr.net/gh/highlightjs/cdn-release/build/highlight.min.js"></script>
+<script>hljs.highlightAll();</script>
+</head>
+<body class="article-page">
+<script>
+        (function() {
+            const colorSchemeKey = 'StackColorScheme';
+            if(!localStorage.getItem(colorSchemeKey)){
+                localStorage.setItem(colorSchemeKey, "auto");
+            }
+        })();
+    </script><script>
+    (function() {
+        const colorSchemeKey = 'StackColorScheme';
+        const colorSchemeItem = localStorage.getItem(colorSchemeKey);
+        const supportDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches === true;
+
+        if (colorSchemeItem == 'dark' || colorSchemeItem === 'auto' && supportDarkMode) {
+            
+
+            document.documentElement.dataset.scheme = 'dark';
+        } else {
+            document.documentElement.dataset.scheme = 'light';
+        }
+    })();
+</script>
+<div class="container main-container flex on-phone--column extended"><aside class="sidebar left-sidebar sticky">
+<button aria-label="切换菜单" class="hamburger hamburger--spin" id="toggle-menu" type="button">
+<span class="hamburger-box">
+<span class="hamburger-inner"></span>
+</span>
+</button>
+<header>
+<figure class="site-avatar">
+<a href="/">
+<img alt="Avatar" class="site-logo" height="300" loading="lazy" src="/img/avatar_huea3ce2119467b51fdd2a81393644a76d_51594_300x0_resize_q75_box.jpg" width="300"/>
+</a>
+<span class="emoji">😅</span>
+</figure>
+<div class="site-meta">
+<h1 class="site-name"><a href="/">清烛的博客</a></h1>
+<h2 class="site-description">烟火已谢，笙歌未停</h2>
+</div>
+</header><ol class="social-menu">
+<li>
+<a href="mailto:i@imyangty.com" target="_blank" title="email">
+<svg class="icon icon-tabler icon-tabler-mail" fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" viewbox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+<path d="M0 0h24v24H0z" fill="none" stroke="none"></path>
+<rect height="14" rx="2" width="18" x="3" y="5"></rect>
+<polyline points="3 7 12 13 21 7"></polyline>
+</svg>
+</a>
+</li>
+<li>
+<a href="https://github.com/Cgfyufsygsm" target="_blank" title="GitHub">
+<svg class="icon icon-tabler icon-tabler-brand-github" fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+<path d="M0 0h24v24H0z" fill="none" stroke="none"></path>
+<path d="M9 19c-4.3 1.4 -4.3 -2.5 -6 -3m12 5v-3.5c0 -1 .1 -1.4 -.5 -2c2.8 -.3 5.5 -1.4 5.5 -6a4.6 4.6 0 0 0 -1.3 -3.2a4.2 4.2 0 0 0 -.1 -3.2s-1.1 -.3 -3.5 1.3a12.3 12.3 0 0 0 -6.2 0c-2.4 -1.6 -3.5 -1.3 -3.5 -1.3a4.2 4.2 0 0 0 -.1 3.2a4.6 4.6 0 0 0 -1.3 3.2c0 4.6 2.7 5.7 5.5 6c-.6 .6 -.6 1.2 -.5 2v3.5"></path>
+</svg>
+</a>
+</li>
+<li>
+<a href="https://t.me/Cgfyufsygsm" target="_blank" title="Telegram">
+<svg class="icon icon-tabler icon-tabler-brand-telegram" fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" viewbox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+<path d="M0 0h24v24H0z" fill="none" stroke="none"></path>
+<path d="M15 10l-4 4l6 6l4 -16l-18 7l4 2l2 6l3 -4"></path>
+</svg>
+</a>
+</li>
+<li>
+<a href="https://twitter.com/Cgfyufsygsm" target="_blank" title="Twitter">
+<svg class="icon icon-tabler icon-tabler-brand-twitter" fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+<path d="M0 0h24v24H0z" fill="none" stroke="none"></path>
+<path d="M22 4.01c-1 .49 -1.98 .689 -3 .99c-1.121 -1.265 -2.783 -1.335 -4.38 -.737s-2.643 2.06 -2.62 3.737v1c-3.245 .083 -6.135 -1.395 -8 -4c0 0 -4.182 7.433 4 11c-1.872 1.247 -3.739 2.088 -6 2c3.308 1.803 6.913 2.423 10.034 1.517c3.58 -1.04 6.522 -3.723 7.651 -7.742a13.84 13.84 0 0 0 .497 -3.753c-.002 -.249 1.51 -2.772 1.818 -4.013z"></path>
+</svg>
+</a>
+</li>
+</ol><ol class="menu" id="main-menu">
+<li>
+<a href="/">
+<svg class="icon icon-tabler icon-tabler-home" fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+<path d="M0 0h24v24H0z" stroke="none"></path>
+<polyline points="5 12 3 12 12 3 21 12 19 12"></polyline>
+<path d="M5 12v7a2 2 0 0 0 2 2h10a2 2 0 0 0 2 -2v-7"></path>
+<path d="M9 21v-6a2 2 0 0 1 2 -2h2a2 2 0 0 1 2 2v6"></path>
+</svg>
+<span>主页</span>
+</a>
+</li>
+<li>
+<a href="/about/">
+<svg class="icon icon-tabler icon-tabler-user" fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+<path d="M0 0h24v24H0z" stroke="none"></path>
+<circle cx="12" cy="7" r="4"></circle>
+<path d="M6 21v-2a4 4 0 0 1 4 -4h4a4 4 0 0 1 4 4v2"></path>
+</svg>
+<span>关于</span>
+</a>
+</li>
+<li>
+<a href="/idx/">
+<svg class="icon icon-tabler icon-tabler-hash" fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+<path d="M0 0h24v24H0z" stroke="none"></path>
+<line x1="5" x2="19" y1="9" y2="9"></line>
+<line x1="5" x2="19" y1="15" y2="15"></line>
+<line x1="11" x2="7" y1="4" y2="20"></line>
+<line x1="17" x2="13" y1="4" y2="20"></line>
+</svg>
+<span>导航</span>
+</a>
+</li>
+<li>
+<a href="/archives/">
+<svg class="icon icon-tabler icon-tabler-archive" fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+<path d="M0 0h24v24H0z" stroke="none"></path>
+<rect height="4" rx="2" width="18" x="3" y="4"></rect>
+<path d="M5 8v10a2 2 0 0 0 2 2h10a2 2 0 0 0 2 -2v-10"></path>
+<line x1="10" x2="14" y1="12" y2="12"></line>
+</svg>
+<span>归档</span>
+</a>
+</li>
+<li>
+<a href="/search/">
+<svg class="icon icon-tabler icon-tabler-search" fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+<path d="M0 0h24v24H0z" stroke="none"></path>
+<circle cx="10" cy="10" r="7"></circle>
+<line x1="21" x2="15" y1="21" y2="15"></line>
+</svg>
+<span>搜索</span>
+</a>
+</li>
+<li>
+<a href="/friends/">
+<svg class="icon icon-tabler icon-tabler-link" fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+<path d="M0 0h24v24H0z" stroke="none"></path>
+<path d="M10 14a3.5 3.5 0 0 0 5 0l4 -4a3.5 3.5 0 0 0 -5 -5l-.5 .5"></path>
+<path d="M14 10a3.5 3.5 0 0 0 -5 0l-4 4a3.5 3.5 0 0 0 5 5l.5 -.5"></path>
+</svg>
+<span>友链</span>
+</a>
+</li>
+<li>
+<a href="https://blog.imyangty.com" target="_blank">
+<svg class="icon icon-tabler icon-tabler-home" fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+<path d="M0 0h24v24H0z" stroke="none"></path>
+<polyline points="5 12 3 12 12 3 21 12 19 12"></polyline>
+<path d="M5 12v7a2 2 0 0 0 2 2h10a2 2 0 0 0 2 -2v-7"></path>
+<path d="M9 21v-6a2 2 0 0 1 2 -2h2a2 2 0 0 1 2 2v6"></path>
+</svg>
+<span>主博客</span>
+</a>
+</li>
+<div class="menu-bottom-section">
+<li id="dark-mode-toggle">
+<svg class="icon icon-tabler icon-tabler-toggle-left" fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+<path d="M0 0h24v24H0z" stroke="none"></path>
+<circle cx="8" cy="12" r="2"></circle>
+<rect height="12" rx="6" width="20" x="2" y="6"></rect>
+</svg>
+<svg class="icon icon-tabler icon-tabler-toggle-right" fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+<path d="M0 0h24v24H0z" stroke="none"></path>
+<circle cx="16" cy="12" r="2"></circle>
+<rect height="12" rx="6" width="20" x="2" y="6"></rect>
+</svg>
+<span>暗色模式</span>
+</li>
+</div>
+</ol>
+</aside>
+<main class="main full-width">
+<article class="has-image main-article">
+<header class="article-header">
+<div class="article-image">
+<a href="/summary-2020-12/">
+<img alt="Featured image of post 2020年12月 OI学习记录" loading="lazy" src="https://yangty-pic.oss-cn-beijing.aliyuncs.com/bg53.webp"/>
+</a>
+</div>
+<div class="article-details">
+<header class="article-category">
+<a href="/categories/oi/">
+                OI
+            </a>
+<a href="/categories/summary/">
+                总结
+            </a>
+</header>
+<div class="article-title-wrapper">
+<h2 class="article-title">
+<a href="/summary-2020-12/">2020年12月 OI学习记录</a>
+</h2>
+</div>
+<footer class="article-time">
+<div>
+<svg class="icon icon-tabler icon-tabler-calendar-time" fill="none" height="56" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="56" xmlns="http://www.w3.org/2000/svg">
+<path d="M0 0h24v24H0z" stroke="none"></path>
+<path d="M11.795 21h-6.795a2 2 0 0 1 -2 -2v-12a2 2 0 0 1 2 -2h12a2 2 0 0 1 2 2v4"></path>
+<circle cx="18" cy="18" r="4"></circle>
+<path d="M15 3v4"></path>
+<path d="M7 3v4"></path>
+<path d="M3 11h16"></path>
+<path d="M18 16.496v1.504l1 1"></path>
+</svg>
+<time class="article-time--published">Dec 01, 2020</time>
+</div>
+<div>
+<svg class="icon icon-tabler icon-tabler-clock" fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+<path d="M0 0h24v24H0z" stroke="none"></path>
+<circle cx="12" cy="12" r="9"></circle>
+<polyline points="12 7 12 12 15 15"></polyline>
+</svg>
+<time class="article-time--reading">
+                    阅读时长: 2 分钟
+                </time>
+</div>
+</footer>
+</div>
+</header>
+<section class="article-content">
+<h2 id="前言">前言</h2>
+<p>11 月是水过来的，12 月活过 NOIP 之后要努力了。 第一周复习 NOIP，之后到寒假前全力冲刺弱的板块，起码达到提高组水平：</p>
+<ul>
+<li>贪心</li>
+<li>二分</li>
+<li>数论</li>
+<li>组合计数</li>
+<li>分治</li>
+<li>dp</li>
+</ul>
+<h2 id="学习内容">学习内容</h2>
+<ul>
+<li>Trie</li>
+<li>平衡树（Treap、Splay、FHQ-Treap）</li>
+<li>exCRT</li>
+<li>拉格朗日插值</li>
+<li>整除分块</li>
+</ul>
+<h2 id="做题记录">做题记录</h2>
+<h3 id="section">20/12/01</h3>
+<ul>
+<li><strong>P1052 过河</strong></li>
+</ul>
+<p>dp，需要对坐标轴上进行缩点，（特判 <span class="math inline">\(s=t\)</span>）考虑如果一个石头无论如何可以被前面的石头不跳过，就直接缩，之后就是 <span class="math inline">\(f_i=\min_{j\in[s,t]}\lbrace f_{i-j}+[i为石子] \rbrace\)</span></p>
+<ul>
+<li><strong>P3951 小凯的疑惑</strong></li>
+</ul>
+<p>打表找规律，答案为 <span class="math inline">\(ab-a-b\)</span>，证明一下写</p>
+<ul>
+<li><strong>SP666 VOCV - Con-Junctions</strong></li>
+</ul>
+<p>第一问直接照搬没有上司的舞会，第二问根据乘法原理和加法原理分类讨论即可</p>
+<ul>
+<li><strong>P1099 树网的核</strong></li>
+</ul>
+<p>题面十分毒瘤的树形 dp，综合考察了直径的性质。<a href="https://imyangty.com/oi/1234">https://imyangty.com/oi/1234</a></p>
+<h3 id="section-1">20/12/02</h3>
+<ul>
+<li><strong>P5664 Emiya 家今天的饭</strong></li>
+</ul>
+<p><a href="https://imyangty.com/oi/1235" title="计数 dp">计数 dp</a></p>
+<ul>
+<li><strong>P5858 「SWTR-03」Golden Sword</strong></li>
+</ul>
+<p>线性 dp，设 <span class="math inline">\(f_{i,j}\)</span> 为放入第 <span class="math inline">\(i\)</span> 个元素后锅中有 <span class="math inline">\(j\)</span> 个元素可达到的最大耐久值，显然有</p>
+<p><span class="math display">\[
+f_{i,j}=\min_{k=\max(0,1-j)}^{\min(s,w+i-j)}\lbrace f_{i-1,j-1+k}+j\times a_i\rbrace
+\]</span></p>
+<p>其中 <span class="math inline">\(k\)</span> 为我们要拿掉的元素数量。这样做复杂度可视为 <span class="math inline">\(O(nws)\)</span>，单调队列稍加优化可达到 <span class="math inline">\(O(nw)\)</span></p>
+<h3 id="section-2">20/12/03</h3>
+<ul>
+<li><strong>P5017 摆渡车</strong></li>
+</ul>
+<p><a href="https://imyangty.com/oi/1237" title="斜率优化">斜率优化</a>，<strong>在奇奇怪怪的问题上调了很久</strong></p>
+<h3 id="noip-爆炸">20/12/05 NOIP 爆炸</h3>
+<h3 id="section-3">20/12/07</h3>
+<ul>
+<li><strong>P3174 [HAOI2009]毛毛虫</strong></li>
+</ul>
+<p>树形 dp</p>
+<ul>
+<li><strong>UVA1401 Remember the Word</strong></li>
+</ul>
+<p>Trie 优化 dp</p>
+<ul>
+<li><strong>UVA11732 “strcmp()” Anyone?</strong></li>
+</ul>
+<p>Trie 上计数 <a href="https://imyangty.com/oi/1241">https://imyangty.com/oi/1241</a></p>
+<h3 id="section-4">20/12/12</h3>
+<p>学习平衡树</p>
+<ul>
+<li><strong>P3369 【模板】普通平衡树</strong></li>
+</ul>
+<p>使用 Treap 和 Splay 通过</p>
+<ul>
+<li><strong>P6136 【模板】普通平衡树（数据加强版）</strong></li>
+</ul>
+<p>使用 Treap 通过</p>
+<h3 id="section-5">20/12/13</h3>
+<ul>
+<li><strong>P6136 【模板】普通平衡树（数据加强版）</strong></li>
+</ul>
+<p>使用 Splay 通过</p>
+<h3 id="section-6">20/12/15</h3>
+<ul>
+<li><strong>P2286 [HNOI2004]宠物收养场</strong></li>
+</ul>
+<p>平衡树，练习 Splay</p>
+<ul>
+<li><strong>P3391 【模板】文艺平衡树</strong></li>
+</ul>
+<p>使用 Splay 通过</p>
+<ul>
+<li><strong>P1486 [NOI2004]郁闷的出纳员</strong></li>
+</ul>
+<p>平衡树裸题，运用了差量思想。考虑全局变量记录所有人工资的加减情况，然后插入时插入 <span class="math inline">\(k-\Delta\)</span> 以消除影响。删除时可将所有会被删除的集中起来然后直接删掉。注意 <code>kth()</code> 函数的实现是求第 <span class="math inline">\(k\)</span> 大</p>
+<h3 id="section-7">20/12/18</h3>
+<ul>
+<li><strong>P3165 [CQOI2014]排序机械臂</strong></li>
+</ul>
+<p>调了三天的题，<a href="https://imyangty.com/oi/1261" title="Splay 维护区间信息">Splay 维护区间信息</a></p>
+<ul>
+<li>使用 FHQ-Treap 通过普通平衡树和文艺平衡树</li>
+</ul>
+<h3 id="section-8">20/12/19</h3>
+<ul>
+<li><strong>P2596 [ZJOI2006]书架</strong></li>
+</ul>
+<p>FHQ 的一个 trick：可以记录每个节点的父亲，这样可以快速查找某值在序列中的位置，同时不要忘了 pushup</p>
+<ul>
+<li><strong>P4146 序列终结者</strong></li>
+</ul>
+<p>平衡树维护区间信息，标记比较多，注意维护即可</p>
+<h3 id="section-9">20/12/20</h3>
+<ul>
+<li><strong>P3224 [HNOI2012]永无乡</strong></li>
+</ul>
+<p>启发式合并 FHQ-Treap，使用并查集维护连通性</p>
+<ul>
+<li><strong>P5338 [TJOI2019]甲苯先生的滚榜</strong></li>
+</ul>
+<p>平衡树板子，卡常</p>
+<h3 id="section-10">20/12/21</h3>
+<ul>
+<li><strong>POJ2689 Prime Distance</strong></li>
+</ul>
+<p><a href="https://imyangty.com/oi/1271" title="区间筛素数板子">区间筛素数板子</a>，注意特判</p>
+<h3 id="section-11">20/12/22</h3>
+<ul>
+<li><strong>P1463 [POI2002][HAOI2007]反素数</strong></li>
+</ul>
+<p>dfs</p>
+<h3 id="section-12">20/12/24</h3>
+<ul>
+<li><strong>UVA11526 H(n)</strong></li>
+</ul>
+<p><a href="https://imyangty.com/oi/1273" title="整除分块">整除分块</a>，<span class="math inline">\(O(\sqrt n)\)</span></p>
+<ul>
+<li><strong>P2261 [CQOI2007]余数求和</strong></li>
+</ul>
+<p><a href="https://imyangty.com/oi/1273" title="整除分块 + 等差数列">整除分块 + 等差数列</a></p>
+<h3 id="section-13">20/12/25</h3>
+<ul>
+<li><strong>P2260 [清华集训2012]模积和</strong></li>
+</ul>
+<p>推式子 + 整除分块</p>
+<ul>
+<li><strong>P3935 Calculating</strong></li>
+</ul>
+<p>推式子 + 整除分块</p>
+<ul>
+<li><strong>P4781 【模板】拉格朗日插值</strong></li>
+</ul>
+<p><a href="https://imyangty.com/oi/1275" title="拉插">拉插</a></p>
+<h3 id="section-14">20/12/26</h3>
+<ul>
+<li><strong>P4280 [AHOI2008]逆序对</strong></li>
+</ul>
+<p>线性 dp + 树状数组，注意讨论 <span class="math inline">\(-1\)</span> 可能产生的贡献</p>
+<ul>
+<li><strong>P4777 【模板】扩展中国剩余定理（EXCRT）</strong></li>
+</ul>
+<p>exCRT</p>
+<h3 id="section-15">20/12/27</h3>
+<ul>
+<li><strong>P3868 [TJOI2009]猜数字</strong></li>
+</ul>
+<p>CRT，需要快速乘防溢出</p>
+<h3 id="section-16">20/12/31</h3>
+<ul>
+<li><strong>P4774 [NOI2018] 屠龙勇士</strong></li>
+</ul>
+<p>细节相当繁琐的 <a href="https://imyangty.com/oi/1277" title="exCRT">exCRT</a>，第一道黑题祭</p>
+</section>
+<footer class="article-footer">
+<section class="article-tags">
+<a href="/tags/OI/">OI</a>
+</section>
+<section class="article-copyright">
+<svg class="icon icon-tabler icon-tabler-copyright" fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+<path d="M0 0h24v24H0z" stroke="none"></path>
+<circle cx="12" cy="12" r="9"></circle>
+<path d="M14.5 9a3.5 4 0 1 0 0 6"></path>
+</svg>
+<span>Licensed under CC BY-NC-SA 4.0</span>
+</section>
+</footer>
+<link crossorigin="anonymous" href="https://cdn.jsdelivr.net/npm/katex@0.13.13/dist/katex.min.css" integrity="sha384-RZU/ijkSsFbcmivfdRBQDtwuwVqK7GMOw6IMvKyeWL2K5UAlyp6WonmB8m7Jd0Hn" rel="stylesheet"/><script crossorigin="anonymous" defer="" integrity="sha384-pK1WpvzWVBQiP0/GjnvRxV4mOb0oxFuyRxJlk6vVw146n3egcN5C925NCP7a7BY8" src="https://cdn.jsdelivr.net/npm/katex@0.13.13/dist/katex.min.js">
+</script><script crossorigin="anonymous" defer="" integrity="sha384-vZTG03m+2yp6N6BNi5iM4rW4oIwk5DfcNdFfxkk9ZWpDriOkXX8voJBFrAO7MpVl" src="https://cdn.jsdelivr.net/npm/katex@0.13.13/dist/contrib/auto-render.min.js">
+</script><script>
+    window.addEventListener("DOMContentLoaded", () => {
+        renderMathInElement(document.querySelector(`.article-content`), {
+            delimiters: [
+                { left: "$$", right: "$$", display: true },
+                { left: "$", right: "$", display: false },
+                { left: "\\(", right: "\\)", display: false },
+                { left: "\\[", right: "\\]", display: true }
+            ]
+        });})
+</script>
+</article>
+<aside class="related-contents--wrapper">
+<h2 class="section-title">相关文章</h2>
+<div class="related-contents">
+<div class="flex article-list--tile">
+<article class="has-image">
+<a href="/sol-luogu-p5468/">
+<div class="article-image">
+<img data-hash="https://yangty-pic.oss-cn-beijing.aliyuncs.com/bg01.webp" data-key="" loading="lazy" src="https://yangty-pic.oss-cn-beijing.aliyuncs.com/bg01.webp"/>
+</div>
+<div class="article-details">
+<h2 class="article-title">P5468 [NOI2019] 回家路线</h2>
+</div>
+</a>
+</article>
+<article class="has-image">
+<a href="/travels-noi2022/">
+<div class="article-image">
+<img data-hash="https://yangty-pic.oss-cn-beijing.aliyuncs.com/bg01.webp" data-key="" loading="lazy" src="https://yangty-pic.oss-cn-beijing.aliyuncs.com/bg01.webp"/>
+</div>
+<div class="article-details">
+<h2 class="article-title">NOI2022 游记</h2>
+</div>
+</a>
+</article>
+<article class="has-image">
+<a href="/sol-cf715b/">
+<div class="article-image">
+<img data-hash="https://yangty-pic.oss-cn-beijing.aliyuncs.com/bg57.webp" data-key="" loading="lazy" src="https://yangty-pic.oss-cn-beijing.aliyuncs.com/bg57.webp"/>
+</div>
+<div class="article-details">
+<h2 class="article-title">CF715B Complete The Graph</h2>
+</div>
+</a>
+</article>
+<article class="has-image">
+<a href="/sol-agc027d/">
+<div class="article-image">
+<img data-hash="https://yangty-pic.oss-cn-beijing.aliyuncs.com/bg01.webp" data-key="" loading="lazy" src="https://yangty-pic.oss-cn-beijing.aliyuncs.com/bg01.webp"/>
+</div>
+<div class="article-details">
+<h2 class="article-title">AGC027D - Modulo Matrix</h2>
+</div>
+</a>
+</article>
+<article class="has-image">
+<a href="/sol-luogu-p5305/">
+<div class="article-image">
+<img data-hash="https://yangty-pic.oss-cn-beijing.aliyuncs.com/bg32.webp" data-key="" loading="lazy" src="https://yangty-pic.oss-cn-beijing.aliyuncs.com/bg32.webp"/>
+</div>
+<div class="article-details">
+<h2 class="article-title">P5305 [GXOI/GZOI2019]旧词</h2>
+</div>
+</a>
+</article>
+</div>
+</div>
+</aside>
+<footer class="site-footer">
+<section class="copyright">
+        © 
+        
+            2019 - 
+        
+        2024 清烛的博客
+    </section>
+<section class="powerby">
+        Built with <a href="https://gohugo.io/" rel="noopener" target="_blank">Hugo</a> <br/>
+        主题 <b><a data-version="3.11.0" href="https://github.com/CaiJimmy/hugo-theme-stack" rel="noopener" target="_blank">Stack</a></b> 由 <a href="https://jimmycai.com" rel="noopener" target="_blank">Jimmy</a> 设计
+    </section>
+</footer>
+<div aria-hidden="true" class="pswp" role="dialog" tabindex="-1">
+<div class="pswp__bg"></div>
+<div class="pswp__scroll-wrap">
+<div class="pswp__container">
+<div class="pswp__item"></div>
+<div class="pswp__item"></div>
+<div class="pswp__item"></div>
+</div>
+<div class="pswp__ui pswp__ui--hidden">
+<div class="pswp__top-bar">
+<div class="pswp__counter"></div>
+<button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+<button class="pswp__button pswp__button--share" title="Share"></button>
+<button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+<button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+<div class="pswp__preloader">
+<div class="pswp__preloader__icn">
+<div class="pswp__preloader__cut">
+<div class="pswp__preloader__donut"></div>
+</div>
+</div>
+</div>
+</div>
+<div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+<div class="pswp__share-tooltip"></div>
+</div>
+<button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+</button>
+<button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+</button>
+<div class="pswp__caption">
+<div class="pswp__caption__center"></div>
+</div>
+</div>
+</div>
+</div><script crossorigin="anonymous" defer="" integrity="sha256-ePwmChbbvXbsO02lbM3HoHbSHTHFAeChekF1xKJdleo=" src="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe.min.js">
+</script><script crossorigin="anonymous" defer="" integrity="sha256-UKkzOn/w1mBxRmLLGrSeyB4e1xbrp4xylgAWb3M42pU=" src="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe-ui-default.min.js">
+</script><link crossorigin="anonymous" href="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/default-skin/default-skin.css" integrity="sha256-c0uckgykQ9v5k+IqViZOZKc47Jn7KQil4/MP3ySA3F8=" rel="stylesheet"/><link crossorigin="anonymous" href="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe.css" integrity="sha256-SBLU4vv6CA6lHsZ1XyTdhyjJxCjPif/TRkjnsyGAGnE=" rel="stylesheet"/>
+</main>
+</div>
+<script crossorigin="anonymous" integrity="sha256-5NovOZc4iwiAWTYIFiIM7DxKUXKWvpVEuMEPLzcm5/g=" src="https://cdn.jsdelivr.net/npm/node-vibrant@3.1.5/dist/vibrant.min.js">
+</script><script defer="" src="/ts/main.js" type="text/javascript"></script>
+<script>
+    (function () {
+        const customFont = document.createElement('link');
+        customFont.href = "https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&display=swap";
+
+        customFont.type = "text/css";
+        customFont.rel = "stylesheet";
+
+        document.head.appendChild(customFont);
+    }());
+</script>
+</body>
+</html>

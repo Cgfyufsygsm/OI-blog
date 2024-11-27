@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+    <channel>
+        <title>向量 on 清烛的博客</title>
+        <link>https://oi.imyangty.com/tags/vector/</link>
+        <description>Recent content in 向量 on 清烛的博客</description>
+        <generator>Hugo -- gohugo.io</generator>
+        <language>zh-CN</language>
+        <lastBuildDate>Thu, 24 Mar 2022 15:31:08 +0800</lastBuildDate><atom:link href="https://oi.imyangty.com/tags/vector/index.xml" rel="self" type="application/rss+xml" /><item>
+        <title>BZOJ#4767. 两双手</title>
+        <link>https://oi.imyangty.com/sol-bzoj4767/</link>
+        <pubDate>Tue, 22 Mar 2022 09:58:30 +0800</pubDate>
+        
+        <guid>https://oi.imyangty.com/sol-bzoj4767/</guid>
+        <description>&lt;img src="https://yangty-pic.oss-cn-beijing.aliyuncs.com/bg52.webp" alt="Featured image of post BZOJ#4767. 两双手" /&gt;&lt;h2 id=&#34;description&#34;&gt;Description&lt;/h2&gt;
+&lt;p&gt;从 &lt;span class=&#34;math inline&#34;&gt;\((0, 0)\)&lt;/span&gt; 要走到 &lt;span class=&#34;math inline&#34;&gt;\((E_x, E_y)\)&lt;/span&gt;，每次能从 &lt;span class=&#34;math inline&#34;&gt;\((x, y)\)&lt;/span&gt; 走到 &lt;span class=&#34;math inline&#34;&gt;\((x + A_x, y + A_y)\)&lt;/span&gt; 或 &lt;span class=&#34;math inline&#34;&gt;\((x + B_x, y + B_y)\)&lt;/span&gt;。中间有 &lt;span class=&#34;math inline&#34;&gt;\(k\)&lt;/span&gt; 个不能走的点，问方案数。&lt;/p&gt;
+&lt;p&gt;原题保证 &lt;span class=&#34;math inline&#34;&gt;\(A_xB_y - A_yB_x\ne 0\)&lt;/span&gt;。&lt;/p&gt;
+&lt;p&gt;&lt;span class=&#34;math inline&#34;&gt;\(0\le n,m,k, |A_x|,|A_y|,|B_x|,|B_y|\le 500\)&lt;/span&gt;。&lt;/p&gt;
+&lt;h2 id=&#34;solution&#34;&gt;Solution&lt;/h2&gt;
+&lt;p&gt;先考虑 &lt;span class=&#34;math inline&#34;&gt;\(A_xB_y-A_yB_x\ne 0\)&lt;/span&gt; 的情况，注意到这两个向量构成平面内的一组基，所以任意的点 &lt;span class=&#34;math inline&#34;&gt;\((x, y)\)&lt;/span&gt; 都可以被表示为 &lt;span class=&#34;math inline&#34;&gt;\(cA + dB\)&lt;/span&gt;，将所有点 &lt;span class=&#34;math inline&#34;&gt;\((x,y)\)&lt;/span&gt; 转为 &lt;span class=&#34;math inline&#34;&gt;\((c, d)\)&lt;/span&gt;。问题于是转化为带障碍的网格路径计数。&lt;/p&gt;
+&lt;p&gt;设换了坐标系后终点为 &lt;span class=&#34;math inline&#34;&gt;\((n, m)\)&lt;/span&gt;，则若没有障碍，答案显然为 &lt;span class=&#34;math inline&#34;&gt;\(\dbinom{n + m}{m}\)&lt;/span&gt;。&lt;/p&gt;
+&lt;p&gt;有障碍则需要考虑容斥。&lt;/p&gt;
+&lt;p&gt;将所有的障碍点以及 &lt;span class=&#34;math inline&#34;&gt;\((n, m)\)&lt;/span&gt; 视为关键点，排个序，然后便令 &lt;span class=&#34;math inline&#34;&gt;\(f_i\)&lt;/span&gt; 为从 &lt;span class=&#34;math inline&#34;&gt;\((0, 0)\)&lt;/span&gt; 出发，不经过障碍点，走到第 &lt;span class=&#34;math inline&#34;&gt;\(i\)&lt;/span&gt; 个关键点的方案数，则 &lt;span class=&#34;math display&#34;&gt;\[
+f_i = \binom{x_i + y_i}{x_i}- \sum_{x_j\le x_i\land y_j\le y_i}f_j\times\binom{(x_i - x_j) + (y_i - y_j)}{x_i - x_j}
+\]&lt;/span&gt; 于是时间复杂度为 &lt;span class=&#34;math inline&#34;&gt;\(O(k^2)\)&lt;/span&gt;。&lt;/p&gt;
+&lt;h2 id=&#34;implementation&#34;&gt;Implementation&lt;/h2&gt;
+&lt;div class=&#34;sourceCode&#34; id=&#34;cb1&#34;&gt;&lt;pre class=&#34;sourceCode cpp&#34;&gt;&lt;code class=&#34;sourceCode cpp&#34;&gt;&lt;span id=&#34;cb1-1&#34;&gt;&lt;a href=&#34;#cb1-1&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;&lt;span class=&#34;kw&#34;&gt;using&lt;/span&gt; Point = pair&amp;lt;&lt;span class=&#34;dt&#34;&gt;int&lt;/span&gt;, &lt;span class=&#34;dt&#34;&gt;int&lt;/span&gt;&amp;gt;;&lt;/span&gt;
+&lt;span id=&#34;cb1-2&#34;&gt;&lt;a href=&#34;#cb1-2&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;Point p[&lt;span class=&#34;dv&#34;&gt;505&lt;/span&gt;];&lt;/span&gt;
+&lt;span id=&#34;cb1-3&#34;&gt;&lt;a href=&#34;#cb1-3&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;&lt;/span&gt;
+&lt;span id=&#34;cb1-4&#34;&gt;&lt;a href=&#34;#cb1-4&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;&lt;span class=&#34;at&#34;&gt;const&lt;/span&gt; &lt;span class=&#34;dt&#34;&gt;int&lt;/span&gt; maxn = &lt;span class=&#34;fl&#34;&gt;1e7&lt;/span&gt; + &lt;span class=&#34;dv&#34;&gt;5&lt;/span&gt;, N = &lt;span class=&#34;fl&#34;&gt;1e7&lt;/span&gt;;&lt;/span&gt;
+&lt;span id=&#34;cb1-5&#34;&gt;&lt;a href=&#34;#cb1-5&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;&lt;span class=&#34;dt&#34;&gt;int&lt;/span&gt; Ax, Ay, Bx, By, Ex, Ey, K, tot;&lt;/span&gt;
+&lt;span id=&#34;cb1-6&#34;&gt;&lt;a href=&#34;#cb1-6&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;modint fac[maxn], ifac[maxn], f[&lt;span class=&#34;dv&#34;&gt;505&lt;/span&gt;];&lt;/span&gt;
+&lt;span id=&#34;cb1-7&#34;&gt;&lt;a href=&#34;#cb1-7&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;&lt;/span&gt;
+&lt;span id=&#34;cb1-8&#34;&gt;&lt;a href=&#34;#cb1-8&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;modint binom(&lt;span class=&#34;dt&#34;&gt;int&lt;/span&gt; n, &lt;span class=&#34;dt&#34;&gt;int&lt;/span&gt; m) {&lt;span class=&#34;cf&#34;&gt;return&lt;/span&gt; n &amp;lt; m ? &lt;span class=&#34;dv&#34;&gt;0&lt;/span&gt; : fac[n] * ifac[m] * ifac[n - m];}&lt;/span&gt;
+&lt;span id=&#34;cb1-9&#34;&gt;&lt;a href=&#34;#cb1-9&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;&lt;/span&gt;
+&lt;span id=&#34;cb1-10&#34;&gt;&lt;a href=&#34;#cb1-10&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;&lt;span class=&#34;dt&#34;&gt;bool&lt;/span&gt; convert(&lt;span class=&#34;dt&#34;&gt;int&lt;/span&gt; &amp;amp;x, &lt;span class=&#34;dt&#34;&gt;int&lt;/span&gt; &amp;amp;y) {&lt;/span&gt;
+&lt;span id=&#34;cb1-11&#34;&gt;&lt;a href=&#34;#cb1-11&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;    &lt;span class=&#34;dt&#34;&gt;int&lt;/span&gt; rx, ry;&lt;/span&gt;
+&lt;span id=&#34;cb1-12&#34;&gt;&lt;a href=&#34;#cb1-12&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;    &lt;span class=&#34;cf&#34;&gt;if&lt;/span&gt; ((x * Ay - y * Ax) % (Bx * Ay - Ax * By)) &lt;span class=&#34;cf&#34;&gt;return&lt;/span&gt; &lt;span class=&#34;kw&#34;&gt;false&lt;/span&gt;;&lt;/span&gt;
+&lt;span id=&#34;cb1-13&#34;&gt;&lt;a href=&#34;#cb1-13&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;    &lt;span class=&#34;cf&#34;&gt;else&lt;/span&gt; ry = (x * Ay - y * Ax) / (Bx * Ay - Ax * By);&lt;/span&gt;
+&lt;span id=&#34;cb1-14&#34;&gt;&lt;a href=&#34;#cb1-14&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;    &lt;span class=&#34;cf&#34;&gt;if&lt;/span&gt; ((x * By - y * Bx) % (Ax * By - Bx * Ay)) &lt;span class=&#34;cf&#34;&gt;return&lt;/span&gt; &lt;span class=&#34;kw&#34;&gt;false&lt;/span&gt;;&lt;/span&gt;
+&lt;span id=&#34;cb1-15&#34;&gt;&lt;a href=&#34;#cb1-15&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;    &lt;span class=&#34;cf&#34;&gt;else&lt;/span&gt; rx = (x * By - y * Bx) / (Ax * By - Bx * Ay);&lt;/span&gt;
+&lt;span id=&#34;cb1-16&#34;&gt;&lt;a href=&#34;#cb1-16&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;    &lt;span class=&#34;cf&#34;&gt;return&lt;/span&gt; x = rx, y = ry, &lt;span class=&#34;kw&#34;&gt;true&lt;/span&gt;;&lt;/span&gt;
+&lt;span id=&#34;cb1-17&#34;&gt;&lt;a href=&#34;#cb1-17&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;}&lt;/span&gt;
+&lt;span id=&#34;cb1-18&#34;&gt;&lt;a href=&#34;#cb1-18&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;&lt;/span&gt;
+&lt;span id=&#34;cb1-19&#34;&gt;&lt;a href=&#34;#cb1-19&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;&lt;span class=&#34;dt&#34;&gt;int&lt;/span&gt; main() {&lt;/span&gt;
+&lt;span id=&#34;cb1-20&#34;&gt;&lt;a href=&#34;#cb1-20&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;    fac[&lt;span class=&#34;dv&#34;&gt;0&lt;/span&gt;] = &lt;span class=&#34;dv&#34;&gt;1&lt;/span&gt;;&lt;/span&gt;
+&lt;span id=&#34;cb1-21&#34;&gt;&lt;a href=&#34;#cb1-21&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;    FOR(i, &lt;span class=&#34;dv&#34;&gt;1&lt;/span&gt;, N) fac[i] = i * fac[i - &lt;span class=&#34;dv&#34;&gt;1&lt;/span&gt;];&lt;/span&gt;
+&lt;span id=&#34;cb1-22&#34;&gt;&lt;a href=&#34;#cb1-22&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;    ifac[N] = qPow(fac[N], mod - &lt;span class=&#34;dv&#34;&gt;2&lt;/span&gt;);&lt;/span&gt;
+&lt;span id=&#34;cb1-23&#34;&gt;&lt;a href=&#34;#cb1-23&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;    DEC(i, N - &lt;span class=&#34;dv&#34;&gt;1&lt;/span&gt;, &lt;span class=&#34;dv&#34;&gt;0&lt;/span&gt;) ifac[i] = (i + &lt;span class=&#34;dv&#34;&gt;1&lt;/span&gt;) * ifac[i + &lt;span class=&#34;dv&#34;&gt;1&lt;/span&gt;];&lt;/span&gt;
+&lt;span id=&#34;cb1-24&#34;&gt;&lt;a href=&#34;#cb1-24&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;    read(Ex, Ey, K, Ax, Ay, Bx, By);&lt;/span&gt;
+&lt;span id=&#34;cb1-25&#34;&gt;&lt;a href=&#34;#cb1-25&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;    &lt;span class=&#34;cf&#34;&gt;if&lt;/span&gt; (!convert(Ex, Ey)) {&lt;/span&gt;
+&lt;span id=&#34;cb1-26&#34;&gt;&lt;a href=&#34;#cb1-26&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;        print(&lt;span class=&#34;dv&#34;&gt;0&lt;/span&gt;);&lt;/span&gt;
+&lt;span id=&#34;cb1-27&#34;&gt;&lt;a href=&#34;#cb1-27&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;    } &lt;span class=&#34;cf&#34;&gt;else&lt;/span&gt; {&lt;/span&gt;
+&lt;span id=&#34;cb1-28&#34;&gt;&lt;a href=&#34;#cb1-28&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;        p[tot = &lt;span class=&#34;dv&#34;&gt;1&lt;/span&gt;] = {Ex, Ey};&lt;/span&gt;
+&lt;span id=&#34;cb1-29&#34;&gt;&lt;a href=&#34;#cb1-29&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;        FOR(i, &lt;span class=&#34;dv&#34;&gt;1&lt;/span&gt;, K) {&lt;/span&gt;
+&lt;span id=&#34;cb1-30&#34;&gt;&lt;a href=&#34;#cb1-30&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;            &lt;span class=&#34;dt&#34;&gt;int&lt;/span&gt; x, y; read(x, y);&lt;/span&gt;
+&lt;span id=&#34;cb1-31&#34;&gt;&lt;a href=&#34;#cb1-31&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;            &lt;span class=&#34;cf&#34;&gt;if&lt;/span&gt; (convert(x, y)) p[++tot] = {x, y};&lt;/span&gt;
+&lt;span id=&#34;cb1-32&#34;&gt;&lt;a href=&#34;#cb1-32&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;        }&lt;/span&gt;
+&lt;span id=&#34;cb1-33&#34;&gt;&lt;a href=&#34;#cb1-33&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;        sort(p + &lt;span class=&#34;dv&#34;&gt;1&lt;/span&gt;, p + tot + &lt;span class=&#34;dv&#34;&gt;1&lt;/span&gt;);&lt;/span&gt;
+&lt;span id=&#34;cb1-34&#34;&gt;&lt;a href=&#34;#cb1-34&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;        FOR(i, &lt;span class=&#34;dv&#34;&gt;1&lt;/span&gt;, tot) {&lt;/span&gt;
+&lt;span id=&#34;cb1-35&#34;&gt;&lt;a href=&#34;#cb1-35&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;            f[i] = binom(p[i].first + p[i].second, p[i].second);&lt;/span&gt;
+&lt;span id=&#34;cb1-36&#34;&gt;&lt;a href=&#34;#cb1-36&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;            FOR(j, &lt;span class=&#34;dv&#34;&gt;1&lt;/span&gt;, i - &lt;span class=&#34;dv&#34;&gt;1&lt;/span&gt;) &lt;span class=&#34;cf&#34;&gt;if&lt;/span&gt; (p[j].first &amp;lt;= p[i].first &amp;amp;&amp;amp; p[j].second &amp;lt;= p[i].second)&lt;/span&gt;
+&lt;span id=&#34;cb1-37&#34;&gt;&lt;a href=&#34;#cb1-37&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;                f[i] -= f[j] * binom(p[i].first - p[j].first + p[i].second - p[j].second, p[i].first - p[j].first);&lt;/span&gt;
+&lt;span id=&#34;cb1-38&#34;&gt;&lt;a href=&#34;#cb1-38&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;        }&lt;/span&gt;
+&lt;span id=&#34;cb1-39&#34;&gt;&lt;a href=&#34;#cb1-39&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;        FOR(i, &lt;span class=&#34;dv&#34;&gt;1&lt;/span&gt;, tot) &lt;span class=&#34;cf&#34;&gt;if&lt;/span&gt; (p[i].first == Ex &amp;amp;&amp;amp; p[i].second == Ey) {&lt;/span&gt;
+&lt;span id=&#34;cb1-40&#34;&gt;&lt;a href=&#34;#cb1-40&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;            print(f[i]);&lt;/span&gt;
+&lt;span id=&#34;cb1-41&#34;&gt;&lt;a href=&#34;#cb1-41&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;            &lt;span class=&#34;cf&#34;&gt;break&lt;/span&gt;;&lt;/span&gt;
+&lt;span id=&#34;cb1-42&#34;&gt;&lt;a href=&#34;#cb1-42&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;        }&lt;/span&gt;
+&lt;span id=&#34;cb1-43&#34;&gt;&lt;a href=&#34;#cb1-43&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;    }&lt;/span&gt;
+&lt;span id=&#34;cb1-44&#34;&gt;&lt;a href=&#34;#cb1-44&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;    &lt;span class=&#34;cf&#34;&gt;return&lt;/span&gt; output(), &lt;span class=&#34;dv&#34;&gt;0&lt;/span&gt;;&lt;/span&gt;
+&lt;span id=&#34;cb1-45&#34;&gt;&lt;a href=&#34;#cb1-45&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;}&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+</description>
+        </item>
+        
+    </channel>
+</rss>

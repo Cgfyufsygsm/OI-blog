@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+    <channel>
+        <title>平面几何 on 清烛的博客</title>
+        <link>https://oi.imyangty.com/tags/plane-geometry/</link>
+        <description>Recent content in 平面几何 on 清烛的博客</description>
+        <generator>Hugo -- gohugo.io</generator>
+        <language>zh-CN</language>
+        <lastBuildDate>Sat, 30 Oct 2021 15:02:00 +0800</lastBuildDate><atom:link href="https://oi.imyangty.com/tags/plane-geometry/index.xml" rel="self" type="application/rss+xml" /><item>
+        <title>AGC039D Incenters</title>
+        <link>https://oi.imyangty.com/sol-agc039d/</link>
+        <pubDate>Sat, 30 Oct 2021 15:02:00 +0800</pubDate>
+        
+        <guid>https://oi.imyangty.com/sol-agc039d/</guid>
+        <description>&lt;img src="https://yangty-pic.oss-cn-beijing.aliyuncs.com/bg44.webp" alt="Featured image of post AGC039D Incenters" /&gt;&lt;h2 id=&#34;description&#34;&gt;Description&lt;/h2&gt;
+&lt;p&gt;给定 &lt;span class=&#34;math inline&#34;&gt;\(n\)&lt;/span&gt; 个单位圆上的点，坐标形如 &lt;span class=&#34;math inline&#34;&gt;\(\left(\cos\dfrac{2\pi T_i}{L}, \sin\dfrac{2\pi T_i}{L}\right)\)&lt;/span&gt;，等概率随机选 &lt;span class=&#34;math inline&#34;&gt;\(3\)&lt;/span&gt; 个点，问内心坐标的期望。&lt;/p&gt;
+&lt;p&gt;&lt;span class=&#34;math inline&#34;&gt;\(3\le n\le 3000\)&lt;/span&gt;。&lt;/p&gt;
+&lt;h2 id=&#34;solution&#34;&gt;Solution&lt;/h2&gt;
+&lt;p&gt;平面几何的推导题。mark 住说不定以后有用。&lt;/p&gt;
+&lt;p&gt;Lemma 1：对于 &lt;span class=&#34;math inline&#34;&gt;\(\triangle ABC\)&lt;/span&gt;，在外接圆上取 &lt;span class=&#34;math inline&#34;&gt;\(\overset{\frown}{BC}\)&lt;/span&gt; 的中点 &lt;span class=&#34;math inline&#34;&gt;\(A&amp;#39;\)&lt;/span&gt;，&lt;span class=&#34;math inline&#34;&gt;\(B&amp;#39;\)&lt;/span&gt; 和 &lt;span class=&#34;math inline&#34;&gt;\(C&amp;#39;\)&lt;/span&gt; 同理，则 &lt;span class=&#34;math inline&#34;&gt;\(\triangle ABC\)&lt;/span&gt; 的内心 &lt;span class=&#34;math inline&#34;&gt;\(I\)&lt;/span&gt; 与 &lt;span class=&#34;math inline&#34;&gt;\(\triangle A&amp;#39;B&amp;#39;C&amp;#39;\)&lt;/span&gt; 的垂心 &lt;span class=&#34;math inline&#34;&gt;\(H\)&lt;/span&gt; 重合。&lt;/p&gt;
+&lt;p&gt;证明：考虑下面的 &lt;span class=&#34;math inline&#34;&gt;\(\triangle ABC\)&lt;/span&gt; 和 &lt;span class=&#34;math inline&#34;&gt;\(\triangle A&amp;#39;B&amp;#39;C&amp;#39;\)&lt;/span&gt;：&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://yangty-pic.oss-cn-beijing.aliyuncs.com/agc039d1.png&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;首先我们由初中平几知识知道 &lt;span class=&#34;math inline&#34;&gt;\(A\)&lt;/span&gt;，&lt;span class=&#34;math inline&#34;&gt;\(I\)&lt;/span&gt; 和 &lt;span class=&#34;math inline&#34;&gt;\(A&amp;#39;\)&lt;/span&gt; 是共线的，然后我们就可以进行角度的转化，随便转几下就可以发现 &lt;span class=&#34;math inline&#34;&gt;\(AA&amp;#39;\perp BC\)&lt;/span&gt;，依次类推，故内心与垂心重合。&lt;/p&gt;
+&lt;p&gt;Lemma 2（欧拉线定理）：&lt;span class=&#34;math inline&#34;&gt;\(\triangle ABC\)&lt;/span&gt; 的垂心 &lt;span class=&#34;math inline&#34;&gt;\(H\)&lt;/span&gt;，重心 &lt;span class=&#34;math inline&#34;&gt;\(G\)&lt;/span&gt; 和外心 &lt;span class=&#34;math inline&#34;&gt;\(O\)&lt;/span&gt; 共线，且 &lt;span class=&#34;math inline&#34;&gt;\(GH = 2GO\)&lt;/span&gt;。&lt;/p&gt;
+&lt;p&gt;证明：考虑下图的 &lt;span class=&#34;math inline&#34;&gt;\(\triangle ABC\)&lt;/span&gt;：&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://yangty-pic.oss-cn-beijing.aliyuncs.com/agc039d2.png&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;证明的话考虑 &lt;span class=&#34;math inline&#34;&gt;\(\overrightarrow{OH} = \overrightarrow{OA}+ \overrightarrow{OB} + \overrightarrow{OC}\)&lt;/span&gt;，而 &lt;span class=&#34;math inline&#34;&gt;\(\overrightarrow{OG} = \dfrac13\left(\overrightarrow{OA}+ \overrightarrow{OB} + \overrightarrow{OC}\right)\)&lt;/span&gt;。证毕。&lt;/p&gt;
+&lt;p&gt;回到本题，原来三角形的内心就被我们转化成功了。然后由于 &lt;span class=&#34;math inline&#34;&gt;\(\overrightarrow{OH} = 3\overrightarrow{OG}\)&lt;/span&gt;，所以要求的点的坐标即为 &lt;span class=&#34;math inline&#34;&gt;\(A&amp;#39;\)&lt;/span&gt;，&lt;span class=&#34;math inline&#34;&gt;\(B&amp;#39;\)&lt;/span&gt; 和 &lt;span class=&#34;math inline&#34;&gt;\(C&amp;#39;\)&lt;/span&gt; 的坐标之和。接下来就是枚举三角形然后计算了。可是，&lt;span class=&#34;math inline&#34;&gt;\(O(n^3)\)&lt;/span&gt; 是过不去的，怎么办？&lt;/p&gt;
+&lt;p&gt;不妨考虑枚举点 &lt;span class=&#34;math inline&#34;&gt;\(A\)&lt;/span&gt; 和 &lt;span class=&#34;math inline&#34;&gt;\(B\)&lt;/span&gt;，然后 &lt;span class=&#34;math inline&#34;&gt;\(C&amp;#39;\)&lt;/span&gt; 自然就出来了（取角度的平均数），每个都这样子枚举一遍，统计 &lt;span class=&#34;math inline&#34;&gt;\(C&amp;#39;\)&lt;/span&gt; 的贡献，就可以了。&lt;/p&gt;
+&lt;h2 id=&#34;implementation&#34;&gt;Implementation&lt;/h2&gt;
+&lt;div class=&#34;sourceCode&#34; id=&#34;cb1&#34;&gt;&lt;pre class=&#34;sourceCode cpp&#34;&gt;&lt;code class=&#34;sourceCode cpp&#34;&gt;&lt;span id=&#34;cb1-1&#34;&gt;&lt;a href=&#34;#cb1-1&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;&lt;span class=&#34;kw&#34;&gt;using&lt;/span&gt; db = &lt;span class=&#34;dt&#34;&gt;long&lt;/span&gt; &lt;span class=&#34;dt&#34;&gt;double&lt;/span&gt;;&lt;/span&gt;
+&lt;span id=&#34;cb1-2&#34;&gt;&lt;a href=&#34;#cb1-2&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;&lt;span class=&#34;at&#34;&gt;const&lt;/span&gt; db PI = acos(-&lt;span class=&#34;fl&#34;&gt;1.0&lt;/span&gt;);&lt;/span&gt;
+&lt;span id=&#34;cb1-3&#34;&gt;&lt;a href=&#34;#cb1-3&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;&lt;span class=&#34;at&#34;&gt;const&lt;/span&gt; &lt;span class=&#34;dt&#34;&gt;int&lt;/span&gt; maxn = &lt;span class=&#34;dv&#34;&gt;3005&lt;/span&gt;;&lt;/span&gt;
+&lt;span id=&#34;cb1-4&#34;&gt;&lt;a href=&#34;#cb1-4&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;&lt;/span&gt;
+&lt;span id=&#34;cb1-5&#34;&gt;&lt;a href=&#34;#cb1-5&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;&lt;span class=&#34;dt&#34;&gt;int&lt;/span&gt; n, L, t[maxn];&lt;/span&gt;
+&lt;span id=&#34;cb1-6&#34;&gt;&lt;a href=&#34;#cb1-6&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;&lt;/span&gt;
+&lt;span id=&#34;cb1-7&#34;&gt;&lt;a href=&#34;#cb1-7&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;&lt;span class=&#34;dt&#34;&gt;int&lt;/span&gt; main() {&lt;/span&gt;
+&lt;span id=&#34;cb1-8&#34;&gt;&lt;a href=&#34;#cb1-8&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;    read(n), read(L);&lt;/span&gt;
+&lt;span id=&#34;cb1-9&#34;&gt;&lt;a href=&#34;#cb1-9&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;    FOR(i, &lt;span class=&#34;dv&#34;&gt;1&lt;/span&gt;, n) read(t[i]);&lt;/span&gt;
+&lt;span id=&#34;cb1-10&#34;&gt;&lt;a href=&#34;#cb1-10&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;    db ansx = &lt;span class=&#34;dv&#34;&gt;0&lt;/span&gt;, ansy = &lt;span class=&#34;dv&#34;&gt;0&lt;/span&gt;;&lt;/span&gt;
+&lt;span id=&#34;cb1-11&#34;&gt;&lt;a href=&#34;#cb1-11&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;    FOR(i, &lt;span class=&#34;dv&#34;&gt;1&lt;/span&gt;, n) {&lt;/span&gt;
+&lt;span id=&#34;cb1-12&#34;&gt;&lt;a href=&#34;#cb1-12&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;        FOR(j, i + &lt;span class=&#34;dv&#34;&gt;1&lt;/span&gt;, n) {&lt;/span&gt;
+&lt;span id=&#34;cb1-13&#34;&gt;&lt;a href=&#34;#cb1-13&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;            ansx += (n - &lt;span class=&#34;dv&#34;&gt;2&lt;/span&gt; * (j - i)) * cos(PI * (t[i] + t[j]) / L);&lt;/span&gt;
+&lt;span id=&#34;cb1-14&#34;&gt;&lt;a href=&#34;#cb1-14&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;            ansy += (n - &lt;span class=&#34;dv&#34;&gt;2&lt;/span&gt; * (j - i)) * sin(PI * (t[i] + t[j]) / L);&lt;/span&gt;
+&lt;span id=&#34;cb1-15&#34;&gt;&lt;a href=&#34;#cb1-15&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;        }&lt;/span&gt;
+&lt;span id=&#34;cb1-16&#34;&gt;&lt;a href=&#34;#cb1-16&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;    }&lt;/span&gt;
+&lt;span id=&#34;cb1-17&#34;&gt;&lt;a href=&#34;#cb1-17&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;    db cnt = &lt;span class=&#34;fl&#34;&gt;1.0&lt;/span&gt; * n * (n - &lt;span class=&#34;dv&#34;&gt;1&lt;/span&gt;) * (n - &lt;span class=&#34;dv&#34;&gt;2&lt;/span&gt;) / &lt;span class=&#34;dv&#34;&gt;6&lt;/span&gt;;&lt;/span&gt;
+&lt;span id=&#34;cb1-18&#34;&gt;&lt;a href=&#34;#cb1-18&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;    printf(&lt;span class=&#34;st&#34;&gt;&amp;quot;&lt;/span&gt;&lt;span class=&#34;sc&#34;&gt;%.12Lf&lt;/span&gt;&lt;span class=&#34;st&#34;&gt; &lt;/span&gt;&lt;span class=&#34;sc&#34;&gt;%.12Lf\n&lt;/span&gt;&lt;span class=&#34;st&#34;&gt;&amp;quot;&lt;/span&gt;, ansx / cnt, ansy / cnt);&lt;/span&gt;
+&lt;span id=&#34;cb1-19&#34;&gt;&lt;a href=&#34;#cb1-19&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;    &lt;span class=&#34;cf&#34;&gt;return&lt;/span&gt; &lt;span class=&#34;dv&#34;&gt;0&lt;/span&gt;;&lt;/span&gt;
+&lt;span id=&#34;cb1-20&#34;&gt;&lt;a href=&#34;#cb1-20&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;}&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+</description>
+        </item>
+        
+    </channel>
+</rss>

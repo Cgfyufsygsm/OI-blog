@@ -1,0 +1,281 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+    <channel>
+        <title>凸包 on 清烛的博客</title>
+        <link>https://oi.imyangty.com/tags/convex-hull/</link>
+        <description>Recent content in 凸包 on 清烛的博客</description>
+        <generator>Hugo -- gohugo.io</generator>
+        <language>zh-CN</language>
+        <lastBuildDate>Fri, 08 Oct 2021 21:24:49 +0800</lastBuildDate><atom:link href="https://oi.imyangty.com/tags/convex-hull/index.xml" rel="self" type="application/rss+xml" /><item>
+        <title>计算几何全家桶</title>
+        <link>https://oi.imyangty.com/note-geometry/</link>
+        <pubDate>Fri, 08 Oct 2021 21:24:49 +0800</pubDate>
+        
+        <guid>https://oi.imyangty.com/note-geometry/</guid>
+        <description>&lt;img src="https://yangty-pic.oss-cn-beijing.aliyuncs.com/bg14.webp" alt="Featured image of post 计算几何全家桶" /&gt;&lt;h2 id=&#34;前言&#34;&gt;前言&lt;/h2&gt;
+&lt;p&gt;最近模拟赛好像比较爱考😢有点虚。毕竟在 NOI 大纲上的等级比较低。&lt;/p&gt;
+&lt;p&gt;计算几何还是比较烦的一个东西。如果以后打 ICPC 的话还是需要会点的。&lt;/p&gt;
+&lt;p&gt;先考虑二维计算几何。&lt;del&gt;三维是甚么毒瘤东西&lt;/del&gt;&lt;/p&gt;
+&lt;h2 id=&#34;基本定义&#34;&gt;基本定义&lt;/h2&gt;
+&lt;h3 id=&#34;一些约定&#34;&gt;一些约定&lt;/h3&gt;
+&lt;p&gt;类型名和宏&lt;/p&gt;
+&lt;div class=&#34;sourceCode&#34; id=&#34;cb1&#34;&gt;&lt;pre class=&#34;sourceCode cpp&#34;&gt;&lt;code class=&#34;sourceCode cpp&#34;&gt;&lt;span id=&#34;cb1-1&#34;&gt;&lt;a href=&#34;#cb1-1&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;&lt;span class=&#34;pp&#34;&gt;#define FOR&lt;/span&gt;(i,&lt;span class=&#34;pp&#34;&gt; &lt;/span&gt;a,&lt;span class=&#34;pp&#34;&gt; &lt;/span&gt;b)&lt;span class=&#34;pp&#34;&gt; &lt;/span&gt;&lt;span class=&#34;cf&#34;&gt;for&lt;/span&gt;&lt;span class=&#34;pp&#34;&gt; &lt;/span&gt;(&lt;span class=&#34;dt&#34;&gt;int&lt;/span&gt;&lt;span class=&#34;pp&#34;&gt; &lt;/span&gt;i&lt;span class=&#34;pp&#34;&gt; &lt;/span&gt;=&lt;span class=&#34;pp&#34;&gt; &lt;/span&gt;(a);&lt;span class=&#34;pp&#34;&gt; &lt;/span&gt;i&lt;span class=&#34;pp&#34;&gt; &lt;/span&gt;&amp;lt;=&lt;span class=&#34;pp&#34;&gt; &lt;/span&gt;(b);&lt;span class=&#34;pp&#34;&gt; &lt;/span&gt;++i)&lt;/span&gt;
+&lt;span id=&#34;cb1-2&#34;&gt;&lt;a href=&#34;#cb1-2&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;&lt;span class=&#34;pp&#34;&gt;#define DEC&lt;/span&gt;(i,&lt;span class=&#34;pp&#34;&gt; &lt;/span&gt;a,&lt;span class=&#34;pp&#34;&gt; &lt;/span&gt;b)&lt;span class=&#34;pp&#34;&gt; &lt;/span&gt;&lt;span class=&#34;cf&#34;&gt;for&lt;/span&gt;&lt;span class=&#34;pp&#34;&gt; &lt;/span&gt;(&lt;span class=&#34;dt&#34;&gt;int&lt;/span&gt;&lt;span class=&#34;pp&#34;&gt; &lt;/span&gt;i&lt;span class=&#34;pp&#34;&gt; &lt;/span&gt;=&lt;span class=&#34;pp&#34;&gt; &lt;/span&gt;(b);&lt;span class=&#34;pp&#34;&gt; &lt;/span&gt;i&lt;span class=&#34;pp&#34;&gt; &lt;/span&gt;&amp;gt;=&lt;span class=&#34;pp&#34;&gt; &lt;/span&gt;(a);&lt;span class=&#34;pp&#34;&gt; &lt;/span&gt;--i)&lt;/span&gt;
+&lt;span id=&#34;cb1-3&#34;&gt;&lt;a href=&#34;#cb1-3&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;&lt;span class=&#34;pp&#34;&gt;#define il &lt;/span&gt;&lt;span class=&#34;kw&#34;&gt;inline&lt;/span&gt;&lt;/span&gt;
+&lt;span id=&#34;cb1-4&#34;&gt;&lt;a href=&#34;#cb1-4&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;&lt;/span&gt;
+&lt;span id=&#34;cb1-5&#34;&gt;&lt;a href=&#34;#cb1-5&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;&lt;span class=&#34;kw&#34;&gt;using&lt;/span&gt; db = &lt;span class=&#34;dt&#34;&gt;double&lt;/span&gt;;&lt;/span&gt;
+&lt;span id=&#34;cb1-6&#34;&gt;&lt;a href=&#34;#cb1-6&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;&lt;span class=&#34;kw&#34;&gt;using&lt;/span&gt; ll = &lt;span class=&#34;dt&#34;&gt;long&lt;/span&gt; &lt;span class=&#34;dt&#34;&gt;long&lt;/span&gt;;&lt;/span&gt;
+&lt;span id=&#34;cb1-7&#34;&gt;&lt;a href=&#34;#cb1-7&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;&lt;span class=&#34;kw&#34;&gt;using&lt;/span&gt; ldb = &lt;span class=&#34;dt&#34;&gt;long&lt;/span&gt; &lt;span class=&#34;dt&#34;&gt;double&lt;/span&gt;;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;浮点误差相关。由于计算几何涉及浮点运算较多，故我们需要减少浮点误差对答案正确性造成的影响。&lt;/p&gt;
+&lt;div class=&#34;sourceCode&#34; id=&#34;cb2&#34;&gt;&lt;pre class=&#34;sourceCode cpp&#34;&gt;&lt;code class=&#34;sourceCode cpp&#34;&gt;&lt;span id=&#34;cb2-1&#34;&gt;&lt;a href=&#34;#cb2-1&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;&lt;span class=&#34;at&#34;&gt;const&lt;/span&gt; db EPS = &lt;span class=&#34;fl&#34;&gt;1e-8&lt;/span&gt;;&lt;/span&gt;
+&lt;span id=&#34;cb2-2&#34;&gt;&lt;a href=&#34;#cb2-2&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;&lt;span class=&#34;dt&#34;&gt;int&lt;/span&gt; sgn(db x) {&lt;span class=&#34;cf&#34;&gt;return&lt;/span&gt; fabs(x) &amp;lt; EPS ? &lt;span class=&#34;dv&#34;&gt;0&lt;/span&gt; : (x &amp;gt; &lt;span class=&#34;dv&#34;&gt;0&lt;/span&gt; ? &lt;span class=&#34;dv&#34;&gt;1&lt;/span&gt; : -&lt;span class=&#34;dv&#34;&gt;1&lt;/span&gt;);}&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;h3 id=&#34;点和向量&#34;&gt;点和向量&lt;/h3&gt;
+&lt;p&gt;我们知道一个有序实数对可以表示点的坐标，同样对于向量也适用。所以我们存储点的方式和向量的方式其实是一样的。&lt;/p&gt;
+&lt;div class=&#34;sourceCode&#34; id=&#34;cb3&#34;&gt;&lt;pre class=&#34;sourceCode cpp&#34;&gt;&lt;code class=&#34;sourceCode cpp&#34;&gt;&lt;span id=&#34;cb3-1&#34;&gt;&lt;a href=&#34;#cb3-1&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;&lt;span class=&#34;kw&#34;&gt;struct&lt;/span&gt; Point {&lt;/span&gt;
+&lt;span id=&#34;cb3-2&#34;&gt;&lt;a href=&#34;#cb3-2&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;    db x, y;&lt;/span&gt;
+&lt;span id=&#34;cb3-3&#34;&gt;&lt;a href=&#34;#cb3-3&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;    Point(db _x = &lt;span class=&#34;dv&#34;&gt;0&lt;/span&gt;, db _y = &lt;span class=&#34;dv&#34;&gt;0&lt;/span&gt;) : x(_x), y(_y) {}&lt;/span&gt;
+&lt;span id=&#34;cb3-4&#34;&gt;&lt;a href=&#34;#cb3-4&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;};&lt;/span&gt;
+&lt;span id=&#34;cb3-5&#34;&gt;&lt;a href=&#34;#cb3-5&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;&lt;/span&gt;
+&lt;span id=&#34;cb3-6&#34;&gt;&lt;a href=&#34;#cb3-6&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;&lt;span class=&#34;kw&#34;&gt;using&lt;/span&gt; Vector = Point;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;向量的加减法，数乘等基本运算先写在这里。&lt;/p&gt;
+&lt;div class=&#34;sourceCode&#34; id=&#34;cb4&#34;&gt;&lt;pre class=&#34;sourceCode cpp&#34;&gt;&lt;code class=&#34;sourceCode cpp&#34;&gt;&lt;span id=&#34;cb4-1&#34;&gt;&lt;a href=&#34;#cb4-1&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;Vector &lt;span class=&#34;kw&#34;&gt;operator&lt;/span&gt;+(&lt;span class=&#34;at&#34;&gt;const&lt;/span&gt; Vector &amp;amp;a, &lt;span class=&#34;at&#34;&gt;const&lt;/span&gt; Vector &amp;amp;b) {&lt;span class=&#34;cf&#34;&gt;return&lt;/span&gt; Vector(a.x + b.x, a.y + b.y);}&lt;/span&gt;
+&lt;span id=&#34;cb4-2&#34;&gt;&lt;a href=&#34;#cb4-2&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;Vector &lt;span class=&#34;kw&#34;&gt;operator&lt;/span&gt;-(&lt;span class=&#34;at&#34;&gt;const&lt;/span&gt; Vector &amp;amp;a, &lt;span class=&#34;at&#34;&gt;const&lt;/span&gt; Vector &amp;amp;b) {&lt;span class=&#34;cf&#34;&gt;return&lt;/span&gt; Vector(a.x - b.x, a.y - b.y);}&lt;/span&gt;
+&lt;span id=&#34;cb4-3&#34;&gt;&lt;a href=&#34;#cb4-3&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;Vector &lt;span class=&#34;kw&#34;&gt;operator&lt;/span&gt;*(&lt;span class=&#34;at&#34;&gt;const&lt;/span&gt; Vector &amp;amp;a, &lt;span class=&#34;at&#34;&gt;const&lt;/span&gt; db &amp;amp;lambda) {&lt;span class=&#34;cf&#34;&gt;return&lt;/span&gt; Vector(lambda * a.x, lambda * a.y);}&lt;/span&gt;
+&lt;span id=&#34;cb4-4&#34;&gt;&lt;a href=&#34;#cb4-4&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;Vector &lt;span class=&#34;kw&#34;&gt;operator&lt;/span&gt;/(&lt;span class=&#34;at&#34;&gt;const&lt;/span&gt; Vector &amp;amp;a, &lt;span class=&#34;at&#34;&gt;const&lt;/span&gt; db &amp;amp;lambda) {&lt;span class=&#34;cf&#34;&gt;return&lt;/span&gt; Vector(lambda / a.x, lambda / a.y);}&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;h3 id=&#34;其他对象的存储&#34;&gt;其他对象的存储&lt;/h3&gt;
+&lt;ul&gt;
+&lt;li&gt;线段：存储两个端点。&lt;/li&gt;
+&lt;li&gt;直线：计算甚么的会带来较大的误差，因此保存直线上一点和其方向向量就可以了。&lt;/li&gt;
+&lt;li&gt;多边形：一般逆时针记录各个顶点。&lt;/li&gt;
+&lt;li&gt;圆：记录圆心和半径。&lt;/li&gt;
+&lt;li&gt;特殊曲线：记解析式甚么的。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id=&#34;基本操作&#34;&gt;基本操作&lt;/h2&gt;
+&lt;h3 id=&#34;前置公式&#34;&gt;前置公式&lt;/h3&gt;
+&lt;p&gt;正弦定理： &lt;span class=&#34;math display&#34;&gt;\[
+\frac{a}{\sin A} = \frac{b}{\sin B} = \frac{c}{\sin C} = 2R
+\]&lt;/span&gt; 余弦定理： &lt;span class=&#34;math display&#34;&gt;\[
+a^2 = b^2 + c^2 - 2bc\cos A
+\]&lt;/span&gt; 和角公式/倍角公式以及他们的变形等等： &lt;span class=&#34;math display&#34;&gt;\[
+\sin(\alpha \pm \beta) = \sin\alpha\cos\beta \pm \cos\alpha\sin\beta\\
+\cos(\alpha\pm\beta) = \cos\alpha\cos\beta \mp \sin\alpha\sin\beta\\
+\]&lt;/span&gt; 学好文化课里的这部分还是挺有帮助的。&lt;/p&gt;
+&lt;h3 id=&#34;向量的进阶操作&#34;&gt;向量的进阶操作&lt;/h3&gt;
+&lt;p&gt;点积类比做功。&lt;/p&gt;
+&lt;div class=&#34;sourceCode&#34; id=&#34;cb5&#34;&gt;&lt;pre class=&#34;sourceCode cpp&#34;&gt;&lt;code class=&#34;sourceCode cpp&#34;&gt;&lt;span id=&#34;cb5-1&#34;&gt;&lt;a href=&#34;#cb5-1&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;db &lt;span class=&#34;kw&#34;&gt;operator&lt;/span&gt;*(&lt;span class=&#34;at&#34;&gt;const&lt;/span&gt; Vector &amp;amp;a, &lt;span class=&#34;at&#34;&gt;const&lt;/span&gt; Vector &amp;amp;b) {&lt;span class=&#34;cf&#34;&gt;return&lt;/span&gt; a.x * b.x + a.y * b.y;}&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;叉积的一个几何意义是平四有向面积。&lt;/p&gt;
+&lt;div class=&#34;sourceCode&#34; id=&#34;cb6&#34;&gt;&lt;pre class=&#34;sourceCode cpp&#34;&gt;&lt;code class=&#34;sourceCode cpp&#34;&gt;&lt;span id=&#34;cb6-1&#34;&gt;&lt;a href=&#34;#cb6-1&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;db &lt;span class=&#34;kw&#34;&gt;operator&lt;/span&gt;^(&lt;span class=&#34;at&#34;&gt;const&lt;/span&gt; Vector &amp;amp;a, &lt;span class=&#34;at&#34;&gt;const&lt;/span&gt; Vector &amp;amp;b) {&lt;span class=&#34;cf&#34;&gt;return&lt;/span&gt; a.x * b.y - a.y * b.x;}&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;应用：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;若两向量的点积为正，则两向量夹角小于 &lt;span class=&#34;math inline&#34;&gt;\(\dfrac\pi2\)&lt;/span&gt;，若点积为 &lt;span class=&#34;math inline&#34;&gt;\(0\)&lt;/span&gt;，则两向量垂直，否则夹角大于 &lt;span class=&#34;math inline&#34;&gt;\(\dfrac\pi2\)&lt;/span&gt;。&lt;/li&gt;
+&lt;li&gt;&lt;span class=&#34;math inline&#34;&gt;\(\mathbf a\times \mathbf b\)&lt;/span&gt; 的正负性可以判断两个向量的方向位置关系。若其大于 &lt;span class=&#34;math inline&#34;&gt;\(0\)&lt;/span&gt;，则 &lt;span class=&#34;math inline&#34;&gt;\(\mathbf b\)&lt;/span&gt; 在 &lt;span class=&#34;math inline&#34;&gt;\(\mathbf a\)&lt;/span&gt; 左侧，反之亦然。记忆考虑右手螺旋即可。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;向量的旋转。套一个和角公式。&lt;span class=&#34;math inline&#34;&gt;\((x, y)\)&lt;/span&gt; 经过旋转 &lt;span class=&#34;math inline&#34;&gt;\(\theta\)&lt;/span&gt; 之后会得到 &lt;span class=&#34;math inline&#34;&gt;\((x\cos\theta-y\sin\theta, x\sin\theta + y\cos\theta)\)&lt;/span&gt;。记不住的话大可以现推。&lt;/p&gt;
+&lt;h3 id=&#34;极角&#34;&gt;极角&lt;/h3&gt;
+&lt;p&gt;使用 &lt;code&gt;atan2(x, y)&lt;/code&gt; 函数来求极角，这样可以在 &lt;span class=&#34;math inline&#34;&gt;\(x=0\)&lt;/span&gt; 时返回正确的结果。&lt;/p&gt;
+&lt;p&gt;极角排序非常有用。&lt;/p&gt;
+&lt;h3 id=&#34;计算多边形面积&#34;&gt;计算多边形面积&lt;/h3&gt;
+&lt;p&gt;先考虑三角形的情况。我们知道对于一个三角形 &lt;span class=&#34;math inline&#34;&gt;\(OAB\)&lt;/span&gt;，&lt;span class=&#34;math inline&#34;&gt;\(S_{\triangle OAB} = \dfrac12\overrightarrow{OA}\times\overrightarrow{OB}\)&lt;/span&gt;。&lt;del&gt;这东西可以拿来氵文化课题&lt;/del&gt;&lt;/p&gt;
+&lt;p&gt;所以计算三角形的面积是很简单的。直接坐标相减再叉乘一下就出来了。&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;整点三角形面积的两倍一定为整数。&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;咕。&lt;/p&gt;
+&lt;h3 id=&#34;点和线段的位置关系&#34;&gt;点和线段的位置关系&lt;/h3&gt;
+&lt;h3 id=&#34;线段与线段相交&#34;&gt;线段与线段相交&lt;/h3&gt;
+&lt;h2 id=&#34;凸包&#34;&gt;凸包&lt;/h2&gt;
+&lt;h2 id=&#34;最小圆覆盖&#34;&gt;最小圆覆盖&lt;/h2&gt;
+&lt;p&gt;随机增量法，期望 &lt;span class=&#34;math inline&#34;&gt;\(O(n)\)&lt;/span&gt;。关键在于新加入点不在圆内的概率为 &lt;span class=&#34;math inline&#34;&gt;\(\dfrac3i\)&lt;/span&gt;。&lt;/p&gt;
+&lt;p&gt;伪代码：&lt;/p&gt;
+&lt;div class=&#34;sourceCode&#34; id=&#34;cb7&#34;&gt;&lt;pre class=&#34;sourceCode cpp&#34;&gt;&lt;code class=&#34;sourceCode cpp&#34;&gt;&lt;span id=&#34;cb7-1&#34;&gt;&lt;a href=&#34;#cb7-1&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;圆 C;&lt;/span&gt;
+&lt;span id=&#34;cb7-2&#34;&gt;&lt;a href=&#34;#cb7-2&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;&lt;span class=&#34;cf&#34;&gt;for&lt;/span&gt; (i = &lt;span class=&#34;dv&#34;&gt;1&lt;/span&gt; to n) {&lt;/span&gt;
+&lt;span id=&#34;cb7-3&#34;&gt;&lt;a href=&#34;#cb7-3&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;    &lt;span class=&#34;cf&#34;&gt;if&lt;/span&gt; (p[i] 不在 C 内) {&lt;/span&gt;
+&lt;span id=&#34;cb7-4&#34;&gt;&lt;a href=&#34;#cb7-4&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;        C = {p[i], &lt;span class=&#34;dv&#34;&gt;0&lt;/span&gt;};&lt;/span&gt;
+&lt;span id=&#34;cb7-5&#34;&gt;&lt;a href=&#34;#cb7-5&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;        &lt;span class=&#34;cf&#34;&gt;for&lt;/span&gt; (j = &lt;span class=&#34;dv&#34;&gt;1&lt;/span&gt; to i - &lt;span class=&#34;dv&#34;&gt;1&lt;/span&gt;) {&lt;/span&gt;
+&lt;span id=&#34;cb7-6&#34;&gt;&lt;a href=&#34;#cb7-6&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;            &lt;span class=&#34;cf&#34;&gt;if&lt;/span&gt; (p[j] 不在 C 内) {&lt;/span&gt;
+&lt;span id=&#34;cb7-7&#34;&gt;&lt;a href=&#34;#cb7-7&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;                C = 直径为 p[i] 和 p[j] 的圆;&lt;/span&gt;
+&lt;span id=&#34;cb7-8&#34;&gt;&lt;a href=&#34;#cb7-8&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;                &lt;span class=&#34;cf&#34;&gt;for&lt;/span&gt; (k = &lt;span class=&#34;dv&#34;&gt;1&lt;/span&gt; to j - &lt;span class=&#34;dv&#34;&gt;1&lt;/span&gt;) {&lt;/span&gt;
+&lt;span id=&#34;cb7-9&#34;&gt;&lt;a href=&#34;#cb7-9&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;                    &lt;span class=&#34;cf&#34;&gt;if&lt;/span&gt; (p[k] 不在 C 内)&lt;/span&gt;
+&lt;span id=&#34;cb7-10&#34;&gt;&lt;a href=&#34;#cb7-10&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;                        C = 外接圆(p[i], p[j], p[k]);&lt;/span&gt;
+&lt;span id=&#34;cb7-11&#34;&gt;&lt;a href=&#34;#cb7-11&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;                }&lt;/span&gt;
+&lt;span id=&#34;cb7-12&#34;&gt;&lt;a href=&#34;#cb7-12&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;            }&lt;/span&gt;
+&lt;span id=&#34;cb7-13&#34;&gt;&lt;a href=&#34;#cb7-13&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;        }&lt;/span&gt;
+&lt;span id=&#34;cb7-14&#34;&gt;&lt;a href=&#34;#cb7-14&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;    }&lt;/span&gt;
+&lt;span id=&#34;cb7-15&#34;&gt;&lt;a href=&#34;#cb7-15&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;}&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;外接圆可以这样求：&lt;/p&gt;
+&lt;div class=&#34;sourceCode&#34; id=&#34;cb8&#34;&gt;&lt;pre class=&#34;sourceCode cpp&#34;&gt;&lt;code class=&#34;sourceCode cpp&#34;&gt;&lt;span id=&#34;cb8-1&#34;&gt;&lt;a href=&#34;#cb8-1&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;&lt;span class=&#34;dt&#34;&gt;void&lt;/span&gt; get(&lt;span class=&#34;at&#34;&gt;const&lt;/span&gt; Point &amp;amp;a, &lt;span class=&#34;at&#34;&gt;const&lt;/span&gt; Point &amp;amp;b, &lt;span class=&#34;at&#34;&gt;const&lt;/span&gt; Point &amp;amp;c) {&lt;/span&gt;
+&lt;span id=&#34;cb8-2&#34;&gt;&lt;a href=&#34;#cb8-2&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;    db a1 = b.x - a.x, a2 = c.x - a.x, b1 = b.y - a.y, b2 = c.y - a.y;&lt;/span&gt;
+&lt;span id=&#34;cb8-3&#34;&gt;&lt;a href=&#34;#cb8-3&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;    db c1 = sqr(b.x) - sqr(a.x) + sqr(b.y) - sqr(a.y);&lt;/span&gt;
+&lt;span id=&#34;cb8-4&#34;&gt;&lt;a href=&#34;#cb8-4&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;    db c2 = sqr(c.x) - sqr(a.x) + sqr(c.y) - sqr(a.y);&lt;/span&gt;
+&lt;span id=&#34;cb8-5&#34;&gt;&lt;a href=&#34;#cb8-5&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;    o = {&lt;/span&gt;
+&lt;span id=&#34;cb8-6&#34;&gt;&lt;a href=&#34;#cb8-6&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;        (b2 * c1 - b1 * c2) / (b2 * a1 * &lt;span class=&#34;dv&#34;&gt;2&lt;/span&gt; - b1 * a2 * &lt;span class=&#34;dv&#34;&gt;2&lt;/span&gt;), &lt;/span&gt;
+&lt;span id=&#34;cb8-7&#34;&gt;&lt;a href=&#34;#cb8-7&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;        (a2 * c1 - a1 * c2) / (a2 * b1 * &lt;span class=&#34;dv&#34;&gt;2&lt;/span&gt; - a1 * b2 * &lt;span class=&#34;dv&#34;&gt;2&lt;/span&gt;)&lt;/span&gt;
+&lt;span id=&#34;cb8-8&#34;&gt;&lt;a href=&#34;#cb8-8&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;    };&lt;/span&gt;
+&lt;span id=&#34;cb8-9&#34;&gt;&lt;a href=&#34;#cb8-9&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;    r = dis(a, o);&lt;/span&gt;
+&lt;span id=&#34;cb8-10&#34;&gt;&lt;a href=&#34;#cb8-10&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;    &lt;span class=&#34;cf&#34;&gt;return&lt;/span&gt;;&lt;/span&gt;
+&lt;span id=&#34;cb8-11&#34;&gt;&lt;a href=&#34;#cb8-11&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;}&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;h2 id=&#34;旋转卡壳&#34;&gt;旋转卡壳&lt;/h2&gt;
+&lt;h2 id=&#34;半平面交&#34;&gt;半平面交&lt;/h2&gt;
+&lt;h2 id=&#34;pick-定理&#34;&gt;Pick 定理&lt;/h2&gt;
+&lt;h2 id=&#34;三维计算几何&#34;&gt;三维计算几何&lt;/h2&gt;
+&lt;h3 id=&#34;叉积&#34;&gt;叉积&lt;/h3&gt;
+&lt;p&gt;现在两个向量叉乘出来还是一个向量 &lt;span class=&#34;math display&#34;&gt;\[
+(x_1, y_1, z_1)\times(x_2,y_2, z_2) = (y_1z_2 - y_2z_1, z_1x_2 - z_2x_1, x_1y_2 - x_2y_1)
+\]&lt;/span&gt; 实质上为 &lt;span class=&#34;math display&#34;&gt;\[
+\begin{vmatrix}
+\vec{i} &amp;amp; \vec{j} &amp;amp; \vec{k}\\
+x_1 &amp;amp; y_1 &amp;amp; z_1\\
+x_2 &amp;amp; y_2 &amp;amp; z_2
+\end{vmatrix}
+\]&lt;/span&gt; 把这个行列式打开来就能得到上面的结果。&lt;/p&gt;
+</description>
+        </item>
+        <item>
+        <title>ABC202F - Integer Convex Hull</title>
+        <link>https://oi.imyangty.com/sol-abc202f/</link>
+        <pubDate>Thu, 27 May 2021 21:34:21 +0800</pubDate>
+        
+        <guid>https://oi.imyangty.com/sol-abc202f/</guid>
+        <description>&lt;img src="https://yangty-pic.oss-cn-beijing.aliyuncs.com/bg34.webp" alt="Featured image of post ABC202F - Integer Convex Hull" /&gt;&lt;h2 id=&#34;description&#34;&gt;Description&lt;/h2&gt;
+&lt;p&gt;平面内 &lt;span class=&#34;math inline&#34;&gt;\(N\)&lt;/span&gt; 个坐标均为整数的点，其中任意三点不共线，令所有点 &lt;span class=&#34;math inline&#34;&gt;\(P_i\)&lt;/span&gt; 构成一个全集 &lt;span class=&#34;math inline&#34;&gt;\(U\)&lt;/span&gt;，子集 &lt;span class=&#34;math inline&#34;&gt;\(S\subseteq U\)&lt;/span&gt; 且 &lt;span class=&#34;math inline&#34;&gt;\(|S|\ge 3\)&lt;/span&gt;。问凸包面积为整数的子集 &lt;span class=&#34;math inline&#34;&gt;\(S\)&lt;/span&gt; 的个数模 &lt;span class=&#34;math inline&#34;&gt;\(10^9 + 7\)&lt;/span&gt; 的值。&lt;/p&gt;
+&lt;p&gt;&lt;span class=&#34;math inline&#34;&gt;\(3\le N\le 80\)&lt;/span&gt;。&lt;/p&gt;
+&lt;h2 id=&#34;solution&#34;&gt;Solution&lt;/h2&gt;
+&lt;p&gt;比较神奇的题目。&lt;/p&gt;
+&lt;p&gt;考虑 Andrew 算法的执行流程：将所有点按照先 &lt;span class=&#34;math inline&#34;&gt;\(x\)&lt;/span&gt; 轴升序后 &lt;span class=&#34;math inline&#34;&gt;\(y\)&lt;/span&gt; 轴升序排序，然后从左往右弄出下凸包，再从右往左弄出上凸包。本题可以利用类似的思路。&lt;/p&gt;
+&lt;p&gt;然后我们由叉积计算面积的方法知道，整点三角形的面积乘二之后必然是整数。于是我们考虑依次用三角形弄出凸包，具体地，可以 dp：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;p&gt;&lt;span class=&#34;math inline&#34;&gt;\(O(n)\)&lt;/span&gt; 枚举凸包最左端的端点 &lt;span class=&#34;math inline&#34;&gt;\(P_{s}\)&lt;/span&gt;。&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;&lt;span class=&#34;math inline&#34;&gt;\(\mathrm{upper}_{i,jk}\)&lt;/span&gt;：凸包满足如下条件的点集 &lt;span class=&#34;math inline&#34;&gt;\(S\)&lt;/span&gt; 的数量：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;从 &lt;span class=&#34;math inline&#34;&gt;\(P_s\)&lt;/span&gt; 顺时针考虑每个点，最后两个分别是 &lt;span class=&#34;math inline&#34;&gt;\(P_i\)&lt;/span&gt; 和 &lt;span class=&#34;math inline&#34;&gt;\(P_j\)&lt;/span&gt;；&lt;/li&gt;
+&lt;li&gt;所有的点都在直线 &lt;span class=&#34;math inline&#34;&gt;\(P_sP_j\)&lt;/span&gt; 以上；&lt;/li&gt;
+&lt;li&gt;面积乘以二之后模二为 &lt;span class=&#34;math inline&#34;&gt;\(k\)&lt;/span&gt;。&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;&lt;span class=&#34;math inline&#34;&gt;\(\mathrm{lower}_{i,j,k}\)&lt;/span&gt;：凸包满足如下条件的点集 &lt;span class=&#34;math inline&#34;&gt;\(S\)&lt;/span&gt; 的数量：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;从 &lt;span class=&#34;math inline&#34;&gt;\(P_s\)&lt;/span&gt; 逆时针考虑每个点，最后两个分别是 &lt;span class=&#34;math inline&#34;&gt;\(P_i\)&lt;/span&gt; 和 &lt;span class=&#34;math inline&#34;&gt;\(P_j\)&lt;/span&gt;；&lt;/li&gt;
+&lt;li&gt;所有的点都在直线 &lt;span class=&#34;math inline&#34;&gt;\(P_sP_j\)&lt;/span&gt; 以下；&lt;/li&gt;
+&lt;li&gt;面积乘以二之后模二为 &lt;span class=&#34;math inline&#34;&gt;\(k\)&lt;/span&gt;。&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;确定每个最右端的点 &lt;span class=&#34;math inline&#34;&gt;\(P_j\)&lt;/span&gt;，然后枚举 &lt;span class=&#34;math inline&#34;&gt;\(i\)&lt;/span&gt; 和 &lt;span class=&#34;math inline&#34;&gt;\(k\)&lt;/span&gt; 统计答案： &lt;span class=&#34;math display&#34;&gt;\[
+\mathrm{ans}_s = \sum_{j = s + 1}^n\sum_{k \in \{0, 1\}}\left(\sum_{i}\mathrm{upper}_{i,j,k} \times \sum_{i}\mathrm{lower_{i,j,k}} \right)
+\]&lt;/span&gt;&lt;/p&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;这样做的原理其实就是合并上下凸壳：根据上面设计的 dp 状态可知我们确定了左端点 &lt;span class=&#34;math inline&#34;&gt;\(P_s\)&lt;/span&gt; 和右端点 &lt;span class=&#34;math inline&#34;&gt;\(P_j\)&lt;/span&gt; 后，满足上凸壳的点集个数即为枚举倒数第二个点 &lt;span class=&#34;math inline&#34;&gt;\(i\)&lt;/span&gt; 然后求和的结果 &lt;span class=&#34;math inline&#34;&gt;\(\sum_{i}\mathrm{upper}_{i,j,k}\)&lt;/span&gt;，满足下凸壳的点集个数即为 &lt;span class=&#34;math inline&#34;&gt;\(\sum_i\mathrm{lower}_{i,j,k}\)&lt;/span&gt;。&lt;/p&gt;
+&lt;p&gt;怎么计算 &lt;span class=&#34;math inline&#34;&gt;\(\mathrm{upper}\)&lt;/span&gt; 和 &lt;span class=&#34;math inline&#34;&gt;\(\mathrm{lower}\)&lt;/span&gt; 呢？我们可以通过 &lt;span class=&#34;math inline&#34;&gt;\(\mathrm{upper}_{i,j,k}\)&lt;/span&gt; 递推出 &lt;span class=&#34;math inline&#34;&gt;\(\mathrm{upper}_{j,l,k}\)&lt;/span&gt;，其原理就是判断 &lt;span class=&#34;math inline&#34;&gt;\(P_l\)&lt;/span&gt; 能否被加入凸壳中，能则更新，不能就更新 &lt;span class=&#34;math inline&#34;&gt;\(\mathrm{lower}_{j,l,k}\)&lt;/span&gt;（加入下凸壳）。新加入的部分即为 &lt;span class=&#34;math inline&#34;&gt;\(\triangle P_sP_jP_l\)&lt;/span&gt;，需要根据这个面积的二倍的奇偶性判断更新哪个 &lt;span class=&#34;math inline&#34;&gt;\(k\)&lt;/span&gt;。&lt;/p&gt;
+&lt;p&gt;这个做法要求我们提前预处理每个三角形的面积的二倍的奇偶性 &lt;span class=&#34;math inline&#34;&gt;\(\mathrm{parity}_{i,j,k}\)&lt;/span&gt; 和三角形内点的个数 &lt;span class=&#34;math inline&#34;&gt;\(\mathrm{inside}_{i,j,k}\)&lt;/span&gt;。总时间复杂度 &lt;span class=&#34;math inline&#34;&gt;\(O(n^4)\)&lt;/span&gt;。&lt;/p&gt;
+&lt;div class=&#34;sourceCode&#34; id=&#34;cb1&#34;&gt;&lt;pre class=&#34;sourceCode cpp&#34;&gt;&lt;code class=&#34;sourceCode cpp&#34;&gt;&lt;span id=&#34;cb1-1&#34;&gt;&lt;a href=&#34;#cb1-1&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;&lt;span class=&#34;pp&#34;&gt;#include &lt;/span&gt;&lt;span class=&#34;im&#34;&gt;&amp;lt;cstdio&amp;gt;&lt;/span&gt;&lt;/span&gt;
+&lt;span id=&#34;cb1-2&#34;&gt;&lt;a href=&#34;#cb1-2&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;&lt;span class=&#34;pp&#34;&gt;#include &lt;/span&gt;&lt;span class=&#34;im&#34;&gt;&amp;lt;cctype&amp;gt;&lt;/span&gt;&lt;/span&gt;
+&lt;span id=&#34;cb1-3&#34;&gt;&lt;a href=&#34;#cb1-3&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;&lt;span class=&#34;pp&#34;&gt;#include &lt;/span&gt;&lt;span class=&#34;im&#34;&gt;&amp;lt;cmath&amp;gt;&lt;/span&gt;&lt;/span&gt;
+&lt;span id=&#34;cb1-4&#34;&gt;&lt;a href=&#34;#cb1-4&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;&lt;span class=&#34;pp&#34;&gt;#include &lt;/span&gt;&lt;span class=&#34;im&#34;&gt;&amp;lt;algorithm&amp;gt;&lt;/span&gt;&lt;/span&gt;
+&lt;span id=&#34;cb1-5&#34;&gt;&lt;a href=&#34;#cb1-5&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;&lt;span class=&#34;pp&#34;&gt;#define il &lt;/span&gt;&lt;span class=&#34;kw&#34;&gt;inline&lt;/span&gt;&lt;/span&gt;
+&lt;span id=&#34;cb1-6&#34;&gt;&lt;a href=&#34;#cb1-6&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;&lt;span class=&#34;pp&#34;&gt;#define FOR&lt;/span&gt;(i,&lt;span class=&#34;pp&#34;&gt; &lt;/span&gt;a,&lt;span class=&#34;pp&#34;&gt; &lt;/span&gt;b)&lt;span class=&#34;pp&#34;&gt; &lt;/span&gt;&lt;span class=&#34;cf&#34;&gt;for&lt;/span&gt;&lt;span class=&#34;pp&#34;&gt; &lt;/span&gt;(&lt;span class=&#34;dt&#34;&gt;int&lt;/span&gt;&lt;span class=&#34;pp&#34;&gt; &lt;/span&gt;i&lt;span class=&#34;pp&#34;&gt; &lt;/span&gt;=&lt;span class=&#34;pp&#34;&gt; &lt;/span&gt;a;&lt;span class=&#34;pp&#34;&gt; &lt;/span&gt;i&lt;span class=&#34;pp&#34;&gt; &lt;/span&gt;&amp;lt;=&lt;span class=&#34;pp&#34;&gt; &lt;/span&gt;b;&lt;span class=&#34;pp&#34;&gt; &lt;/span&gt;++i)&lt;/span&gt;
+&lt;span id=&#34;cb1-7&#34;&gt;&lt;a href=&#34;#cb1-7&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;&lt;span class=&#34;pp&#34;&gt;#define DEC&lt;/span&gt;(i,&lt;span class=&#34;pp&#34;&gt; &lt;/span&gt;a,&lt;span class=&#34;pp&#34;&gt; &lt;/span&gt;b)&lt;span class=&#34;pp&#34;&gt; &lt;/span&gt;&lt;span class=&#34;cf&#34;&gt;for&lt;/span&gt;&lt;span class=&#34;pp&#34;&gt; &lt;/span&gt;(&lt;span class=&#34;dt&#34;&gt;int&lt;/span&gt;&lt;span class=&#34;pp&#34;&gt; &lt;/span&gt;i&lt;span class=&#34;pp&#34;&gt; &lt;/span&gt;=&lt;span class=&#34;pp&#34;&gt; &lt;/span&gt;a;&lt;span class=&#34;pp&#34;&gt; &lt;/span&gt;i&lt;span class=&#34;pp&#34;&gt; &lt;/span&gt;&amp;gt;=&lt;span class=&#34;pp&#34;&gt; &lt;/span&gt;b;&lt;span class=&#34;pp&#34;&gt; &lt;/span&gt;--i)&lt;/span&gt;
+&lt;span id=&#34;cb1-8&#34;&gt;&lt;a href=&#34;#cb1-8&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;&lt;/span&gt;
+&lt;span id=&#34;cb1-9&#34;&gt;&lt;a href=&#34;#cb1-9&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;&lt;span class=&#34;at&#34;&gt;const&lt;/span&gt; &lt;span class=&#34;dt&#34;&gt;int&lt;/span&gt; maxn = &lt;span class=&#34;dv&#34;&gt;85&lt;/span&gt;;&lt;/span&gt;
+&lt;span id=&#34;cb1-10&#34;&gt;&lt;a href=&#34;#cb1-10&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;&lt;/span&gt;
+&lt;span id=&#34;cb1-11&#34;&gt;&lt;a href=&#34;#cb1-11&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;&lt;span class=&#34;dt&#34;&gt;int&lt;/span&gt; read()&lt;/span&gt;
+&lt;span id=&#34;cb1-12&#34;&gt;&lt;a href=&#34;#cb1-12&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;{&lt;/span&gt;
+&lt;span id=&#34;cb1-13&#34;&gt;&lt;a href=&#34;#cb1-13&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;    &lt;span class=&#34;dt&#34;&gt;int&lt;/span&gt; s = &lt;span class=&#34;dv&#34;&gt;0&lt;/span&gt;, x = &lt;span class=&#34;dv&#34;&gt;0&lt;/span&gt;;&lt;/span&gt;
+&lt;span id=&#34;cb1-14&#34;&gt;&lt;a href=&#34;#cb1-14&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;    &lt;span class=&#34;dt&#34;&gt;char&lt;/span&gt; c = getchar();&lt;/span&gt;
+&lt;span id=&#34;cb1-15&#34;&gt;&lt;a href=&#34;#cb1-15&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;    &lt;span class=&#34;cf&#34;&gt;while&lt;/span&gt; (!isdigit(c))&lt;/span&gt;
+&lt;span id=&#34;cb1-16&#34;&gt;&lt;a href=&#34;#cb1-16&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;        x |= (c == &lt;span class=&#34;ch&#34;&gt;&amp;#39;-&amp;#39;&lt;/span&gt;), c = getchar();&lt;/span&gt;
+&lt;span id=&#34;cb1-17&#34;&gt;&lt;a href=&#34;#cb1-17&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;    &lt;span class=&#34;cf&#34;&gt;while&lt;/span&gt; (isdigit(c))&lt;/span&gt;
+&lt;span id=&#34;cb1-18&#34;&gt;&lt;a href=&#34;#cb1-18&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;        s = s * &lt;span class=&#34;dv&#34;&gt;10&lt;/span&gt; + c - &lt;span class=&#34;ch&#34;&gt;&amp;#39;0&amp;#39;&lt;/span&gt;, c = getchar();&lt;/span&gt;
+&lt;span id=&#34;cb1-19&#34;&gt;&lt;a href=&#34;#cb1-19&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;    &lt;span class=&#34;cf&#34;&gt;return&lt;/span&gt; x ? -s : s;&lt;/span&gt;
+&lt;span id=&#34;cb1-20&#34;&gt;&lt;a href=&#34;#cb1-20&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;}&lt;/span&gt;
+&lt;span id=&#34;cb1-21&#34;&gt;&lt;a href=&#34;#cb1-21&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;&lt;/span&gt;
+&lt;span id=&#34;cb1-22&#34;&gt;&lt;a href=&#34;#cb1-22&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;&lt;span class=&#34;kw&#34;&gt;struct&lt;/span&gt; Point&lt;/span&gt;
+&lt;span id=&#34;cb1-23&#34;&gt;&lt;a href=&#34;#cb1-23&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;{&lt;/span&gt;
+&lt;span id=&#34;cb1-24&#34;&gt;&lt;a href=&#34;#cb1-24&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;    &lt;span class=&#34;dt&#34;&gt;int&lt;/span&gt; x, y;&lt;/span&gt;
+&lt;span id=&#34;cb1-25&#34;&gt;&lt;a href=&#34;#cb1-25&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;    Point() {}&lt;/span&gt;
+&lt;span id=&#34;cb1-26&#34;&gt;&lt;a href=&#34;#cb1-26&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;    Point(&lt;span class=&#34;dt&#34;&gt;int&lt;/span&gt; _x, &lt;span class=&#34;dt&#34;&gt;int&lt;/span&gt; _y) {x = _x, y = _y;}&lt;/span&gt;
+&lt;span id=&#34;cb1-27&#34;&gt;&lt;a href=&#34;#cb1-27&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;    il &lt;span class=&#34;dt&#34;&gt;bool&lt;/span&gt; &lt;span class=&#34;kw&#34;&gt;operator&lt;/span&gt;&amp;lt;(&lt;span class=&#34;at&#34;&gt;const&lt;/span&gt; Point &amp;amp;b) &lt;span class=&#34;at&#34;&gt;const&lt;/span&gt; {&lt;span class=&#34;cf&#34;&gt;return&lt;/span&gt; x == b.x ? y &amp;lt; b.y : x &amp;lt; b.x;}&lt;/span&gt;
+&lt;span id=&#34;cb1-28&#34;&gt;&lt;a href=&#34;#cb1-28&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;} P[maxn];&lt;/span&gt;
+&lt;span id=&#34;cb1-29&#34;&gt;&lt;a href=&#34;#cb1-29&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;&lt;/span&gt;
+&lt;span id=&#34;cb1-30&#34;&gt;&lt;a href=&#34;#cb1-30&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;&lt;span class=&#34;kw&#34;&gt;typedef&lt;/span&gt; Point Vector;&lt;/span&gt;
+&lt;span id=&#34;cb1-31&#34;&gt;&lt;a href=&#34;#cb1-31&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;&lt;/span&gt;
+&lt;span id=&#34;cb1-32&#34;&gt;&lt;a href=&#34;#cb1-32&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;&lt;span class=&#34;kw&#34;&gt;struct&lt;/span&gt; modint&lt;/span&gt;
+&lt;span id=&#34;cb1-33&#34;&gt;&lt;a href=&#34;#cb1-33&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;{&lt;/span&gt;
+&lt;span id=&#34;cb1-34&#34;&gt;&lt;a href=&#34;#cb1-34&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;    &lt;span class=&#34;kw&#34;&gt;typedef&lt;/span&gt; &lt;span class=&#34;dt&#34;&gt;long&lt;/span&gt; &lt;span class=&#34;dt&#34;&gt;long&lt;/span&gt; ll;&lt;/span&gt;
+&lt;span id=&#34;cb1-35&#34;&gt;&lt;a href=&#34;#cb1-35&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;    &lt;span class=&#34;at&#34;&gt;const&lt;/span&gt; &lt;span class=&#34;at&#34;&gt;static&lt;/span&gt; ll mod = &lt;span class=&#34;fl&#34;&gt;1e9&lt;/span&gt; + &lt;span class=&#34;dv&#34;&gt;7&lt;/span&gt;;&lt;/span&gt;
+&lt;span id=&#34;cb1-36&#34;&gt;&lt;a href=&#34;#cb1-36&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;    ll val;&lt;/span&gt;
+&lt;span id=&#34;cb1-37&#34;&gt;&lt;a href=&#34;#cb1-37&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;    modint(&lt;span class=&#34;dt&#34;&gt;int&lt;/span&gt; _val = &lt;span class=&#34;dv&#34;&gt;0&lt;/span&gt;) {val = _val;}&lt;/span&gt;
+&lt;span id=&#34;cb1-38&#34;&gt;&lt;a href=&#34;#cb1-38&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;    modint &lt;span class=&#34;kw&#34;&gt;operator&lt;/span&gt;+(&lt;span class=&#34;at&#34;&gt;const&lt;/span&gt; modint &amp;amp;b) &lt;span class=&#34;at&#34;&gt;const&lt;/span&gt; {&lt;span class=&#34;cf&#34;&gt;return&lt;/span&gt; modint((val + b.val) % mod);}&lt;/span&gt;
+&lt;span id=&#34;cb1-39&#34;&gt;&lt;a href=&#34;#cb1-39&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;    modint &lt;span class=&#34;kw&#34;&gt;operator&lt;/span&gt;-(&lt;span class=&#34;at&#34;&gt;const&lt;/span&gt; modint &amp;amp;b) &lt;span class=&#34;at&#34;&gt;const&lt;/span&gt; {&lt;span class=&#34;cf&#34;&gt;return&lt;/span&gt; modint((val - b.val + mod) % mod);}&lt;/span&gt;
+&lt;span id=&#34;cb1-40&#34;&gt;&lt;a href=&#34;#cb1-40&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;    modint &lt;span class=&#34;kw&#34;&gt;operator&lt;/span&gt;*(&lt;span class=&#34;at&#34;&gt;const&lt;/span&gt; modint &amp;amp;b) &lt;span class=&#34;at&#34;&gt;const&lt;/span&gt; {&lt;span class=&#34;cf&#34;&gt;return&lt;/span&gt; modint((val * b.val) % mod);}&lt;/span&gt;
+&lt;span id=&#34;cb1-41&#34;&gt;&lt;a href=&#34;#cb1-41&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;    modint &lt;span class=&#34;kw&#34;&gt;operator&lt;/span&gt;+=(&lt;span class=&#34;at&#34;&gt;const&lt;/span&gt; modint &amp;amp;b) {&lt;span class=&#34;cf&#34;&gt;return&lt;/span&gt; *&lt;span class=&#34;kw&#34;&gt;this&lt;/span&gt; = *&lt;span class=&#34;kw&#34;&gt;this&lt;/span&gt; + b;}&lt;/span&gt;
+&lt;span id=&#34;cb1-42&#34;&gt;&lt;a href=&#34;#cb1-42&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;    modint &lt;span class=&#34;kw&#34;&gt;operator&lt;/span&gt;*=(&lt;span class=&#34;at&#34;&gt;const&lt;/span&gt; modint &amp;amp;b) {&lt;span class=&#34;cf&#34;&gt;return&lt;/span&gt; *&lt;span class=&#34;kw&#34;&gt;this&lt;/span&gt; = *&lt;span class=&#34;kw&#34;&gt;this&lt;/span&gt; * b;}&lt;/span&gt;
+&lt;span id=&#34;cb1-43&#34;&gt;&lt;a href=&#34;#cb1-43&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;    modint &lt;span class=&#34;kw&#34;&gt;operator&lt;/span&gt;-=(&lt;span class=&#34;at&#34;&gt;const&lt;/span&gt; modint &amp;amp;b) {&lt;span class=&#34;cf&#34;&gt;return&lt;/span&gt; *&lt;span class=&#34;kw&#34;&gt;this&lt;/span&gt; = *&lt;span class=&#34;kw&#34;&gt;this&lt;/span&gt; - b;}&lt;/span&gt;
+&lt;span id=&#34;cb1-44&#34;&gt;&lt;a href=&#34;#cb1-44&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;    modint &lt;span class=&#34;kw&#34;&gt;operator&lt;/span&gt;+(&lt;span class=&#34;at&#34;&gt;const&lt;/span&gt; &lt;span class=&#34;dt&#34;&gt;int&lt;/span&gt; &amp;amp;b) &lt;span class=&#34;at&#34;&gt;const&lt;/span&gt; {&lt;span class=&#34;cf&#34;&gt;return&lt;/span&gt; modint((val + b) % mod);}&lt;/span&gt;
+&lt;span id=&#34;cb1-45&#34;&gt;&lt;a href=&#34;#cb1-45&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;    modint &lt;span class=&#34;kw&#34;&gt;operator&lt;/span&gt;-(&lt;span class=&#34;at&#34;&gt;const&lt;/span&gt; &lt;span class=&#34;dt&#34;&gt;int&lt;/span&gt; &amp;amp;b) &lt;span class=&#34;at&#34;&gt;const&lt;/span&gt; {&lt;span class=&#34;cf&#34;&gt;return&lt;/span&gt; modint((val - b + mod) % mod);}&lt;/span&gt;
+&lt;span id=&#34;cb1-46&#34;&gt;&lt;a href=&#34;#cb1-46&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;    modint &lt;span class=&#34;kw&#34;&gt;operator&lt;/span&gt;*(&lt;span class=&#34;at&#34;&gt;const&lt;/span&gt; &lt;span class=&#34;dt&#34;&gt;int&lt;/span&gt; &amp;amp;b) &lt;span class=&#34;at&#34;&gt;const&lt;/span&gt; {&lt;span class=&#34;cf&#34;&gt;return&lt;/span&gt; modint((val * b) % mod);}&lt;/span&gt;
+&lt;span id=&#34;cb1-47&#34;&gt;&lt;a href=&#34;#cb1-47&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;    modint &lt;span class=&#34;kw&#34;&gt;operator&lt;/span&gt;+=(&lt;span class=&#34;at&#34;&gt;const&lt;/span&gt; &lt;span class=&#34;dt&#34;&gt;int&lt;/span&gt; &amp;amp;b) {&lt;span class=&#34;cf&#34;&gt;return&lt;/span&gt; *&lt;span class=&#34;kw&#34;&gt;this&lt;/span&gt; = *&lt;span class=&#34;kw&#34;&gt;this&lt;/span&gt; + b;}&lt;/span&gt;
+&lt;span id=&#34;cb1-48&#34;&gt;&lt;a href=&#34;#cb1-48&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;    modint &lt;span class=&#34;kw&#34;&gt;operator&lt;/span&gt;-=(&lt;span class=&#34;at&#34;&gt;const&lt;/span&gt; &lt;span class=&#34;dt&#34;&gt;int&lt;/span&gt; &amp;amp;b) {&lt;span class=&#34;cf&#34;&gt;return&lt;/span&gt; *&lt;span class=&#34;kw&#34;&gt;this&lt;/span&gt; = *&lt;span class=&#34;kw&#34;&gt;this&lt;/span&gt; - b;}&lt;/span&gt;
+&lt;span id=&#34;cb1-49&#34;&gt;&lt;a href=&#34;#cb1-49&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;    modint &lt;span class=&#34;kw&#34;&gt;operator&lt;/span&gt;*=(&lt;span class=&#34;at&#34;&gt;const&lt;/span&gt; &lt;span class=&#34;dt&#34;&gt;int&lt;/span&gt; &amp;amp;b) {&lt;span class=&#34;cf&#34;&gt;return&lt;/span&gt; *&lt;span class=&#34;kw&#34;&gt;this&lt;/span&gt; = *&lt;span class=&#34;kw&#34;&gt;this&lt;/span&gt; * b;}&lt;/span&gt;
+&lt;span id=&#34;cb1-50&#34;&gt;&lt;a href=&#34;#cb1-50&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;};&lt;/span&gt;
+&lt;span id=&#34;cb1-51&#34;&gt;&lt;a href=&#34;#cb1-51&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;&lt;/span&gt;
+&lt;span id=&#34;cb1-52&#34;&gt;&lt;a href=&#34;#cb1-52&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;il Vector &lt;span class=&#34;kw&#34;&gt;operator&lt;/span&gt;-(&lt;span class=&#34;at&#34;&gt;const&lt;/span&gt; Point &amp;amp;a, &lt;span class=&#34;at&#34;&gt;const&lt;/span&gt; Point &amp;amp;b) {&lt;span class=&#34;cf&#34;&gt;return&lt;/span&gt; Point(b.x - a.x, b.y - a.y);}&lt;/span&gt;
+&lt;span id=&#34;cb1-53&#34;&gt;&lt;a href=&#34;#cb1-53&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;il &lt;span class=&#34;dt&#34;&gt;int&lt;/span&gt; &lt;span class=&#34;kw&#34;&gt;operator&lt;/span&gt;^(&lt;span class=&#34;at&#34;&gt;const&lt;/span&gt; Vector &amp;amp;a, &lt;span class=&#34;at&#34;&gt;const&lt;/span&gt; Vector &amp;amp;b) {&lt;span class=&#34;cf&#34;&gt;return&lt;/span&gt; a.x * b.y - a.y * b.x;}&lt;span class=&#34;co&#34;&gt;//叉积&lt;/span&gt;&lt;/span&gt;
+&lt;span id=&#34;cb1-54&#34;&gt;&lt;a href=&#34;#cb1-54&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;&lt;/span&gt;
+&lt;span id=&#34;cb1-55&#34;&gt;&lt;a href=&#34;#cb1-55&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;&lt;span class=&#34;dt&#34;&gt;int&lt;/span&gt; area2(Point x, Point y, Point z)&lt;span class=&#34;co&#34;&gt;//返回面积的二倍&lt;/span&gt;&lt;/span&gt;
+&lt;span id=&#34;cb1-56&#34;&gt;&lt;a href=&#34;#cb1-56&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;{&lt;/span&gt;
+&lt;span id=&#34;cb1-57&#34;&gt;&lt;a href=&#34;#cb1-57&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;    &lt;span class=&#34;cf&#34;&gt;return&lt;/span&gt; abs((y - x) ^ (z - x));&lt;/span&gt;
+&lt;span id=&#34;cb1-58&#34;&gt;&lt;a href=&#34;#cb1-58&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;}&lt;/span&gt;
+&lt;span id=&#34;cb1-59&#34;&gt;&lt;a href=&#34;#cb1-59&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;&lt;/span&gt;
+&lt;span id=&#34;cb1-60&#34;&gt;&lt;a href=&#34;#cb1-60&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;&lt;span class=&#34;dt&#34;&gt;int&lt;/span&gt; n, parity[maxn][maxn][maxn], inside[maxn][maxn][maxn];&lt;/span&gt;
+&lt;span id=&#34;cb1-61&#34;&gt;&lt;a href=&#34;#cb1-61&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;modint pow2[maxn], upper[maxn][maxn][&lt;span class=&#34;dv&#34;&gt;2&lt;/span&gt;], lower[maxn][maxn][&lt;span class=&#34;dv&#34;&gt;2&lt;/span&gt;];&lt;/span&gt;
+&lt;span id=&#34;cb1-62&#34;&gt;&lt;a href=&#34;#cb1-62&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;&lt;/span&gt;
+&lt;span id=&#34;cb1-63&#34;&gt;&lt;a href=&#34;#cb1-63&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;&lt;span class=&#34;dt&#34;&gt;int&lt;/span&gt; main()&lt;/span&gt;
+&lt;span id=&#34;cb1-64&#34;&gt;&lt;a href=&#34;#cb1-64&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;{&lt;/span&gt;
+&lt;span id=&#34;cb1-65&#34;&gt;&lt;a href=&#34;#cb1-65&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;    n = read();&lt;/span&gt;
+&lt;span id=&#34;cb1-66&#34;&gt;&lt;a href=&#34;#cb1-66&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;    FOR(i, &lt;span class=&#34;dv&#34;&gt;1&lt;/span&gt;, n) P[i].x = read(), P[i].y = read();&lt;/span&gt;
+&lt;span id=&#34;cb1-67&#34;&gt;&lt;a href=&#34;#cb1-67&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;    &lt;span class=&#34;bu&#34;&gt;std::&lt;/span&gt;sort(P + &lt;span class=&#34;dv&#34;&gt;1&lt;/span&gt;, P + n + &lt;span class=&#34;dv&#34;&gt;1&lt;/span&gt;);&lt;span class=&#34;co&#34;&gt;//对点进行排序&lt;/span&gt;&lt;/span&gt;
+&lt;span id=&#34;cb1-68&#34;&gt;&lt;a href=&#34;#cb1-68&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;&lt;/span&gt;
+&lt;span id=&#34;cb1-69&#34;&gt;&lt;a href=&#34;#cb1-69&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;    FOR(i, &lt;span class=&#34;dv&#34;&gt;1&lt;/span&gt;, n)&lt;/span&gt;
+&lt;span id=&#34;cb1-70&#34;&gt;&lt;a href=&#34;#cb1-70&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;        FOR(j, &lt;span class=&#34;dv&#34;&gt;1&lt;/span&gt;, n)&lt;/span&gt;
+&lt;span id=&#34;cb1-71&#34;&gt;&lt;a href=&#34;#cb1-71&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;            FOR(k, &lt;span class=&#34;dv&#34;&gt;1&lt;/span&gt;, n)&lt;/span&gt;
+&lt;span id=&#34;cb1-72&#34;&gt;&lt;a href=&#34;#cb1-72&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;            {&lt;/span&gt;
+&lt;span id=&#34;cb1-73&#34;&gt;&lt;a href=&#34;#cb1-73&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;                &lt;span class=&#34;cf&#34;&gt;if&lt;/span&gt; (i == j || j == k || i == k) &lt;span class=&#34;cf&#34;&gt;continue&lt;/span&gt;;&lt;/span&gt;
+&lt;span id=&#34;cb1-74&#34;&gt;&lt;a href=&#34;#cb1-74&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;                parity[i][j][k] = area2(P[i], P[j], P[k]) % &lt;span class=&#34;dv&#34;&gt;2&lt;/span&gt;;&lt;span class=&#34;co&#34;&gt;//更新面积奇偶性&lt;/span&gt;&lt;/span&gt;
+&lt;span id=&#34;cb1-75&#34;&gt;&lt;a href=&#34;#cb1-75&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;                FOR(l, &lt;span class=&#34;dv&#34;&gt;1&lt;/span&gt;, n)&lt;span class=&#34;co&#34;&gt;//枚举每个 l 点判断 l 在不在三角形内&lt;/span&gt;&lt;/span&gt;
+&lt;span id=&#34;cb1-76&#34;&gt;&lt;a href=&#34;#cb1-76&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;                    &lt;span class=&#34;cf&#34;&gt;if&lt;/span&gt; (l != i &amp;amp;&amp;amp; l != j &amp;amp;&amp;amp; l != k &amp;amp;&amp;amp; area2(P[i], P[j], P[k]) == area2(P[l], P[j], P[k]) + area2(P[i], P[l], P[k]) + area2(P[i], P[j], P[l]))&lt;/span&gt;
+&lt;span id=&#34;cb1-77&#34;&gt;&lt;a href=&#34;#cb1-77&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;                        inside[i][j][k] += &lt;span class=&#34;dv&#34;&gt;1&lt;/span&gt;;&lt;/span&gt;
+&lt;span id=&#34;cb1-78&#34;&gt;&lt;a href=&#34;#cb1-78&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;            }&lt;/span&gt;
+&lt;span id=&#34;cb1-79&#34;&gt;&lt;a href=&#34;#cb1-79&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;    &lt;/span&gt;
+&lt;span id=&#34;cb1-80&#34;&gt;&lt;a href=&#34;#cb1-80&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;&lt;/span&gt;
+&lt;span id=&#34;cb1-81&#34;&gt;&lt;a href=&#34;#cb1-81&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;    pow2[&lt;span class=&#34;dv&#34;&gt;0&lt;/span&gt;] = &lt;span class=&#34;dv&#34;&gt;1&lt;/span&gt;;&lt;/span&gt;
+&lt;span id=&#34;cb1-82&#34;&gt;&lt;a href=&#34;#cb1-82&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;    FOR(i, &lt;span class=&#34;dv&#34;&gt;1&lt;/span&gt;, n) pow2[i] = pow2[i - &lt;span class=&#34;dv&#34;&gt;1&lt;/span&gt;] * &lt;span class=&#34;dv&#34;&gt;2&lt;/span&gt;;&lt;span class=&#34;co&#34;&gt;//预处理二的次幂&lt;/span&gt;&lt;/span&gt;
+&lt;span id=&#34;cb1-83&#34;&gt;&lt;a href=&#34;#cb1-83&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;&lt;/span&gt;
+&lt;span id=&#34;cb1-84&#34;&gt;&lt;a href=&#34;#cb1-84&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;    modint ans = &lt;span class=&#34;dv&#34;&gt;0&lt;/span&gt;;&lt;/span&gt;
+&lt;span id=&#34;cb1-85&#34;&gt;&lt;a href=&#34;#cb1-85&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;&lt;/span&gt;
+&lt;span id=&#34;cb1-86&#34;&gt;&lt;a href=&#34;#cb1-86&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;    DEC(must, n, &lt;span class=&#34;dv&#34;&gt;1&lt;/span&gt;)&lt;span class=&#34;co&#34;&gt;//枚举最左边的端点&lt;/span&gt;&lt;/span&gt;
+&lt;span id=&#34;cb1-87&#34;&gt;&lt;a href=&#34;#cb1-87&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;    {&lt;/span&gt;
+&lt;span id=&#34;cb1-88&#34;&gt;&lt;a href=&#34;#cb1-88&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;        FOR(i, must, n)&lt;/span&gt;
+&lt;span id=&#34;cb1-89&#34;&gt;&lt;a href=&#34;#cb1-89&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;            FOR(j, must, n)&lt;/span&gt;
+&lt;span id=&#34;cb1-90&#34;&gt;&lt;a href=&#34;#cb1-90&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;                FOR(k, &lt;span class=&#34;dv&#34;&gt;0&lt;/span&gt;, &lt;span class=&#34;dv&#34;&gt;1&lt;/span&gt;)&lt;/span&gt;
+&lt;span id=&#34;cb1-91&#34;&gt;&lt;a href=&#34;#cb1-91&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;                    upper[i][j][k] = lower[i][j][k] = &lt;span class=&#34;dv&#34;&gt;0&lt;/span&gt;;&lt;span class=&#34;co&#34;&gt;//清空数组&lt;/span&gt;&lt;/span&gt;
+&lt;span id=&#34;cb1-92&#34;&gt;&lt;a href=&#34;#cb1-92&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;        FOR(i, must + &lt;span class=&#34;dv&#34;&gt;1&lt;/span&gt;, n) upper[must][i][&lt;span class=&#34;dv&#34;&gt;0&lt;/span&gt;] = lower[must][i][&lt;span class=&#34;dv&#34;&gt;0&lt;/span&gt;] = &lt;span class=&#34;dv&#34;&gt;1&lt;/span&gt;;&lt;span class=&#34;co&#34;&gt;//边界条件&lt;/span&gt;&lt;/span&gt;
+&lt;span id=&#34;cb1-93&#34;&gt;&lt;a href=&#34;#cb1-93&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;        FOR(i, must, n)&lt;/span&gt;
+&lt;span id=&#34;cb1-94&#34;&gt;&lt;a href=&#34;#cb1-94&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;            FOR(j, must + &lt;span class=&#34;dv&#34;&gt;1&lt;/span&gt;, n)&lt;/span&gt;
+&lt;span id=&#34;cb1-95&#34;&gt;&lt;a href=&#34;#cb1-95&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;                FOR(k, &lt;span class=&#34;dv&#34;&gt;0&lt;/span&gt;, &lt;span class=&#34;dv&#34;&gt;1&lt;/span&gt;)&lt;/span&gt;
+&lt;span id=&#34;cb1-96&#34;&gt;&lt;a href=&#34;#cb1-96&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;                    FOR(l, j + &lt;span class=&#34;dv&#34;&gt;1&lt;/span&gt;, n)&lt;/span&gt;
+&lt;span id=&#34;cb1-97&#34;&gt;&lt;a href=&#34;#cb1-97&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;                        &lt;span class=&#34;cf&#34;&gt;if&lt;/span&gt; (((P[l] - P[j]) ^ (P[j] - P[i])) &amp;gt; &lt;span class=&#34;dv&#34;&gt;0&lt;/span&gt;)&lt;span class=&#34;co&#34;&gt;//加入上凸壳&lt;/span&gt;&lt;/span&gt;
+&lt;span id=&#34;cb1-98&#34;&gt;&lt;a href=&#34;#cb1-98&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;                            upper[j][l][k ^ parity[must][j][l]] += upper[i][j][k] * pow2[inside[must][j][l]];&lt;span class=&#34;co&#34;&gt;//乘法原理&lt;/span&gt;&lt;/span&gt;
+&lt;span id=&#34;cb1-99&#34;&gt;&lt;a href=&#34;#cb1-99&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;                        &lt;span class=&#34;cf&#34;&gt;else&lt;/span&gt; lower[j][l][k ^ parity[must][j][l]] += lower[i][j][k] * pow2[inside[must][j][l]];&lt;/span&gt;
+&lt;span id=&#34;cb1-100&#34;&gt;&lt;a href=&#34;#cb1-100&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;        FOR(j, must + &lt;span class=&#34;dv&#34;&gt;1&lt;/span&gt;, n)&lt;span class=&#34;co&#34;&gt;//枚举最右端点&lt;/span&gt;&lt;/span&gt;
+&lt;span id=&#34;cb1-101&#34;&gt;&lt;a href=&#34;#cb1-101&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;            FOR(k, &lt;span class=&#34;dv&#34;&gt;0&lt;/span&gt;, &lt;span class=&#34;dv&#34;&gt;1&lt;/span&gt;)&lt;/span&gt;
+&lt;span id=&#34;cb1-102&#34;&gt;&lt;a href=&#34;#cb1-102&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;            {&lt;/span&gt;
+&lt;span id=&#34;cb1-103&#34;&gt;&lt;a href=&#34;#cb1-103&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;                modint up = &lt;span class=&#34;dv&#34;&gt;0&lt;/span&gt;, lo = &lt;span class=&#34;dv&#34;&gt;0&lt;/span&gt;;&lt;span class=&#34;co&#34;&gt;//上下凸壳&lt;/span&gt;&lt;/span&gt;
+&lt;span id=&#34;cb1-104&#34;&gt;&lt;a href=&#34;#cb1-104&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;                FOR(i, must, j - &lt;span class=&#34;dv&#34;&gt;1&lt;/span&gt;)&lt;/span&gt;
+&lt;span id=&#34;cb1-105&#34;&gt;&lt;a href=&#34;#cb1-105&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;                    up += upper[i][j][k], lo += lower[i][j][k];&lt;/span&gt;
+&lt;span id=&#34;cb1-106&#34;&gt;&lt;a href=&#34;#cb1-106&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;                ans += up * lo;&lt;/span&gt;
+&lt;span id=&#34;cb1-107&#34;&gt;&lt;a href=&#34;#cb1-107&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;            }&lt;/span&gt;
+&lt;span id=&#34;cb1-108&#34;&gt;&lt;a href=&#34;#cb1-108&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;    }&lt;/span&gt;
+&lt;span id=&#34;cb1-109&#34;&gt;&lt;a href=&#34;#cb1-109&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;&lt;/span&gt;
+&lt;span id=&#34;cb1-110&#34;&gt;&lt;a href=&#34;#cb1-110&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;    printf(&lt;span class=&#34;st&#34;&gt;&amp;quot;&lt;/span&gt;&lt;span class=&#34;sc&#34;&gt;%d\n&lt;/span&gt;&lt;span class=&#34;st&#34;&gt;&amp;quot;&lt;/span&gt;, (ans - n * (n - &lt;span class=&#34;dv&#34;&gt;1&lt;/span&gt;) / &lt;span class=&#34;dv&#34;&gt;2&lt;/span&gt;).val);&lt;span class=&#34;co&#34;&gt;//最后要去除线段的贡献&lt;/span&gt;&lt;/span&gt;
+&lt;span id=&#34;cb1-111&#34;&gt;&lt;a href=&#34;#cb1-111&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;    &lt;span class=&#34;cf&#34;&gt;return&lt;/span&gt; &lt;span class=&#34;dv&#34;&gt;0&lt;/span&gt;;&lt;/span&gt;
+&lt;span id=&#34;cb1-112&#34;&gt;&lt;a href=&#34;#cb1-112&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;}&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+</description>
+        </item>
+        
+    </channel>
+</rss>

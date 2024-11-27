@@ -1,0 +1,649 @@
+<!DOCTYPE html>
+<html dir="ltr" lang="zh-CN">
+<head><meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1" name="viewport"/><meta content="本文内容已经过时，可见 集合幂级数胡扯。
+快速沃尔什变换/FWT 参考：位运算卷积(FWT) &amp;amp; 集合幂级数 by cmdblock
+前言 我们考虑一般的加法卷积： \[ c_k = \sum_{i + j = k} a_ib_j \] 类似地，我们可以定义位运算卷积： \[ c_k = \sum_{i\oplus j = k}a_ib_j \] 其中 \(\oplus\) 是某种按位运算。
+已知的是，FFT 是通过将系数表示乘上一个范德蒙矩阵变成点值表示然后直接对应相乘，考虑构造一个类似的过程，将两序列转成新序列再对应相乘。
+构造 设 \(\operatorname{FWT}(A)\) 为幂级数 \(A\) 变换之后得到的幂级数。令 \(C = A * B\) 为 \(A\) 与 \(B\) 位运算卷积后的结果。则需要满足： \[ A*B = C\iff \operatorname{FWT}(A)\cdot\operatorname{FWT}(B) = \operatorname{FWT}(C) \] FFT 是一个线性变换，相当于乘上一个范德蒙矩阵。考虑对 FWT 构造一个类似的转移矩阵。
+设 \(c(i, j)\) 为变换系数，即 \(A_j\) 对 \(\operatorname{FWT}(A)_i\) 产生的贡献，则 \[ \operatorname{FWT}(A)_i = \sum_{j = 0}^{n - 1}c(i, j)A_j \] 根据 \(\operatorname{FWT}(A)_i\cdot\operatorname{FWT}(B)_i=\operatorname{FWT}(C)_i\)，发现 \[ \begin{aligned} \left(\sum_{j = 0}^{n - 1}c(i, j)A_j\right)\left(\sum_{j = 0}^{n - 1}c(i, j)B_j\right) &amp;amp;= \sum_{j = 0}^{n - 1}c(i, j)C_j\\ \sum_{j = 0}^{n - 1}\sum_{k = 0}^{n - 1}c(i,j)c(i, k)A_jB_k &amp;amp;= \sum_{j = 0}^{n -1}c(i, j)C_j \end{aligned} \] 而 \(A*B = C\)， \[ \begin{aligned} \sum_{j = 0}^{n - 1}c(i, j)C_j &amp;amp;= \sum_{j = 0}^{n - 1}c(i,j)\sum_{t_1\oplus t_2 = j}A_{t_1}B_{t_2}\\ \sum_{j = 0}^{n - 1}\sum_{k = 0}^{n - 1}c(i,j)c(i, k)A_jB_k &amp;amp;= \sum_{j = 0}^{n - 1}c(i,j)\sum_{t_1\oplus t_2 = j}A_{t_1}B_{t_2}\\ &amp;amp;= \sum_{j = 0}^{n - 1}\sum_{t_1\oplus t_2 = j}A_{t_1}B_{t_2}c(i, j)\\ &amp;amp;= \sum_{t_1 = 0}^{n - 1}\sum_{t_2 = 0}^{n - 1}A_{t_1}B_{t_2}c(i, t_1\oplus t_2) \end{aligned} \] 对比以下左右两边，发现 \[ c(i, j)c(i, k) = c(i, j\oplus k) \] 同时，位运算是具有按位独立性的，所以知道了所有的 \(c(x, y)\)（\(x, y\in \{0, 1\}\)）之后就可以求出所有的 \(c(i, j)\)，具体地，把 \(i\) 和 \(j\) 的第 \(k\) 位称为 \(i_k\) 和 \(j_k\)，则 \(c(i, j) = \prod c(i_k, j_k)\)，证明显然。" name="description"/><title>位运算卷积学习笔记</title>
+<link href="https://oi.imyangty.com/note-fwt/" rel="canonical"/>
+<link href="/scss/style.min.a5821f3d3ab84ce5a0ac21477e347a2e0ca00292e398d16c5e8e36ded6e35a23.css" rel="stylesheet"/><meta content="位运算卷积学习笔记" property="og:title"/>
+<meta content="本文内容已经过时，可见 集合幂级数胡扯。
+快速沃尔什变换/FWT 参考：位运算卷积(FWT) &amp;amp; 集合幂级数 by cmdblock
+前言 我们考虑一般的加法卷积： \[ c_k = \sum_{i + j = k} a_ib_j \] 类似地，我们可以定义位运算卷积： \[ c_k = \sum_{i\oplus j = k}a_ib_j \] 其中 \(\oplus\) 是某种按位运算。
+已知的是，FFT 是通过将系数表示乘上一个范德蒙矩阵变成点值表示然后直接对应相乘，考虑构造一个类似的过程，将两序列转成新序列再对应相乘。
+构造 设 \(\operatorname{FWT}(A)\) 为幂级数 \(A\) 变换之后得到的幂级数。令 \(C = A * B\) 为 \(A\) 与 \(B\) 位运算卷积后的结果。则需要满足： \[ A*B = C\iff \operatorname{FWT}(A)\cdot\operatorname{FWT}(B) = \operatorname{FWT}(C) \] FFT 是一个线性变换，相当于乘上一个范德蒙矩阵。考虑对 FWT 构造一个类似的转移矩阵。
+设 \(c(i, j)\) 为变换系数，即 \(A_j\) 对 \(\operatorname{FWT}(A)_i\) 产生的贡献，则 \[ \operatorname{FWT}(A)_i = \sum_{j = 0}^{n - 1}c(i, j)A_j \] 根据 \(\operatorname{FWT}(A)_i\cdot\operatorname{FWT}(B)_i=\operatorname{FWT}(C)_i\)，发现 \[ \begin{aligned} \left(\sum_{j = 0}^{n - 1}c(i, j)A_j\right)\left(\sum_{j = 0}^{n - 1}c(i, j)B_j\right) &amp;amp;= \sum_{j = 0}^{n - 1}c(i, j)C_j\\ \sum_{j = 0}^{n - 1}\sum_{k = 0}^{n - 1}c(i,j)c(i, k)A_jB_k &amp;amp;= \sum_{j = 0}^{n -1}c(i, j)C_j \end{aligned} \] 而 \(A*B = C\)， \[ \begin{aligned} \sum_{j = 0}^{n - 1}c(i, j)C_j &amp;amp;= \sum_{j = 0}^{n - 1}c(i,j)\sum_{t_1\oplus t_2 = j}A_{t_1}B_{t_2}\\ \sum_{j = 0}^{n - 1}\sum_{k = 0}^{n - 1}c(i,j)c(i, k)A_jB_k &amp;amp;= \sum_{j = 0}^{n - 1}c(i,j)\sum_{t_1\oplus t_2 = j}A_{t_1}B_{t_2}\\ &amp;amp;= \sum_{j = 0}^{n - 1}\sum_{t_1\oplus t_2 = j}A_{t_1}B_{t_2}c(i, j)\\ &amp;amp;= \sum_{t_1 = 0}^{n - 1}\sum_{t_2 = 0}^{n - 1}A_{t_1}B_{t_2}c(i, t_1\oplus t_2) \end{aligned} \] 对比以下左右两边，发现 \[ c(i, j)c(i, k) = c(i, j\oplus k) \] 同时，位运算是具有按位独立性的，所以知道了所有的 \(c(x, y)\)（\(x, y\in \{0, 1\}\)）之后就可以求出所有的 \(c(i, j)\)，具体地，把 \(i\) 和 \(j\) 的第 \(k\) 位称为 \(i_k\) 和 \(j_k\)，则 \(c(i, j) = \prod c(i_k, j_k)\)，证明显然。" property="og:description"/>
+<meta content="https://oi.imyangty.com/note-fwt/" property="og:url"/>
+<meta content="清烛的博客" property="og:site_name"/>
+<meta content="article" property="og:type"/><meta content="Post" property="article:section"/><meta content="OI" property="article:tag"/><meta content="笔记" property="article:tag"/><meta content="FWT" property="article:tag"/><meta content="2021-08-28T20:09:11+08:00" property="article:published_time"/><meta content="2021-08-28T20:09:11+08:00" property="article:modified_time"/><meta content="https://yangty-pic.oss-cn-beijing.aliyuncs.com/bg13.webp" property="og:image"/>
+<meta content="位运算卷积学习笔记" name="twitter:title"/>
+<meta content="本文内容已经过时，可见 集合幂级数胡扯。
+快速沃尔什变换/FWT 参考：位运算卷积(FWT) &amp;amp; 集合幂级数 by cmdblock
+前言 我们考虑一般的加法卷积： \[ c_k = \sum_{i + j = k} a_ib_j \] 类似地，我们可以定义位运算卷积： \[ c_k = \sum_{i\oplus j = k}a_ib_j \] 其中 \(\oplus\) 是某种按位运算。
+已知的是，FFT 是通过将系数表示乘上一个范德蒙矩阵变成点值表示然后直接对应相乘，考虑构造一个类似的过程，将两序列转成新序列再对应相乘。
+构造 设 \(\operatorname{FWT}(A)\) 为幂级数 \(A\) 变换之后得到的幂级数。令 \(C = A * B\) 为 \(A\) 与 \(B\) 位运算卷积后的结果。则需要满足： \[ A*B = C\iff \operatorname{FWT}(A)\cdot\operatorname{FWT}(B) = \operatorname{FWT}(C) \] FFT 是一个线性变换，相当于乘上一个范德蒙矩阵。考虑对 FWT 构造一个类似的转移矩阵。
+设 \(c(i, j)\) 为变换系数，即 \(A_j\) 对 \(\operatorname{FWT}(A)_i\) 产生的贡献，则 \[ \operatorname{FWT}(A)_i = \sum_{j = 0}^{n - 1}c(i, j)A_j \] 根据 \(\operatorname{FWT}(A)_i\cdot\operatorname{FWT}(B)_i=\operatorname{FWT}(C)_i\)，发现 \[ \begin{aligned} \left(\sum_{j = 0}^{n - 1}c(i, j)A_j\right)\left(\sum_{j = 0}^{n - 1}c(i, j)B_j\right) &amp;amp;= \sum_{j = 0}^{n - 1}c(i, j)C_j\\ \sum_{j = 0}^{n - 1}\sum_{k = 0}^{n - 1}c(i,j)c(i, k)A_jB_k &amp;amp;= \sum_{j = 0}^{n -1}c(i, j)C_j \end{aligned} \] 而 \(A*B = C\)， \[ \begin{aligned} \sum_{j = 0}^{n - 1}c(i, j)C_j &amp;amp;= \sum_{j = 0}^{n - 1}c(i,j)\sum_{t_1\oplus t_2 = j}A_{t_1}B_{t_2}\\ \sum_{j = 0}^{n - 1}\sum_{k = 0}^{n - 1}c(i,j)c(i, k)A_jB_k &amp;amp;= \sum_{j = 0}^{n - 1}c(i,j)\sum_{t_1\oplus t_2 = j}A_{t_1}B_{t_2}\\ &amp;amp;= \sum_{j = 0}^{n - 1}\sum_{t_1\oplus t_2 = j}A_{t_1}B_{t_2}c(i, j)\\ &amp;amp;= \sum_{t_1 = 0}^{n - 1}\sum_{t_2 = 0}^{n - 1}A_{t_1}B_{t_2}c(i, t_1\oplus t_2) \end{aligned} \] 对比以下左右两边，发现 \[ c(i, j)c(i, k) = c(i, j\oplus k) \] 同时，位运算是具有按位独立性的，所以知道了所有的 \(c(x, y)\)（\(x, y\in \{0, 1\}\)）之后就可以求出所有的 \(c(i, j)\)，具体地，把 \(i\) 和 \(j\) 的第 \(k\) 位称为 \(i_k\) 和 \(j_k\)，则 \(c(i, j) = \prod c(i_k, j_k)\)，证明显然。" name="twitter:description"/><meta content="summary_large_image" name="twitter:card"/>
+<meta content="https://yangty-pic.oss-cn-beijing.aliyuncs.com/bg13.webp" name="twitter:image"/>
+<link href="https://q1.qlogo.cn/g?b=qq&amp;nk=375836877&amp;s=5" rel="shortcut icon"/>
+<link href="https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.5.1/build/styles/github-dark-dimmed.min.css" rel="stylesheet"/>
+<script src="https://cdn.jsdelivr.net/gh/highlightjs/cdn-release/build/highlight.min.js"></script>
+<script>hljs.highlightAll();</script>
+</head>
+<body class="article-page">
+<script>
+        (function() {
+            const colorSchemeKey = 'StackColorScheme';
+            if(!localStorage.getItem(colorSchemeKey)){
+                localStorage.setItem(colorSchemeKey, "auto");
+            }
+        })();
+    </script><script>
+    (function() {
+        const colorSchemeKey = 'StackColorScheme';
+        const colorSchemeItem = localStorage.getItem(colorSchemeKey);
+        const supportDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches === true;
+
+        if (colorSchemeItem == 'dark' || colorSchemeItem === 'auto' && supportDarkMode) {
+            
+
+            document.documentElement.dataset.scheme = 'dark';
+        } else {
+            document.documentElement.dataset.scheme = 'light';
+        }
+    })();
+</script>
+<div class="container main-container flex on-phone--column extended"><aside class="sidebar left-sidebar sticky">
+<button aria-label="切换菜单" class="hamburger hamburger--spin" id="toggle-menu" type="button">
+<span class="hamburger-box">
+<span class="hamburger-inner"></span>
+</span>
+</button>
+<header>
+<figure class="site-avatar">
+<a href="/">
+<img alt="Avatar" class="site-logo" height="300" loading="lazy" src="/img/avatar_huea3ce2119467b51fdd2a81393644a76d_51594_300x0_resize_q75_box.jpg" width="300"/>
+</a>
+<span class="emoji">😅</span>
+</figure>
+<div class="site-meta">
+<h1 class="site-name"><a href="/">清烛的博客</a></h1>
+<h2 class="site-description">烟火已谢，笙歌未停</h2>
+</div>
+</header><ol class="social-menu">
+<li>
+<a href="mailto:i@imyangty.com" target="_blank" title="email">
+<svg class="icon icon-tabler icon-tabler-mail" fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" viewbox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+<path d="M0 0h24v24H0z" fill="none" stroke="none"></path>
+<rect height="14" rx="2" width="18" x="3" y="5"></rect>
+<polyline points="3 7 12 13 21 7"></polyline>
+</svg>
+</a>
+</li>
+<li>
+<a href="https://github.com/Cgfyufsygsm" target="_blank" title="GitHub">
+<svg class="icon icon-tabler icon-tabler-brand-github" fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+<path d="M0 0h24v24H0z" fill="none" stroke="none"></path>
+<path d="M9 19c-4.3 1.4 -4.3 -2.5 -6 -3m12 5v-3.5c0 -1 .1 -1.4 -.5 -2c2.8 -.3 5.5 -1.4 5.5 -6a4.6 4.6 0 0 0 -1.3 -3.2a4.2 4.2 0 0 0 -.1 -3.2s-1.1 -.3 -3.5 1.3a12.3 12.3 0 0 0 -6.2 0c-2.4 -1.6 -3.5 -1.3 -3.5 -1.3a4.2 4.2 0 0 0 -.1 3.2a4.6 4.6 0 0 0 -1.3 3.2c0 4.6 2.7 5.7 5.5 6c-.6 .6 -.6 1.2 -.5 2v3.5"></path>
+</svg>
+</a>
+</li>
+<li>
+<a href="https://t.me/Cgfyufsygsm" target="_blank" title="Telegram">
+<svg class="icon icon-tabler icon-tabler-brand-telegram" fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" viewbox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+<path d="M0 0h24v24H0z" fill="none" stroke="none"></path>
+<path d="M15 10l-4 4l6 6l4 -16l-18 7l4 2l2 6l3 -4"></path>
+</svg>
+</a>
+</li>
+<li>
+<a href="https://twitter.com/Cgfyufsygsm" target="_blank" title="Twitter">
+<svg class="icon icon-tabler icon-tabler-brand-twitter" fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+<path d="M0 0h24v24H0z" fill="none" stroke="none"></path>
+<path d="M22 4.01c-1 .49 -1.98 .689 -3 .99c-1.121 -1.265 -2.783 -1.335 -4.38 -.737s-2.643 2.06 -2.62 3.737v1c-3.245 .083 -6.135 -1.395 -8 -4c0 0 -4.182 7.433 4 11c-1.872 1.247 -3.739 2.088 -6 2c3.308 1.803 6.913 2.423 10.034 1.517c3.58 -1.04 6.522 -3.723 7.651 -7.742a13.84 13.84 0 0 0 .497 -3.753c-.002 -.249 1.51 -2.772 1.818 -4.013z"></path>
+</svg>
+</a>
+</li>
+</ol><ol class="menu" id="main-menu">
+<li>
+<a href="/">
+<svg class="icon icon-tabler icon-tabler-home" fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+<path d="M0 0h24v24H0z" stroke="none"></path>
+<polyline points="5 12 3 12 12 3 21 12 19 12"></polyline>
+<path d="M5 12v7a2 2 0 0 0 2 2h10a2 2 0 0 0 2 -2v-7"></path>
+<path d="M9 21v-6a2 2 0 0 1 2 -2h2a2 2 0 0 1 2 2v6"></path>
+</svg>
+<span>主页</span>
+</a>
+</li>
+<li>
+<a href="/about/">
+<svg class="icon icon-tabler icon-tabler-user" fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+<path d="M0 0h24v24H0z" stroke="none"></path>
+<circle cx="12" cy="7" r="4"></circle>
+<path d="M6 21v-2a4 4 0 0 1 4 -4h4a4 4 0 0 1 4 4v2"></path>
+</svg>
+<span>关于</span>
+</a>
+</li>
+<li>
+<a href="/idx/">
+<svg class="icon icon-tabler icon-tabler-hash" fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+<path d="M0 0h24v24H0z" stroke="none"></path>
+<line x1="5" x2="19" y1="9" y2="9"></line>
+<line x1="5" x2="19" y1="15" y2="15"></line>
+<line x1="11" x2="7" y1="4" y2="20"></line>
+<line x1="17" x2="13" y1="4" y2="20"></line>
+</svg>
+<span>导航</span>
+</a>
+</li>
+<li>
+<a href="/archives/">
+<svg class="icon icon-tabler icon-tabler-archive" fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+<path d="M0 0h24v24H0z" stroke="none"></path>
+<rect height="4" rx="2" width="18" x="3" y="4"></rect>
+<path d="M5 8v10a2 2 0 0 0 2 2h10a2 2 0 0 0 2 -2v-10"></path>
+<line x1="10" x2="14" y1="12" y2="12"></line>
+</svg>
+<span>归档</span>
+</a>
+</li>
+<li>
+<a href="/search/">
+<svg class="icon icon-tabler icon-tabler-search" fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+<path d="M0 0h24v24H0z" stroke="none"></path>
+<circle cx="10" cy="10" r="7"></circle>
+<line x1="21" x2="15" y1="21" y2="15"></line>
+</svg>
+<span>搜索</span>
+</a>
+</li>
+<li>
+<a href="/friends/">
+<svg class="icon icon-tabler icon-tabler-link" fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+<path d="M0 0h24v24H0z" stroke="none"></path>
+<path d="M10 14a3.5 3.5 0 0 0 5 0l4 -4a3.5 3.5 0 0 0 -5 -5l-.5 .5"></path>
+<path d="M14 10a3.5 3.5 0 0 0 -5 0l-4 4a3.5 3.5 0 0 0 5 5l.5 -.5"></path>
+</svg>
+<span>友链</span>
+</a>
+</li>
+<li>
+<a href="https://blog.imyangty.com" target="_blank">
+<svg class="icon icon-tabler icon-tabler-home" fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+<path d="M0 0h24v24H0z" stroke="none"></path>
+<polyline points="5 12 3 12 12 3 21 12 19 12"></polyline>
+<path d="M5 12v7a2 2 0 0 0 2 2h10a2 2 0 0 0 2 -2v-7"></path>
+<path d="M9 21v-6a2 2 0 0 1 2 -2h2a2 2 0 0 1 2 2v6"></path>
+</svg>
+<span>主博客</span>
+</a>
+</li>
+<div class="menu-bottom-section">
+<li id="dark-mode-toggle">
+<svg class="icon icon-tabler icon-tabler-toggle-left" fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+<path d="M0 0h24v24H0z" stroke="none"></path>
+<circle cx="8" cy="12" r="2"></circle>
+<rect height="12" rx="6" width="20" x="2" y="6"></rect>
+</svg>
+<svg class="icon icon-tabler icon-tabler-toggle-right" fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+<path d="M0 0h24v24H0z" stroke="none"></path>
+<circle cx="16" cy="12" r="2"></circle>
+<rect height="12" rx="6" width="20" x="2" y="6"></rect>
+</svg>
+<span>暗色模式</span>
+</li>
+</div>
+</ol>
+</aside>
+<main class="main full-width">
+<article class="has-image main-article">
+<header class="article-header">
+<div class="article-image">
+<a href="/note-fwt/">
+<img alt="Featured image of post 位运算卷积学习笔记" loading="lazy" src="https://yangty-pic.oss-cn-beijing.aliyuncs.com/bg13.webp"/>
+</a>
+</div>
+<div class="article-details">
+<div class="article-title-wrapper">
+<h2 class="article-title">
+<a href="/note-fwt/">位运算卷积学习笔记</a>
+</h2>
+</div>
+<footer class="article-time">
+<div>
+<svg class="icon icon-tabler icon-tabler-calendar-time" fill="none" height="56" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="56" xmlns="http://www.w3.org/2000/svg">
+<path d="M0 0h24v24H0z" stroke="none"></path>
+<path d="M11.795 21h-6.795a2 2 0 0 1 -2 -2v-12a2 2 0 0 1 2 -2h12a2 2 0 0 1 2 2v4"></path>
+<circle cx="18" cy="18" r="4"></circle>
+<path d="M15 3v4"></path>
+<path d="M7 3v4"></path>
+<path d="M3 11h16"></path>
+<path d="M18 16.496v1.504l1 1"></path>
+</svg>
+<time class="article-time--published">Aug 28, 2021</time>
+</div>
+<div>
+<svg class="icon icon-tabler icon-tabler-clock" fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+<path d="M0 0h24v24H0z" stroke="none"></path>
+<circle cx="12" cy="12" r="9"></circle>
+<polyline points="12 7 12 12 15 15"></polyline>
+</svg>
+<time class="article-time--reading">
+                    阅读时长: 7 分钟
+                </time>
+</div>
+</footer>
+</div>
+</header>
+<section class="article-content">
+<p>本文内容已经过时，可见 <a href="/note-set-power-series/">集合幂级数胡扯</a>。</p>
+<h2 id="快速沃尔什变换fwt">快速沃尔什变换/FWT</h2>
+<p>参考：<a href="https://www.luogu.com.cn/blog/command-block/wei-yun-suan-juan-ji-yu-ji-kuo-zhan">位运算卷积(FWT) &amp; 集合幂级数 by cmdblock</a></p>
+<h3 id="前言">前言</h3>
+<p>我们考虑一般的加法卷积： <span class="math display">\[
+c_k = \sum_{i + j = k} a_ib_j
+\]</span> 类似地，我们可以定义位运算卷积： <span class="math display">\[
+c_k = \sum_{i\oplus j = k}a_ib_j
+\]</span> 其中 <span class="math inline">\(\oplus\)</span> 是某种按位运算。</p>
+<p>已知的是，FFT 是通过将系数表示乘上一个范德蒙矩阵变成点值表示然后直接对应相乘，考虑构造一个类似的过程，将两序列转成新序列再对应相乘。</p>
+<h3 id="构造">构造</h3>
+<p>设 <span class="math inline">\(\operatorname{FWT}(A)\)</span> 为幂级数 <span class="math inline">\(A\)</span> 变换之后得到的幂级数。令 <span class="math inline">\(C = A * B\)</span> 为 <span class="math inline">\(A\)</span> 与 <span class="math inline">\(B\)</span> 位运算卷积后的结果。则需要满足： <span class="math display">\[
+A*B = C\iff \operatorname{FWT}(A)\cdot\operatorname{FWT}(B) = \operatorname{FWT}(C)
+\]</span> FFT 是一个线性变换，相当于乘上一个范德蒙矩阵。考虑对 FWT 构造一个类似的转移矩阵。</p>
+<p>设 <span class="math inline">\(c(i, j)\)</span> 为变换系数，即 <span class="math inline">\(A_j\)</span> 对 <span class="math inline">\(\operatorname{FWT}(A)_i\)</span> 产生的贡献，则 <span class="math display">\[
+\operatorname{FWT}(A)_i = \sum_{j = 0}^{n - 1}c(i, j)A_j
+\]</span> 根据 <span class="math inline">\(\operatorname{FWT}(A)_i\cdot\operatorname{FWT}(B)_i=\operatorname{FWT}(C)_i\)</span>，发现 <span class="math display">\[
+\begin{aligned}
+\left(\sum_{j = 0}^{n - 1}c(i, j)A_j\right)\left(\sum_{j = 0}^{n - 1}c(i, j)B_j\right) &amp;= \sum_{j = 0}^{n - 1}c(i, j)C_j\\
+\sum_{j = 0}^{n - 1}\sum_{k = 0}^{n - 1}c(i,j)c(i, k)A_jB_k &amp;= \sum_{j = 0}^{n -1}c(i, j)C_j
+\end{aligned}
+\]</span> 而 <span class="math inline">\(A*B = C\)</span>， <span class="math display">\[
+\begin{aligned}
+\sum_{j = 0}^{n - 1}c(i, j)C_j &amp;= \sum_{j = 0}^{n - 1}c(i,j)\sum_{t_1\oplus t_2 = j}A_{t_1}B_{t_2}\\
+\sum_{j = 0}^{n - 1}\sum_{k = 0}^{n - 1}c(i,j)c(i, k)A_jB_k &amp;= \sum_{j = 0}^{n - 1}c(i,j)\sum_{t_1\oplus t_2 = j}A_{t_1}B_{t_2}\\
+&amp;= \sum_{j = 0}^{n - 1}\sum_{t_1\oplus t_2 = j}A_{t_1}B_{t_2}c(i, j)\\
+&amp;= \sum_{t_1 = 0}^{n - 1}\sum_{t_2 = 0}^{n - 1}A_{t_1}B_{t_2}c(i, t_1\oplus t_2)
+\end{aligned}
+\]</span> 对比以下左右两边，发现 <span class="math display">\[
+c(i, j)c(i, k) = c(i, j\oplus k)
+\]</span> 同时，位运算是具有按位独立性的，所以知道了所有的 <span class="math inline">\(c(x, y)\)</span>（<span class="math inline">\(x, y\in \{0, 1\}\)</span>）之后就可以求出所有的 <span class="math inline">\(c(i, j)\)</span>，具体地，把 <span class="math inline">\(i\)</span> 和 <span class="math inline">\(j\)</span> 的第 <span class="math inline">\(k\)</span> 位称为 <span class="math inline">\(i_k\)</span> 和 <span class="math inline">\(j_k\)</span>，则 <span class="math inline">\(c(i, j) = \prod c(i_k, j_k)\)</span>，证明显然。</p>
+<p>现在考虑 <span class="math inline">\(\operatorname{FWT}(A)_i\)</span> 的计算。前面说过，其等于 <span class="math display">\[
+\sum_{j = 0}^{n - 1}c(i, j)A_j
+\]</span> 然后计算就是 <span class="math inline">\(O(n^2)\)</span> 的，貌似没什么卵用。</p>
+<p>接下来假定 <span class="math inline">\(n = 2^m\)</span>，然后按位折半： <span class="math display">\[
+\begin{aligned}
+\operatorname{FWT}(A)_i &amp;= \sum_{j = 0}^{n - 1}c(i, j)A_j\\
+&amp;= \sum_{j = 0}^{n / 2 - 1}c(i, j)A_j + \sum_{j = n/2}^{n - 1}c(i, j)A_j\\
+&amp;= c(i_0, 0)\sum_{j = 0}^{n / 2 - 1}c(i', j')A_j + c(i_0, 1)\sum_{j = n / 2}^{n - 1}c(i', j')A_j\\
+\end{aligned}
+\]</span> 然后就会惊奇的发现：问题的规模得到了减半。设 <span class="math inline">\(A\)</span> 的前一半为 <span class="math inline">\(A_0\)</span>，后一半为 <span class="math inline">\(A_1\)</span>，则 <span class="math display">\[
+\begin{aligned}
+\operatorname{FWT}(A)_i &amp;=c(0, 0)\operatorname{FWT}(A_0)_i + c(0, 1)\operatorname{FWT}(A_1)_i&amp;i_0 = 0, i\in[0, n / 2)\\
+\operatorname{FWT}(A)_{i + n/2}&amp;= c(1, 0)\operatorname{FWT}(A_0)_i + c(1, 1)\operatorname{FWT}(A_1)_i&amp;i_0 = 1, i\in[0, n / 2)
+\end{aligned}
+\]</span> 分析一下时间复杂度：<span class="math inline">\(T(n) = T(n / 2) + O(n) = O(n\log n)\)</span>。逆变换也就是 <span class="math inline">\(c\)</span> 矩阵的逆，具体下文。</p>
+<h3 id="具体的位运算卷积">具体的位运算卷积</h3>
+<p>对于不同的位运算 <span class="math inline">\(\oplus\)</span>，构造相应的 <span class="math inline">\(c\)</span> 矩阵。将 <span class="math display">\[
+\begin{bmatrix}
+c(0, 0)&amp;c(0, 1)\\
+c(1, 0)&amp;c(1, 1)
+\end{bmatrix}
+\]</span> 称为位矩阵。</p>
+<h4 id="or-卷积">OR 卷积</h4>
+<p><span class="math inline">\(c(i, j)c(i, k) = c(i, j\lor k)\)</span>。</p>
+<p><span class="math inline">\(c(i, j)c(i, j) = c(i, j)\)</span>，故 <span class="math inline">\(c(i, j)\in\{0, 1\}\)</span>。 <span class="math display">\[
+\begin{cases}
+c(1, 0)c(1, 1) = c(1, 1)\\
+c(0, 1)c(0, 0) = c(0, 1)
+\end{cases}
+\]</span> 合法的矩阵有 <span class="math inline">\(\begin{bmatrix}1 &amp; 1 \\ 1 &amp; 0\end{bmatrix}\)</span> 和 <span class="math inline">\(\begin{bmatrix}1 &amp; 0\\1 &amp; 1\end{bmatrix}\)</span>。</p>
+<p>第二个的意义为 <span class="math inline">\(c(i, j) = [i\land j = j]\)</span>，<span class="math inline">\(\operatorname{FWT}(A)_i = \displaystyle\sum_{j = 0}^{n - 1}c(i, j) A_j = \sum_{j\in i}A_j\)</span>。相当于就是子集求和，并且其逆阵的形式很对称，所以使用第二个矩阵。 <span class="math display">\[
+\begin{aligned}
+\operatorname{FWT}(A)_i &amp;=\operatorname{FWT}(A_0)_i &amp;i_0 = 0, i\in[0, n / 2)\\
+\operatorname{FWT}(A)_{i + n/2}&amp;= \operatorname{FWT}(A_0)_i + \operatorname{FWT}(A_1)_i&amp;i_0 = 1, i\in[0, n / 2)
+\end{aligned}
+\]</span></p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode cpp"><code class="sourceCode cpp"><span id="cb1-1"><a aria-hidden="true" href="#cb1-1"></a><span class="dt">void</span> OR(modint *f) {</span>
+<span id="cb1-2"><a aria-hidden="true" href="#cb1-2"></a>    <span class="cf">for</span> (<span class="dt">int</span> o = <span class="dv">2</span>, k = <span class="dv">1</span>; o &lt;= n; o &lt;&lt;= <span class="dv">1</span>, k &lt;&lt;= <span class="dv">1</span>)</span>
+<span id="cb1-3"><a aria-hidden="true" href="#cb1-3"></a>        <span class="cf">for</span> (<span class="dt">int</span> i = <span class="dv">0</span>; i &lt; n; i += o)</span>
+<span id="cb1-4"><a aria-hidden="true" href="#cb1-4"></a>            <span class="cf">for</span> (<span class="dt">int</span> j = <span class="dv">0</span>; j &lt; k; ++j)</span>
+<span id="cb1-5"><a aria-hidden="true" href="#cb1-5"></a>                f[i + j + k] += f[i + j];</span>
+<span id="cb1-6"><a aria-hidden="true" href="#cb1-6"></a>    <span class="cf">return</span>;</span>
+<span id="cb1-7"><a aria-hidden="true" href="#cb1-7"></a>}</span></code></pre></div>
+<p><span class="math display">\[
+\begin{bmatrix}
+1 &amp; 0\\
+1 &amp; 1
+\end{bmatrix}^{-1} = 
+\begin{bmatrix}
+1 &amp; 0\\
+-1 &amp; 1
+\end{bmatrix}
+\]</span></p>
+<p><span class="math display">\[
+\begin{aligned}
+\operatorname{IFWT}(A)_i &amp;=\operatorname{IFWT}(A_0)_i &amp;i_0 = 0, i\in[0, n / 2)\\
+\operatorname{IFWT}(A)_{i + n/2}&amp;= \operatorname{IFWT}(A_0)_i - \operatorname{IFWT}(A_1)_i&amp;i_0 = 1, i\in[0, n / 2)
+\end{aligned}
+\]</span></p>
+<p>所以就可以写出如下的代码：</p>
+<div class="sourceCode" id="cb2"><pre class="sourceCode cpp"><code class="sourceCode cpp"><span id="cb2-1"><a aria-hidden="true" href="#cb2-1"></a><span class="dt">void</span> OR(modint *f, modint x = <span class="dv">1</span>) {</span>
+<span id="cb2-2"><a aria-hidden="true" href="#cb2-2"></a>    <span class="cf">for</span> (<span class="dt">int</span> o = <span class="dv">2</span>, k = <span class="dv">1</span>; o &lt;= n; o &lt;&lt;= <span class="dv">1</span>, k &lt;&lt;= <span class="dv">1</span>)</span>
+<span id="cb2-3"><a aria-hidden="true" href="#cb2-3"></a>        <span class="cf">for</span> (<span class="dt">int</span> i = <span class="dv">0</span>; i &lt; n; i += o)</span>
+<span id="cb2-4"><a aria-hidden="true" href="#cb2-4"></a>            <span class="cf">for</span> (<span class="dt">int</span> j = <span class="dv">0</span>; j &lt; k; ++j)</span>
+<span id="cb2-5"><a aria-hidden="true" href="#cb2-5"></a>                f[i + j + k] += f[i + j] * x;</span>
+<span id="cb2-6"><a aria-hidden="true" href="#cb2-6"></a>    <span class="cf">return</span>;</span>
+<span id="cb2-7"><a aria-hidden="true" href="#cb2-7"></a>}</span></code></pre></div>
+<h4 id="and-卷积">AND 卷积</h4>
+<p><span class="math inline">\(c(i, j)c(j, k) = c(i,j\land k)\)</span>，类似地，<span class="math inline">\(c(i,j)\in\{0,1\}\)</span>。 <span class="math display">\[
+\begin{cases}
+c(0, 0)c(0, 1) = c(0, 0)\\
+c(1, 0)c(1, 1) = c(1, 0)\\
+\end{cases}
+\]</span> 合法的矩阵有 <span class="math inline">\(\begin{bmatrix}1 &amp; 1\\ 0 &amp; 1\end{bmatrix}\)</span> 和 <span class="math inline">\(\begin{bmatrix}0 &amp; 1\\1 &amp; 1\end{bmatrix}\)</span>。第一种的意义为 <span class="math inline">\(c(i, j) = [i\land j = i]\)</span>，<span class="math inline">\(\operatorname{FWT}(A)_i = \displaystyle\sum_{j=0}^{n - 1}c(i,j)A_j = \sum_{i\in j}A_j\)</span>，相当于超集求和，且求逆完的形式比较对偶，所以使用第一种： <span class="math display">\[
+\begin{aligned}
+\operatorname{FWT}(A)_i &amp;=\operatorname{FWT}(A_0)_i + \operatorname{FWT}(A_1)_i &amp;i_0 = 0, i\in[0, n / 2)\\
+\operatorname{FWT}(A)_{i + n/2}&amp;=\operatorname{FWT}(A_1)_i  &amp;i_0 = 1, i\in[0, n / 2)
+\end{aligned}
+\]</span></p>
+<p><span class="math display">\[
+\begin{bmatrix}
+1 &amp; 1\\0 &amp; 1
+\end{bmatrix}^{-1} = \begin{bmatrix}
+1 &amp; -1\\
+0 &amp; 1
+\end{bmatrix}
+\]</span></p>
+<p><span class="math display">\[
+\begin{aligned}
+\operatorname{IFWT}(A)_i &amp;=\operatorname{IFWT}(A_0)_i - \operatorname{IFWT}(A_1)_i &amp;i_0 = 0, i\in[0, n / 2)\\
+\operatorname{IFWT}(A)_{i + n/2}&amp;=\operatorname{IFWT}(A_1)_i  &amp;i_0 = 1, i\in[0, n / 2)
+\end{aligned}
+\]</span></p>
+<div class="sourceCode" id="cb3"><pre class="sourceCode cpp"><code class="sourceCode cpp"><span id="cb3-1"><a aria-hidden="true" href="#cb3-1"></a><span class="dt">void</span> AND(modint *f, modint x = <span class="dv">1</span>) {</span>
+<span id="cb3-2"><a aria-hidden="true" href="#cb3-2"></a>    <span class="cf">for</span> (<span class="dt">int</span> o = <span class="dv">2</span>, k = <span class="dv">1</span>; o &lt;= n; o &lt;&lt;= <span class="dv">1</span>, k &lt;&lt;= <span class="dv">1</span>)</span>
+<span id="cb3-3"><a aria-hidden="true" href="#cb3-3"></a>        <span class="cf">for</span> (<span class="dt">int</span> i = <span class="dv">0</span>; i &lt; n; i += o)</span>
+<span id="cb3-4"><a aria-hidden="true" href="#cb3-4"></a>            <span class="cf">for</span> (<span class="dt">int</span> j = <span class="dv">0</span>; j &lt; k; ++j)</span>
+<span id="cb3-5"><a aria-hidden="true" href="#cb3-5"></a>                f[i + j] += f[i + j + k] * x;</span>
+<span id="cb3-6"><a aria-hidden="true" href="#cb3-6"></a>    <span class="cf">return</span>;</span>
+<span id="cb3-7"><a aria-hidden="true" href="#cb3-7"></a>}</span></code></pre></div>
+<h4 id="xor-卷积">XOR 卷积</h4>
+<p><span class="math inline">\(c(i, j)c(i, k) = c(i, j\operatorname{xor} k)\)</span>。</p>
+<p>合法的有 <span class="math inline">\(\begin{bmatrix}1 &amp; 1\\ 1 &amp; -1\end{bmatrix}\)</span> 和 <span class="math inline">\(\begin{bmatrix}1 &amp; 1 \\ -1 &amp; 1\end{bmatrix}\)</span>。第二种求完逆形式不太好，选用第一种。 <span class="math display">\[
+\begin{aligned}
+\operatorname{FWT}(A)_i &amp;=\operatorname{FWT}(A_0)_i + \operatorname{FWT}(A_1)_i&amp;i_0 = 0, i\in[0, n / 2)\\
+\operatorname{FWT}(A)_{i + n/2}&amp;= \operatorname{FWT}(A_0)_i -\operatorname{FWT}(A_1)_i&amp;i_0 = 1, i\in[0, n / 2)
+\end{aligned}
+\]</span></p>
+<p><span class="math display">\[
+\begin{bmatrix}
+1 &amp; 1 \\ 1 &amp; -1
+\end{bmatrix}^{-1} =
+\begin{bmatrix}
+1/ 2 &amp; 1/  2\\
+1/2 &amp; -1/2
+\end{bmatrix}
+\]</span></p>
+<p><span class="math display">\[
+\begin{aligned}
+\operatorname{IFWT}(A)_i &amp;=\frac 1 2\operatorname{IFWT}(A_0)_i + \frac 1 2\operatorname{IFWT}(A_1)_i&amp;i_0 = 0, i\in[0, n / 2)\\
+\operatorname{IFWT}(A)_{i + n/2}&amp;= \frac 1 2\operatorname{IFWT}(A_0)_i -\frac 1 2\operatorname{IFWT}(A_1)_i&amp;i_0 = 1, i\in[0, n / 2)
+\end{aligned}
+\]</span></p>
+<div class="sourceCode" id="cb4"><pre class="sourceCode cpp"><code class="sourceCode cpp"><span id="cb4-1"><a aria-hidden="true" href="#cb4-1"></a><span class="dt">void</span> XOR(modint *f, modint x = <span class="dv">1</span>) {</span>
+<span id="cb4-2"><a aria-hidden="true" href="#cb4-2"></a>    <span class="cf">for</span> (<span class="dt">int</span> o = <span class="dv">2</span>, k = <span class="dv">1</span>; o &lt;= n; o &lt;&lt;= <span class="dv">1</span>, k &lt;&lt;= <span class="dv">1</span>)</span>
+<span id="cb4-3"><a aria-hidden="true" href="#cb4-3"></a>        <span class="cf">for</span> (<span class="dt">int</span> i = <span class="dv">0</span>; i &lt; n; i += o)</span>
+<span id="cb4-4"><a aria-hidden="true" href="#cb4-4"></a>            <span class="cf">for</span> (<span class="dt">int</span> j = <span class="dv">0</span>; j &lt; k; ++j) {</span>
+<span id="cb4-5"><a aria-hidden="true" href="#cb4-5"></a>                f[i + j] += f[i + j + k];</span>
+<span id="cb4-6"><a aria-hidden="true" href="#cb4-6"></a>                f[i + j + k] = f[i + j] - f[i + j + k] - f[i + j + k];</span>
+<span id="cb4-7"><a aria-hidden="true" href="#cb4-7"></a>                f[i + j] *= x, f[i + j + k] *= x;</span>
+<span id="cb4-8"><a aria-hidden="true" href="#cb4-8"></a>            }</span>
+<span id="cb4-9"><a aria-hidden="true" href="#cb4-9"></a>    <span class="cf">return</span>;</span>
+<span id="cb4-10"><a aria-hidden="true" href="#cb4-10"></a>}</span></code></pre></div>
+<h4 id="板子">板子</h4>
+<p><a href="https://www.luogu.com.cn/problem/P4717">P4717</a></p>
+<div class="sourceCode" id="cb5"><pre class="sourceCode cpp"><code class="sourceCode cpp"><span id="cb5-1"><a aria-hidden="true" href="#cb5-1"></a><span class="at">const</span> <span class="dt">int</span> maxn = <span class="dv">1</span> &lt;&lt; <span class="dv">19</span>;</span>
+<span id="cb5-2"><a aria-hidden="true" href="#cb5-2"></a></span>
+<span id="cb5-3"><a aria-hidden="true" href="#cb5-3"></a><span class="dt">int</span> n;</span>
+<span id="cb5-4"><a aria-hidden="true" href="#cb5-4"></a>modint A[maxn], B[maxn], a[maxn], b[maxn];</span>
+<span id="cb5-5"><a aria-hidden="true" href="#cb5-5"></a></span>
+<span id="cb5-6"><a aria-hidden="true" href="#cb5-6"></a><span class="dt">void</span> OR(modint *f, modint x = <span class="dv">1</span>) {</span>
+<span id="cb5-7"><a aria-hidden="true" href="#cb5-7"></a>    <span class="cf">for</span> (<span class="dt">int</span> o = <span class="dv">2</span>, k = <span class="dv">1</span>; o &lt;= n; o &lt;&lt;= <span class="dv">1</span>, k &lt;&lt;= <span class="dv">1</span>)</span>
+<span id="cb5-8"><a aria-hidden="true" href="#cb5-8"></a>        <span class="cf">for</span> (<span class="dt">int</span> i = <span class="dv">0</span>; i &lt; n; i += o)</span>
+<span id="cb5-9"><a aria-hidden="true" href="#cb5-9"></a>            <span class="cf">for</span> (<span class="dt">int</span> j = <span class="dv">0</span>; j &lt; k; ++j)</span>
+<span id="cb5-10"><a aria-hidden="true" href="#cb5-10"></a>                f[i + j + k] += f[i + j] * x;</span>
+<span id="cb5-11"><a aria-hidden="true" href="#cb5-11"></a>    <span class="cf">return</span>;</span>
+<span id="cb5-12"><a aria-hidden="true" href="#cb5-12"></a>}</span>
+<span id="cb5-13"><a aria-hidden="true" href="#cb5-13"></a></span>
+<span id="cb5-14"><a aria-hidden="true" href="#cb5-14"></a><span class="dt">void</span> AND(modint *f, modint x = <span class="dv">1</span>) {</span>
+<span id="cb5-15"><a aria-hidden="true" href="#cb5-15"></a>    <span class="cf">for</span> (<span class="dt">int</span> o = <span class="dv">2</span>, k = <span class="dv">1</span>; o &lt;= n; o &lt;&lt;= <span class="dv">1</span>, k &lt;&lt;= <span class="dv">1</span>)</span>
+<span id="cb5-16"><a aria-hidden="true" href="#cb5-16"></a>        <span class="cf">for</span> (<span class="dt">int</span> i = <span class="dv">0</span>; i &lt; n; i += o)</span>
+<span id="cb5-17"><a aria-hidden="true" href="#cb5-17"></a>            <span class="cf">for</span> (<span class="dt">int</span> j = <span class="dv">0</span>; j &lt; k; ++j)</span>
+<span id="cb5-18"><a aria-hidden="true" href="#cb5-18"></a>                f[i + j] += f[i + j + k] * x;</span>
+<span id="cb5-19"><a aria-hidden="true" href="#cb5-19"></a>    <span class="cf">return</span>;</span>
+<span id="cb5-20"><a aria-hidden="true" href="#cb5-20"></a>}</span>
+<span id="cb5-21"><a aria-hidden="true" href="#cb5-21"></a></span>
+<span id="cb5-22"><a aria-hidden="true" href="#cb5-22"></a><span class="dt">void</span> XOR(modint *f, modint x = <span class="dv">1</span>) {</span>
+<span id="cb5-23"><a aria-hidden="true" href="#cb5-23"></a>    <span class="cf">for</span> (<span class="dt">int</span> o = <span class="dv">2</span>, k = <span class="dv">1</span>; o &lt;= n; o &lt;&lt;= <span class="dv">1</span>, k &lt;&lt;= <span class="dv">1</span>)</span>
+<span id="cb5-24"><a aria-hidden="true" href="#cb5-24"></a>        <span class="cf">for</span> (<span class="dt">int</span> i = <span class="dv">0</span>; i &lt; n; i += o)</span>
+<span id="cb5-25"><a aria-hidden="true" href="#cb5-25"></a>            <span class="cf">for</span> (<span class="dt">int</span> j = <span class="dv">0</span>; j &lt; k; ++j) {</span>
+<span id="cb5-26"><a aria-hidden="true" href="#cb5-26"></a>                f[i + j] += f[i + j + k];</span>
+<span id="cb5-27"><a aria-hidden="true" href="#cb5-27"></a>                f[i + j + k] = f[i + j] - f[i + j + k] - f[i + j + k];</span>
+<span id="cb5-28"><a aria-hidden="true" href="#cb5-28"></a>                f[i + j] *= x, f[i + j + k] *= x;</span>
+<span id="cb5-29"><a aria-hidden="true" href="#cb5-29"></a>            }</span>
+<span id="cb5-30"><a aria-hidden="true" href="#cb5-30"></a>    <span class="cf">return</span>;</span>
+<span id="cb5-31"><a aria-hidden="true" href="#cb5-31"></a>}</span>
+<span id="cb5-32"><a aria-hidden="true" href="#cb5-32"></a></span>
+<span id="cb5-33"><a aria-hidden="true" href="#cb5-33"></a><span class="dt">void</span> mul(modint *f, modint *g) {</span>
+<span id="cb5-34"><a aria-hidden="true" href="#cb5-34"></a>    FOR(i, <span class="dv">0</span>, n) f[i] *= g[i];</span>
+<span id="cb5-35"><a aria-hidden="true" href="#cb5-35"></a>    <span class="cf">return</span>;</span>
+<span id="cb5-36"><a aria-hidden="true" href="#cb5-36"></a>}</span>
+<span id="cb5-37"><a aria-hidden="true" href="#cb5-37"></a></span>
+<span id="cb5-38"><a aria-hidden="true" href="#cb5-38"></a><span class="dt">int</span> main() {</span>
+<span id="cb5-39"><a aria-hidden="true" href="#cb5-39"></a>    read(n);</span>
+<span id="cb5-40"><a aria-hidden="true" href="#cb5-40"></a>    n = <span class="dv">1</span> &lt;&lt; n;</span>
+<span id="cb5-41"><a aria-hidden="true" href="#cb5-41"></a>    FOR(i, <span class="dv">0</span>, n - <span class="dv">1</span>) read(A[i]);</span>
+<span id="cb5-42"><a aria-hidden="true" href="#cb5-42"></a>    FOR(i, <span class="dv">0</span>, n - <span class="dv">1</span>) read(B[i]);</span>
+<span id="cb5-43"><a aria-hidden="true" href="#cb5-43"></a>    </span>
+<span id="cb5-44"><a aria-hidden="true" href="#cb5-44"></a>    cpy(A, a), cpy(B, b), OR(a, <span class="dv">1</span>), OR(b, <span class="dv">1</span>), mul(a, b), OR(a, MOD - <span class="dv">1</span>);</span>
+<span id="cb5-45"><a aria-hidden="true" href="#cb5-45"></a>    FOR(i, <span class="dv">0</span>, n - <span class="dv">1</span>) print(a[i]), putchar(<span class="ch">' '</span>); putchar(<span class="ch">'</span><span class="sc">\n</span><span class="ch">'</span>);</span>
+<span id="cb5-46"><a aria-hidden="true" href="#cb5-46"></a></span>
+<span id="cb5-47"><a aria-hidden="true" href="#cb5-47"></a>    cpy(A, a), cpy(B, b), AND(a, <span class="dv">1</span>), AND(b, <span class="dv">1</span>), mul(a, b), AND(a, MOD - <span class="dv">1</span>);</span>
+<span id="cb5-48"><a aria-hidden="true" href="#cb5-48"></a>    FOR(i, <span class="dv">0</span>, n - <span class="dv">1</span>) print(a[i]), putchar(<span class="ch">' '</span>); putchar(<span class="ch">'</span><span class="sc">\n</span><span class="ch">'</span>);</span>
+<span id="cb5-49"><a aria-hidden="true" href="#cb5-49"></a></span>
+<span id="cb5-50"><a aria-hidden="true" href="#cb5-50"></a>    cpy(A, a), cpy(B, b), XOR(a, <span class="dv">1</span>), XOR(b, <span class="dv">1</span>), mul(a, b), XOR(a, (MOD + <span class="dv">1</span>) / <span class="dv">2</span>);</span>
+<span id="cb5-51"><a aria-hidden="true" href="#cb5-51"></a>    FOR(i, <span class="dv">0</span>, n - <span class="dv">1</span>) print(a[i]), putchar(<span class="ch">' '</span>); putchar(<span class="ch">'</span><span class="sc">\n</span><span class="ch">'</span>);</span>
+<span id="cb5-52"><a aria-hidden="true" href="#cb5-52"></a></span>
+<span id="cb5-53"><a aria-hidden="true" href="#cb5-53"></a>    <span class="cf">return</span> output(), <span class="dv">0</span>;</span>
+<span id="cb5-54"><a aria-hidden="true" href="#cb5-54"></a>}</span></code></pre></div>
+<h3 id="总结">总结</h3>
+<p>整体的思路：</p>
+<ol type="1">
+<li><p>回顾 FFT，现在要求构造一种线性变换满足 <span class="math inline">\(\operatorname{FWT}(A)\cdot\operatorname{FWT}(B) = \operatorname{FWT}(C)\iff A*B = C\)</span>。</p></li>
+<li><p>考虑构造系数矩阵 <span class="math inline">\(c(i, j)\)</span> 满足 <span class="math inline">\(\operatorname{FWT}(A)_i = \sum c(i, j)A_j\)</span>。</p></li>
+<li><p>发现 <span class="math inline">\(c(i, j)c(i, k) = c(i, j\oplus k)\)</span>。</p></li>
+<li><p>发现所有的 <span class="math inline">\(c(i, j)\)</span> 可以由 <span class="math inline">\(c(x, y)(x,y\in\{0, 1\})\)</span> 得到。</p></li>
+<li><p>将 <span class="math inline">\(\operatorname{FWT}(A)_i\)</span> 的式子折半拆开，发现变为两个子问题。 <span class="math display">\[
+\begin{aligned}
+\operatorname{FWT}(A)_i &amp;=c(0, 0)\operatorname{FWT}(A_0)_i + c(0, 1)\operatorname{FWT}(A_1)_i&amp;i_0 = 0, i\in[0, n / 2)\\
+\operatorname{FWT}(A)_{i + n/2}&amp;= c(1, 0)\operatorname{FWT}(A_0)_i + c(1, 1)\operatorname{FWT}(A_1)_i&amp;i_0 = 1, i\in[0, n / 2)
+\end{aligned}
+\]</span></p></li>
+<li><p>对于具体的位运算，构造出 <span class="math inline">\(\begin{bmatrix}c(0, 0)&amp; c(0, 1)\\ c(1, 0) &amp; c(1, 1) \end{bmatrix}\)</span> 及其逆阵，尽量使得两种形式统一。</p></li>
+<li><p>敲出迭代版代码。</p></li>
+</ol>
+<p>同时注意一下：</p>
+<ul>
+<li><strong>FWT_AND</strong> 是<strong>超集</strong>求和；</li>
+<li><strong>FWT_OR</strong> 是<strong>子集</strong>求和。</li>
+</ul>
+<h2 id="应用">应用</h2>
+<p>主要运用到 FWT 的线性性。即 <span class="math display">\[
+\operatorname{FWT}(A) + \operatorname{FWT}(B) = \operatorname{FWT}(A + B)\\
+\operatorname{FWT}(cA) = c\operatorname{FWT}(A)
+\]</span> 然后就可以用其优化一些生成函数的运算。</p>
+<p>同时，FWT 求子集/超级和的应用也是很广泛的。</p>
+<p>注意当 <span class="math inline">\(A\)</span> 中只有若干项为 <span class="math inline">\(1\)</span> 时是可以大力分类讨论的。</p>
+<ul>
+<li><p>ABC212H - Nim Counting <a href="/summary-atcoder/">sol</a> 利用了 FWT 的线性性，所以 FWT 完之后直接等比数列求和再 IFWT 回去就是对的。</p></li>
+<li><p>CF449D Jzzhu and Numbers <a href="/sol-cf449d/">sol</a></p>
+<p>涉及到了子集求和和 FWT 的线性性。分析只有两项不为 <span class="math inline">\(0\)</span> 的序列做 FWT 之后的性质。</p></li>
+</ul>
+</section>
+<footer class="article-footer">
+<section class="article-tags">
+<a href="/tags/OI/">OI</a>
+<a href="/tags/note/">笔记</a>
+<a href="/tags/FWT/">FWT</a>
+</section>
+<section class="article-copyright">
+<svg class="icon icon-tabler icon-tabler-copyright" fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+<path d="M0 0h24v24H0z" stroke="none"></path>
+<circle cx="12" cy="12" r="9"></circle>
+<path d="M14.5 9a3.5 4 0 1 0 0 6"></path>
+</svg>
+<span>Licensed under CC BY-NC-SA 4.0</span>
+</section>
+</footer>
+<link crossorigin="anonymous" href="https://cdn.jsdelivr.net/npm/katex@0.13.13/dist/katex.min.css" integrity="sha384-RZU/ijkSsFbcmivfdRBQDtwuwVqK7GMOw6IMvKyeWL2K5UAlyp6WonmB8m7Jd0Hn" rel="stylesheet"/><script crossorigin="anonymous" defer="" integrity="sha384-pK1WpvzWVBQiP0/GjnvRxV4mOb0oxFuyRxJlk6vVw146n3egcN5C925NCP7a7BY8" src="https://cdn.jsdelivr.net/npm/katex@0.13.13/dist/katex.min.js">
+</script><script crossorigin="anonymous" defer="" integrity="sha384-vZTG03m+2yp6N6BNi5iM4rW4oIwk5DfcNdFfxkk9ZWpDriOkXX8voJBFrAO7MpVl" src="https://cdn.jsdelivr.net/npm/katex@0.13.13/dist/contrib/auto-render.min.js">
+</script><script>
+    window.addEventListener("DOMContentLoaded", () => {
+        renderMathInElement(document.querySelector(`.article-content`), {
+            delimiters: [
+                { left: "$$", right: "$$", display: true },
+                { left: "$", right: "$", display: false },
+                { left: "\\(", right: "\\)", display: false },
+                { left: "\\[", right: "\\]", display: true }
+            ]
+        });})
+</script>
+</article>
+<aside class="related-contents--wrapper">
+<h2 class="section-title">相关文章</h2>
+<div class="related-contents">
+<div class="flex article-list--tile">
+<article class="has-image">
+<a href="/note-set-power-series/">
+<div class="article-image">
+<img data-hash="https://yangty-pic.oss-cn-beijing.aliyuncs.com/bg39.webp" data-key="" loading="lazy" src="https://yangty-pic.oss-cn-beijing.aliyuncs.com/bg39.webp"/>
+</div>
+<div class="article-details">
+<h2 class="article-title">集合幂级数胡扯</h2>
+</div>
+</a>
+</article>
+<article class="has-image">
+<a href="/note-gf/">
+<div class="article-image">
+<img data-hash="https://yangty-pic.oss-cn-beijing.aliyuncs.com/bg28.webp" data-key="" loading="lazy" src="https://yangty-pic.oss-cn-beijing.aliyuncs.com/bg28.webp"/>
+</div>
+<div class="article-details">
+<h2 class="article-title">生成函数胡扯</h2>
+</div>
+</a>
+</article>
+<article class="has-image">
+<a href="/note-linear-basis/">
+<div class="article-image">
+<img data-hash="https://yangty-pic.oss-cn-beijing.aliyuncs.com/bg19.webp" data-key="" loading="lazy" src="https://yangty-pic.oss-cn-beijing.aliyuncs.com/bg19.webp"/>
+</div>
+<div class="article-details">
+<h2 class="article-title">线性基学习笔记</h2>
+</div>
+</a>
+</article>
+<article class="has-image">
+<a href="/note-wqs/">
+<div class="article-image">
+<img data-hash="https://yangty-pic.oss-cn-beijing.aliyuncs.com/bg28.webp" data-key="" loading="lazy" src="https://yangty-pic.oss-cn-beijing.aliyuncs.com/bg28.webp"/>
+</div>
+<div class="article-details">
+<h2 class="article-title">wqs 二分学习笔记</h2>
+</div>
+</a>
+</article>
+<article class="has-image">
+<a href="/note-builtin/">
+<div class="article-image">
+<img data-hash="https://yangty-pic.oss-cn-beijing.aliyuncs.com/bg9.webp" data-key="" loading="lazy" src="https://yangty-pic.oss-cn-beijing.aliyuncs.com/bg9.webp"/>
+</div>
+<div class="article-details">
+<h2 class="article-title">__builtin 系列函数总结</h2>
+</div>
+</a>
+</article>
+</div>
+</div>
+</aside>
+<footer class="site-footer">
+<section class="copyright">
+        © 
+        
+            2019 - 
+        
+        2024 清烛的博客
+    </section>
+<section class="powerby">
+        Built with <a href="https://gohugo.io/" rel="noopener" target="_blank">Hugo</a> <br/>
+        主题 <b><a data-version="3.11.0" href="https://github.com/CaiJimmy/hugo-theme-stack" rel="noopener" target="_blank">Stack</a></b> 由 <a href="https://jimmycai.com" rel="noopener" target="_blank">Jimmy</a> 设计
+    </section>
+</footer>
+<div aria-hidden="true" class="pswp" role="dialog" tabindex="-1">
+<div class="pswp__bg"></div>
+<div class="pswp__scroll-wrap">
+<div class="pswp__container">
+<div class="pswp__item"></div>
+<div class="pswp__item"></div>
+<div class="pswp__item"></div>
+</div>
+<div class="pswp__ui pswp__ui--hidden">
+<div class="pswp__top-bar">
+<div class="pswp__counter"></div>
+<button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+<button class="pswp__button pswp__button--share" title="Share"></button>
+<button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+<button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+<div class="pswp__preloader">
+<div class="pswp__preloader__icn">
+<div class="pswp__preloader__cut">
+<div class="pswp__preloader__donut"></div>
+</div>
+</div>
+</div>
+</div>
+<div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+<div class="pswp__share-tooltip"></div>
+</div>
+<button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+</button>
+<button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+</button>
+<div class="pswp__caption">
+<div class="pswp__caption__center"></div>
+</div>
+</div>
+</div>
+</div><script crossorigin="anonymous" defer="" integrity="sha256-ePwmChbbvXbsO02lbM3HoHbSHTHFAeChekF1xKJdleo=" src="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe.min.js">
+</script><script crossorigin="anonymous" defer="" integrity="sha256-UKkzOn/w1mBxRmLLGrSeyB4e1xbrp4xylgAWb3M42pU=" src="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe-ui-default.min.js">
+</script><link crossorigin="anonymous" href="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/default-skin/default-skin.css" integrity="sha256-c0uckgykQ9v5k+IqViZOZKc47Jn7KQil4/MP3ySA3F8=" rel="stylesheet"/><link crossorigin="anonymous" href="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe.css" integrity="sha256-SBLU4vv6CA6lHsZ1XyTdhyjJxCjPif/TRkjnsyGAGnE=" rel="stylesheet"/>
+</main>
+</div>
+<script crossorigin="anonymous" integrity="sha256-5NovOZc4iwiAWTYIFiIM7DxKUXKWvpVEuMEPLzcm5/g=" src="https://cdn.jsdelivr.net/npm/node-vibrant@3.1.5/dist/vibrant.min.js">
+</script><script defer="" src="/ts/main.js" type="text/javascript"></script>
+<script>
+    (function () {
+        const customFont = document.createElement('link');
+        customFont.href = "https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&display=swap";
+
+        customFont.type = "text/css";
+        customFont.rel = "stylesheet";
+
+        document.head.appendChild(customFont);
+    }());
+</script>
+</body>
+</html>

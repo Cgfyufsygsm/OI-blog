@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+    <channel>
+        <title>位运算 on 清烛的博客</title>
+        <link>https://oi.imyangty.com/tags/bitmask/</link>
+        <description>Recent content in 位运算 on 清烛的博客</description>
+        <generator>Hugo -- gohugo.io</generator>
+        <language>zh-CN</language>
+        <lastBuildDate>Tue, 09 Nov 2021 16:56:14 +0800</lastBuildDate><atom:link href="https://oi.imyangty.com/tags/bitmask/index.xml" rel="self" type="application/rss+xml" /><item>
+        <title>__builtin 系列函数总结</title>
+        <link>https://oi.imyangty.com/note-builtin/</link>
+        <pubDate>Tue, 09 Nov 2021 16:56:14 +0800</pubDate>
+        
+        <guid>https://oi.imyangty.com/note-builtin/</guid>
+        <description>&lt;img src="https://yangty-pic.oss-cn-beijing.aliyuncs.com/bg9.webp" alt="Featured image of post __builtin 系列函数总结" /&gt;&lt;h2 id=&#34;前言&#34;&gt;前言&lt;/h2&gt;
+&lt;p&gt;CCF 解禁双下划线函数后实战中有较为强大的运用。&lt;/p&gt;
+&lt;p&gt;GCC 编译器提供的内建函数，以 &lt;code&gt;__builtin_&lt;/code&gt; 开头，开头为双下划线。&lt;/p&gt;
+&lt;h2 id=&#34;定义&#34;&gt;定义&lt;/h2&gt;
+&lt;p&gt;主要有用的是针对位运算的这几个函数。&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;__builtin_popcount(unsigned x)&lt;/code&gt;：popcount 函数，基本上比手写的快。&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;__builtin_popcountll(unsigned long long x)&lt;/code&gt;：对于 &lt;code&gt;long long&lt;/code&gt; 类型的需使用这个函数。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;即，一般，我们是对 &lt;code&gt;unsigned&lt;/code&gt; 进行操作，有符号数会自动转为无符号，对于 &lt;code&gt;long long&lt;/code&gt; 则需要在后面加上 &lt;code&gt;ll&lt;/code&gt; 的后缀。&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;__builtin_ffs(unsigned x)&lt;/code&gt;：相当于 &lt;code&gt;lowbit(x)&lt;/code&gt;，两者效率差别不大。&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;__builtin_ctz(unsigned x)&lt;/code&gt;：返回末尾 &lt;span class=&#34;math inline&#34;&gt;\(0\)&lt;/span&gt; 的个数，相当于 &lt;code&gt;lowbit(x) - 1&lt;/code&gt;，&lt;strong&gt;对 &lt;span class=&#34;math inline&#34;&gt;\(0\)&lt;/span&gt; 未定义&lt;/strong&gt;。&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;__builtin_clz(unsigned x)&lt;/code&gt;：返回前导 &lt;span class=&#34;math inline&#34;&gt;\(0\)&lt;/span&gt; 的个数，&lt;strong&gt;对 &lt;span class=&#34;math inline&#34;&gt;\(0\)&lt;/span&gt; 未定义&lt;/strong&gt;。上面两个的记忆方法：count leading/trailing zeros。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;一般有用的就这几个。&lt;/p&gt;
+&lt;h2 id=&#34;应用&#34;&gt;应用&lt;/h2&gt;
+&lt;p&gt;部分应用场景下可以减少状压 dp 的实现难度。&lt;/p&gt;
+&lt;p&gt;而且其效率高（尤其是 popcount），基本不会被卡常。&lt;/p&gt;
+</description>
+        </item>
+        
+    </channel>
+</rss>

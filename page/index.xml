@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+    <channel>
+        <title>Pages on 清烛的博客</title>
+        <link>https://oi.imyangty.com/page/</link>
+        <description>Recent content in Pages on 清烛的博客</description>
+        <generator>Hugo -- gohugo.io</generator>
+        <language>zh-CN</language><atom:link href="https://oi.imyangty.com/page/index.xml" rel="self" type="application/rss+xml" /><item>
+        <title>关于</title>
+        <link>https://oi.imyangty.com/about/</link>
+        <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+        
+        <guid>https://oi.imyangty.com/about/</guid>
+        <description>&lt;img src="https://yangty-pic.oss-cn-beijing.aliyuncs.com/bg34.webp" alt="Featured image of post 关于" /&gt;&lt;p&gt;Updated on Nov.27 2024: 以下内容截止至 2022 年，无时效性，部分内容已失效。&lt;/p&gt;
+&lt;h2 id=&#34;个人资料&#34;&gt;个人资料&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;常用 ID：&lt;code&gt;清烛&lt;/code&gt;、&lt;code&gt;YangTY&lt;/code&gt; 和 &lt;code&gt;Cgfyufsygsm&lt;/code&gt;。&lt;strong&gt;不保证全平台上使用这些 ID 的都是本人。&lt;/strong&gt;&lt;/li&gt;
+&lt;li&gt;姓名：Taoyu Yang&lt;/li&gt;
+&lt;li&gt;学校：贵阳市第一中学&lt;/li&gt;
+&lt;li&gt;年级：高二&lt;/li&gt;
+&lt;li&gt;职业：半退役 OIer&lt;/li&gt;
+&lt;li&gt;QQ：290817530&lt;/li&gt;
+&lt;li&gt;洛谷：&lt;a href=&#34;https://www.luogu.com.cn/user/212488&#34;&gt;U212488&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;Codeforces：&lt;a href=&#34;https://codeforces.com/profile/YangTY&#34;&gt;&lt;img src=&#34;http://cfrating.ihcr.top/?user=YangTY&#34; /&gt;&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;AtCoder：&lt;a href=&#34;https://atcoder.jp/users/YangTY&#34;&gt;YangTY&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id=&#34;其他乱七八糟的&#34;&gt;其他乱七八糟的&lt;/h2&gt;
+&lt;p&gt;菜的一批（（（&lt;/p&gt;
+&lt;p&gt;本 blog 主要记录一些算法竞赛相关的东西（暂时的）。关于一些零零碎碎的杂七杂八的东西可以访问&lt;a href=&#34;https://imyangty.com&#34;&gt;主站&lt;/a&gt;。&lt;/p&gt;
+&lt;p&gt;&lt;del&gt;本 blog 托管在 Github Pages&lt;/del&gt;，&lt;del&gt;使用 hexo 搭建&lt;/del&gt;；主站托管在老薛主机上，平台为 Wordpress。&lt;/p&gt;
+&lt;p&gt;将本站迁移到了虚拟主机的子空间，提升访问速度以及 SEO。&lt;/p&gt;
+&lt;p&gt;现在换成了 hugo，原来的 hexo 博客可以访问&lt;a href=&#34;https://old.blog.imyangty.com/&#34;&gt;这里&lt;/a&gt;。&lt;/p&gt;
+</description>
+        </item>
+        <item>
+        <title>归档</title>
+        <link>https://oi.imyangty.com/archives/</link>
+        <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+        
+        <guid>https://oi.imyangty.com/archives/</guid>
+        <description>
+</description>
+        </item>
+        <item>
+        <title>搜索</title>
+        <link>https://oi.imyangty.com/search/</link>
+        <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+        
+        <guid>https://oi.imyangty.com/search/</guid>
+        <description>
+</description>
+        </item>
+        <item>
+        <title>友链</title>
+        <link>https://oi.imyangty.com/friends/</link>
+        <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+        
+        <guid>https://oi.imyangty.com/friends/</guid>
+        <description>&lt;img src="https://yangty-pic.oss-cn-beijing.aliyuncs.com/bg36.webp" alt="Featured image of post 友链" /&gt;&lt;p&gt;欢迎 dd 我来加友链嗷（&lt;/p&gt;
+</description>
+        </item>
+        
+    </channel>
+</rss>

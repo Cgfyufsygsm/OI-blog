@@ -1,0 +1,671 @@
+<!DOCTYPE html>
+<html dir="ltr" lang="zh-CN">
+<head><meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1" name="viewport"/><meta content="前言 咕咕咕了好久，终于今天把 T3 的坑给补回来了，于是打算写一波题解。
+勿吐槽码风，丑是必然的，毕竟好久前写的代码了。
+T1 数字游戏 P5660 数字游戏
+大意：给定长度为 8 的 01 串，求 1 的个数
+sb 题，考察字符串基本使用，当时好像 2:30 还没到就已经切完了
+考场代码：
+#include &amp;lt;iostream&amp;gt; #include &amp;lt;cstdio&amp;gt; #include &amp;lt;string&amp;gt; //#define LOCAL using namespace std; int main() { #ifndef LOCAL freopen(&amp;quot;number.in&amp;quot;,&amp;quot;r&amp;quot;,stdin); freopen(&amp;quot;number.out&amp;quot;,&amp;quot;w&amp;quot;,stdout); #endif string s; cin&amp;gt;&amp;gt;s; int ans=0; for(int i=0;i&amp;lt;s.size();i++) { if(s[i]==&amp;#39;1&amp;#39;) ans++; } printf(&amp;quot;%d\n&amp;quot;,ans); return 0; } T2 公交换乘 P5661 公交换乘
+大意：坐一次地铁可以获取一张有效期 45 分钟的优惠券，可以凭券免费坐票价不超过地铁票价的公交车，优惠票可累积，使用时优先使用最先获得的
+模拟即可，这里使用 vector 模拟优惠票的队列，代码并不优美但是能过。
+坑点就在于
+使用票要使用最先获得的 优惠票用过要删掉 记得当时在考场上发现队列不能用之后还自己研究 vector::erase 的用法" name="description"/><title>2019 CSP-J 题解</title>
+<link href="https://oi.imyangty.com/sol-cspj2019/" rel="canonical"/>
+<link href="/scss/style.min.a5821f3d3ab84ce5a0ac21477e347a2e0ca00292e398d16c5e8e36ded6e35a23.css" rel="stylesheet"/><meta content="2019 CSP-J 题解" property="og:title"/>
+<meta content="前言 咕咕咕了好久，终于今天把 T3 的坑给补回来了，于是打算写一波题解。
+勿吐槽码风，丑是必然的，毕竟好久前写的代码了。
+T1 数字游戏 P5660 数字游戏
+大意：给定长度为 8 的 01 串，求 1 的个数
+sb 题，考察字符串基本使用，当时好像 2:30 还没到就已经切完了
+考场代码：
+#include &amp;lt;iostream&amp;gt; #include &amp;lt;cstdio&amp;gt; #include &amp;lt;string&amp;gt; //#define LOCAL using namespace std; int main() { #ifndef LOCAL freopen(&amp;quot;number.in&amp;quot;,&amp;quot;r&amp;quot;,stdin); freopen(&amp;quot;number.out&amp;quot;,&amp;quot;w&amp;quot;,stdout); #endif string s; cin&amp;gt;&amp;gt;s; int ans=0; for(int i=0;i&amp;lt;s.size();i++) { if(s[i]==&amp;#39;1&amp;#39;) ans++; } printf(&amp;quot;%d\n&amp;quot;,ans); return 0; } T2 公交换乘 P5661 公交换乘
+大意：坐一次地铁可以获取一张有效期 45 分钟的优惠券，可以凭券免费坐票价不超过地铁票价的公交车，优惠票可累积，使用时优先使用最先获得的
+模拟即可，这里使用 vector 模拟优惠票的队列，代码并不优美但是能过。
+坑点就在于
+使用票要使用最先获得的 优惠票用过要删掉 记得当时在考场上发现队列不能用之后还自己研究 vector::erase 的用法" property="og:description"/>
+<meta content="https://oi.imyangty.com/sol-cspj2019/" property="og:url"/>
+<meta content="清烛的博客" property="og:site_name"/>
+<meta content="article" property="og:type"/><meta content="Post" property="article:section"/><meta content="NOIP" property="article:tag"/><meta content="OI" property="article:tag"/><meta content="动态规划" property="article:tag"/><meta content="图论" property="article:tag"/><meta content="模拟" property="article:tag"/><meta content="背包" property="article:tag"/><meta content="题解" property="article:tag"/><meta content="2020-04-04T23:03:27+08:00" property="article:published_time"/><meta content="2020-04-04T23:03:27+08:00" property="article:modified_time"/><meta content="https://yangty-pic.oss-cn-beijing.aliyuncs.com/bg9.webp" property="og:image"/>
+<meta content="2019 CSP-J 题解" name="twitter:title"/>
+<meta content="前言 咕咕咕了好久，终于今天把 T3 的坑给补回来了，于是打算写一波题解。
+勿吐槽码风，丑是必然的，毕竟好久前写的代码了。
+T1 数字游戏 P5660 数字游戏
+大意：给定长度为 8 的 01 串，求 1 的个数
+sb 题，考察字符串基本使用，当时好像 2:30 还没到就已经切完了
+考场代码：
+#include &amp;lt;iostream&amp;gt; #include &amp;lt;cstdio&amp;gt; #include &amp;lt;string&amp;gt; //#define LOCAL using namespace std; int main() { #ifndef LOCAL freopen(&amp;quot;number.in&amp;quot;,&amp;quot;r&amp;quot;,stdin); freopen(&amp;quot;number.out&amp;quot;,&amp;quot;w&amp;quot;,stdout); #endif string s; cin&amp;gt;&amp;gt;s; int ans=0; for(int i=0;i&amp;lt;s.size();i++) { if(s[i]==&amp;#39;1&amp;#39;) ans++; } printf(&amp;quot;%d\n&amp;quot;,ans); return 0; } T2 公交换乘 P5661 公交换乘
+大意：坐一次地铁可以获取一张有效期 45 分钟的优惠券，可以凭券免费坐票价不超过地铁票价的公交车，优惠票可累积，使用时优先使用最先获得的
+模拟即可，这里使用 vector 模拟优惠票的队列，代码并不优美但是能过。
+坑点就在于
+使用票要使用最先获得的 优惠票用过要删掉 记得当时在考场上发现队列不能用之后还自己研究 vector::erase 的用法" name="twitter:description"/><meta content="summary_large_image" name="twitter:card"/>
+<meta content="https://yangty-pic.oss-cn-beijing.aliyuncs.com/bg9.webp" name="twitter:image"/>
+<link href="https://q1.qlogo.cn/g?b=qq&amp;nk=375836877&amp;s=5" rel="shortcut icon"/>
+<link href="https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.5.1/build/styles/github-dark-dimmed.min.css" rel="stylesheet"/>
+<script src="https://cdn.jsdelivr.net/gh/highlightjs/cdn-release/build/highlight.min.js"></script>
+<script>hljs.highlightAll();</script>
+</head>
+<body class="article-page">
+<script>
+        (function() {
+            const colorSchemeKey = 'StackColorScheme';
+            if(!localStorage.getItem(colorSchemeKey)){
+                localStorage.setItem(colorSchemeKey, "auto");
+            }
+        })();
+    </script><script>
+    (function() {
+        const colorSchemeKey = 'StackColorScheme';
+        const colorSchemeItem = localStorage.getItem(colorSchemeKey);
+        const supportDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches === true;
+
+        if (colorSchemeItem == 'dark' || colorSchemeItem === 'auto' && supportDarkMode) {
+            
+
+            document.documentElement.dataset.scheme = 'dark';
+        } else {
+            document.documentElement.dataset.scheme = 'light';
+        }
+    })();
+</script>
+<div class="container main-container flex on-phone--column extended"><aside class="sidebar left-sidebar sticky">
+<button aria-label="切换菜单" class="hamburger hamburger--spin" id="toggle-menu" type="button">
+<span class="hamburger-box">
+<span class="hamburger-inner"></span>
+</span>
+</button>
+<header>
+<figure class="site-avatar">
+<a href="/">
+<img alt="Avatar" class="site-logo" height="300" loading="lazy" src="/img/avatar_huea3ce2119467b51fdd2a81393644a76d_51594_300x0_resize_q75_box.jpg" width="300"/>
+</a>
+<span class="emoji">😅</span>
+</figure>
+<div class="site-meta">
+<h1 class="site-name"><a href="/">清烛的博客</a></h1>
+<h2 class="site-description">烟火已谢，笙歌未停</h2>
+</div>
+</header><ol class="social-menu">
+<li>
+<a href="mailto:i@imyangty.com" target="_blank" title="email">
+<svg class="icon icon-tabler icon-tabler-mail" fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" viewbox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+<path d="M0 0h24v24H0z" fill="none" stroke="none"></path>
+<rect height="14" rx="2" width="18" x="3" y="5"></rect>
+<polyline points="3 7 12 13 21 7"></polyline>
+</svg>
+</a>
+</li>
+<li>
+<a href="https://github.com/Cgfyufsygsm" target="_blank" title="GitHub">
+<svg class="icon icon-tabler icon-tabler-brand-github" fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+<path d="M0 0h24v24H0z" fill="none" stroke="none"></path>
+<path d="M9 19c-4.3 1.4 -4.3 -2.5 -6 -3m12 5v-3.5c0 -1 .1 -1.4 -.5 -2c2.8 -.3 5.5 -1.4 5.5 -6a4.6 4.6 0 0 0 -1.3 -3.2a4.2 4.2 0 0 0 -.1 -3.2s-1.1 -.3 -3.5 1.3a12.3 12.3 0 0 0 -6.2 0c-2.4 -1.6 -3.5 -1.3 -3.5 -1.3a4.2 4.2 0 0 0 -.1 3.2a4.6 4.6 0 0 0 -1.3 3.2c0 4.6 2.7 5.7 5.5 6c-.6 .6 -.6 1.2 -.5 2v3.5"></path>
+</svg>
+</a>
+</li>
+<li>
+<a href="https://t.me/Cgfyufsygsm" target="_blank" title="Telegram">
+<svg class="icon icon-tabler icon-tabler-brand-telegram" fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" viewbox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+<path d="M0 0h24v24H0z" fill="none" stroke="none"></path>
+<path d="M15 10l-4 4l6 6l4 -16l-18 7l4 2l2 6l3 -4"></path>
+</svg>
+</a>
+</li>
+<li>
+<a href="https://twitter.com/Cgfyufsygsm" target="_blank" title="Twitter">
+<svg class="icon icon-tabler icon-tabler-brand-twitter" fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+<path d="M0 0h24v24H0z" fill="none" stroke="none"></path>
+<path d="M22 4.01c-1 .49 -1.98 .689 -3 .99c-1.121 -1.265 -2.783 -1.335 -4.38 -.737s-2.643 2.06 -2.62 3.737v1c-3.245 .083 -6.135 -1.395 -8 -4c0 0 -4.182 7.433 4 11c-1.872 1.247 -3.739 2.088 -6 2c3.308 1.803 6.913 2.423 10.034 1.517c3.58 -1.04 6.522 -3.723 7.651 -7.742a13.84 13.84 0 0 0 .497 -3.753c-.002 -.249 1.51 -2.772 1.818 -4.013z"></path>
+</svg>
+</a>
+</li>
+</ol><ol class="menu" id="main-menu">
+<li>
+<a href="/">
+<svg class="icon icon-tabler icon-tabler-home" fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+<path d="M0 0h24v24H0z" stroke="none"></path>
+<polyline points="5 12 3 12 12 3 21 12 19 12"></polyline>
+<path d="M5 12v7a2 2 0 0 0 2 2h10a2 2 0 0 0 2 -2v-7"></path>
+<path d="M9 21v-6a2 2 0 0 1 2 -2h2a2 2 0 0 1 2 2v6"></path>
+</svg>
+<span>主页</span>
+</a>
+</li>
+<li>
+<a href="/about/">
+<svg class="icon icon-tabler icon-tabler-user" fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+<path d="M0 0h24v24H0z" stroke="none"></path>
+<circle cx="12" cy="7" r="4"></circle>
+<path d="M6 21v-2a4 4 0 0 1 4 -4h4a4 4 0 0 1 4 4v2"></path>
+</svg>
+<span>关于</span>
+</a>
+</li>
+<li>
+<a href="/idx/">
+<svg class="icon icon-tabler icon-tabler-hash" fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+<path d="M0 0h24v24H0z" stroke="none"></path>
+<line x1="5" x2="19" y1="9" y2="9"></line>
+<line x1="5" x2="19" y1="15" y2="15"></line>
+<line x1="11" x2="7" y1="4" y2="20"></line>
+<line x1="17" x2="13" y1="4" y2="20"></line>
+</svg>
+<span>导航</span>
+</a>
+</li>
+<li>
+<a href="/archives/">
+<svg class="icon icon-tabler icon-tabler-archive" fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+<path d="M0 0h24v24H0z" stroke="none"></path>
+<rect height="4" rx="2" width="18" x="3" y="4"></rect>
+<path d="M5 8v10a2 2 0 0 0 2 2h10a2 2 0 0 0 2 -2v-10"></path>
+<line x1="10" x2="14" y1="12" y2="12"></line>
+</svg>
+<span>归档</span>
+</a>
+</li>
+<li>
+<a href="/search/">
+<svg class="icon icon-tabler icon-tabler-search" fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+<path d="M0 0h24v24H0z" stroke="none"></path>
+<circle cx="10" cy="10" r="7"></circle>
+<line x1="21" x2="15" y1="21" y2="15"></line>
+</svg>
+<span>搜索</span>
+</a>
+</li>
+<li>
+<a href="/friends/">
+<svg class="icon icon-tabler icon-tabler-link" fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+<path d="M0 0h24v24H0z" stroke="none"></path>
+<path d="M10 14a3.5 3.5 0 0 0 5 0l4 -4a3.5 3.5 0 0 0 -5 -5l-.5 .5"></path>
+<path d="M14 10a3.5 3.5 0 0 0 -5 0l-4 4a3.5 3.5 0 0 0 5 5l.5 -.5"></path>
+</svg>
+<span>友链</span>
+</a>
+</li>
+<li>
+<a href="https://blog.imyangty.com" target="_blank">
+<svg class="icon icon-tabler icon-tabler-home" fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+<path d="M0 0h24v24H0z" stroke="none"></path>
+<polyline points="5 12 3 12 12 3 21 12 19 12"></polyline>
+<path d="M5 12v7a2 2 0 0 0 2 2h10a2 2 0 0 0 2 -2v-7"></path>
+<path d="M9 21v-6a2 2 0 0 1 2 -2h2a2 2 0 0 1 2 2v6"></path>
+</svg>
+<span>主博客</span>
+</a>
+</li>
+<div class="menu-bottom-section">
+<li id="dark-mode-toggle">
+<svg class="icon icon-tabler icon-tabler-toggle-left" fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+<path d="M0 0h24v24H0z" stroke="none"></path>
+<circle cx="8" cy="12" r="2"></circle>
+<rect height="12" rx="6" width="20" x="2" y="6"></rect>
+</svg>
+<svg class="icon icon-tabler icon-tabler-toggle-right" fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+<path d="M0 0h24v24H0z" stroke="none"></path>
+<circle cx="16" cy="12" r="2"></circle>
+<rect height="12" rx="6" width="20" x="2" y="6"></rect>
+</svg>
+<span>暗色模式</span>
+</li>
+</div>
+</ol>
+</aside>
+<main class="main full-width">
+<article class="has-image main-article">
+<header class="article-header">
+<div class="article-image">
+<a href="/sol-cspj2019/">
+<img alt="Featured image of post 2019 CSP-J 题解" loading="lazy" src="https://yangty-pic.oss-cn-beijing.aliyuncs.com/bg9.webp"/>
+</a>
+</div>
+<div class="article-details">
+<header class="article-category">
+<a href="/categories/oi/">
+                OI
+            </a>
+<a href="/categories/tutorial/">
+                题解
+            </a>
+</header>
+<div class="article-title-wrapper">
+<h2 class="article-title">
+<a href="/sol-cspj2019/">2019 CSP-J 题解</a>
+</h2>
+</div>
+<footer class="article-time">
+<div>
+<svg class="icon icon-tabler icon-tabler-calendar-time" fill="none" height="56" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="56" xmlns="http://www.w3.org/2000/svg">
+<path d="M0 0h24v24H0z" stroke="none"></path>
+<path d="M11.795 21h-6.795a2 2 0 0 1 -2 -2v-12a2 2 0 0 1 2 -2h12a2 2 0 0 1 2 2v4"></path>
+<circle cx="18" cy="18" r="4"></circle>
+<path d="M15 3v4"></path>
+<path d="M7 3v4"></path>
+<path d="M3 11h16"></path>
+<path d="M18 16.496v1.504l1 1"></path>
+</svg>
+<time class="article-time--published">Apr 04, 2020</time>
+</div>
+<div>
+<svg class="icon icon-tabler icon-tabler-clock" fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+<path d="M0 0h24v24H0z" stroke="none"></path>
+<circle cx="12" cy="12" r="9"></circle>
+<polyline points="12 7 12 12 15 15"></polyline>
+</svg>
+<time class="article-time--reading">
+                    阅读时长: 3 分钟
+                </time>
+</div>
+</footer>
+</div>
+</header>
+<section class="article-content">
+<h2 id="前言">前言</h2>
+<p>咕咕咕了好久，终于今天把 T3 的坑给补回来了，于是打算写一波题解。</p>
+<p>勿吐槽码风，丑是必然的，毕竟好久前写的代码了。</p>
+<h2 id="t1-数字游戏">T1 数字游戏</h2>
+<p><a href="https://www.luogu.com.cn/problem/P5660" title="P5660 数字游戏">P5660 数字游戏</a></p>
+<p>大意：给定长度为 8 的 01 串，求 1 的个数</p>
+<p>sb 题，考察字符串基本使用，当时好像 2:30 还没到就已经切完了</p>
+<p>考场代码：</p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode cpp"><code class="sourceCode cpp"><span id="cb1-1"><a aria-hidden="true" href="#cb1-1"></a><span class="pp">#include </span><span class="im">&lt;iostream&gt;</span></span>
+<span id="cb1-2"><a aria-hidden="true" href="#cb1-2"></a><span class="pp">#include </span><span class="im">&lt;cstdio&gt;</span></span>
+<span id="cb1-3"><a aria-hidden="true" href="#cb1-3"></a><span class="pp">#include </span><span class="im">&lt;string&gt;</span></span>
+<span id="cb1-4"><a aria-hidden="true" href="#cb1-4"></a><span class="co">//#define LOCAL</span></span>
+<span id="cb1-5"><a aria-hidden="true" href="#cb1-5"></a></span>
+<span id="cb1-6"><a aria-hidden="true" href="#cb1-6"></a><span class="kw">using</span> <span class="kw">namespace</span> std;</span>
+<span id="cb1-7"><a aria-hidden="true" href="#cb1-7"></a></span>
+<span id="cb1-8"><a aria-hidden="true" href="#cb1-8"></a><span class="dt">int</span> main()</span>
+<span id="cb1-9"><a aria-hidden="true" href="#cb1-9"></a>{</span>
+<span id="cb1-10"><a aria-hidden="true" href="#cb1-10"></a><span class="pp">#ifndef LOCAL</span></span>
+<span id="cb1-11"><a aria-hidden="true" href="#cb1-11"></a>    freopen(<span class="st">"number.in"</span>,<span class="st">"r"</span>,stdin);</span>
+<span id="cb1-12"><a aria-hidden="true" href="#cb1-12"></a>    freopen(<span class="st">"number.out"</span>,<span class="st">"w"</span>,stdout);</span>
+<span id="cb1-13"><a aria-hidden="true" href="#cb1-13"></a><span class="pp">#endif</span></span>
+<span id="cb1-14"><a aria-hidden="true" href="#cb1-14"></a>    string s;</span>
+<span id="cb1-15"><a aria-hidden="true" href="#cb1-15"></a>    cin&gt;&gt;s;</span>
+<span id="cb1-16"><a aria-hidden="true" href="#cb1-16"></a>    <span class="dt">int</span> ans=<span class="dv">0</span>;</span>
+<span id="cb1-17"><a aria-hidden="true" href="#cb1-17"></a>    <span class="cf">for</span>(<span class="dt">int</span> i=<span class="dv">0</span>;i&lt;s.size();i++)</span>
+<span id="cb1-18"><a aria-hidden="true" href="#cb1-18"></a>    {</span>
+<span id="cb1-19"><a aria-hidden="true" href="#cb1-19"></a>        <span class="cf">if</span>(s[i]==<span class="ch">'1'</span>) ans++;</span>
+<span id="cb1-20"><a aria-hidden="true" href="#cb1-20"></a>    }</span>
+<span id="cb1-21"><a aria-hidden="true" href="#cb1-21"></a>    printf(<span class="st">"</span><span class="sc">%d\n</span><span class="st">"</span>,ans);</span>
+<span id="cb1-22"><a aria-hidden="true" href="#cb1-22"></a>    <span class="cf">return</span> <span class="dv">0</span>;</span>
+<span id="cb1-23"><a aria-hidden="true" href="#cb1-23"></a>}</span></code></pre></div>
+<h2 id="t2-公交换乘">T2 公交换乘</h2>
+<p><a href="https://www.luogu.com.cn/problem/P5661" title="P5661 公交换乘">P5661 公交换乘</a></p>
+<p>大意：坐一次地铁可以获取一张有效期 45 分钟的优惠券，可以凭券免费坐票价不超过地铁票价的公交车，优惠票可累积，使用时优先使用最先获得的</p>
+<p>模拟即可，这里使用 <code>vector</code> 模拟优惠票的队列，代码并不优美但是能过。</p>
+<p>坑点就在于</p>
+<ul>
+<li><strong>使用票要使用最先获得的</strong></li>
+<li><strong>优惠票用过要删掉</strong></li>
+</ul>
+<p><del>记得当时在考场上发现队列不能用之后还自己研究 <code>vector::erase</code> 的用法</del></p>
+<div class="sourceCode" id="cb2"><pre class="sourceCode cpp"><code class="sourceCode cpp"><span id="cb2-1"><a aria-hidden="true" href="#cb2-1"></a><span class="pp">#include </span><span class="im">&lt;cstdio&gt;</span></span>
+<span id="cb2-2"><a aria-hidden="true" href="#cb2-2"></a><span class="pp">#include </span><span class="im">&lt;vector&gt;</span></span>
+<span id="cb2-3"><a aria-hidden="true" href="#cb2-3"></a><span class="kw">using</span> <span class="kw">namespace</span> std;</span>
+<span id="cb2-4"><a aria-hidden="true" href="#cb2-4"></a><span class="kw">typedef</span> <span class="dt">long</span> <span class="dt">long</span> ll;</span>
+<span id="cb2-5"><a aria-hidden="true" href="#cb2-5"></a><span class="co">//#define LOCAL</span></span>
+<span id="cb2-6"><a aria-hidden="true" href="#cb2-6"></a><span class="kw">struct</span> ticket{</span>
+<span id="cb2-7"><a aria-hidden="true" href="#cb2-7"></a>    <span class="dt">int</span> price;</span>
+<span id="cb2-8"><a aria-hidden="true" href="#cb2-8"></a>    ll time;</span>
+<span id="cb2-9"><a aria-hidden="true" href="#cb2-9"></a>};</span>
+<span id="cb2-10"><a aria-hidden="true" href="#cb2-10"></a>vector&lt;ticket&gt; q;</span>
+<span id="cb2-11"><a aria-hidden="true" href="#cb2-11"></a></span>
+<span id="cb2-12"><a aria-hidden="true" href="#cb2-12"></a><span class="dt">int</span> main()</span>
+<span id="cb2-13"><a aria-hidden="true" href="#cb2-13"></a>{</span>
+<span id="cb2-14"><a aria-hidden="true" href="#cb2-14"></a><span class="pp">#ifndef LOCAL</span></span>
+<span id="cb2-15"><a aria-hidden="true" href="#cb2-15"></a>    freopen(<span class="st">"transfer.in"</span>,<span class="st">"r"</span>,stdin);</span>
+<span id="cb2-16"><a aria-hidden="true" href="#cb2-16"></a>    freopen(<span class="st">"transfer.out"</span>,<span class="st">"w"</span>,stdout);</span>
+<span id="cb2-17"><a aria-hidden="true" href="#cb2-17"></a><span class="pp">#endif</span></span>
+<span id="cb2-18"><a aria-hidden="true" href="#cb2-18"></a>    <span class="dt">int</span> n;</span>
+<span id="cb2-19"><a aria-hidden="true" href="#cb2-19"></a>    scanf(<span class="st">"</span><span class="sc">%d</span><span class="st">"</span>,&amp;n);</span>
+<span id="cb2-20"><a aria-hidden="true" href="#cb2-20"></a>    ll ans=<span class="dv">0</span>;</span>
+<span id="cb2-21"><a aria-hidden="true" href="#cb2-21"></a>    <span class="cf">while</span>(n--)</span>
+<span id="cb2-22"><a aria-hidden="true" href="#cb2-22"></a>    {</span>
+<span id="cb2-23"><a aria-hidden="true" href="#cb2-23"></a>        <span class="dt">int</span> type,price;</span>
+<span id="cb2-24"><a aria-hidden="true" href="#cb2-24"></a>        ll t;</span>
+<span id="cb2-25"><a aria-hidden="true" href="#cb2-25"></a>        scanf(<span class="st">"</span><span class="sc">%d</span><span class="st"> </span><span class="sc">%d</span><span class="st"> </span><span class="sc">%lld</span><span class="st">"</span>,&amp;type,&amp;price,&amp;t);</span>
+<span id="cb2-26"><a aria-hidden="true" href="#cb2-26"></a>        <span class="cf">if</span>(type==<span class="dv">0</span>)<span class="co">//如果坐地铁</span></span>
+<span id="cb2-27"><a aria-hidden="true" href="#cb2-27"></a>        {</span>
+<span id="cb2-28"><a aria-hidden="true" href="#cb2-28"></a>            ans+=price;<span class="co">//更新答案</span></span>
+<span id="cb2-29"><a aria-hidden="true" href="#cb2-29"></a>            ticket tt={price,t};</span>
+<span id="cb2-30"><a aria-hidden="true" href="#cb2-30"></a>            q.push_back(tt);<span class="co">//插入候选队</span></span>
+<span id="cb2-31"><a aria-hidden="true" href="#cb2-31"></a>        }</span>
+<span id="cb2-32"><a aria-hidden="true" href="#cb2-32"></a>        <span class="cf">else</span> <span class="cf">if</span>(type==<span class="dv">1</span>)<span class="co">//如果是公交</span></span>
+<span id="cb2-33"><a aria-hidden="true" href="#cb2-33"></a>        {</span>
+<span id="cb2-34"><a aria-hidden="true" href="#cb2-34"></a>            <span class="cf">while</span>(!(q.empty())&amp;&amp;t-q.front().time&gt;<span class="dv">45</span>) q.erase(q.begin());<span class="co">//先删掉超时的优惠票</span></span>
+<span id="cb2-35"><a aria-hidden="true" href="#cb2-35"></a>            <span class="dt">bool</span> flag=<span class="dv">0</span>;</span>
+<span id="cb2-36"><a aria-hidden="true" href="#cb2-36"></a>            <span class="cf">for</span>(<span class="dt">int</span> i=<span class="dv">0</span>;i&lt;q.size();i++)<span class="co">//查询符合标准的第一张优惠票</span></span>
+<span id="cb2-37"><a aria-hidden="true" href="#cb2-37"></a>            {</span>
+<span id="cb2-38"><a aria-hidden="true" href="#cb2-38"></a>                </span>
+<span id="cb2-39"><a aria-hidden="true" href="#cb2-39"></a>                <span class="cf">if</span>(q[i].price&gt;=price)</span>
+<span id="cb2-40"><a aria-hidden="true" href="#cb2-40"></a>                {</span>
+<span id="cb2-41"><a aria-hidden="true" href="#cb2-41"></a>                    q.erase(q.begin()+i);<span class="co">//直接删掉</span></span>
+<span id="cb2-42"><a aria-hidden="true" href="#cb2-42"></a>                    flag=<span class="dv">1</span>;</span>
+<span id="cb2-43"><a aria-hidden="true" href="#cb2-43"></a>                    <span class="cf">break</span>;</span>
+<span id="cb2-44"><a aria-hidden="true" href="#cb2-44"></a>                }</span>
+<span id="cb2-45"><a aria-hidden="true" href="#cb2-45"></a>            }</span>
+<span id="cb2-46"><a aria-hidden="true" href="#cb2-46"></a>            <span class="cf">if</span>(!flag) ans+=price;<span class="co">//如果不存在就需要付原价</span></span>
+<span id="cb2-47"><a aria-hidden="true" href="#cb2-47"></a>        }</span>
+<span id="cb2-48"><a aria-hidden="true" href="#cb2-48"></a>    }</span>
+<span id="cb2-49"><a aria-hidden="true" href="#cb2-49"></a>    printf(<span class="st">"</span><span class="sc">%lld\n</span><span class="st">"</span>,ans);</span>
+<span id="cb2-50"><a aria-hidden="true" href="#cb2-50"></a>    <span class="cf">return</span> <span class="dv">0</span>;</span>
+<span id="cb2-51"><a aria-hidden="true" href="#cb2-51"></a>}</span></code></pre></div>
+<h2 id="t3-纪念品">T3 纪念品</h2>
+<p><a href="https://www.luogu.com.cn/problem/P5662" title="P5662 纪念品">P5662 纪念品</a></p>
+<p>谁叫我太菜，当时考场上骗了 10 分走人，现在看题解才写出正解。</p>
+<p>大意：<span class="math inline">\(T\)</span> 天，<span class="math inline">\(N\)</span> 种纪念品，每天不同的纪念品都有不同的价格，小伟一开始有 <span class="math inline">\(M\)</span> 金币，每天可以卖掉手中的纪念品换取金币，买进纪念品花费金币或者什么都不做。在第 <span class="math inline">\(T\)</span> 天一定会卖出手中所有纪念品，求最高收益</p>
+<p>分析题意，可以发现需要使用 dp，发现状态貌似很复杂，又可以买进又可以卖出，然而，注意到买进和卖出都可以进行无数次，因此我们可以把所谓一直持有的纪念品看成先将其卖出，又将其买进，效果是一样的，实质上就是每一天都做一次完全背包。</p>
+<p>令 <span class="math inline">\(f_{i,j,k}\)</span> 表示第 <span class="math inline">\(i\)</span> 天，考虑前 <span class="math inline">\(j\)</span> 种物品，手里有 <span class="math inline">\(k\)</span> 金币时，在下一天全部卖出能达到的最大收益，则有方程</p>
+<p><span class="math display">\[
+f_{i,j,k}=\max(f_{i,j,k},f_{i,j-1,k+p_i,j}+p_{i,j}-p_{i+1,j})
+\]</span></p>
+<p>表示如果要了第 <span class="math inline">\(j\)</span> 个物品，那么净收益即为 <span class="math inline">\(p_{i,j}-p_{i+1,j}\)</span>，从 <span class="math inline">\(f_{i,j-1,k+p_i,j}\)</span> 转移而来，利用完全背包思想压一下维度然后改循环顺序即可以达到正确结果。</p>
+<p>（第一维的天数是可以不要的，第二维的物品也是可以用滚动数组优化掉的，保留第三维即可）</p>
+<div class="sourceCode" id="cb3"><pre class="sourceCode cpp"><code class="sourceCode cpp"><span id="cb3-1"><a aria-hidden="true" href="#cb3-1"></a><span class="pp">#include </span><span class="im">&lt;cstdio&gt;</span></span>
+<span id="cb3-2"><a aria-hidden="true" href="#cb3-2"></a><span class="pp">#include </span><span class="im">&lt;cctype&gt;</span></span>
+<span id="cb3-3"><a aria-hidden="true" href="#cb3-3"></a><span class="pp">#include </span><span class="im">&lt;cstring&gt;</span></span>
+<span id="cb3-4"><a aria-hidden="true" href="#cb3-4"></a></span>
+<span id="cb3-5"><a aria-hidden="true" href="#cb3-5"></a><span class="kw">inline</span> <span class="dt">int</span> read()</span>
+<span id="cb3-6"><a aria-hidden="true" href="#cb3-6"></a>{</span>
+<span id="cb3-7"><a aria-hidden="true" href="#cb3-7"></a>    <span class="dt">char</span> c = getchar();</span>
+<span id="cb3-8"><a aria-hidden="true" href="#cb3-8"></a>    <span class="dt">int</span> s = <span class="dv">0</span>;</span>
+<span id="cb3-9"><a aria-hidden="true" href="#cb3-9"></a>    <span class="cf">while</span> (!isdigit(c))</span>
+<span id="cb3-10"><a aria-hidden="true" href="#cb3-10"></a>        c = getchar();</span>
+<span id="cb3-11"><a aria-hidden="true" href="#cb3-11"></a>    <span class="cf">while</span> (isdigit(c))</span>
+<span id="cb3-12"><a aria-hidden="true" href="#cb3-12"></a>        s = <span class="dv">10</span> * s + c - <span class="ch">'0'</span>, c = getchar();</span>
+<span id="cb3-13"><a aria-hidden="true" href="#cb3-13"></a>    <span class="cf">return</span> s;</span>
+<span id="cb3-14"><a aria-hidden="true" href="#cb3-14"></a>}</span>
+<span id="cb3-15"><a aria-hidden="true" href="#cb3-15"></a></span>
+<span id="cb3-16"><a aria-hidden="true" href="#cb3-16"></a><span class="kw">inline</span> <span class="dt">int</span> max(<span class="dt">int</span> a,<span class="dt">int</span> b)</span>
+<span id="cb3-17"><a aria-hidden="true" href="#cb3-17"></a>{</span>
+<span id="cb3-18"><a aria-hidden="true" href="#cb3-18"></a>    <span class="cf">return</span> a&gt;b?a:b;</span>
+<span id="cb3-19"><a aria-hidden="true" href="#cb3-19"></a>}</span>
+<span id="cb3-20"><a aria-hidden="true" href="#cb3-20"></a></span>
+<span id="cb3-21"><a aria-hidden="true" href="#cb3-21"></a><span class="dt">int</span> n,t,p[<span class="dv">105</span>][<span class="dv">105</span>],f[<span class="dv">10005</span>];</span>
+<span id="cb3-22"><a aria-hidden="true" href="#cb3-22"></a></span>
+<span id="cb3-23"><a aria-hidden="true" href="#cb3-23"></a><span class="dt">int</span> main()</span>
+<span id="cb3-24"><a aria-hidden="true" href="#cb3-24"></a>{</span>
+<span id="cb3-25"><a aria-hidden="true" href="#cb3-25"></a>    t=read(),n=read();</span>
+<span id="cb3-26"><a aria-hidden="true" href="#cb3-26"></a>    <span class="dt">int</span> m=read();</span>
+<span id="cb3-27"><a aria-hidden="true" href="#cb3-27"></a>    <span class="cf">for</span>(<span class="dt">int</span> i=<span class="dv">1</span>;i&lt;=t;i++)</span>
+<span id="cb3-28"><a aria-hidden="true" href="#cb3-28"></a>        <span class="cf">for</span>(<span class="dt">int</span> j=<span class="dv">1</span>;j&lt;=n;j++)</span>
+<span id="cb3-29"><a aria-hidden="true" href="#cb3-29"></a>            p[i][j]=read();</span>
+<span id="cb3-30"><a aria-hidden="true" href="#cb3-30"></a>    <span class="dt">int</span> ans=m;</span>
+<span id="cb3-31"><a aria-hidden="true" href="#cb3-31"></a>    <span class="cf">for</span>(<span class="dt">int</span> i=<span class="dv">1</span>;i&lt;t;i++)</span>
+<span id="cb3-32"><a aria-hidden="true" href="#cb3-32"></a>    {</span>
+<span id="cb3-33"><a aria-hidden="true" href="#cb3-33"></a>        memset(f,~<span class="bn">0x3f</span>,<span class="kw">sizeof</span>(f));<span class="co">//先赋负无穷</span></span>
+<span id="cb3-34"><a aria-hidden="true" href="#cb3-34"></a>        f[ans]=ans;<span class="co">//初始值，什么都不干的情况</span></span>
+<span id="cb3-35"><a aria-hidden="true" href="#cb3-35"></a>        <span class="cf">for</span>(<span class="dt">int</span> j=<span class="dv">1</span>;j&lt;=n;j++)<span class="co">//枚举物品，从小到大即为完全背包</span></span>
+<span id="cb3-36"><a aria-hidden="true" href="#cb3-36"></a>            <span class="cf">for</span>(<span class="dt">int</span> k=ans;k&gt;=p[i][j];k--)<span class="co">//枚举金钱</span></span>
+<span id="cb3-37"><a aria-hidden="true" href="#cb3-37"></a>                f[k-p[i][j]]=max(f[k-p[i][j]],f[k]+p[i+<span class="dv">1</span>][j]-p[i][j]);</span>
+<span id="cb3-38"><a aria-hidden="true" href="#cb3-38"></a>        <span class="dt">int</span> maxn=<span class="dv">0</span>;<span class="co">//统计最优答案用</span></span>
+<span id="cb3-39"><a aria-hidden="true" href="#cb3-39"></a>        <span class="cf">for</span>(<span class="dt">int</span> j=<span class="dv">0</span>;j&lt;=ans;j++)</span>
+<span id="cb3-40"><a aria-hidden="true" href="#cb3-40"></a>            maxn=max(maxn,f[j]);</span>
+<span id="cb3-41"><a aria-hidden="true" href="#cb3-41"></a>        ans=maxn;</span>
+<span id="cb3-42"><a aria-hidden="true" href="#cb3-42"></a>    }</span>
+<span id="cb3-43"><a aria-hidden="true" href="#cb3-43"></a>    printf(<span class="st">"</span><span class="sc">%d\n</span><span class="st">"</span>,ans);</span>
+<span id="cb3-44"><a aria-hidden="true" href="#cb3-44"></a>    <span class="cf">return</span> <span class="dv">0</span>;</span>
+<span id="cb3-45"><a aria-hidden="true" href="#cb3-45"></a>}</span></code></pre></div>
+<h2 id="t4-加工零件">T4 加工零件</h2>
+<p><a href="https://www.luogu.com.cn/problem/P5663" title="P5663 加工零件">P5663 加工零件</a></p>
+<p>大意：一个工厂正在生产零件，工人从 1 到 <span class="math inline">\(n\)</span> 标号，某些工人之间有双向传送带。</p>
+<p>如果 <span class="math inline">\(x\)</span> 号工人想生产一个被加工到第 <span class="math inline">\(L (L \gt 1)\)</span> 阶段的零件，则所有与 <span class="math inline">\(x\)</span> 号工人有传送带直接相连的工人，都需要生产一个被加工到第 <span class="math inline">\(L - 1\)</span> 阶段的零件（但 <span class="math inline">\(x\)</span> 号工人自己无需生产第 <span class="math inline">\(L - 1\)</span> 阶段的零件）。</p>
+<p>如果 <span class="math inline">\(x\)</span> 号工人想生产一个被加工到第 1 阶段的零件，则所有与 <span class="math inline">\(x\)</span> 号工人有传送带直接相连的工人，都需要为 <span class="math inline">\(x\)</span> 号工人提供一个原材料。</p>
+<p>给定一些工单，即需要某工人生产某阶段的零件，求 1 号是否需要提供原材料。</p>
+<hr/>
+<p>先将其抽象成图论问题，以工人为节点，传送带为边来建图。</p>
+<p>考虑暴力，虽然一定超时，但还是能给我们一些启示，不难发现暴力就是在看 <span class="math inline">\(a\)</span> 与 1 之间是否存在长度为 <span class="math inline">\(L\)</span> 的路径，同时我们又注意到：如果 <span class="math inline">\(L\)</span> 为奇数，且从 1 到 <span class="math inline">\(a\)</span> 存在一条奇数路径，且最小奇数路径长<strong>小于等于</strong> <span class="math inline">\(L\)</span>，那么 1 就必须提供原材料（为什么可以：你可以两个传送带之间来回跳，比如 1-&gt;2-&gt;1-&gt;2-&gt;1…，但如果最小的奇数路径大于 <span class="math inline">\(L\)</span>，说明从 <span class="math inline">\(a\)</span> 走 <span class="math inline">\(L\)</span> 个阶段也轮不到 1，就不行）同样的，如果 <span class="math inline">\(L\)</span> 为偶数，且从 1 到 <span class="math inline">\(a\)</span> 存在一条偶数路径，且最小偶数路径长<strong>小于等于</strong> <span class="math inline">\(L\)</span>，那么 1 就必须提供原材料。</p>
+<p>这就给我们了正解的方法：找到每个点距离 1 点的最小奇数路径与偶数路径即可，这一过程实现可以使用 bfs<del>（因为我当时还没学过最短路）</del>，然后判定每一个工单的时候按照奇偶数去找最短奇偶路径是否小于等于工单给定阶段就可以判定 <code>Yes</code> 或 <code>No</code> 了</p>
+<p>当然，我写的考场代码有一个小 bug，就是没有判断 1 点不连通的情况，然而 ccf 的数据没有这种特殊情况，所以也就 A 了这道题</p>
+<p>考场代码：</p>
+<div class="sourceCode" id="cb4"><pre class="sourceCode cpp"><code class="sourceCode cpp"><span id="cb4-1"><a aria-hidden="true" href="#cb4-1"></a><span class="pp">#include </span><span class="im">&lt;cstdio&gt;</span></span>
+<span id="cb4-2"><a aria-hidden="true" href="#cb4-2"></a><span class="pp">#include </span><span class="im">&lt;vector&gt;</span></span>
+<span id="cb4-3"><a aria-hidden="true" href="#cb4-3"></a><span class="pp">#include </span><span class="im">&lt;queue&gt;</span></span>
+<span id="cb4-4"><a aria-hidden="true" href="#cb4-4"></a><span class="pp">#include </span><span class="im">&lt;cstring&gt;</span></span>
+<span id="cb4-5"><a aria-hidden="true" href="#cb4-5"></a><span class="co">//#define LOCAL</span></span>
+<span id="cb4-6"><a aria-hidden="true" href="#cb4-6"></a><span class="pp">#define inf </span><span class="bn">0x3f3f3f3f</span></span>
+<span id="cb4-7"><a aria-hidden="true" href="#cb4-7"></a><span class="kw">typedef</span> <span class="dt">long</span> <span class="dt">long</span> ll;</span>
+<span id="cb4-8"><a aria-hidden="true" href="#cb4-8"></a><span class="kw">using</span> <span class="kw">namespace</span> std;</span>
+<span id="cb4-9"><a aria-hidden="true" href="#cb4-9"></a>vector&lt;<span class="dt">int</span>&gt; g[<span class="dv">100020</span>];<span class="co">//存图</span></span>
+<span id="cb4-10"><a aria-hidden="true" href="#cb4-10"></a><span class="dt">bool</span> vis0[<span class="dv">100020</span>],vis1[<span class="dv">100020</span>];<span class="co">//bfs用</span></span>
+<span id="cb4-11"><a aria-hidden="true" href="#cb4-11"></a><span class="dt">int</span> minans0[<span class="dv">100020</span>],minans1[<span class="dv">100020</span>];<span class="co">//存储奇偶最短路</span></span>
+<span id="cb4-12"><a aria-hidden="true" href="#cb4-12"></a><span class="kw">struct</span> node{</span>
+<span id="cb4-13"><a aria-hidden="true" href="#cb4-13"></a>    <span class="dt">int</span> n,time;</span>
+<span id="cb4-14"><a aria-hidden="true" href="#cb4-14"></a>};</span>
+<span id="cb4-15"><a aria-hidden="true" href="#cb4-15"></a>queue&lt;node&gt; q;</span>
+<span id="cb4-16"><a aria-hidden="true" href="#cb4-16"></a><span class="dt">void</span> bfs()</span>
+<span id="cb4-17"><a aria-hidden="true" href="#cb4-17"></a>{</span>
+<span id="cb4-18"><a aria-hidden="true" href="#cb4-18"></a>    memset(minans0,inf,<span class="kw">sizeof</span>(minans0));</span>
+<span id="cb4-19"><a aria-hidden="true" href="#cb4-19"></a>    memset(minans1,inf,<span class="kw">sizeof</span>(minans1));</span>
+<span id="cb4-20"><a aria-hidden="true" href="#cb4-20"></a>    q.push((node){<span class="dv">1</span>,<span class="dv">0</span>});</span>
+<span id="cb4-21"><a aria-hidden="true" href="#cb4-21"></a>    <span class="cf">while</span>(!q.empty())</span>
+<span id="cb4-22"><a aria-hidden="true" href="#cb4-22"></a>    {</span>
+<span id="cb4-23"><a aria-hidden="true" href="#cb4-23"></a>        <span class="dt">int</span> curn=q.front().n;<span class="co">//当前的点</span></span>
+<span id="cb4-24"><a aria-hidden="true" href="#cb4-24"></a>        <span class="dt">int</span> nxtc=q.front().time+<span class="dv">1</span>;<span class="co">//下一个点会经过的路径长</span></span>
+<span id="cb4-25"><a aria-hidden="true" href="#cb4-25"></a>        q.pop();</span>
+<span id="cb4-26"><a aria-hidden="true" href="#cb4-26"></a>        <span class="cf">for</span>(<span class="dt">int</span> i=<span class="dv">0</span>;i&lt;g[curn].size();i++)</span>
+<span id="cb4-27"><a aria-hidden="true" href="#cb4-27"></a>        {</span>
+<span id="cb4-28"><a aria-hidden="true" href="#cb4-28"></a>            <span class="dt">int</span> nxt=g[curn][i];</span>
+<span id="cb4-29"><a aria-hidden="true" href="#cb4-29"></a>            <span class="cf">if</span>(nxtc%<span class="dv">2</span>==<span class="dv">0</span>)<span class="co">//如果下一个点是偶数到达</span></span>
+<span id="cb4-30"><a aria-hidden="true" href="#cb4-30"></a>            {</span>
+<span id="cb4-31"><a aria-hidden="true" href="#cb4-31"></a>                <span class="cf">if</span>(vis0[nxt]==<span class="dv">0</span>)<span class="co">//如果未访问</span></span>
+<span id="cb4-32"><a aria-hidden="true" href="#cb4-32"></a>                {</span>
+<span id="cb4-33"><a aria-hidden="true" href="#cb4-33"></a>                    vis0[nxt]=<span class="dv">1</span>;</span>
+<span id="cb4-34"><a aria-hidden="true" href="#cb4-34"></a>                    q.push((node){nxt,nxtc});</span>
+<span id="cb4-35"><a aria-hidden="true" href="#cb4-35"></a>                    minans0[nxt]=min(nxtc,minans0[nxt]);<span class="co">//就更新这里的结果</span></span>
+<span id="cb4-36"><a aria-hidden="true" href="#cb4-36"></a>                    <span class="co">//cout&lt;&lt;"no."&lt;&lt;nxt&lt;&lt;" "&lt;&lt;nxtc&lt;&lt;endl;</span></span>
+<span id="cb4-37"><a aria-hidden="true" href="#cb4-37"></a>                }</span>
+<span id="cb4-38"><a aria-hidden="true" href="#cb4-38"></a>            }</span>
+<span id="cb4-39"><a aria-hidden="true" href="#cb4-39"></a>            <span class="cf">if</span>(nxtc%<span class="dv">2</span>==<span class="dv">1</span>)<span class="co">//反之如果是奇数，也一样</span></span>
+<span id="cb4-40"><a aria-hidden="true" href="#cb4-40"></a>            {</span>
+<span id="cb4-41"><a aria-hidden="true" href="#cb4-41"></a>                <span class="cf">if</span>(vis1[nxt]==<span class="dv">0</span>)</span>
+<span id="cb4-42"><a aria-hidden="true" href="#cb4-42"></a>                {</span>
+<span id="cb4-43"><a aria-hidden="true" href="#cb4-43"></a>                    vis1[nxt]=<span class="dv">1</span>;</span>
+<span id="cb4-44"><a aria-hidden="true" href="#cb4-44"></a>                    q.push((node){nxt,nxtc});</span>
+<span id="cb4-45"><a aria-hidden="true" href="#cb4-45"></a>                    minans1[nxt]=min(nxtc,minans1[nxt]);</span>
+<span id="cb4-46"><a aria-hidden="true" href="#cb4-46"></a>                    <span class="co">//cout&lt;&lt;"no."&lt;&lt;nxt&lt;&lt;" "&lt;&lt;nxtc&lt;&lt;endl;</span></span>
+<span id="cb4-47"><a aria-hidden="true" href="#cb4-47"></a>                }</span>
+<span id="cb4-48"><a aria-hidden="true" href="#cb4-48"></a>            }</span>
+<span id="cb4-49"><a aria-hidden="true" href="#cb4-49"></a>        }</span>
+<span id="cb4-50"><a aria-hidden="true" href="#cb4-50"></a>    }</span>
+<span id="cb4-51"><a aria-hidden="true" href="#cb4-51"></a>    <span class="cf">return</span>;</span>
+<span id="cb4-52"><a aria-hidden="true" href="#cb4-52"></a>}</span>
+<span id="cb4-53"><a aria-hidden="true" href="#cb4-53"></a> </span>
+<span id="cb4-54"><a aria-hidden="true" href="#cb4-54"></a><span class="dt">void</span> add_edge(<span class="dt">int</span> u,<span class="dt">int</span> v)</span>
+<span id="cb4-55"><a aria-hidden="true" href="#cb4-55"></a>{</span>
+<span id="cb4-56"><a aria-hidden="true" href="#cb4-56"></a>    g[u].push_back(v);<span class="co">//注意是无向图</span></span>
+<span id="cb4-57"><a aria-hidden="true" href="#cb4-57"></a>    g[v].push_back(u);</span>
+<span id="cb4-58"><a aria-hidden="true" href="#cb4-58"></a>    <span class="cf">return</span>;</span>
+<span id="cb4-59"><a aria-hidden="true" href="#cb4-59"></a>}</span>
+<span id="cb4-60"><a aria-hidden="true" href="#cb4-60"></a> </span>
+<span id="cb4-61"><a aria-hidden="true" href="#cb4-61"></a> </span>
+<span id="cb4-62"><a aria-hidden="true" href="#cb4-62"></a><span class="dt">int</span> main()</span>
+<span id="cb4-63"><a aria-hidden="true" href="#cb4-63"></a>{</span>
+<span id="cb4-64"><a aria-hidden="true" href="#cb4-64"></a><span class="pp">#ifndef LOCAL</span></span>
+<span id="cb4-65"><a aria-hidden="true" href="#cb4-65"></a>    freopen(<span class="st">"work.in"</span>,<span class="st">"r"</span>,stdin);</span>
+<span id="cb4-66"><a aria-hidden="true" href="#cb4-66"></a>    freopen(<span class="st">"work.out"</span>,<span class="st">"w"</span>,stdout);</span>
+<span id="cb4-67"><a aria-hidden="true" href="#cb4-67"></a><span class="pp">#endif</span></span>
+<span id="cb4-68"><a aria-hidden="true" href="#cb4-68"></a>    <span class="dt">int</span> n,m,q;</span>
+<span id="cb4-69"><a aria-hidden="true" href="#cb4-69"></a>    scanf(<span class="st">"</span><span class="sc">%d</span><span class="st"> </span><span class="sc">%d</span><span class="st"> </span><span class="sc">%d</span><span class="st">"</span>,&amp;n,&amp;m,&amp;q);</span>
+<span id="cb4-70"><a aria-hidden="true" href="#cb4-70"></a>    <span class="cf">while</span>(m--)</span>
+<span id="cb4-71"><a aria-hidden="true" href="#cb4-71"></a>    {</span>
+<span id="cb4-72"><a aria-hidden="true" href="#cb4-72"></a>        <span class="dt">int</span> u,v;</span>
+<span id="cb4-73"><a aria-hidden="true" href="#cb4-73"></a>        scanf(<span class="st">"</span><span class="sc">%d</span><span class="st"> </span><span class="sc">%d</span><span class="st">"</span>,&amp;u,&amp;v);</span>
+<span id="cb4-74"><a aria-hidden="true" href="#cb4-74"></a>        add_edge(u,v);</span>
+<span id="cb4-75"><a aria-hidden="true" href="#cb4-75"></a>    }</span>
+<span id="cb4-76"><a aria-hidden="true" href="#cb4-76"></a>    bfs();<span class="co">//预处理</span></span>
+<span id="cb4-77"><a aria-hidden="true" href="#cb4-77"></a>    <span class="cf">while</span>(q--)</span>
+<span id="cb4-78"><a aria-hidden="true" href="#cb4-78"></a>    {</span>
+<span id="cb4-79"><a aria-hidden="true" href="#cb4-79"></a>        <span class="dt">int</span> a,l;</span>
+<span id="cb4-80"><a aria-hidden="true" href="#cb4-80"></a>        scanf(<span class="st">"</span><span class="sc">%d</span><span class="st"> </span><span class="sc">%d</span><span class="st">"</span>,&amp;a,&amp;l);</span>
+<span id="cb4-81"><a aria-hidden="true" href="#cb4-81"></a>        <span class="dt">bool</span> flag=<span class="dv">0</span>;</span>
+<span id="cb4-82"><a aria-hidden="true" href="#cb4-82"></a>        <span class="cf">if</span>(l%<span class="dv">2</span>==<span class="dv">0</span>&amp;&amp;vis0[a]==<span class="dv">1</span>&amp;&amp;minans0[a]&lt;=l) flag=<span class="dv">1</span>;<span class="co">//如果是偶数阶段并且能到达</span></span>
+<span id="cb4-83"><a aria-hidden="true" href="#cb4-83"></a>        <span class="cf">if</span>(l%<span class="dv">2</span>==<span class="dv">1</span>&amp;&amp;vis1[a]==<span class="dv">1</span>&amp;&amp;minans1[a]&lt;=l) flag=<span class="dv">1</span>;</span>
+<span id="cb4-84"><a aria-hidden="true" href="#cb4-84"></a>        <span class="cf">if</span>(flag) printf(<span class="st">"Yes</span><span class="sc">\n</span><span class="st">"</span>);</span>
+<span id="cb4-85"><a aria-hidden="true" href="#cb4-85"></a>        <span class="cf">else</span> printf(<span class="st">"No</span><span class="sc">\n</span><span class="st">"</span>);</span>
+<span id="cb4-86"><a aria-hidden="true" href="#cb4-86"></a>    }</span>
+<span id="cb4-87"><a aria-hidden="true" href="#cb4-87"></a>    <span class="cf">return</span> <span class="dv">0</span>;</span>
+<span id="cb4-88"><a aria-hidden="true" href="#cb4-88"></a>}</span></code></pre></div>
+</section>
+<footer class="article-footer">
+<section class="article-tags">
+<a href="/tags/NOIP/">NOIP</a>
+<a href="/tags/OI/">OI</a>
+<a href="/tags/dp/">动态规划</a>
+<a href="/tags/graph/">图论</a>
+<a href="/tags/implementation/">模拟</a>
+<a href="/tags/backpack-dp/">背包</a>
+<a href="/tags/editorial/">题解</a>
+</section>
+<section class="article-copyright">
+<svg class="icon icon-tabler icon-tabler-copyright" fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+<path d="M0 0h24v24H0z" stroke="none"></path>
+<circle cx="12" cy="12" r="9"></circle>
+<path d="M14.5 9a3.5 4 0 1 0 0 6"></path>
+</svg>
+<span>Licensed under CC BY-NC-SA 4.0</span>
+</section>
+</footer>
+<link crossorigin="anonymous" href="https://cdn.jsdelivr.net/npm/katex@0.13.13/dist/katex.min.css" integrity="sha384-RZU/ijkSsFbcmivfdRBQDtwuwVqK7GMOw6IMvKyeWL2K5UAlyp6WonmB8m7Jd0Hn" rel="stylesheet"/><script crossorigin="anonymous" defer="" integrity="sha384-pK1WpvzWVBQiP0/GjnvRxV4mOb0oxFuyRxJlk6vVw146n3egcN5C925NCP7a7BY8" src="https://cdn.jsdelivr.net/npm/katex@0.13.13/dist/katex.min.js">
+</script><script crossorigin="anonymous" defer="" integrity="sha384-vZTG03m+2yp6N6BNi5iM4rW4oIwk5DfcNdFfxkk9ZWpDriOkXX8voJBFrAO7MpVl" src="https://cdn.jsdelivr.net/npm/katex@0.13.13/dist/contrib/auto-render.min.js">
+</script><script>
+    window.addEventListener("DOMContentLoaded", () => {
+        renderMathInElement(document.querySelector(`.article-content`), {
+            delimiters: [
+                { left: "$$", right: "$$", display: true },
+                { left: "$", right: "$", display: false },
+                { left: "\\(", right: "\\)", display: false },
+                { left: "\\[", right: "\\]", display: true }
+            ]
+        });})
+</script>
+</article>
+<aside class="related-contents--wrapper">
+<h2 class="section-title">相关文章</h2>
+<div class="related-contents">
+<div class="flex article-list--tile">
+<article class="has-image">
+<a href="/sol-csps2020/">
+<div class="article-image">
+<img data-hash="https://yangty-pic.oss-cn-beijing.aliyuncs.com/bg12.webp" data-key="" loading="lazy" src="https://yangty-pic.oss-cn-beijing.aliyuncs.com/bg12.webp"/>
+</div>
+<div class="article-details">
+<h2 class="article-title">CSP-S 2020 题解</h2>
+</div>
+</a>
+</article>
+<article class="has-image">
+<a href="/sol-lhsx2022/">
+<div class="article-image">
+<img data-hash="https://yangty-pic.oss-cn-beijing.aliyuncs.com/bg1.webp" data-key="" loading="lazy" src="https://yangty-pic.oss-cn-beijing.aliyuncs.com/bg1.webp"/>
+</div>
+<div class="article-details">
+<h2 class="article-title">联合省选 2022 题解</h2>
+</div>
+</a>
+</article>
+<article class="has-image">
+<a href="/sol-noip2021/">
+<div class="article-image">
+<img data-hash="https://yangty-pic.oss-cn-beijing.aliyuncs.com/bg34.webp" data-key="" loading="lazy" src="https://yangty-pic.oss-cn-beijing.aliyuncs.com/bg34.webp"/>
+</div>
+<div class="article-details">
+<h2 class="article-title">NOIP 2021 题解</h2>
+</div>
+</a>
+</article>
+<article class="has-image">
+<a href="/sol-lhsx2021/">
+<div class="article-image">
+<img data-hash="https://yangty-pic.oss-cn-beijing.aliyuncs.com/bg22.webp" data-key="" loading="lazy" src="https://yangty-pic.oss-cn-beijing.aliyuncs.com/bg22.webp"/>
+</div>
+<div class="article-details">
+<h2 class="article-title">联合省选 2021 题解</h2>
+</div>
+</a>
+</article>
+<article class="has-image">
+<a href="/sol-past-noip/">
+<div class="article-image">
+<img data-hash="https://yangty-pic.oss-cn-beijing.aliyuncs.com/bg35.webp" data-key="" loading="lazy" src="https://yangty-pic.oss-cn-beijing.aliyuncs.com/bg35.webp"/>
+</div>
+<div class="article-details">
+<h2 class="article-title">历年联赛真题选做</h2>
+</div>
+</a>
+</article>
+</div>
+</div>
+</aside>
+<footer class="site-footer">
+<section class="copyright">
+        © 
+        
+            2019 - 
+        
+        2024 清烛的博客
+    </section>
+<section class="powerby">
+        Built with <a href="https://gohugo.io/" rel="noopener" target="_blank">Hugo</a> <br/>
+        主题 <b><a data-version="3.11.0" href="https://github.com/CaiJimmy/hugo-theme-stack" rel="noopener" target="_blank">Stack</a></b> 由 <a href="https://jimmycai.com" rel="noopener" target="_blank">Jimmy</a> 设计
+    </section>
+</footer>
+<div aria-hidden="true" class="pswp" role="dialog" tabindex="-1">
+<div class="pswp__bg"></div>
+<div class="pswp__scroll-wrap">
+<div class="pswp__container">
+<div class="pswp__item"></div>
+<div class="pswp__item"></div>
+<div class="pswp__item"></div>
+</div>
+<div class="pswp__ui pswp__ui--hidden">
+<div class="pswp__top-bar">
+<div class="pswp__counter"></div>
+<button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+<button class="pswp__button pswp__button--share" title="Share"></button>
+<button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+<button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+<div class="pswp__preloader">
+<div class="pswp__preloader__icn">
+<div class="pswp__preloader__cut">
+<div class="pswp__preloader__donut"></div>
+</div>
+</div>
+</div>
+</div>
+<div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+<div class="pswp__share-tooltip"></div>
+</div>
+<button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+</button>
+<button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+</button>
+<div class="pswp__caption">
+<div class="pswp__caption__center"></div>
+</div>
+</div>
+</div>
+</div><script crossorigin="anonymous" defer="" integrity="sha256-ePwmChbbvXbsO02lbM3HoHbSHTHFAeChekF1xKJdleo=" src="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe.min.js">
+</script><script crossorigin="anonymous" defer="" integrity="sha256-UKkzOn/w1mBxRmLLGrSeyB4e1xbrp4xylgAWb3M42pU=" src="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe-ui-default.min.js">
+</script><link crossorigin="anonymous" href="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/default-skin/default-skin.css" integrity="sha256-c0uckgykQ9v5k+IqViZOZKc47Jn7KQil4/MP3ySA3F8=" rel="stylesheet"/><link crossorigin="anonymous" href="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe.css" integrity="sha256-SBLU4vv6CA6lHsZ1XyTdhyjJxCjPif/TRkjnsyGAGnE=" rel="stylesheet"/>
+</main>
+</div>
+<script crossorigin="anonymous" integrity="sha256-5NovOZc4iwiAWTYIFiIM7DxKUXKWvpVEuMEPLzcm5/g=" src="https://cdn.jsdelivr.net/npm/node-vibrant@3.1.5/dist/vibrant.min.js">
+</script><script defer="" src="/ts/main.js" type="text/javascript"></script>
+<script>
+    (function () {
+        const customFont = document.createElement('link');
+        customFont.href = "https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&display=swap";
+
+        customFont.type = "text/css";
+        customFont.rel = "stylesheet";
+
+        document.head.appendChild(customFont);
+    }());
+</script>
+</body>
+</html>

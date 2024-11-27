@@ -1,0 +1,129 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+    <channel>
+        <title>总结 on 清烛的博客</title>
+        <link>https://oi.imyangty.com/tags/summary/</link>
+        <description>Recent content in 总结 on 清烛的博客</description>
+        <generator>Hugo -- gohugo.io</generator>
+        <language>zh-CN</language>
+        <lastBuildDate>Fri, 01 Oct 2021 10:31:44 +0800</lastBuildDate><atom:link href="https://oi.imyangty.com/tags/summary/index.xml" rel="self" type="application/rss+xml" /><item>
+        <title>21年十一集训</title>
+        <link>https://oi.imyangty.com/summary-zroi202110/</link>
+        <pubDate>Fri, 01 Oct 2021 10:31:44 +0800</pubDate>
+        
+        <guid>https://oi.imyangty.com/summary-zroi202110/</guid>
+        <description>&lt;img src="https://yangty-pic.oss-cn-beijing.aliyuncs.com/bg19.webp" alt="Featured image of post 21年十一集训" /&gt;&lt;p&gt;密码：ACM password 5&lt;/p&gt;
+&lt;div class=&#34;hugo-encryptor-container&#34;&gt;
+  &lt;div class=&#34;hugo-encryptor-prompt&#34;&gt;
+    
+      &lt;p&gt;文章的部分内容被密码保护：&lt;/p&gt;
+    
+  &lt;/div&gt;
+  &lt;div class=&#34;hugo-encryptor-form&#34;&gt;
+    &lt;input
+      class=&#34;hugo-encryptor-input&#34;
+      placeholder=&#39;请输入密码&#39;
+    /&gt;
+    &lt;input
+      class=&#34;hugo-encryptor-button&#34;
+      type=&#34;button&#34;
+      value=&#39;点击验证&#39;
+      onclick=&#34;_click_handler(this)&#34;
+    /&gt;
+  &lt;/div&gt;
+  &lt;div
+    class=&#34;hugo-encryptor-cipher-text&#34;
+    data-password=&#34;PASSWORD&#34;
+    style=&#34;display: none;&#34;
+  &gt;
+    &lt;span style=&#34;display: none;&#34;&gt;--- DON&#39;T MODIFY THIS LINE ---&lt;/span&gt;
+    &lt;h2 id=&#34;day-1-ds&#34;&gt;Day 1 DS&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;p&gt;【Done】&lt;strong&gt;P3531 [POI2012]LIT-Letters&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;给定串 A 和 B，每次操作可以交换 A 的相邻两个字符，问将 A 变成 B 的最小操作次数。&lt;/p&gt;
+&lt;p&gt;将 A 串变为 B 串，每次交换相当于减少一个“逆序对”，把这个逆序对求出来就行了。&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;【树状数组】&lt;strong&gt;LOJ#2873. 「JOISC 2014 Day1」有趣的家庭菜园&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;给定一个序列，每次操作交换相邻元素，问使得这个序列变得单峰的最小操作次数。&lt;/p&gt;
+&lt;p&gt;我们将数字从小到大考虑。不难发现我们每次要把一个最小的数字丢到两端。&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;【哈希】&lt;strong&gt;P4398 [JSOI2008]Blue Mary的战役地图&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;正方形里面的哈希。&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;【分块】&lt;strong&gt;P4117 [Ynoi2018] 五彩斑斓的世界&lt;/strong&gt;&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;【分块】&lt;strong&gt;P4108 [HEOI2015]公约数数列&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;前缀 gcd 只有 &lt;span class=&#34;math inline&#34;&gt;\(O(\log)\)&lt;/span&gt; 种，且变化至少除以 &lt;span class=&#34;math inline&#34;&gt;\(2\)&lt;/span&gt;。使用分块维护&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;【分块】&lt;strong&gt;BZOJ#4867. [Ynoi2017]舌尖上的由乃&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;拍扁到 dfn 上后变为区间加，区间第 k 大&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;【分块】&lt;strong&gt;P4118 [Ynoi2018] 末日时在做什么？有没有空？可以来拯救吗？&lt;/strong&gt;&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;【分块】&lt;strong&gt;P4119 [Ynoi2018] 未来日记&lt;/strong&gt;&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;【Done】【根号分治】&lt;strong&gt;P1989 无向图三元环计数&lt;/strong&gt;&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;【扫描线】&lt;a href=&#34;https://vjudge.net/problem/TopCoder-12691&#34;&gt;&lt;strong&gt;PiecewiseLinearFunction&lt;/strong&gt;&lt;/a&gt;&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;【并查集】&lt;a href=&#34;https://vjudge.net/problem/TopCoder-12504&#34;&gt;&lt;strong&gt;ArcadeManao&lt;/strong&gt;&lt;/a&gt;&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;【dp】&lt;a href=&#34;https://vjudge.net/problem/TopCoder-11387&#34;&gt;&lt;strong&gt;FoxAndFlowerShopDivOne&lt;/strong&gt;&lt;/a&gt;&lt;/p&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id=&#34;day-2-杂题&#34;&gt;Day 2 杂题&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;p&gt;【数学】&lt;strong&gt;CF1244C The Football Season&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;从 &lt;span class=&#34;math inline&#34;&gt;\([0, w)\)&lt;/span&gt; 枚举 &lt;span class=&#34;math inline&#34;&gt;\(y\)&lt;/span&gt; 即可。&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;【构造】&lt;strong&gt;CF1416B Make Them Equal&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;无解易判。充分性：考虑把所有数字移到 &lt;span class=&#34;math inline&#34;&gt;\(1\)&lt;/span&gt;，然后发回去。当然需要从 &lt;span class=&#34;math inline&#34;&gt;\(1\)&lt;/span&gt; 借一点过去再全部还回来。次数最大 &lt;span class=&#34;math inline&#34;&gt;\(3n - 3\)&lt;/span&gt;&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;&lt;strong&gt;CF1408D Searchlights&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;分开考虑每个强盗，设 &lt;span class=&#34;math inline&#34;&gt;\(f_x\)&lt;/span&gt; 为 &lt;span class=&#34;math inline&#34;&gt;\(x\)&lt;/span&gt; 方向上移动 &lt;span class=&#34;math inline&#34;&gt;\(x\)&lt;/span&gt;，&lt;span class=&#34;math inline&#34;&gt;\(y\)&lt;/span&gt; 方向需要最少移动多少。不难发现其为一个分段函数，求一个后缀 &lt;span class=&#34;math inline&#34;&gt;\(\max\)&lt;/span&gt; 就可以了。&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;&lt;strong&gt;CF446B DZY Loves Modification&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;行与行之间操作无关，并且注意到对一行操作会对所有列的贡献减去 &lt;span class=&#34;math inline&#34;&gt;\(p\)&lt;/span&gt;。选的行与列之间不会产生影响，但是会产生 &lt;span class=&#34;math inline&#34;&gt;\(-pxy\)&lt;/span&gt; 的贡献，贪心即可。&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;&lt;strong&gt;CF486D Valid Sets&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;枚举最小点权，然后就可以 dp 了。&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;&lt;strong&gt;CF431D Random Task&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;发现单调性之后可以二分，然后数位 dp 判断即可。&lt;/p&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id=&#34;day-3-字符串组合&#34;&gt;Day 3 字符串+组合&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;p&gt;&lt;strong&gt;CF1129C Morse Code&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;区间dp&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;&lt;strong&gt;CF1320D Reachable Strings&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;每次操作之后，&lt;span class=&#34;math inline&#34;&gt;\(0\)&lt;/span&gt; 的位置的奇偶性不会改变，且 &lt;span class=&#34;math inline&#34;&gt;\(0\)&lt;/span&gt; 的相对位置不改变，建出两个辅助串然后用 hash 判断即可。&lt;/p&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;奇怪的等式： &lt;span class=&#34;math display&#34;&gt;\[
+\binom n k = \frac nk\binom{n - 1}{k - 1}
+\]&lt;/span&gt; 上指标求和： &lt;span class=&#34;math display&#34;&gt;\[
+\sum_{l = 0}^n\binom l k = \binom{n + 1}{k + 1}
+\]&lt;/span&gt;&lt;/p&gt;
+&lt;p&gt;&lt;span class=&#34;math display&#34;&gt;\[
+\sum_{k = 0}^nk\binom n k = n2^{n - 1}
+\]&lt;/span&gt;&lt;/p&gt;
+&lt;p&gt;Proof： &lt;span class=&#34;math display&#34;&gt;\[
+\begin{aligned}
+\sum_{k = 0}^nk\binom n k &amp;amp;= \sum_{k = 0}^nk\frac{n}{k}\binom{n - 1}{k - 1} = n2^{n - 1}
+\end{aligned}
+\]&lt;/span&gt;&lt;/p&gt;
+&lt;p&gt;&lt;span class=&#34;math display&#34;&gt;\[
+\binom n r \binom r k = \binom n k \binom{n - k}{r - k}
+\]&lt;/span&gt;&lt;/p&gt;
+&lt;p&gt;&lt;span class=&#34;math display&#34;&gt;\[
+\sum_{k = 0}^r\binom m k\binom{n}{r - k} = \binom{m + n}{r}
+\]&lt;/span&gt;&lt;/p&gt;
+&lt;p&gt;&lt;span class=&#34;math inline&#34;&gt;\(m+ n\)&lt;/span&gt; 个数选 &lt;span class=&#34;math inline&#34;&gt;\(r\)&lt;/span&gt; 个出来，钦定其分为两组，一组 &lt;span class=&#34;math inline&#34;&gt;\(m\)&lt;/span&gt; 个，一组 &lt;span class=&#34;math inline&#34;&gt;\(n\)&lt;/span&gt; 个，枚举 &lt;span class=&#34;math inline&#34;&gt;\(m\)&lt;/span&gt; 中选了多少个即可。 &lt;span class=&#34;math display&#34;&gt;\[
+\sum_{k = 0}^m\binom m k \binom n k = \sum_{k = 0}^m\binom{m}{m - k}\binom n k = \binom{m + n}{m}
+\]&lt;/span&gt; 单调路径问题：从 &lt;span class=&#34;math inline&#34;&gt;\((0, 0)\)&lt;/span&gt; 到 &lt;span class=&#34;math inline&#34;&gt;\((x, y)\)&lt;/span&gt;。考虑一共走 &lt;span class=&#34;math inline&#34;&gt;\(x + y\)&lt;/span&gt; 步，其中要走 &lt;span class=&#34;math inline&#34;&gt;\(x\)&lt;/span&gt; 步横的，所以易得答案 &lt;span class=&#34;math inline&#34;&gt;\(\dbinom{x +y}x\)&lt;/span&gt;&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;p&gt;&lt;strong&gt;ARC077B 11&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;因为只有两个数是相同的，所以我们可以先忽略其影响，然后此时答案为 $ k $，然后去重，发现重的情况一定是两个相同的数字中间没有选数的情况，这部分答案为 &lt;span class=&#34;math inline&#34;&gt;\(\dbinom{n + 1 - r + l - 1}{k - 1}\)&lt;/span&gt;。&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;&lt;strong&gt;CF1312D Count the Arrays&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;先考虑 &lt;span class=&#34;math inline&#34;&gt;\(m\)&lt;/span&gt; 个数中选出我们要的，就是 &lt;span class=&#34;math inline&#34;&gt;\(\dbinom{m}{n - 1}\)&lt;/span&gt;，最大值首先显然不可能为相同的那对，故相同的有 &lt;span class=&#34;math inline&#34;&gt;\(n - 2\)&lt;/span&gt; 种可能，然后考虑剩下每个数放的位置，就是 &lt;span class=&#34;math inline&#34;&gt;\(2^{n - 3}\)&lt;/span&gt;。&lt;/p&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id=&#34;day-4-杂题&#34;&gt;Day 4 杂题&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;p&gt;&lt;strong&gt;CF1578L Labyrinth&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;考虑吃糖果之后是所有的边权减小，考虑最大生成树。在最大生成树上面 dp。&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;&lt;strong&gt;CF1578A Anti-Tetris&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;。&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;&lt;strong&gt;CF1575M Managing Telephone Poles&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;拆式子&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;&lt;strong&gt;CF1575B Building an Amusement Park&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;二分答案，&lt;/p&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+  &lt;/div&gt;
+&lt;/div&gt;</description>
+        </item>
+        
+    </channel>
+</rss>

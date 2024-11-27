@@ -1,0 +1,401 @@
+<!DOCTYPE html>
+<html dir="ltr" lang="zh-CN">
+<head><meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1" name="viewport"/><meta content="password procted.
+" name="description"/><title>Summary 2022 08</title>
+<link href="https://oi.imyangty.com/summary-2022-08/" rel="canonical"/>
+<link href="/scss/style.min.a5821f3d3ab84ce5a0ac21477e347a2e0ca00292e398d16c5e8e36ded6e35a23.css" rel="stylesheet"/><meta content="Summary 2022 08" property="og:title"/>
+<meta content="password procted.
+" property="og:description"/>
+<meta content="https://oi.imyangty.com/summary-2022-08/" property="og:url"/>
+<meta content="清烛的博客" property="og:site_name"/>
+<meta content="article" property="og:type"/><meta content="Post" property="article:section"/><meta content="OI" property="article:tag"/><meta content="2022-08-10T14:31:39+08:00" property="article:published_time"/><meta content="2022-08-10T14:31:39+08:00" property="article:modified_time"/><meta content="https://yangty-pic.oss-cn-beijing.aliyuncs.com/bg31.webp" property="og:image"/>
+<meta content="Summary 2022 08" name="twitter:title"/>
+<meta content="password procted.
+" name="twitter:description"/><meta content="summary_large_image" name="twitter:card"/>
+<meta content="https://yangty-pic.oss-cn-beijing.aliyuncs.com/bg31.webp" name="twitter:image"/>
+<link href="https://q1.qlogo.cn/g?b=qq&amp;nk=375836877&amp;s=5" rel="shortcut icon"/>
+<link href="https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.5.1/build/styles/github-dark-dimmed.min.css" rel="stylesheet"/>
+<script src="https://cdn.jsdelivr.net/gh/highlightjs/cdn-release/build/highlight.min.js"></script>
+<script>hljs.highlightAll();</script>
+</head>
+<body class="article-page">
+<script>
+        (function() {
+            const colorSchemeKey = 'StackColorScheme';
+            if(!localStorage.getItem(colorSchemeKey)){
+                localStorage.setItem(colorSchemeKey, "auto");
+            }
+        })();
+    </script><script>
+    (function() {
+        const colorSchemeKey = 'StackColorScheme';
+        const colorSchemeItem = localStorage.getItem(colorSchemeKey);
+        const supportDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches === true;
+
+        if (colorSchemeItem == 'dark' || colorSchemeItem === 'auto' && supportDarkMode) {
+            
+
+            document.documentElement.dataset.scheme = 'dark';
+        } else {
+            document.documentElement.dataset.scheme = 'light';
+        }
+    })();
+</script>
+<div class="container main-container flex on-phone--column extended"><aside class="sidebar left-sidebar sticky">
+<button aria-label="切换菜单" class="hamburger hamburger--spin" id="toggle-menu" type="button">
+<span class="hamburger-box">
+<span class="hamburger-inner"></span>
+</span>
+</button>
+<header>
+<figure class="site-avatar">
+<a href="/">
+<img alt="Avatar" class="site-logo" height="300" loading="lazy" src="/img/avatar_huea3ce2119467b51fdd2a81393644a76d_51594_300x0_resize_q75_box.jpg" width="300"/>
+</a>
+<span class="emoji">😅</span>
+</figure>
+<div class="site-meta">
+<h1 class="site-name"><a href="/">清烛的博客</a></h1>
+<h2 class="site-description">烟火已谢，笙歌未停</h2>
+</div>
+</header><ol class="social-menu">
+<li>
+<a href="mailto:i@imyangty.com" target="_blank" title="email">
+<svg class="icon icon-tabler icon-tabler-mail" fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" viewbox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+<path d="M0 0h24v24H0z" fill="none" stroke="none"></path>
+<rect height="14" rx="2" width="18" x="3" y="5"></rect>
+<polyline points="3 7 12 13 21 7"></polyline>
+</svg>
+</a>
+</li>
+<li>
+<a href="https://github.com/Cgfyufsygsm" target="_blank" title="GitHub">
+<svg class="icon icon-tabler icon-tabler-brand-github" fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+<path d="M0 0h24v24H0z" fill="none" stroke="none"></path>
+<path d="M9 19c-4.3 1.4 -4.3 -2.5 -6 -3m12 5v-3.5c0 -1 .1 -1.4 -.5 -2c2.8 -.3 5.5 -1.4 5.5 -6a4.6 4.6 0 0 0 -1.3 -3.2a4.2 4.2 0 0 0 -.1 -3.2s-1.1 -.3 -3.5 1.3a12.3 12.3 0 0 0 -6.2 0c-2.4 -1.6 -3.5 -1.3 -3.5 -1.3a4.2 4.2 0 0 0 -.1 3.2a4.6 4.6 0 0 0 -1.3 3.2c0 4.6 2.7 5.7 5.5 6c-.6 .6 -.6 1.2 -.5 2v3.5"></path>
+</svg>
+</a>
+</li>
+<li>
+<a href="https://t.me/Cgfyufsygsm" target="_blank" title="Telegram">
+<svg class="icon icon-tabler icon-tabler-brand-telegram" fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" viewbox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+<path d="M0 0h24v24H0z" fill="none" stroke="none"></path>
+<path d="M15 10l-4 4l6 6l4 -16l-18 7l4 2l2 6l3 -4"></path>
+</svg>
+</a>
+</li>
+<li>
+<a href="https://twitter.com/Cgfyufsygsm" target="_blank" title="Twitter">
+<svg class="icon icon-tabler icon-tabler-brand-twitter" fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+<path d="M0 0h24v24H0z" fill="none" stroke="none"></path>
+<path d="M22 4.01c-1 .49 -1.98 .689 -3 .99c-1.121 -1.265 -2.783 -1.335 -4.38 -.737s-2.643 2.06 -2.62 3.737v1c-3.245 .083 -6.135 -1.395 -8 -4c0 0 -4.182 7.433 4 11c-1.872 1.247 -3.739 2.088 -6 2c3.308 1.803 6.913 2.423 10.034 1.517c3.58 -1.04 6.522 -3.723 7.651 -7.742a13.84 13.84 0 0 0 .497 -3.753c-.002 -.249 1.51 -2.772 1.818 -4.013z"></path>
+</svg>
+</a>
+</li>
+</ol><ol class="menu" id="main-menu">
+<li>
+<a href="/">
+<svg class="icon icon-tabler icon-tabler-home" fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+<path d="M0 0h24v24H0z" stroke="none"></path>
+<polyline points="5 12 3 12 12 3 21 12 19 12"></polyline>
+<path d="M5 12v7a2 2 0 0 0 2 2h10a2 2 0 0 0 2 -2v-7"></path>
+<path d="M9 21v-6a2 2 0 0 1 2 -2h2a2 2 0 0 1 2 2v6"></path>
+</svg>
+<span>主页</span>
+</a>
+</li>
+<li>
+<a href="/about/">
+<svg class="icon icon-tabler icon-tabler-user" fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+<path d="M0 0h24v24H0z" stroke="none"></path>
+<circle cx="12" cy="7" r="4"></circle>
+<path d="M6 21v-2a4 4 0 0 1 4 -4h4a4 4 0 0 1 4 4v2"></path>
+</svg>
+<span>关于</span>
+</a>
+</li>
+<li>
+<a href="/idx/">
+<svg class="icon icon-tabler icon-tabler-hash" fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+<path d="M0 0h24v24H0z" stroke="none"></path>
+<line x1="5" x2="19" y1="9" y2="9"></line>
+<line x1="5" x2="19" y1="15" y2="15"></line>
+<line x1="11" x2="7" y1="4" y2="20"></line>
+<line x1="17" x2="13" y1="4" y2="20"></line>
+</svg>
+<span>导航</span>
+</a>
+</li>
+<li>
+<a href="/archives/">
+<svg class="icon icon-tabler icon-tabler-archive" fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+<path d="M0 0h24v24H0z" stroke="none"></path>
+<rect height="4" rx="2" width="18" x="3" y="4"></rect>
+<path d="M5 8v10a2 2 0 0 0 2 2h10a2 2 0 0 0 2 -2v-10"></path>
+<line x1="10" x2="14" y1="12" y2="12"></line>
+</svg>
+<span>归档</span>
+</a>
+</li>
+<li>
+<a href="/search/">
+<svg class="icon icon-tabler icon-tabler-search" fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+<path d="M0 0h24v24H0z" stroke="none"></path>
+<circle cx="10" cy="10" r="7"></circle>
+<line x1="21" x2="15" y1="21" y2="15"></line>
+</svg>
+<span>搜索</span>
+</a>
+</li>
+<li>
+<a href="/friends/">
+<svg class="icon icon-tabler icon-tabler-link" fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+<path d="M0 0h24v24H0z" stroke="none"></path>
+<path d="M10 14a3.5 3.5 0 0 0 5 0l4 -4a3.5 3.5 0 0 0 -5 -5l-.5 .5"></path>
+<path d="M14 10a3.5 3.5 0 0 0 -5 0l-4 4a3.5 3.5 0 0 0 5 5l.5 -.5"></path>
+</svg>
+<span>友链</span>
+</a>
+</li>
+<li>
+<a href="https://blog.imyangty.com" target="_blank">
+<svg class="icon icon-tabler icon-tabler-home" fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+<path d="M0 0h24v24H0z" stroke="none"></path>
+<polyline points="5 12 3 12 12 3 21 12 19 12"></polyline>
+<path d="M5 12v7a2 2 0 0 0 2 2h10a2 2 0 0 0 2 -2v-7"></path>
+<path d="M9 21v-6a2 2 0 0 1 2 -2h2a2 2 0 0 1 2 2v6"></path>
+</svg>
+<span>主博客</span>
+</a>
+</li>
+<div class="menu-bottom-section">
+<li id="dark-mode-toggle">
+<svg class="icon icon-tabler icon-tabler-toggle-left" fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+<path d="M0 0h24v24H0z" stroke="none"></path>
+<circle cx="8" cy="12" r="2"></circle>
+<rect height="12" rx="6" width="20" x="2" y="6"></rect>
+</svg>
+<svg class="icon icon-tabler icon-tabler-toggle-right" fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+<path d="M0 0h24v24H0z" stroke="none"></path>
+<circle cx="16" cy="12" r="2"></circle>
+<rect height="12" rx="6" width="20" x="2" y="6"></rect>
+</svg>
+<span>暗色模式</span>
+</li>
+</div>
+</ol>
+</aside>
+<main class="main full-width">
+<article class="has-image main-article">
+<header class="article-header">
+<div class="article-image">
+<a href="/summary-2022-08/">
+<img alt="Featured image of post Summary 2022 08" loading="lazy" src="https://yangty-pic.oss-cn-beijing.aliyuncs.com/bg31.webp"/>
+</a>
+</div>
+<div class="article-details">
+<header class="article-category">
+<a href="/categories/oi/">
+                OI
+            </a>
+<a href="/categories/summary/">
+                总结
+            </a>
+</header>
+<div class="article-title-wrapper">
+<h2 class="article-title">
+<a href="/summary-2022-08/">Summary 2022 08</a>
+</h2>
+</div>
+<footer class="article-time">
+<div>
+<svg class="icon icon-tabler icon-tabler-calendar-time" fill="none" height="56" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="56" xmlns="http://www.w3.org/2000/svg">
+<path d="M0 0h24v24H0z" stroke="none"></path>
+<path d="M11.795 21h-6.795a2 2 0 0 1 -2 -2v-12a2 2 0 0 1 2 -2h12a2 2 0 0 1 2 2v4"></path>
+<circle cx="18" cy="18" r="4"></circle>
+<path d="M15 3v4"></path>
+<path d="M7 3v4"></path>
+<path d="M3 11h16"></path>
+<path d="M18 16.496v1.504l1 1"></path>
+</svg>
+<time class="article-time--published">Aug 10, 2022</time>
+</div>
+<div>
+<svg class="icon icon-tabler icon-tabler-clock" fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+<path d="M0 0h24v24H0z" stroke="none"></path>
+<circle cx="12" cy="12" r="9"></circle>
+<polyline points="12 7 12 12 15 15"></polyline>
+</svg>
+<time class="article-time--reading">
+                    阅读时长: 1 分钟
+                </time>
+</div>
+</footer>
+</div>
+</header>
+<section class="article-content">
+<p>password procted.</p>
+<div class="hugo-encryptor-container">
+<div class="hugo-encryptor-prompt">
+<p>文章的部分内容被密码保护：</p>
+</div>
+<div class="hugo-encryptor-form">
+<input class="hugo-encryptor-input" placeholder="请输入密码"/>
+<input class="hugo-encryptor-button" onclick="_click_handler(this)" type="button" value="点击验证"/>
+</div>
+<div class="hugo-encryptor-cipher-text" style="display: none;">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</div>
+</div>
+</section>
+<footer class="article-footer">
+<section class="article-tags">
+<a href="/tags/OI/">OI</a>
+</section>
+<section class="article-copyright">
+<svg class="icon icon-tabler icon-tabler-copyright" fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+<path d="M0 0h24v24H0z" stroke="none"></path>
+<circle cx="12" cy="12" r="9"></circle>
+<path d="M14.5 9a3.5 4 0 1 0 0 6"></path>
+</svg>
+<span>Licensed under CC BY-NC-SA 4.0</span>
+</section>
+</footer>
+<link crossorigin="anonymous" href="https://cdn.jsdelivr.net/npm/katex@0.13.13/dist/katex.min.css" integrity="sha384-RZU/ijkSsFbcmivfdRBQDtwuwVqK7GMOw6IMvKyeWL2K5UAlyp6WonmB8m7Jd0Hn" rel="stylesheet"/><script crossorigin="anonymous" defer="" integrity="sha384-pK1WpvzWVBQiP0/GjnvRxV4mOb0oxFuyRxJlk6vVw146n3egcN5C925NCP7a7BY8" src="https://cdn.jsdelivr.net/npm/katex@0.13.13/dist/katex.min.js">
+</script><script crossorigin="anonymous" defer="" integrity="sha384-vZTG03m+2yp6N6BNi5iM4rW4oIwk5DfcNdFfxkk9ZWpDriOkXX8voJBFrAO7MpVl" src="https://cdn.jsdelivr.net/npm/katex@0.13.13/dist/contrib/auto-render.min.js">
+</script><script>
+    window.addEventListener("DOMContentLoaded", () => {
+        renderMathInElement(document.querySelector(`.article-content`), {
+            delimiters: [
+                { left: "$$", right: "$$", display: true },
+                { left: "$", right: "$", display: false },
+                { left: "\\(", right: "\\)", display: false },
+                { left: "\\[", right: "\\]", display: true }
+            ]
+        });})
+</script>
+</article>
+<aside class="related-contents--wrapper">
+<h2 class="section-title">相关文章</h2>
+<div class="related-contents">
+<div class="flex article-list--tile">
+<article class="has-image">
+<a href="/sol-luogu-p5468/">
+<div class="article-image">
+<img data-hash="https://yangty-pic.oss-cn-beijing.aliyuncs.com/bg01.webp" data-key="" loading="lazy" src="https://yangty-pic.oss-cn-beijing.aliyuncs.com/bg01.webp"/>
+</div>
+<div class="article-details">
+<h2 class="article-title">P5468 [NOI2019] 回家路线</h2>
+</div>
+</a>
+</article>
+<article class="has-image">
+<a href="/travels-noi2022/">
+<div class="article-image">
+<img data-hash="https://yangty-pic.oss-cn-beijing.aliyuncs.com/bg01.webp" data-key="" loading="lazy" src="https://yangty-pic.oss-cn-beijing.aliyuncs.com/bg01.webp"/>
+</div>
+<div class="article-details">
+<h2 class="article-title">NOI2022 游记</h2>
+</div>
+</a>
+</article>
+<article class="has-image">
+<a href="/sol-cf715b/">
+<div class="article-image">
+<img data-hash="https://yangty-pic.oss-cn-beijing.aliyuncs.com/bg57.webp" data-key="" loading="lazy" src="https://yangty-pic.oss-cn-beijing.aliyuncs.com/bg57.webp"/>
+</div>
+<div class="article-details">
+<h2 class="article-title">CF715B Complete The Graph</h2>
+</div>
+</a>
+</article>
+<article class="has-image">
+<a href="/sol-agc027d/">
+<div class="article-image">
+<img data-hash="https://yangty-pic.oss-cn-beijing.aliyuncs.com/bg01.webp" data-key="" loading="lazy" src="https://yangty-pic.oss-cn-beijing.aliyuncs.com/bg01.webp"/>
+</div>
+<div class="article-details">
+<h2 class="article-title">AGC027D - Modulo Matrix</h2>
+</div>
+</a>
+</article>
+<article class="has-image">
+<a href="/sol-luogu-p5305/">
+<div class="article-image">
+<img data-hash="https://yangty-pic.oss-cn-beijing.aliyuncs.com/bg32.webp" data-key="" loading="lazy" src="https://yangty-pic.oss-cn-beijing.aliyuncs.com/bg32.webp"/>
+</div>
+<div class="article-details">
+<h2 class="article-title">P5305 [GXOI/GZOI2019]旧词</h2>
+</div>
+</a>
+</article>
+</div>
+</div>
+</aside>
+<footer class="site-footer">
+<section class="copyright">
+        © 
+        
+            2019 - 
+        
+        2024 清烛的博客
+    </section>
+<section class="powerby">
+        Built with <a href="https://gohugo.io/" rel="noopener" target="_blank">Hugo</a> <br/>
+        主题 <b><a data-version="3.11.0" href="https://github.com/CaiJimmy/hugo-theme-stack" rel="noopener" target="_blank">Stack</a></b> 由 <a href="https://jimmycai.com" rel="noopener" target="_blank">Jimmy</a> 设计
+    </section>
+</footer>
+<div aria-hidden="true" class="pswp" role="dialog" tabindex="-1">
+<div class="pswp__bg"></div>
+<div class="pswp__scroll-wrap">
+<div class="pswp__container">
+<div class="pswp__item"></div>
+<div class="pswp__item"></div>
+<div class="pswp__item"></div>
+</div>
+<div class="pswp__ui pswp__ui--hidden">
+<div class="pswp__top-bar">
+<div class="pswp__counter"></div>
+<button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+<button class="pswp__button pswp__button--share" title="Share"></button>
+<button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+<button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+<div class="pswp__preloader">
+<div class="pswp__preloader__icn">
+<div class="pswp__preloader__cut">
+<div class="pswp__preloader__donut"></div>
+</div>
+</div>
+</div>
+</div>
+<div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+<div class="pswp__share-tooltip"></div>
+</div>
+<button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+</button>
+<button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+</button>
+<div class="pswp__caption">
+<div class="pswp__caption__center"></div>
+</div>
+</div>
+</div>
+</div><script crossorigin="anonymous" defer="" integrity="sha256-ePwmChbbvXbsO02lbM3HoHbSHTHFAeChekF1xKJdleo=" src="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe.min.js">
+</script><script crossorigin="anonymous" defer="" integrity="sha256-UKkzOn/w1mBxRmLLGrSeyB4e1xbrp4xylgAWb3M42pU=" src="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe-ui-default.min.js">
+</script><link crossorigin="anonymous" href="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/default-skin/default-skin.css" integrity="sha256-c0uckgykQ9v5k+IqViZOZKc47Jn7KQil4/MP3ySA3F8=" rel="stylesheet"/><link crossorigin="anonymous" href="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe.css" integrity="sha256-SBLU4vv6CA6lHsZ1XyTdhyjJxCjPif/TRkjnsyGAGnE=" rel="stylesheet"/>
+</main>
+</div>
+<script crossorigin="anonymous" integrity="sha256-5NovOZc4iwiAWTYIFiIM7DxKUXKWvpVEuMEPLzcm5/g=" src="https://cdn.jsdelivr.net/npm/node-vibrant@3.1.5/dist/vibrant.min.js">
+</script><script defer="" src="/ts/main.js" type="text/javascript"></script>
+<script>
+    (function () {
+        const customFont = document.createElement('link');
+        customFont.href = "https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&display=swap";
+
+        customFont.type = "text/css";
+        customFont.rel = "stylesheet";
+
+        document.head.appendChild(customFont);
+    }());
+</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/3.1.9-1/crypto-js.js"></script><script src="/decrypt.js"></script></body>
+</html>

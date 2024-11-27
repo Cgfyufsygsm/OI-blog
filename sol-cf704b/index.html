@@ -1,0 +1,475 @@
+<!DOCTYPE html>
+<html dir="ltr" lang="zh-CN">
+<head><meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1" name="viewport"/><meta content="题意 有 \(n\) 个元素，第 \(i\) 个元素有五个参数 \(x_i,a_i,b_i,c_i,d_i\)。 你需要求出一个 \(1 \sim n\) 的排列 \(p\)，满足 \(p_1 = s, p_n = e\)，同时最小化这个排列的权值。 一个排列的权值为 \(\sum_{i=1}^{n-1} f(p_i, p_{i+1})\)，其中 \(f(i,j)\) 的值有两种情况： 若 \(j &amp;lt; i\)，则 \(f(i,j) = |x_i - x_j| + c_i + b_j\)。 若 \(j &amp;gt; i\)，则 \(f(i,j) = |x_i - x_j| + d_i + a_j\)。 \(n \le 5 \times 10^3\)，\(1 \le x_i,a_i,b_i,c_i,d_i \le 10^9\)。 translated by xht37
+思路 先思考一下一个点 \(i\) 如何产生贡献：假设 \(x &amp;lt; i &amp;lt; y\)" name="description"/><title>CF704B Ant Man</title>
+<link href="https://oi.imyangty.com/sol-cf704b/" rel="canonical"/>
+<link href="/scss/style.min.a5821f3d3ab84ce5a0ac21477e347a2e0ca00292e398d16c5e8e36ded6e35a23.css" rel="stylesheet"/><meta content="CF704B Ant Man" property="og:title"/>
+<meta content="题意 有 \(n\) 个元素，第 \(i\) 个元素有五个参数 \(x_i,a_i,b_i,c_i,d_i\)。 你需要求出一个 \(1 \sim n\) 的排列 \(p\)，满足 \(p_1 = s, p_n = e\)，同时最小化这个排列的权值。 一个排列的权值为 \(\sum_{i=1}^{n-1} f(p_i, p_{i+1})\)，其中 \(f(i,j)\) 的值有两种情况： 若 \(j &amp;lt; i\)，则 \(f(i,j) = |x_i - x_j| + c_i + b_j\)。 若 \(j &amp;gt; i\)，则 \(f(i,j) = |x_i - x_j| + d_i + a_j\)。 \(n \le 5 \times 10^3\)，\(1 \le x_i,a_i,b_i,c_i,d_i \le 10^9\)。 translated by xht37
+思路 先思考一下一个点 \(i\) 如何产生贡献：假设 \(x &amp;lt; i &amp;lt; y\)" property="og:description"/>
+<meta content="https://oi.imyangty.com/sol-cf704b/" property="og:url"/>
+<meta content="清烛的博客" property="og:site_name"/>
+<meta content="article" property="og:type"/><meta content="Post" property="article:section"/><meta content="OI" property="article:tag"/><meta content="解题报告" property="article:tag"/><meta content="Codeforces" property="article:tag"/><meta content="贪心" property="article:tag"/><meta content="2021-06-29T22:22:53+08:00" property="article:published_time"/><meta content="2021-06-29T22:22:53+08:00" property="article:modified_time"/><meta content="https://yangty-pic.oss-cn-beijing.aliyuncs.com/bg3.webp" property="og:image"/>
+<meta content="CF704B Ant Man" name="twitter:title"/>
+<meta content="题意 有 \(n\) 个元素，第 \(i\) 个元素有五个参数 \(x_i,a_i,b_i,c_i,d_i\)。 你需要求出一个 \(1 \sim n\) 的排列 \(p\)，满足 \(p_1 = s, p_n = e\)，同时最小化这个排列的权值。 一个排列的权值为 \(\sum_{i=1}^{n-1} f(p_i, p_{i+1})\)，其中 \(f(i,j)\) 的值有两种情况： 若 \(j &amp;lt; i\)，则 \(f(i,j) = |x_i - x_j| + c_i + b_j\)。 若 \(j &amp;gt; i\)，则 \(f(i,j) = |x_i - x_j| + d_i + a_j\)。 \(n \le 5 \times 10^3\)，\(1 \le x_i,a_i,b_i,c_i,d_i \le 10^9\)。 translated by xht37
+思路 先思考一下一个点 \(i\) 如何产生贡献：假设 \(x &amp;lt; i &amp;lt; y\)" name="twitter:description"/><meta content="summary_large_image" name="twitter:card"/>
+<meta content="https://yangty-pic.oss-cn-beijing.aliyuncs.com/bg3.webp" name="twitter:image"/>
+<link href="https://q1.qlogo.cn/g?b=qq&amp;nk=375836877&amp;s=5" rel="shortcut icon"/>
+<link href="https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.5.1/build/styles/github-dark-dimmed.min.css" rel="stylesheet"/>
+<script src="https://cdn.jsdelivr.net/gh/highlightjs/cdn-release/build/highlight.min.js"></script>
+<script>hljs.highlightAll();</script>
+</head>
+<body class="article-page">
+<script>
+        (function() {
+            const colorSchemeKey = 'StackColorScheme';
+            if(!localStorage.getItem(colorSchemeKey)){
+                localStorage.setItem(colorSchemeKey, "auto");
+            }
+        })();
+    </script><script>
+    (function() {
+        const colorSchemeKey = 'StackColorScheme';
+        const colorSchemeItem = localStorage.getItem(colorSchemeKey);
+        const supportDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches === true;
+
+        if (colorSchemeItem == 'dark' || colorSchemeItem === 'auto' && supportDarkMode) {
+            
+
+            document.documentElement.dataset.scheme = 'dark';
+        } else {
+            document.documentElement.dataset.scheme = 'light';
+        }
+    })();
+</script>
+<div class="container main-container flex on-phone--column extended"><aside class="sidebar left-sidebar sticky">
+<button aria-label="切换菜单" class="hamburger hamburger--spin" id="toggle-menu" type="button">
+<span class="hamburger-box">
+<span class="hamburger-inner"></span>
+</span>
+</button>
+<header>
+<figure class="site-avatar">
+<a href="/">
+<img alt="Avatar" class="site-logo" height="300" loading="lazy" src="/img/avatar_huea3ce2119467b51fdd2a81393644a76d_51594_300x0_resize_q75_box.jpg" width="300"/>
+</a>
+<span class="emoji">😅</span>
+</figure>
+<div class="site-meta">
+<h1 class="site-name"><a href="/">清烛的博客</a></h1>
+<h2 class="site-description">烟火已谢，笙歌未停</h2>
+</div>
+</header><ol class="social-menu">
+<li>
+<a href="mailto:i@imyangty.com" target="_blank" title="email">
+<svg class="icon icon-tabler icon-tabler-mail" fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" viewbox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+<path d="M0 0h24v24H0z" fill="none" stroke="none"></path>
+<rect height="14" rx="2" width="18" x="3" y="5"></rect>
+<polyline points="3 7 12 13 21 7"></polyline>
+</svg>
+</a>
+</li>
+<li>
+<a href="https://github.com/Cgfyufsygsm" target="_blank" title="GitHub">
+<svg class="icon icon-tabler icon-tabler-brand-github" fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+<path d="M0 0h24v24H0z" fill="none" stroke="none"></path>
+<path d="M9 19c-4.3 1.4 -4.3 -2.5 -6 -3m12 5v-3.5c0 -1 .1 -1.4 -.5 -2c2.8 -.3 5.5 -1.4 5.5 -6a4.6 4.6 0 0 0 -1.3 -3.2a4.2 4.2 0 0 0 -.1 -3.2s-1.1 -.3 -3.5 1.3a12.3 12.3 0 0 0 -6.2 0c-2.4 -1.6 -3.5 -1.3 -3.5 -1.3a4.2 4.2 0 0 0 -.1 3.2a4.6 4.6 0 0 0 -1.3 3.2c0 4.6 2.7 5.7 5.5 6c-.6 .6 -.6 1.2 -.5 2v3.5"></path>
+</svg>
+</a>
+</li>
+<li>
+<a href="https://t.me/Cgfyufsygsm" target="_blank" title="Telegram">
+<svg class="icon icon-tabler icon-tabler-brand-telegram" fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" viewbox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+<path d="M0 0h24v24H0z" fill="none" stroke="none"></path>
+<path d="M15 10l-4 4l6 6l4 -16l-18 7l4 2l2 6l3 -4"></path>
+</svg>
+</a>
+</li>
+<li>
+<a href="https://twitter.com/Cgfyufsygsm" target="_blank" title="Twitter">
+<svg class="icon icon-tabler icon-tabler-brand-twitter" fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+<path d="M0 0h24v24H0z" fill="none" stroke="none"></path>
+<path d="M22 4.01c-1 .49 -1.98 .689 -3 .99c-1.121 -1.265 -2.783 -1.335 -4.38 -.737s-2.643 2.06 -2.62 3.737v1c-3.245 .083 -6.135 -1.395 -8 -4c0 0 -4.182 7.433 4 11c-1.872 1.247 -3.739 2.088 -6 2c3.308 1.803 6.913 2.423 10.034 1.517c3.58 -1.04 6.522 -3.723 7.651 -7.742a13.84 13.84 0 0 0 .497 -3.753c-.002 -.249 1.51 -2.772 1.818 -4.013z"></path>
+</svg>
+</a>
+</li>
+</ol><ol class="menu" id="main-menu">
+<li>
+<a href="/">
+<svg class="icon icon-tabler icon-tabler-home" fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+<path d="M0 0h24v24H0z" stroke="none"></path>
+<polyline points="5 12 3 12 12 3 21 12 19 12"></polyline>
+<path d="M5 12v7a2 2 0 0 0 2 2h10a2 2 0 0 0 2 -2v-7"></path>
+<path d="M9 21v-6a2 2 0 0 1 2 -2h2a2 2 0 0 1 2 2v6"></path>
+</svg>
+<span>主页</span>
+</a>
+</li>
+<li>
+<a href="/about/">
+<svg class="icon icon-tabler icon-tabler-user" fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+<path d="M0 0h24v24H0z" stroke="none"></path>
+<circle cx="12" cy="7" r="4"></circle>
+<path d="M6 21v-2a4 4 0 0 1 4 -4h4a4 4 0 0 1 4 4v2"></path>
+</svg>
+<span>关于</span>
+</a>
+</li>
+<li>
+<a href="/idx/">
+<svg class="icon icon-tabler icon-tabler-hash" fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+<path d="M0 0h24v24H0z" stroke="none"></path>
+<line x1="5" x2="19" y1="9" y2="9"></line>
+<line x1="5" x2="19" y1="15" y2="15"></line>
+<line x1="11" x2="7" y1="4" y2="20"></line>
+<line x1="17" x2="13" y1="4" y2="20"></line>
+</svg>
+<span>导航</span>
+</a>
+</li>
+<li>
+<a href="/archives/">
+<svg class="icon icon-tabler icon-tabler-archive" fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+<path d="M0 0h24v24H0z" stroke="none"></path>
+<rect height="4" rx="2" width="18" x="3" y="4"></rect>
+<path d="M5 8v10a2 2 0 0 0 2 2h10a2 2 0 0 0 2 -2v-10"></path>
+<line x1="10" x2="14" y1="12" y2="12"></line>
+</svg>
+<span>归档</span>
+</a>
+</li>
+<li>
+<a href="/search/">
+<svg class="icon icon-tabler icon-tabler-search" fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+<path d="M0 0h24v24H0z" stroke="none"></path>
+<circle cx="10" cy="10" r="7"></circle>
+<line x1="21" x2="15" y1="21" y2="15"></line>
+</svg>
+<span>搜索</span>
+</a>
+</li>
+<li>
+<a href="/friends/">
+<svg class="icon icon-tabler icon-tabler-link" fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+<path d="M0 0h24v24H0z" stroke="none"></path>
+<path d="M10 14a3.5 3.5 0 0 0 5 0l4 -4a3.5 3.5 0 0 0 -5 -5l-.5 .5"></path>
+<path d="M14 10a3.5 3.5 0 0 0 -5 0l-4 4a3.5 3.5 0 0 0 5 5l.5 -.5"></path>
+</svg>
+<span>友链</span>
+</a>
+</li>
+<li>
+<a href="https://blog.imyangty.com" target="_blank">
+<svg class="icon icon-tabler icon-tabler-home" fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+<path d="M0 0h24v24H0z" stroke="none"></path>
+<polyline points="5 12 3 12 12 3 21 12 19 12"></polyline>
+<path d="M5 12v7a2 2 0 0 0 2 2h10a2 2 0 0 0 2 -2v-7"></path>
+<path d="M9 21v-6a2 2 0 0 1 2 -2h2a2 2 0 0 1 2 2v6"></path>
+</svg>
+<span>主博客</span>
+</a>
+</li>
+<div class="menu-bottom-section">
+<li id="dark-mode-toggle">
+<svg class="icon icon-tabler icon-tabler-toggle-left" fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+<path d="M0 0h24v24H0z" stroke="none"></path>
+<circle cx="8" cy="12" r="2"></circle>
+<rect height="12" rx="6" width="20" x="2" y="6"></rect>
+</svg>
+<svg class="icon icon-tabler icon-tabler-toggle-right" fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+<path d="M0 0h24v24H0z" stroke="none"></path>
+<circle cx="16" cy="12" r="2"></circle>
+<rect height="12" rx="6" width="20" x="2" y="6"></rect>
+</svg>
+<span>暗色模式</span>
+</li>
+</div>
+</ol>
+</aside>
+<main class="main full-width">
+<article class="has-image main-article">
+<header class="article-header">
+<div class="article-image">
+<a href="/sol-cf704b/">
+<img alt="Featured image of post CF704B Ant Man" loading="lazy" src="https://yangty-pic.oss-cn-beijing.aliyuncs.com/bg3.webp"/>
+</a>
+</div>
+<div class="article-details">
+<header class="article-category">
+<a href="/categories/oi/">
+                OI
+            </a>
+<a href="/categories/tutorial/">
+                题解
+            </a>
+</header>
+<div class="article-title-wrapper">
+<h2 class="article-title">
+<a href="/sol-cf704b/">CF704B Ant Man</a>
+</h2>
+</div>
+<footer class="article-time">
+<div>
+<svg class="icon icon-tabler icon-tabler-calendar-time" fill="none" height="56" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="56" xmlns="http://www.w3.org/2000/svg">
+<path d="M0 0h24v24H0z" stroke="none"></path>
+<path d="M11.795 21h-6.795a2 2 0 0 1 -2 -2v-12a2 2 0 0 1 2 -2h12a2 2 0 0 1 2 2v4"></path>
+<circle cx="18" cy="18" r="4"></circle>
+<path d="M15 3v4"></path>
+<path d="M7 3v4"></path>
+<path d="M3 11h16"></path>
+<path d="M18 16.496v1.504l1 1"></path>
+</svg>
+<time class="article-time--published">Jun 29, 2021</time>
+</div>
+<div>
+<svg class="icon icon-tabler icon-tabler-clock" fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+<path d="M0 0h24v24H0z" stroke="none"></path>
+<circle cx="12" cy="12" r="9"></circle>
+<polyline points="12 7 12 12 15 15"></polyline>
+</svg>
+<time class="article-time--reading">
+                    阅读时长: 2 分钟
+                </time>
+</div>
+</footer>
+</div>
+</header>
+<section class="article-content">
+<h2 id="题意">题意</h2>
+<ul>
+<li>有 <span class="math inline">\(n\)</span> 个元素，第 <span class="math inline">\(i\)</span> 个元素有五个参数 <span class="math inline">\(x_i,a_i,b_i,c_i,d_i\)</span>。</li>
+<li>你需要求出一个 <span class="math inline">\(1 \sim n\)</span> 的排列 <span class="math inline">\(p\)</span>，满足 <span class="math inline">\(p_1 = s, p_n = e\)</span>，同时最小化这个排列的权值。</li>
+<li>一个排列的权值为 <span class="math inline">\(\sum_{i=1}^{n-1} f(p_i, p_{i+1})\)</span>，其中 <span class="math inline">\(f(i,j)\)</span> 的值有两种情况：
+<ul>
+<li>若 <span class="math inline">\(j &lt; i\)</span>，则 <span class="math inline">\(f(i,j) = |x_i - x_j| + c_i + b_j\)</span>。</li>
+<li>若 <span class="math inline">\(j &gt; i\)</span>，则 <span class="math inline">\(f(i,j) = |x_i - x_j| + d_i + a_j\)</span>。</li>
+</ul></li>
+<li><span class="math inline">\(n \le 5 \times 10^3\)</span>，<span class="math inline">\(1 \le x_i,a_i,b_i,c_i,d_i \le 10^9\)</span>。</li>
+</ul>
+<p>translated by xht37</p>
+<h2 id="思路">思路</h2>
+<p>先思考一下一个点 <span class="math inline">\(i\)</span> 如何产生贡献：假设 <span class="math inline">\(x &lt; i &lt; y\)</span></p>
+<ul>
+<li><span class="math inline">\(x\rightarrow i\)</span>，贡献为 <span class="math inline">\(A_i = x_i + a_i\)</span></li>
+<li><span class="math inline">\(y \rightarrow i\)</span>，贡献为 <span class="math inline">\(B_i = -x_i + b_i\)</span></li>
+<li><span class="math inline">\(i\rightarrow x\)</span>，贡献为 <span class="math inline">\(C_i = x_i + c_i\)</span></li>
+<li><span class="math inline">\(i\rightarrow y\)</span>，贡献为 <span class="math inline">\(D_i = -x_i + c_i\)</span></li>
+</ul>
+<p>然后考虑我们维护一个链表，从小到大往里面加点，增量构造法。</p>
+<p>现在先不考虑其他的，就考虑将 <span class="math inline">\(i\)</span> 插入 <span class="math inline">\(x\rightarrow y\)</span>，而且 <span class="math inline">\(i &gt; x,y\)</span>。分类讨论一下：</p>
+<ul>
+<li><span class="math inline">\(x &gt; y\)</span>，则 <span class="math inline">\(x\)</span> 的贡献由 <span class="math inline">\(C_x\)</span> 变成 <span class="math inline">\(D_x\)</span>，答案会加上 <span class="math inline">\(D_x - C_x\)</span>。在此之后 <span class="math inline">\(x\)</span> 的后继一定大于 <span class="math inline">\(x\)</span>，所以贡献不会发生变化。</li>
+<li><span class="math inline">\(x &lt; y\)</span>，则 <span class="math inline">\(y\)</span> 的贡献由 <span class="math inline">\(A_y\)</span> 变为 <span class="math inline">\(B_y\)</span>，答案会加上 <span class="math inline">\(B_y - A_y\)</span>。</li>
+</ul>
+<p>由此，每次操作可以理解为下面的操作：</p>
+<ol type="1">
+<li>答案加上 <span class="math inline">\(A_i + C_i\)</span>。</li>
+<li>从数据结构取一个最小值加到答案上，然后删掉这个值。</li>
+<li>向数据结构里面加入两个值 <span class="math inline">\(B_i - A_i\)</span>，<span class="math inline">\(D_i - C_i\)</span>。</li>
+</ol>
+<hr/>
+<p>然后考虑 <span class="math inline">\(s\)</span> 和 <span class="math inline">\(e\)</span> 的限制，依据增量构造法，初始答案为 <span class="math inline">\(s\rightarrow e\)</span> 产生的贡献。</p>
+<p>但是，由于 <span class="math inline">\(i\)</span> 不一定大于 <span class="math inline">\(s\)</span> 和 <span class="math inline">\(e\)</span>，所以当前操作不一定合法。可以如下操作：</p>
+<ul>
+<li><span class="math inline">\(i &lt; s\)</span> 时，<span class="math inline">\(A_i\)</span> 不一定被贡献到，但可以把插入 <span class="math inline">\(B_i - A_i\)</span> 提前在 2 操作之前，如此，即便我们从堆里面取出 <span class="math inline">\(B_i - A_i\)</span>，相当于选了 <span class="math inline">\(B_i\)</span> 为初始答案，<span class="math inline">\(i\)</span> 左侧可能连 <span class="math inline">\(s\)</span>。</li>
+<li><span class="math inline">\(i &gt; e\)</span> 时，同理。</li>
+<li><span class="math inline">\(i = 1 \land s,e\not= 1\)</span>，比较难搞，所以提前强制插入 <span class="math inline">\(1\)</span>。</li>
+</ul>
+<p>当然 <span class="math inline">\(i = s \lor i = e\)</span> 时，只需要插入 <span class="math inline">\(D_s - C_s\)</span> 或 <span class="math inline">\(B_e - A_e\)</span> 表示在计算 <span class="math inline">\(s\)</span> 的时候一开始默认 <span class="math inline">\(s\rightarrow\)</span> 小，现在提供 <span class="math inline">\(s\rightarrow\)</span> 大的可能。（<span class="math inline">\(e\)</span> 同理）</p>
+<p>于是就做完了。</p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode cpp"><code class="sourceCode cpp"><span id="cb1-1"><a aria-hidden="true" href="#cb1-1"></a><span class="kw">typedef</span> <span class="dt">long</span> <span class="dt">long</span> ll;</span>
+<span id="cb1-2"><a aria-hidden="true" href="#cb1-2"></a></span>
+<span id="cb1-3"><a aria-hidden="true" href="#cb1-3"></a>ll x[maxn], a[maxn], b[maxn], c[maxn], d[maxn], n, s, e, ans;</span>
+<span id="cb1-4"><a aria-hidden="true" href="#cb1-4"></a></span>
+<span id="cb1-5"><a aria-hidden="true" href="#cb1-5"></a><span class="bu">std::</span>priority_queue&lt;ll, <span class="bu">std::</span>vector&lt;ll&gt;, <span class="bu">std::</span>greater&lt;ll&gt; &gt; heap;</span>
+<span id="cb1-6"><a aria-hidden="true" href="#cb1-6"></a></span>
+<span id="cb1-7"><a aria-hidden="true" href="#cb1-7"></a>ll calc(<span class="dt">int</span> i, <span class="dt">int</span> j)</span>
+<span id="cb1-8"><a aria-hidden="true" href="#cb1-8"></a>{</span>
+<span id="cb1-9"><a aria-hidden="true" href="#cb1-9"></a>    <span class="cf">if</span> (i &lt; j) <span class="cf">return</span> x[j] - x[i] + d[i] + a[j];</span>
+<span id="cb1-10"><a aria-hidden="true" href="#cb1-10"></a>    <span class="cf">return</span> x[i] - x[j] + c[i] + b[j];</span>
+<span id="cb1-11"><a aria-hidden="true" href="#cb1-11"></a>}</span>
+<span id="cb1-12"><a aria-hidden="true" href="#cb1-12"></a></span>
+<span id="cb1-13"><a aria-hidden="true" href="#cb1-13"></a><span class="dt">int</span> main()</span>
+<span id="cb1-14"><a aria-hidden="true" href="#cb1-14"></a>{</span>
+<span id="cb1-15"><a aria-hidden="true" href="#cb1-15"></a>    n = read(), s = read(), e = read();</span>
+<span id="cb1-16"><a aria-hidden="true" href="#cb1-16"></a>    FOR(i, <span class="dv">1</span>, n) x[i] = read();</span>
+<span id="cb1-17"><a aria-hidden="true" href="#cb1-17"></a>    FOR(i, <span class="dv">1</span>, n) a[i] = read();</span>
+<span id="cb1-18"><a aria-hidden="true" href="#cb1-18"></a>    FOR(i, <span class="dv">1</span>, n) b[i] = read();</span>
+<span id="cb1-19"><a aria-hidden="true" href="#cb1-19"></a>    FOR(i, <span class="dv">1</span>, n) c[i] = read();</span>
+<span id="cb1-20"><a aria-hidden="true" href="#cb1-20"></a>    FOR(i, <span class="dv">1</span>, n) d[i] = read();</span>
+<span id="cb1-21"><a aria-hidden="true" href="#cb1-21"></a>    <span class="cf">if</span> (s == <span class="dv">1</span> || e == <span class="dv">1</span>) ans = calc(s, e);</span>
+<span id="cb1-22"><a aria-hidden="true" href="#cb1-22"></a>    <span class="cf">else</span> ans = calc(s, <span class="dv">1</span>) + calc(<span class="dv">1</span>, e);</span>
+<span id="cb1-23"><a aria-hidden="true" href="#cb1-23"></a>    FOR(i, <span class="dv">2</span>, n)</span>
+<span id="cb1-24"><a aria-hidden="true" href="#cb1-24"></a>    {</span>
+<span id="cb1-25"><a aria-hidden="true" href="#cb1-25"></a>        ll A = x[i] + a[i], B = -x[i] + b[i], C = x[i] + c[i], D = -x[i] + d[i];</span>
+<span id="cb1-26"><a aria-hidden="true" href="#cb1-26"></a>        <span class="cf">if</span> (i == s) heap.push(D - C);</span>
+<span id="cb1-27"><a aria-hidden="true" href="#cb1-27"></a>        <span class="cf">else</span> <span class="cf">if</span> (i == e) heap.push(B - A);</span>
+<span id="cb1-28"><a aria-hidden="true" href="#cb1-28"></a>        <span class="cf">else</span></span>
+<span id="cb1-29"><a aria-hidden="true" href="#cb1-29"></a>        {</span>
+<span id="cb1-30"><a aria-hidden="true" href="#cb1-30"></a>            ans += A + C;</span>
+<span id="cb1-31"><a aria-hidden="true" href="#cb1-31"></a>            <span class="cf">if</span> (i &lt; s) heap.push(B - A);</span>
+<span id="cb1-32"><a aria-hidden="true" href="#cb1-32"></a>            <span class="cf">if</span> (i &lt; e) heap.push(D - C);</span>
+<span id="cb1-33"><a aria-hidden="true" href="#cb1-33"></a>            ans += heap.top(), heap.pop();</span>
+<span id="cb1-34"><a aria-hidden="true" href="#cb1-34"></a>            <span class="cf">if</span> (i &gt; s) heap.push(B - A);</span>
+<span id="cb1-35"><a aria-hidden="true" href="#cb1-35"></a>            <span class="cf">if</span> (i &gt; e) heap.push(D - C);</span>
+<span id="cb1-36"><a aria-hidden="true" href="#cb1-36"></a>        }</span>
+<span id="cb1-37"><a aria-hidden="true" href="#cb1-37"></a>    }</span>
+<span id="cb1-38"><a aria-hidden="true" href="#cb1-38"></a>    printf(<span class="st">"</span><span class="sc">%lld\n</span><span class="st">"</span>, ans);</span>
+<span id="cb1-39"><a aria-hidden="true" href="#cb1-39"></a>    <span class="cf">return</span> <span class="dv">0</span>;</span>
+<span id="cb1-40"><a aria-hidden="true" href="#cb1-40"></a>}</span></code></pre></div>
+</section>
+<footer class="article-footer">
+<section class="article-tags">
+<a href="/tags/OI/">OI</a>
+<a href="/tags/solution/">解题报告</a>
+<a href="/tags/Codeforces/">Codeforces</a>
+<a href="/tags/greedy/">贪心</a>
+</section>
+<section class="article-copyright">
+<svg class="icon icon-tabler icon-tabler-copyright" fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+<path d="M0 0h24v24H0z" stroke="none"></path>
+<circle cx="12" cy="12" r="9"></circle>
+<path d="M14.5 9a3.5 4 0 1 0 0 6"></path>
+</svg>
+<span>Licensed under CC BY-NC-SA 4.0</span>
+</section>
+</footer>
+<link crossorigin="anonymous" href="https://cdn.jsdelivr.net/npm/katex@0.13.13/dist/katex.min.css" integrity="sha384-RZU/ijkSsFbcmivfdRBQDtwuwVqK7GMOw6IMvKyeWL2K5UAlyp6WonmB8m7Jd0Hn" rel="stylesheet"/><script crossorigin="anonymous" defer="" integrity="sha384-pK1WpvzWVBQiP0/GjnvRxV4mOb0oxFuyRxJlk6vVw146n3egcN5C925NCP7a7BY8" src="https://cdn.jsdelivr.net/npm/katex@0.13.13/dist/katex.min.js">
+</script><script crossorigin="anonymous" defer="" integrity="sha384-vZTG03m+2yp6N6BNi5iM4rW4oIwk5DfcNdFfxkk9ZWpDriOkXX8voJBFrAO7MpVl" src="https://cdn.jsdelivr.net/npm/katex@0.13.13/dist/contrib/auto-render.min.js">
+</script><script>
+    window.addEventListener("DOMContentLoaded", () => {
+        renderMathInElement(document.querySelector(`.article-content`), {
+            delimiters: [
+                { left: "$$", right: "$$", display: true },
+                { left: "$", right: "$", display: false },
+                { left: "\\(", right: "\\)", display: false },
+                { left: "\\[", right: "\\]", display: true }
+            ]
+        });})
+</script>
+</article>
+<aside class="related-contents--wrapper">
+<h2 class="section-title">相关文章</h2>
+<div class="related-contents">
+<div class="flex article-list--tile">
+<article class="has-image">
+<a href="/summary-codeforces/">
+<div class="article-image">
+<img data-hash="https://yangty-pic.oss-cn-beijing.aliyuncs.com/bg1.webp" data-key="" loading="lazy" src="https://yangty-pic.oss-cn-beijing.aliyuncs.com/bg1.webp"/>
+</div>
+<div class="article-details">
+<h2 class="article-title">Codeforces 比赛日记</h2>
+</div>
+</a>
+</article>
+<article class="has-image">
+<a href="/sol-cf911f/">
+<div class="article-image">
+<img data-hash="https://yangty-pic.oss-cn-beijing.aliyuncs.com/bg6.webp" data-key="" loading="lazy" src="https://yangty-pic.oss-cn-beijing.aliyuncs.com/bg6.webp"/>
+</div>
+<div class="article-details">
+<h2 class="article-title">CF911F Tree Destruction</h2>
+</div>
+</a>
+</article>
+<article class="has-image">
+<a href="/sol-cf715b/">
+<div class="article-image">
+<img data-hash="https://yangty-pic.oss-cn-beijing.aliyuncs.com/bg57.webp" data-key="" loading="lazy" src="https://yangty-pic.oss-cn-beijing.aliyuncs.com/bg57.webp"/>
+</div>
+<div class="article-details">
+<h2 class="article-title">CF715B Complete The Graph</h2>
+</div>
+</a>
+</article>
+<article class="has-image">
+<a href="/sol-cf317c/">
+<div class="article-image">
+<img data-hash="https://yangty-pic.oss-cn-beijing.aliyuncs.com/bg7.webp" data-key="" loading="lazy" src="https://yangty-pic.oss-cn-beijing.aliyuncs.com/bg7.webp"/>
+</div>
+<div class="article-details">
+<h2 class="article-title">CF317C Balance</h2>
+</div>
+</a>
+</article>
+<article class="has-image">
+<a href="/sol-cf113d/">
+<div class="article-image">
+<img data-hash="https://yangty-pic.oss-cn-beijing.aliyuncs.com/bg54.webp" data-key="" loading="lazy" src="https://yangty-pic.oss-cn-beijing.aliyuncs.com/bg54.webp"/>
+</div>
+<div class="article-details">
+<h2 class="article-title">CF113D Museum</h2>
+</div>
+</a>
+</article>
+</div>
+</div>
+</aside>
+<footer class="site-footer">
+<section class="copyright">
+        © 
+        
+            2019 - 
+        
+        2024 清烛的博客
+    </section>
+<section class="powerby">
+        Built with <a href="https://gohugo.io/" rel="noopener" target="_blank">Hugo</a> <br/>
+        主题 <b><a data-version="3.11.0" href="https://github.com/CaiJimmy/hugo-theme-stack" rel="noopener" target="_blank">Stack</a></b> 由 <a href="https://jimmycai.com" rel="noopener" target="_blank">Jimmy</a> 设计
+    </section>
+</footer>
+<div aria-hidden="true" class="pswp" role="dialog" tabindex="-1">
+<div class="pswp__bg"></div>
+<div class="pswp__scroll-wrap">
+<div class="pswp__container">
+<div class="pswp__item"></div>
+<div class="pswp__item"></div>
+<div class="pswp__item"></div>
+</div>
+<div class="pswp__ui pswp__ui--hidden">
+<div class="pswp__top-bar">
+<div class="pswp__counter"></div>
+<button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+<button class="pswp__button pswp__button--share" title="Share"></button>
+<button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+<button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+<div class="pswp__preloader">
+<div class="pswp__preloader__icn">
+<div class="pswp__preloader__cut">
+<div class="pswp__preloader__donut"></div>
+</div>
+</div>
+</div>
+</div>
+<div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+<div class="pswp__share-tooltip"></div>
+</div>
+<button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+</button>
+<button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+</button>
+<div class="pswp__caption">
+<div class="pswp__caption__center"></div>
+</div>
+</div>
+</div>
+</div><script crossorigin="anonymous" defer="" integrity="sha256-ePwmChbbvXbsO02lbM3HoHbSHTHFAeChekF1xKJdleo=" src="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe.min.js">
+</script><script crossorigin="anonymous" defer="" integrity="sha256-UKkzOn/w1mBxRmLLGrSeyB4e1xbrp4xylgAWb3M42pU=" src="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe-ui-default.min.js">
+</script><link crossorigin="anonymous" href="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/default-skin/default-skin.css" integrity="sha256-c0uckgykQ9v5k+IqViZOZKc47Jn7KQil4/MP3ySA3F8=" rel="stylesheet"/><link crossorigin="anonymous" href="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe.css" integrity="sha256-SBLU4vv6CA6lHsZ1XyTdhyjJxCjPif/TRkjnsyGAGnE=" rel="stylesheet"/>
+</main>
+</div>
+<script crossorigin="anonymous" integrity="sha256-5NovOZc4iwiAWTYIFiIM7DxKUXKWvpVEuMEPLzcm5/g=" src="https://cdn.jsdelivr.net/npm/node-vibrant@3.1.5/dist/vibrant.min.js">
+</script><script defer="" src="/ts/main.js" type="text/javascript"></script>
+<script>
+    (function () {
+        const customFont = document.createElement('link');
+        customFont.href = "https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&display=swap";
+
+        customFont.type = "text/css";
+        customFont.rel = "stylesheet";
+
+        document.head.appendChild(customFont);
+    }());
+</script>
+</body>
+</html>

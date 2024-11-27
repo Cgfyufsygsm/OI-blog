@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+    <channel>
+        <title>树套树 on 清烛的博客</title>
+        <link>https://oi.imyangty.com/tags/ds-in-tree-nodes/</link>
+        <description>Recent content in 树套树 on 清烛的博客</description>
+        <generator>Hugo -- gohugo.io</generator>
+        <language>zh-CN</language>
+        <lastBuildDate>Tue, 08 Feb 2022 23:31:11 +0800</lastBuildDate><atom:link href="https://oi.imyangty.com/tags/ds-in-tree-nodes/index.xml" rel="self" type="application/rss+xml" />
+    </channel>
+</rss>

@@ -1,0 +1,140 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+    <channel>
+        <title>文化课 on 清烛的博客</title>
+        <link>https://oi.imyangty.com/tags/%E6%96%87%E5%8C%96%E8%AF%BE/</link>
+        <description>Recent content in 文化课 on 清烛的博客</description>
+        <generator>Hugo -- gohugo.io</generator>
+        <language>zh-CN</language>
+        <lastBuildDate>Thu, 04 Nov 2021 20:44:01 +0800</lastBuildDate><atom:link href="https://oi.imyangty.com/tags/%E6%96%87%E5%8C%96%E8%AF%BE/index.xml" rel="self" type="application/rss+xml" /><item>
+        <title>圆锥曲线杂记</title>
+        <link>https://oi.imyangty.com/note-conic/</link>
+        <pubDate>Thu, 04 Nov 2021 20:44:01 +0800</pubDate>
+        
+        <guid>https://oi.imyangty.com/note-conic/</guid>
+        <description>&lt;img src="https://yangty-pic.oss-cn-beijing.aliyuncs.com/bg55.webp" alt="Featured image of post 圆锥曲线杂记" /&gt;&lt;h2 id=&#34;椭圆&#34;&gt;椭圆&lt;/h2&gt;
+&lt;h3 id=&#34;基本性质&#34;&gt;基本性质&lt;/h3&gt;
+&lt;h4 id=&#34;第一定义&#34;&gt;第一定义&lt;/h4&gt;
+&lt;p&gt;到顶点 &lt;span class=&#34;math inline&#34;&gt;\((-c, 0)\)&lt;/span&gt; 和 &lt;span class=&#34;math inline&#34;&gt;\((c, 0)\)&lt;/span&gt; 的距离之和为常数 &lt;span class=&#34;math inline&#34;&gt;\(2a\)&lt;/span&gt;（&lt;span class=&#34;math inline&#34;&gt;\(a &amp;gt; c\)&lt;/span&gt;）的点的轨迹。 &lt;span class=&#34;math display&#34;&gt;\[
+\frac{x^2}{a} + \frac{y^2}{b} = 1
+\]&lt;/span&gt;&lt;/p&gt;
+&lt;p&gt;&lt;span class=&#34;math inline&#34;&gt;\(a &amp;gt; b &amp;gt; 0\)&lt;/span&gt;。&lt;span class=&#34;math inline&#34;&gt;\(c ^ 2 = a^2 - b^2\)&lt;/span&gt;。半长轴为 &lt;span class=&#34;math inline&#34;&gt;\(a\)&lt;/span&gt;，半短轴为 &lt;span class=&#34;math inline&#34;&gt;\(b\)&lt;/span&gt;，半焦距为 &lt;span class=&#34;math inline&#34;&gt;\(c\)&lt;/span&gt;。&lt;/p&gt;
+&lt;p&gt;离心率 &lt;span class=&#34;math inline&#34;&gt;\(e = \dfrac c a\)&lt;/span&gt;。&lt;/p&gt;
+&lt;h4 id=&#34;第二定义&#34;&gt;第二定义&lt;/h4&gt;
+&lt;p&gt;到 &lt;span class=&#34;math inline&#34;&gt;\(F(c, 0)\)&lt;/span&gt; 与到定直线 &lt;span class=&#34;math inline&#34;&gt;\(x = \dfrac{a^2}{c}\)&lt;/span&gt; 的距离之比为定值 &lt;span class=&#34;math inline&#34;&gt;\(\dfrac ca\)&lt;/span&gt; 的点的轨迹。&lt;/p&gt;
+&lt;p&gt;焦准距 &lt;span class=&#34;math inline&#34;&gt;\(p = \dfrac{b^2}{c}\)&lt;/span&gt;。&lt;strong&gt;到焦点与到准线的距离之比为 &lt;span class=&#34;math inline&#34;&gt;\(e\)&lt;/span&gt;&lt;/strong&gt;。&lt;/p&gt;
+&lt;h4 id=&#34;第三定义&#34;&gt;第三定义&lt;/h4&gt;
+&lt;p&gt;到定点 &lt;span class=&#34;math inline&#34;&gt;\((a, 0)\)&lt;/span&gt; 和 &lt;span class=&#34;math inline&#34;&gt;\((-a, 0)\)&lt;/span&gt; 的斜率乘积为定值 &lt;span class=&#34;math inline&#34;&gt;\(-\dfrac{b^2}{a^2}\)&lt;/span&gt; 的点的轨迹。&lt;/p&gt;
+&lt;p&gt;推广一下：对于任意关于原点对称的点 &lt;span class=&#34;math inline&#34;&gt;\(A(m, n)\)&lt;/span&gt;，&lt;span class=&#34;math inline&#34;&gt;\(B(-m, -n)\)&lt;/span&gt;，上述也是相同的。&lt;/p&gt;
+&lt;h3 id=&#34;直线与椭圆的位置关系&#34;&gt;直线与椭圆的位置关系&lt;/h3&gt;
+&lt;p&gt;&lt;span class=&#34;math inline&#34;&gt;\(y = kx + m\)&lt;/span&gt; 与 &lt;span class=&#34;math inline&#34;&gt;\(\dfrac{x^2}{a} + \dfrac{y^2}{b} = 1\)&lt;/span&gt; 的位置关系：直接联立看 &lt;span class=&#34;math inline&#34;&gt;\(\Delta\)&lt;/span&gt;。&lt;/p&gt;
+&lt;p&gt;直接爆算。傻逼高中数学。&lt;/p&gt;
+&lt;p&gt;椭圆上求点与 &lt;span class=&#34;math inline&#34;&gt;\(l\)&lt;/span&gt; 的距离最小考虑找出切线 &lt;span class=&#34;math inline&#34;&gt;\(l&amp;#39;//l\)&lt;/span&gt;，然后爆算。&lt;/p&gt;
+&lt;h3 id=&#34;弦长问题&#34;&gt;弦长问题&lt;/h3&gt;
+&lt;p&gt;从两点间距离公式进行推导：&lt;/p&gt;
+&lt;p&gt;设 &lt;span class=&#34;math inline&#34;&gt;\(y = kx + m\)&lt;/span&gt; 与 &lt;span class=&#34;math inline&#34;&gt;\(\dfrac{x^2}{a} + \dfrac{y^2}{b} = 1\)&lt;/span&gt; 交于 &lt;span class=&#34;math inline&#34;&gt;\(A\)&lt;/span&gt;、&lt;span class=&#34;math inline&#34;&gt;\(B\)&lt;/span&gt; 两点。&lt;/p&gt;
+&lt;p&gt;则 &lt;span class=&#34;math display&#34;&gt;\[
+\begin{aligned}
+d_{A,B} &amp;amp;= \sqrt{(x_A - x_B)^2 + (y_A - y_B)^2}\\
+&amp;amp;= \sqrt{(1 + k^2)(x_A - x_B)^2}\\
+&amp;amp;= \sqrt{(1 + k^2)}\sqrt{(x_A + x_B)^2 - 4x_Ax_B}
+\end{aligned}
+\]&lt;/span&gt; 或者还有 &lt;span class=&#34;math display&#34;&gt;\[
+\begin{aligned}
+d_{A,B} &amp;amp;= \sqrt{(x_A - x_B)^2 + (y_A - y_B)^2}\\
+&amp;amp;= \sqrt{\left(1 + \frac{1}{k^2}\right)(y_A - y_B)^2}\\
+&amp;amp;= \sqrt{\left(1 + \frac{1}{k^2}\right)}\sqrt{(y_A + y_B)^2 - 4y_Ay_B}
+\end{aligned}
+\]&lt;/span&gt; 考虑将两个方程联立之后得到 &lt;span class=&#34;math inline&#34;&gt;\(Ax^2 + Bx + c = 0\)&lt;/span&gt;，则由 &lt;span class=&#34;math display&#34;&gt;\[
+|x_1 - x_2| = \frac{\sqrt\Delta}{|A|}
+\]&lt;/span&gt; 我们有 &lt;span class=&#34;math display&#34;&gt;\[
+d_{A,B} = \sqrt{1 + k^2}\frac{\sqrt\Delta}{|A|}
+\]&lt;/span&gt; 可以用来解决弦长问题。&lt;/p&gt;
+&lt;h3 id=&#34;中点弦问题&#34;&gt;中点弦问题&lt;/h3&gt;
+&lt;p&gt;已知 &lt;span class=&#34;math inline&#34;&gt;\(AB\)&lt;/span&gt; 是椭圆 &lt;span class=&#34;math inline&#34;&gt;\(\dfrac{x^2}{a} + \dfrac{y^2}{b} = 1\)&lt;/span&gt; 的弦，&lt;span class=&#34;math inline&#34;&gt;\(M(x_0, y_0)\)&lt;/span&gt; 是 &lt;span class=&#34;math inline&#34;&gt;\(AB\)&lt;/span&gt; 中点。求 &lt;span class=&#34;math inline&#34;&gt;\(AB\)&lt;/span&gt; 的斜率 &lt;span class=&#34;math inline&#34;&gt;\(k\)&lt;/span&gt;。&lt;/p&gt;
+&lt;p&gt;点差法：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;点在直线上，联立方程&lt;/li&gt;
+&lt;li&gt;坐标做差，构造中点坐标与斜率的关系。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;&lt;span class=&#34;math display&#34;&gt;\[
+\begin{cases}
+\dfrac{x_A^2}{a^2} + \dfrac{y_A^2}{b^2} = 1\\
+\dfrac{x_B^2}{a^2} + \dfrac{y_B^2}{b^2} = 1
+\end{cases}
+\]&lt;/span&gt;&lt;/p&gt;
+&lt;p&gt;然后作个差： &lt;span class=&#34;math display&#34;&gt;\[
+\begin{aligned}
+\frac{1}{a^2}(x_A^2 - x_B^2) + \frac{1}{b^2}(y_A^2 - y_B^2) &amp;amp;= 0\\
+\frac{1}{a^2}(x_A + x_B)(x_A - x_B) + \frac{1}{b^2}(y_A + y_B)(y_A - y_B) &amp;amp;= 0\\
+\frac{y_A - y_B}{x_A - x_B} &amp;amp;= -\frac{b^2}{a^2}\cdot\frac{x_A + x_B}{y_A + y_B}\\
+k_{AB} = -\frac{b^2}{a^2}\cdot\frac{x_0}{y_0}
+\end{aligned}
+\]&lt;/span&gt; 得到结论 &lt;span class=&#34;math inline&#34;&gt;\(k_{AB} = -\dfrac{b^2}{a^2}\cdot\dfrac{x_0}{y_0}\)&lt;/span&gt;。实操时，写出 &lt;span class=&#34;math display&#34;&gt;\[
+\begin{aligned}
+&amp;amp;\begin{cases}
+\dfrac{x_A^2}{a^2} + \dfrac{y_A^2}{b^2} = 1\\
+\dfrac{x_B^2}{a^2} + \dfrac{y_B^2}{b^2} = 1
+\end{cases}\implies \frac{1}{a^2}(x_A^2 - x_B^2) + \frac{1}{b^2}(y_A^2 - y_B^2) = 0\\
+\implies &amp;amp; k_{AB} = -\dfrac{b^2}{a^2}\cdot\dfrac{x_0}{y_0}
+\end{aligned}
+\]&lt;/span&gt; 即可。&lt;/p&gt;
+&lt;h3 id=&#34;焦点三角形&#34;&gt;焦点三角形&lt;/h3&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;span class=&#34;math inline&#34;&gt;\(C_{\triangle PF_1F_2} = 2a + 2c\)&lt;/span&gt;。&lt;/li&gt;
+&lt;li&gt;&lt;span class=&#34;math inline&#34;&gt;\(l\)&lt;/span&gt; 过 &lt;span class=&#34;math inline&#34;&gt;\(F_1\)&lt;/span&gt; 交椭圆于 &lt;span class=&#34;math inline&#34;&gt;\(A\)&lt;/span&gt;、&lt;span class=&#34;math inline&#34;&gt;\(B\)&lt;/span&gt; 两点，&lt;span class=&#34;math inline&#34;&gt;\(C_{\triangle F_2AB} = 4a\)&lt;/span&gt;。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;设 &lt;span class=&#34;math inline&#34;&gt;\(\ang F_1PF_2 = \theta\)&lt;/span&gt;，&lt;span class=&#34;math inline&#34;&gt;\(\ang PF_1F_2 = \alpha\)&lt;/span&gt;，&lt;span class=&#34;math inline&#34;&gt;\(\ang PF_2F_1 = \beta\)&lt;/span&gt;。&lt;/p&gt;
+&lt;p&gt;则&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;p&gt;&lt;span class=&#34;math inline&#34;&gt;\(S = b^2\tan\dfrac\theta2\)&lt;/span&gt;。&lt;strong&gt;（重要）&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;Proof：考虑用一下余弦定理： $$&lt;/p&gt;
+&lt;span class=&#34;math display&#34;&gt;\[\begin{aligned}
+(2c)^2 &amp;amp;= |PF_1|^2 + |PF_2|^2 - 2|PF_1||PF_2|\cos\theta\\
+|PF_1| + |PF_2| &amp;amp;= 2a\\
+4a^2 &amp;amp;= |PF_1|^2 + |PF_2|^2 + 2|PF_1||PF_2|\\
+
+\end{aligned}\]&lt;/span&gt;
+&lt;p&gt;&lt;span class=&#34;math display&#34;&gt;\[
+第一行减去第三行后即得到
+\]&lt;/span&gt; 4b^2 = 2|PF_1||PF_2| + 2|PF_1||PF_2| &lt;span class=&#34;math display&#34;&gt;\[
+故
+\]&lt;/span&gt; S = |PF_1||PF_2|=b^2 $$&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;&lt;span class=&#34;math inline&#34;&gt;\(e = \dfrac{\sin\theta}{\sin\alpha + \sin\beta}\)&lt;/span&gt;。&lt;/p&gt;
+&lt;p&gt;Proof：考虑正弦定理。 &lt;span class=&#34;math display&#34;&gt;\[
+e = \frac c a = \frac{2c}{2a} = \frac{F_1F_2}{PF_1 + PF_2} = \frac{\sin\theta}{\sin\alpha + \sin\beta}
+\]&lt;/span&gt;&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;&lt;span class=&#34;math inline&#34;&gt;\(|PF_1||PF_2|=\dfrac{2b^2}{1 + \cos\theta}\)&lt;/span&gt;。证明见上。&lt;/p&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id=&#34;焦半径公式&#34;&gt;焦半径公式&lt;/h3&gt;
+&lt;h4 id=&#34;焦半径公式1&#34;&gt;焦半径公式（1）&lt;/h4&gt;
+&lt;p&gt;&lt;span class=&#34;math display&#34;&gt;\[
+|PF_1| = a + ex_0, |PF_2| = a - ex_0
+\]&lt;/span&gt;&lt;/p&gt;
+&lt;p&gt;短的是减，长的是加。&lt;/p&gt;
+&lt;p&gt;推导：考虑椭圆的第二定义，设准线方程为 &lt;span class=&#34;math inline&#34;&gt;\(x = \dfrac {a^2}c\)&lt;/span&gt;，则 &lt;span class=&#34;math inline&#34;&gt;\(d = \dfrac{a^2}c \pm x_0\)&lt;/span&gt;，而 &lt;span class=&#34;math inline&#34;&gt;\(|PF| = ed = a \pm ex_0\)&lt;/span&gt;。&lt;/p&gt;
+&lt;h4 id=&#34;通径&#34;&gt;通径&lt;/h4&gt;
+&lt;p&gt;即 &lt;span class=&#34;math inline&#34;&gt;\(x_0 = c\)&lt;/span&gt;，通径长： &lt;span class=&#34;math display&#34;&gt;\[
+2(a - \dfrac{c^2}a) = \dfrac{2b^2}{a}
+\]&lt;/span&gt;&lt;/p&gt;
+&lt;h4 id=&#34;焦半径公式2&#34;&gt;焦半径公式（2）&lt;/h4&gt;
+&lt;h2 id=&#34;双曲线&#34;&gt;双曲线&lt;/h2&gt;
+&lt;h3 id=&#34;基本性质-1&#34;&gt;基本性质&lt;/h3&gt;
+&lt;p&gt;定义：到两定点 &lt;span class=&#34;math inline&#34;&gt;\(F_1\)&lt;/span&gt;、&lt;span class=&#34;math inline&#34;&gt;\(F_2\)&lt;/span&gt; 距离之差的绝对值 &lt;span class=&#34;math inline&#34;&gt;\(2a\)&lt;/span&gt; 为定值的点的轨迹。其中 &lt;span class=&#34;math inline&#34;&gt;\(2a &amp;lt; |F_1F_2|\)&lt;/span&gt;。&lt;/p&gt;
+&lt;p&gt;标准方程： &lt;span class=&#34;math display&#34;&gt;\[
+\frac{x^2}{a^2} - \frac{y^2}{b^2} = 1
+\]&lt;/span&gt; 其中 &lt;span class=&#34;math inline&#34;&gt;\(a^2 + b^2 = c^2\)&lt;/span&gt;，&lt;span class=&#34;math inline&#34;&gt;\(F_1(c, 0)\)&lt;/span&gt;，&lt;span class=&#34;math inline&#34;&gt;\(F_2(-c, 0)\)&lt;/span&gt;。&lt;/p&gt;
+&lt;p&gt;若 &lt;span class=&#34;math inline&#34;&gt;\(2a &amp;gt; |F_1F_2|\)&lt;/span&gt;，则其为射线；若不带绝对值，则为双曲线的一支。&lt;/p&gt;
+&lt;p&gt;焦点在 &lt;span class=&#34;math inline&#34;&gt;\(y\)&lt;/span&gt; 轴上则为 &lt;span class=&#34;math display&#34;&gt;\[
+\frac{y^2}{a^2} - \frac{x^2}{b^2} = 1
+\]&lt;/span&gt; 谁前面的系数是正的，焦点就在哪个轴上面。实操中可以设 &lt;span class=&#34;math inline&#34;&gt;\(mx^2 + ny^2 = 1(mn &amp;lt; 0)\)&lt;/span&gt; 来避免可能的分类讨论。&lt;/p&gt;
+&lt;h2 id=&#34;抛物线&#34;&gt;抛物线&lt;/h2&gt;
+&lt;h3 id=&#34;基本性质-2&#34;&gt;基本性质&lt;/h3&gt;
+&lt;p&gt;定义：到一定直线 &lt;span class=&#34;math inline&#34;&gt;\(l\)&lt;/span&gt; 与到 &lt;span class=&#34;math inline&#34;&gt;\(P\)&lt;/span&gt; 距离相等的点的轨迹叫做抛物线。&lt;span class=&#34;math inline&#34;&gt;\(\notin l\)&lt;/span&gt;&lt;/p&gt;
+&lt;h2 id=&#34;基本定义&#34;&gt;基本定义&lt;/h2&gt;
+&lt;h3 id=&#34;section&#34;&gt;&lt;/h3&gt;
+</description>
+        </item>
+        
+    </channel>
+</rss>

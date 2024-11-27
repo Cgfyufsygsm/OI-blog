@@ -1,0 +1,1866 @@
+<!DOCTYPE html>
+<html dir="ltr" lang="zh-CN">
+<head><meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1" name="viewport"/><meta content="前言 CSP 前颓废的成果。本文的目的在于测试出各 IO 方式的效率并进行粗略的比对并选择使用。
+控制变量似乎不是很严谨（
+但是能得出大概的结论（
+如果发现有写的不对的地方欢迎直接在评论区 D 我（
+或者加我 QQ 也🉑以。😘
+输入效率测试 目前我们考虑读入 \(10^7\) 个正整数。
+目前大家熟知的读入方式有下面若干种：C 库的 scanf() 函数，std::cin，手写的 getchar() 版本快读以及 fread 版的快读。
+一般我们认为，cin 很慢，而 scanf 一般被认为比较快，手写的 fread 版是最快的。但是 cin 有种操作叫做关闭流同步：
+ios::sync_with_stdio(false); cin.tie(NULL); cin 关闭流同步之后的效率如何？getchar() 快读和 scanf() 的效率如何？
+我在本机（Intel Core i5-7200U @2.5Ghz，Windows 10 LTSC，GCC 9.2.0）上进行了如下的测试，得到以下测试结果，其中前十个 testcase 没有启用 -O2，后十个在编译时启用了 -O2 选项，取了平均值后的结果如下（单位为 ms）：
+case scanf cin cin2 getchar fread avr 9561.3 19845.9 2733.5 3490.7 470.7 avr_O2 9277.3 18647.6 2539.7 3065.2 160." name="description"/><title>几种 IO 方式效率的实验</title>
+<link href="https://oi.imyangty.com/note-iotest/" rel="canonical"/>
+<link href="/scss/style.min.a5821f3d3ab84ce5a0ac21477e347a2e0ca00292e398d16c5e8e36ded6e35a23.css" rel="stylesheet"/><meta content="几种 IO 方式效率的实验" property="og:title"/>
+<meta content="前言 CSP 前颓废的成果。本文的目的在于测试出各 IO 方式的效率并进行粗略的比对并选择使用。
+控制变量似乎不是很严谨（
+但是能得出大概的结论（
+如果发现有写的不对的地方欢迎直接在评论区 D 我（
+或者加我 QQ 也🉑以。😘
+输入效率测试 目前我们考虑读入 \(10^7\) 个正整数。
+目前大家熟知的读入方式有下面若干种：C 库的 scanf() 函数，std::cin，手写的 getchar() 版本快读以及 fread 版的快读。
+一般我们认为，cin 很慢，而 scanf 一般被认为比较快，手写的 fread 版是最快的。但是 cin 有种操作叫做关闭流同步：
+ios::sync_with_stdio(false); cin.tie(NULL); cin 关闭流同步之后的效率如何？getchar() 快读和 scanf() 的效率如何？
+我在本机（Intel Core i5-7200U @2.5Ghz，Windows 10 LTSC，GCC 9.2.0）上进行了如下的测试，得到以下测试结果，其中前十个 testcase 没有启用 -O2，后十个在编译时启用了 -O2 选项，取了平均值后的结果如下（单位为 ms）：
+case scanf cin cin2 getchar fread avr 9561.3 19845.9 2733.5 3490.7 470.7 avr_O2 9277.3 18647.6 2539.7 3065.2 160." property="og:description"/>
+<meta content="https://oi.imyangty.com/note-iotest/" property="og:url"/>
+<meta content="清烛的博客" property="og:site_name"/>
+<meta content="article" property="og:type"/><meta content="Post" property="article:section"/><meta content="OI" property="article:tag"/><meta content="笔记" property="article:tag"/><meta content="2021-10-21T17:29:30+08:00" property="article:published_time"/><meta content="2021-10-21T17:29:30+08:00" property="article:modified_time"/><meta content="https://yangty-pic.oss-cn-beijing.aliyuncs.com/bg16.webp" property="og:image"/>
+<meta content="几种 IO 方式效率的实验" name="twitter:title"/>
+<meta content="前言 CSP 前颓废的成果。本文的目的在于测试出各 IO 方式的效率并进行粗略的比对并选择使用。
+控制变量似乎不是很严谨（
+但是能得出大概的结论（
+如果发现有写的不对的地方欢迎直接在评论区 D 我（
+或者加我 QQ 也🉑以。😘
+输入效率测试 目前我们考虑读入 \(10^7\) 个正整数。
+目前大家熟知的读入方式有下面若干种：C 库的 scanf() 函数，std::cin，手写的 getchar() 版本快读以及 fread 版的快读。
+一般我们认为，cin 很慢，而 scanf 一般被认为比较快，手写的 fread 版是最快的。但是 cin 有种操作叫做关闭流同步：
+ios::sync_with_stdio(false); cin.tie(NULL); cin 关闭流同步之后的效率如何？getchar() 快读和 scanf() 的效率如何？
+我在本机（Intel Core i5-7200U @2.5Ghz，Windows 10 LTSC，GCC 9.2.0）上进行了如下的测试，得到以下测试结果，其中前十个 testcase 没有启用 -O2，后十个在编译时启用了 -O2 选项，取了平均值后的结果如下（单位为 ms）：
+case scanf cin cin2 getchar fread avr 9561.3 19845.9 2733.5 3490.7 470.7 avr_O2 9277.3 18647.6 2539.7 3065.2 160." name="twitter:description"/><meta content="summary_large_image" name="twitter:card"/>
+<meta content="https://yangty-pic.oss-cn-beijing.aliyuncs.com/bg16.webp" name="twitter:image"/>
+<link href="https://q1.qlogo.cn/g?b=qq&amp;nk=375836877&amp;s=5" rel="shortcut icon"/>
+<link href="https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.5.1/build/styles/github-dark-dimmed.min.css" rel="stylesheet"/>
+<script src="https://cdn.jsdelivr.net/gh/highlightjs/cdn-release/build/highlight.min.js"></script>
+<script>hljs.highlightAll();</script>
+</head>
+<body class="article-page">
+<script>
+        (function() {
+            const colorSchemeKey = 'StackColorScheme';
+            if(!localStorage.getItem(colorSchemeKey)){
+                localStorage.setItem(colorSchemeKey, "auto");
+            }
+        })();
+    </script><script>
+    (function() {
+        const colorSchemeKey = 'StackColorScheme';
+        const colorSchemeItem = localStorage.getItem(colorSchemeKey);
+        const supportDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches === true;
+
+        if (colorSchemeItem == 'dark' || colorSchemeItem === 'auto' && supportDarkMode) {
+            
+
+            document.documentElement.dataset.scheme = 'dark';
+        } else {
+            document.documentElement.dataset.scheme = 'light';
+        }
+    })();
+</script>
+<div class="container main-container flex on-phone--column extended"><aside class="sidebar left-sidebar sticky">
+<button aria-label="切换菜单" class="hamburger hamburger--spin" id="toggle-menu" type="button">
+<span class="hamburger-box">
+<span class="hamburger-inner"></span>
+</span>
+</button>
+<header>
+<figure class="site-avatar">
+<a href="/">
+<img alt="Avatar" class="site-logo" height="300" loading="lazy" src="/img/avatar_huea3ce2119467b51fdd2a81393644a76d_51594_300x0_resize_q75_box.jpg" width="300"/>
+</a>
+<span class="emoji">😅</span>
+</figure>
+<div class="site-meta">
+<h1 class="site-name"><a href="/">清烛的博客</a></h1>
+<h2 class="site-description">烟火已谢，笙歌未停</h2>
+</div>
+</header><ol class="social-menu">
+<li>
+<a href="mailto:i@imyangty.com" target="_blank" title="email">
+<svg class="icon icon-tabler icon-tabler-mail" fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" viewbox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+<path d="M0 0h24v24H0z" fill="none" stroke="none"></path>
+<rect height="14" rx="2" width="18" x="3" y="5"></rect>
+<polyline points="3 7 12 13 21 7"></polyline>
+</svg>
+</a>
+</li>
+<li>
+<a href="https://github.com/Cgfyufsygsm" target="_blank" title="GitHub">
+<svg class="icon icon-tabler icon-tabler-brand-github" fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+<path d="M0 0h24v24H0z" fill="none" stroke="none"></path>
+<path d="M9 19c-4.3 1.4 -4.3 -2.5 -6 -3m12 5v-3.5c0 -1 .1 -1.4 -.5 -2c2.8 -.3 5.5 -1.4 5.5 -6a4.6 4.6 0 0 0 -1.3 -3.2a4.2 4.2 0 0 0 -.1 -3.2s-1.1 -.3 -3.5 1.3a12.3 12.3 0 0 0 -6.2 0c-2.4 -1.6 -3.5 -1.3 -3.5 -1.3a4.2 4.2 0 0 0 -.1 3.2a4.6 4.6 0 0 0 -1.3 3.2c0 4.6 2.7 5.7 5.5 6c-.6 .6 -.6 1.2 -.5 2v3.5"></path>
+</svg>
+</a>
+</li>
+<li>
+<a href="https://t.me/Cgfyufsygsm" target="_blank" title="Telegram">
+<svg class="icon icon-tabler icon-tabler-brand-telegram" fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" viewbox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+<path d="M0 0h24v24H0z" fill="none" stroke="none"></path>
+<path d="M15 10l-4 4l6 6l4 -16l-18 7l4 2l2 6l3 -4"></path>
+</svg>
+</a>
+</li>
+<li>
+<a href="https://twitter.com/Cgfyufsygsm" target="_blank" title="Twitter">
+<svg class="icon icon-tabler icon-tabler-brand-twitter" fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+<path d="M0 0h24v24H0z" fill="none" stroke="none"></path>
+<path d="M22 4.01c-1 .49 -1.98 .689 -3 .99c-1.121 -1.265 -2.783 -1.335 -4.38 -.737s-2.643 2.06 -2.62 3.737v1c-3.245 .083 -6.135 -1.395 -8 -4c0 0 -4.182 7.433 4 11c-1.872 1.247 -3.739 2.088 -6 2c3.308 1.803 6.913 2.423 10.034 1.517c3.58 -1.04 6.522 -3.723 7.651 -7.742a13.84 13.84 0 0 0 .497 -3.753c-.002 -.249 1.51 -2.772 1.818 -4.013z"></path>
+</svg>
+</a>
+</li>
+</ol><ol class="menu" id="main-menu">
+<li>
+<a href="/">
+<svg class="icon icon-tabler icon-tabler-home" fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+<path d="M0 0h24v24H0z" stroke="none"></path>
+<polyline points="5 12 3 12 12 3 21 12 19 12"></polyline>
+<path d="M5 12v7a2 2 0 0 0 2 2h10a2 2 0 0 0 2 -2v-7"></path>
+<path d="M9 21v-6a2 2 0 0 1 2 -2h2a2 2 0 0 1 2 2v6"></path>
+</svg>
+<span>主页</span>
+</a>
+</li>
+<li>
+<a href="/about/">
+<svg class="icon icon-tabler icon-tabler-user" fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+<path d="M0 0h24v24H0z" stroke="none"></path>
+<circle cx="12" cy="7" r="4"></circle>
+<path d="M6 21v-2a4 4 0 0 1 4 -4h4a4 4 0 0 1 4 4v2"></path>
+</svg>
+<span>关于</span>
+</a>
+</li>
+<li>
+<a href="/idx/">
+<svg class="icon icon-tabler icon-tabler-hash" fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+<path d="M0 0h24v24H0z" stroke="none"></path>
+<line x1="5" x2="19" y1="9" y2="9"></line>
+<line x1="5" x2="19" y1="15" y2="15"></line>
+<line x1="11" x2="7" y1="4" y2="20"></line>
+<line x1="17" x2="13" y1="4" y2="20"></line>
+</svg>
+<span>导航</span>
+</a>
+</li>
+<li>
+<a href="/archives/">
+<svg class="icon icon-tabler icon-tabler-archive" fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+<path d="M0 0h24v24H0z" stroke="none"></path>
+<rect height="4" rx="2" width="18" x="3" y="4"></rect>
+<path d="M5 8v10a2 2 0 0 0 2 2h10a2 2 0 0 0 2 -2v-10"></path>
+<line x1="10" x2="14" y1="12" y2="12"></line>
+</svg>
+<span>归档</span>
+</a>
+</li>
+<li>
+<a href="/search/">
+<svg class="icon icon-tabler icon-tabler-search" fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+<path d="M0 0h24v24H0z" stroke="none"></path>
+<circle cx="10" cy="10" r="7"></circle>
+<line x1="21" x2="15" y1="21" y2="15"></line>
+</svg>
+<span>搜索</span>
+</a>
+</li>
+<li>
+<a href="/friends/">
+<svg class="icon icon-tabler icon-tabler-link" fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+<path d="M0 0h24v24H0z" stroke="none"></path>
+<path d="M10 14a3.5 3.5 0 0 0 5 0l4 -4a3.5 3.5 0 0 0 -5 -5l-.5 .5"></path>
+<path d="M14 10a3.5 3.5 0 0 0 -5 0l-4 4a3.5 3.5 0 0 0 5 5l.5 -.5"></path>
+</svg>
+<span>友链</span>
+</a>
+</li>
+<li>
+<a href="https://blog.imyangty.com" target="_blank">
+<svg class="icon icon-tabler icon-tabler-home" fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+<path d="M0 0h24v24H0z" stroke="none"></path>
+<polyline points="5 12 3 12 12 3 21 12 19 12"></polyline>
+<path d="M5 12v7a2 2 0 0 0 2 2h10a2 2 0 0 0 2 -2v-7"></path>
+<path d="M9 21v-6a2 2 0 0 1 2 -2h2a2 2 0 0 1 2 2v6"></path>
+</svg>
+<span>主博客</span>
+</a>
+</li>
+<div class="menu-bottom-section">
+<li id="dark-mode-toggle">
+<svg class="icon icon-tabler icon-tabler-toggle-left" fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+<path d="M0 0h24v24H0z" stroke="none"></path>
+<circle cx="8" cy="12" r="2"></circle>
+<rect height="12" rx="6" width="20" x="2" y="6"></rect>
+</svg>
+<svg class="icon icon-tabler icon-tabler-toggle-right" fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+<path d="M0 0h24v24H0z" stroke="none"></path>
+<circle cx="16" cy="12" r="2"></circle>
+<rect height="12" rx="6" width="20" x="2" y="6"></rect>
+</svg>
+<span>暗色模式</span>
+</li>
+</div>
+</ol>
+</aside>
+<main class="main full-width">
+<article class="has-image main-article">
+<header class="article-header">
+<div class="article-image">
+<a href="/note-iotest/">
+<img alt="Featured image of post 几种 IO 方式效率的实验" loading="lazy" src="https://yangty-pic.oss-cn-beijing.aliyuncs.com/bg16.webp"/>
+</a>
+</div>
+<div class="article-details">
+<header class="article-category">
+<a href="/categories/oi/">
+                OI
+            </a>
+<a href="/categories/note/">
+                笔记
+            </a>
+</header>
+<div class="article-title-wrapper">
+<h2 class="article-title">
+<a href="/note-iotest/">几种 IO 方式效率的实验</a>
+</h2>
+</div>
+<footer class="article-time">
+<div>
+<svg class="icon icon-tabler icon-tabler-calendar-time" fill="none" height="56" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="56" xmlns="http://www.w3.org/2000/svg">
+<path d="M0 0h24v24H0z" stroke="none"></path>
+<path d="M11.795 21h-6.795a2 2 0 0 1 -2 -2v-12a2 2 0 0 1 2 -2h12a2 2 0 0 1 2 2v4"></path>
+<circle cx="18" cy="18" r="4"></circle>
+<path d="M15 3v4"></path>
+<path d="M7 3v4"></path>
+<path d="M3 11h16"></path>
+<path d="M18 16.496v1.504l1 1"></path>
+</svg>
+<time class="article-time--published">Oct 21, 2021</time>
+</div>
+<div>
+<svg class="icon icon-tabler icon-tabler-clock" fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+<path d="M0 0h24v24H0z" stroke="none"></path>
+<circle cx="12" cy="12" r="9"></circle>
+<polyline points="12 7 12 12 15 15"></polyline>
+</svg>
+<time class="article-time--reading">
+                    阅读时长: 10 分钟
+                </time>
+</div>
+</footer>
+</div>
+</header>
+<section class="article-content">
+<h2 id="前言">前言</h2>
+<p>CSP 前颓废的成果。本文的目的在于测试出各 IO 方式的效率并进行粗略的比对并选择使用。</p>
+<p>控制变量似乎不是很严谨（</p>
+<p>但是能得出大概的结论（</p>
+<p>如果发现有写的不对的地方欢迎直接在评论区 D 我（</p>
+<p>或者加我 QQ 也🉑以。😘</p>
+<h2 id="输入效率测试">输入效率测试</h2>
+<p>目前我们考虑读入 <span class="math inline">\(10^7\)</span> 个正整数。</p>
+<p>目前大家熟知的读入方式有下面若干种：C 库的 <code>scanf()</code> 函数，<code>std::cin</code>，手写的 <code>getchar()</code> 版本快读以及 <code>fread</code> 版的快读。</p>
+<p>一般我们认为，<code>cin</code> 很慢，而 <code>scanf</code> 一般被认为比较快，手写的 <code>fread</code> 版是最快的。但是 <code>cin</code> 有种操作叫做关闭流同步：</p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode cpp"><code class="sourceCode cpp"><span id="cb1-1"><a aria-hidden="true" href="#cb1-1"></a>ios::sync_with_stdio(<span class="kw">false</span>);</span>
+<span id="cb1-2"><a aria-hidden="true" href="#cb1-2"></a>cin.tie(NULL);</span></code></pre></div>
+<p><code>cin</code> 关闭流同步之后的效率如何？<code>getchar()</code> 快读和 <code>scanf()</code> 的效率如何？</p>
+<p>我在本机（Intel Core i5-7200U <span class="citation" data-cites="2.5Ghz">@2.5Ghz</span>，Windows 10 LTSC，GCC 9.2.0）上进行了如下的测试，得到以下测试结果，其中前十个 testcase 没有启用 <code>-O2</code>，后十个在编译时启用了 <code>-O2</code> 选项，取了平均值后的结果如下（单位为 ms）：</p>
+<div class="table-wrapper"><table>
+<thead>
+<tr class="header">
+<th style="text-align: center;">case</th>
+<th style="text-align: center;">scanf</th>
+<th style="text-align: center;">cin</th>
+<th style="text-align: center;">cin2</th>
+<th style="text-align: center;">getchar</th>
+<th style="text-align: center;">fread</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: center;">avr</td>
+<td style="text-align: center;">9561.3</td>
+<td style="text-align: center;">19845.9</td>
+<td style="text-align: center;">2733.5</td>
+<td style="text-align: center;">3490.7</td>
+<td style="text-align: center;">470.7</td>
+</tr>
+<tr class="even">
+<td style="text-align: center;">avr_O2</td>
+<td style="text-align: center;">9277.3</td>
+<td style="text-align: center;">18647.6</td>
+<td style="text-align: center;">2539.7</td>
+<td style="text-align: center;">3065.2</td>
+<td style="text-align: center;">160.8</td>
+</tr>
+</tbody>
+</table></div>
+<p>可见，在本机的平台下，<strong><code>cin</code> 关闭流同步后竟然有不俗的表现</strong>，甚至可以和 <code>getchar</code> 版的快读媲美，但是 <code>fread</code> 吊打一切，在开了 <code>-O2</code> 的情况下更加明显。</p>
+<p>随后我在我的另一台电脑（AMD Ryzen 5 2600 <span class="citation" data-cites="3.40Ghz">@3.40Ghz</span>，Windows 10 LTSC，GCC 4.8.0）上进行了同样的测试，得到下面的结果：</p>
+<div class="table-wrapper"><table>
+<thead>
+<tr class="header">
+<th style="text-align: center;"><strong>case</strong></th>
+<th style="text-align: center;"><strong>scanf</strong></th>
+<th style="text-align: center;"><strong>cin</strong></th>
+<th style="text-align: center;"><strong>cin2</strong></th>
+<th style="text-align: center;"><strong>getchar</strong></th>
+<th style="text-align: center;"><strong>fread</strong></th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: center;">avr</td>
+<td style="text-align: center;">5746.9</td>
+<td style="text-align: center;">6426.4</td>
+<td style="text-align: center;">1661.2</td>
+<td style="text-align: center;">1468.7</td>
+<td style="text-align: center;">299</td>
+</tr>
+<tr class="even">
+<td style="text-align: center;">avr_O2</td>
+<td style="text-align: center;">5734.5</td>
+<td style="text-align: center;">6368.8</td>
+<td style="text-align: center;">1639.1</td>
+<td style="text-align: center;">1401.4</td>
+<td style="text-align: center;">98.6</td>
+</tr>
+</tbody>
+</table></div>
+<p>发现在不同的平台上，<code>cin</code> 的效率有所不一，但不关闭流同步时必然慢于 <code>scanf</code>，但关闭流同步后表现十分良好，速度相当快，但是时间仍为 <code>fread</code> 的五倍以上。</p>
+<p>接下来在虚拟机内的 NOI Linux 2.0 内进行测试，编译器为 GCC 9.3.0，得到下面的结果（单位 s）：</p>
+<div class="table-wrapper"><table>
+<thead>
+<tr class="header">
+<th style="text-align: center;"><strong>case</strong></th>
+<th style="text-align: center;"><strong>scanf</strong></th>
+<th style="text-align: center;"><strong>cin</strong></th>
+<th style="text-align: center;"><strong>cin2</strong></th>
+<th style="text-align: center;"><strong>getchar</strong></th>
+<th style="text-align: center;"><strong>fread</strong></th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: center;">avr</td>
+<td style="text-align: center;">1.5291</td>
+<td style="text-align: center;">2.8893</td>
+<td style="text-align: center;">0.675</td>
+<td style="text-align: center;">0.5305</td>
+<td style="text-align: center;">0.8525</td>
+</tr>
+<tr class="even">
+<td style="text-align: center;">avr_O2</td>
+<td style="text-align: center;">0.9605</td>
+<td style="text-align: center;">2.5989</td>
+<td style="text-align: center;">0.5905</td>
+<td style="text-align: center;">0.2427</td>
+<td style="text-align: center;">0.0863</td>
+</tr>
+</tbody>
+</table></div>
+<p>然后惊奇的发现，<code>fread</code> 居然比 <code>cin</code> 关流同步后还慢（可能是虚拟机的锅）???但是开 <code>-O2</code> 之后仍旧吊打全场。</p>
+<p>综上，我们有以下结论：</p>
+<ul>
+<li>不同平台/编译器版本下，各种读入方式的效率会有微小的差异。</li>
+<li><strong>千万不要用不关流同步的 <code>cin</code>，相当的慢</strong>。</li>
+<li>IO 量不是特别大的时候可以使用 <code>scanf</code>，当然关流同步的 <code>cin</code> 会有更优的表现。</li>
+<li>IO 量十分巨大的时候可以考虑 <code>cin</code> 关流同步或者 <code>fread</code> 版快读。</li>
+</ul>
+<h2 id="输出效率测试">输出效率测试</h2>
+<p>考虑输出 <span class="math inline">\(10^7\)</span> 个正整数，我们一般使用 <code>printf</code>，<code>cout</code>，<code>putchar</code> 或者 <code>fwrite</code> 等方式，类似上面的，我们先用本机测试（单位 ms）：</p>
+<div class="table-wrapper"><table>
+<thead>
+<tr class="header">
+<th style="text-align: center;"><strong>case</strong></th>
+<th style="text-align: center;"><strong>printf</strong></th>
+<th style="text-align: center;"><strong>cout</strong></th>
+<th style="text-align: center;"><strong>cout_endl</strong></th>
+<th style="text-align: center;"><strong>putchar</strong></th>
+<th style="text-align: center;"><strong>fwrite</strong></th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: center;">avr</td>
+<td style="text-align: center;">4101.7</td>
+<td style="text-align: center;">1724.4</td>
+<td style="text-align: center;">35893.1</td>
+<td style="text-align: center;">3432.5</td>
+<td style="text-align: center;">3080.6</td>
+</tr>
+<tr class="even">
+<td style="text-align: center;">avr_O2</td>
+<td style="text-align: center;">3684.5</td>
+<td style="text-align: center;">1463.5</td>
+<td style="text-align: center;">31412.1</td>
+<td style="text-align: center;">3046.3</td>
+<td style="text-align: center;">2644.3</td>
+</tr>
+</tbody>
+</table></div>
+<p>其中 cout_endl 是每输出一个数字用 <code>endl</code> 换行。可以发现几种输出方式的效率差别不是特别大，但是由于 <code>endl</code> 每次会刷新缓冲区，所以会非常的慢，所以需要避免 <code>cout &lt;&lt; n &lt;&lt; endl</code> 这种写法。</p>
+<p>同样附上 AMD 的测试结果：</p>
+<div class="table-wrapper"><table>
+<thead>
+<tr class="header">
+<th style="text-align: center;"><strong>case</strong></th>
+<th style="text-align: center;"><strong>printf</strong></th>
+<th style="text-align: center;"><strong>cout</strong></th>
+<th style="text-align: center;"><strong>cout_endl</strong></th>
+<th style="text-align: center;"><strong>putchar</strong></th>
+<th style="text-align: center;"><strong>fwrite</strong></th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: center;">avr</td>
+<td style="text-align: center;">16860.8</td>
+<td style="text-align: center;">1035.9</td>
+<td style="text-align: center;">40743.6</td>
+<td style="text-align: center;">1709.7</td>
+<td style="text-align: center;">1584.7</td>
+</tr>
+<tr class="even">
+<td style="text-align: center;">avr_O2</td>
+<td style="text-align: center;">16645.8</td>
+<td style="text-align: center;">990</td>
+<td style="text-align: center;">39787.3</td>
+<td style="text-align: center;">1516.3</td>
+<td style="text-align: center;">1359.9</td>
+</tr>
+</tbody>
+</table></div>
+<p>可见不同平台的差异还是存在的。但 <code>cout</code> 的速度依旧可观。</p>
+<div class="table-wrapper"><table>
+<thead>
+<tr class="header">
+<th style="text-align: center;"><strong>case</strong></th>
+<th style="text-align: center;"><strong>printf</strong></th>
+<th style="text-align: center;"><strong>cout</strong></th>
+<th style="text-align: center;"><strong>cout_endl</strong></th>
+<th style="text-align: center;"><strong>putchar</strong></th>
+<th style="text-align: center;"><strong>fwrite</strong></th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: center;">avr</td>
+<td style="text-align: center;">814.5</td>
+<td style="text-align: center;">933.6</td>
+<td style="text-align: center;">15801</td>
+<td style="text-align: center;">1007.7</td>
+<td style="text-align: center;">957.5</td>
+</tr>
+<tr class="even">
+<td style="text-align: center;">avr_O2</td>
+<td style="text-align: center;">830.2</td>
+<td style="text-align: center;">945.3</td>
+<td style="text-align: center;">16029.3</td>
+<td style="text-align: center;">476.4</td>
+<td style="text-align: center;">442.6</td>
+</tr>
+</tbody>
+</table></div>
+<p>结论：</p>
+<ul>
+<li>部分平台上 printf 的表现并不是很好。</li>
+<li>与 <code>cin</code> 相反，<strong><code>cout</code> 很快。</strong>比想象中的快。</li>
+<li><code>fwrite</code> 并无特别明显的优势，但开了 <code>-O2</code> 之后效率会有所提升。</li>
+</ul>
+<h2 id="后记">后记</h2>
+<p>这个不是很严谨的小实验告诉了我们在 <strong>IO 量极其巨大</strong>的时候各种 IO 方式的效率差别。但需要注意的是，当数据规模在十万级别及以下时，IO 常数并不是瓶颈，其运行时间都差不多，只需记住不要使用不关闭流同步的 <code>cin</code> 和 <code>endl</code> 即可。</p>
+<p>附自己的 IO 模板：</p>
+<div class="sourceCode" id="cb2"><pre class="sourceCode cpp"><code class="sourceCode cpp"><span id="cb2-1"><a aria-hidden="true" href="#cb2-1"></a><span class="pp">#include </span><span class="im">&lt;cstdio&gt;</span></span>
+<span id="cb2-2"><a aria-hidden="true" href="#cb2-2"></a><span class="pp">#include </span><span class="im">&lt;cctype&gt;</span></span>
+<span id="cb2-3"><a aria-hidden="true" href="#cb2-3"></a><span class="pp">#define il </span><span class="kw">inline</span></span>
+<span id="cb2-4"><a aria-hidden="true" href="#cb2-4"></a><span class="pp">#define FOR</span>(i,<span class="pp"> </span>a,<span class="pp"> </span>b)<span class="pp"> </span><span class="cf">for</span><span class="pp"> </span>(<span class="dt">int</span><span class="pp"> </span>i<span class="pp"> </span>=<span class="pp"> </span>(a);<span class="pp"> </span>i<span class="pp"> </span>&lt;=<span class="pp"> </span>(b);<span class="pp"> </span>++i)</span>
+<span id="cb2-5"><a aria-hidden="true" href="#cb2-5"></a><span class="pp">#define DEC</span>(i,<span class="pp"> </span>a,<span class="pp"> </span>b)<span class="pp"> </span><span class="cf">for</span><span class="pp"> </span>(<span class="dt">int</span><span class="pp"> </span>i<span class="pp"> </span>=<span class="pp"> </span>(a);<span class="pp"> </span>i<span class="pp"> </span>&gt;=<span class="pp"> </span>(b);<span class="pp"> </span>--i)</span>
+<span id="cb2-6"><a aria-hidden="true" href="#cb2-6"></a></span>
+<span id="cb2-7"><a aria-hidden="true" href="#cb2-7"></a><span class="kw">namespace</span> fastIO {</span>
+<span id="cb2-8"><a aria-hidden="true" href="#cb2-8"></a><span class="at">const</span> <span class="dt">int</span> maxc = <span class="dv">1</span> &lt;&lt; <span class="dv">23</span>;</span>
+<span id="cb2-9"><a aria-hidden="true" href="#cb2-9"></a><span class="dt">char</span> ibuf[maxc], *__p1 = ibuf, *__p2 = ibuf;</span>
+<span id="cb2-10"><a aria-hidden="true" href="#cb2-10"></a>il <span class="dt">char</span> getchar() {<span class="cf">return</span> __p1 == __p2 &amp;&amp; (__p2 = (__p1 = ibuf) + fread(ibuf, <span class="dv">1</span>, maxc, stdin), __p1 == __p2) ? EOF : *__p1++;}</span>
+<span id="cb2-11"><a aria-hidden="true" href="#cb2-11"></a><span class="kw">template</span>&lt;<span class="kw">typename</span> T&gt; <span class="dt">void</span> read(T &amp;n) {</span>
+<span id="cb2-12"><a aria-hidden="true" href="#cb2-12"></a>    <span class="dt">int</span> x = <span class="dv">0</span>; n = <span class="dv">0</span>;</span>
+<span id="cb2-13"><a aria-hidden="true" href="#cb2-13"></a>    <span class="dt">char</span> c = getchar();</span>
+<span id="cb2-14"><a aria-hidden="true" href="#cb2-14"></a>    <span class="cf">while</span> (!isdigit(c))</span>
+<span id="cb2-15"><a aria-hidden="true" href="#cb2-15"></a>        x |= (c == <span class="ch">'-'</span>), c = getchar();</span>
+<span id="cb2-16"><a aria-hidden="true" href="#cb2-16"></a>    <span class="cf">while</span> (isdigit(c))</span>
+<span id="cb2-17"><a aria-hidden="true" href="#cb2-17"></a>        n = n * <span class="dv">10</span> + c - <span class="ch">'0'</span>, c = getchar();</span>
+<span id="cb2-18"><a aria-hidden="true" href="#cb2-18"></a>    n = x ? -n : n;</span>
+<span id="cb2-19"><a aria-hidden="true" href="#cb2-19"></a>}</span>
+<span id="cb2-20"><a aria-hidden="true" href="#cb2-20"></a><span class="dt">void</span> read(<span class="dt">char</span> *s) {</span>
+<span id="cb2-21"><a aria-hidden="true" href="#cb2-21"></a>    <span class="dt">int</span> p = <span class="dv">0</span>;</span>
+<span id="cb2-22"><a aria-hidden="true" href="#cb2-22"></a>    <span class="dt">char</span> c = getchar();</span>
+<span id="cb2-23"><a aria-hidden="true" href="#cb2-23"></a>    <span class="cf">while</span> (!isdigit(c) &amp;&amp; !isalpha(c)) c = getchar();</span>
+<span id="cb2-24"><a aria-hidden="true" href="#cb2-24"></a>    <span class="cf">while</span> (isalpha(c) || isdigit(c)) s[p++] = c, c = getchar();</span>
+<span id="cb2-25"><a aria-hidden="true" href="#cb2-25"></a>    <span class="cf">return</span>;</span>
+<span id="cb2-26"><a aria-hidden="true" href="#cb2-26"></a>}</span>
+<span id="cb2-27"><a aria-hidden="true" href="#cb2-27"></a><span class="dt">char</span> obuf[maxc], *__pO = obuf;</span>
+<span id="cb2-28"><a aria-hidden="true" href="#cb2-28"></a>il <span class="dt">void</span> putchar(<span class="dt">char</span> c) {*__pO++ = c;}</span>
+<span id="cb2-29"><a aria-hidden="true" href="#cb2-29"></a><span class="kw">template</span>&lt;<span class="kw">typename</span> T&gt; <span class="dt">void</span> print(<span class="at">const</span> T &amp;x) {</span>
+<span id="cb2-30"><a aria-hidden="true" href="#cb2-30"></a>    <span class="cf">if</span> (x &lt; <span class="dv">0</span>) putchar(<span class="ch">'-'</span>), print(-x);</span>
+<span id="cb2-31"><a aria-hidden="true" href="#cb2-31"></a>    <span class="cf">else</span> {</span>
+<span id="cb2-32"><a aria-hidden="true" href="#cb2-32"></a>        <span class="cf">if</span> (x &gt; <span class="dv">9</span>) print(x / <span class="dv">10</span>);</span>
+<span id="cb2-33"><a aria-hidden="true" href="#cb2-33"></a>        putchar(x % <span class="dv">10</span> + <span class="ch">'0'</span>);</span>
+<span id="cb2-34"><a aria-hidden="true" href="#cb2-34"></a>    }</span>
+<span id="cb2-35"><a aria-hidden="true" href="#cb2-35"></a>    <span class="cf">return</span>;</span>
+<span id="cb2-36"><a aria-hidden="true" href="#cb2-36"></a>}</span>
+<span id="cb2-37"><a aria-hidden="true" href="#cb2-37"></a><span class="kw">template</span>&lt;<span class="kw">typename</span> T&gt; il <span class="dt">void</span> print(<span class="at">const</span> T &amp;x, <span class="at">const</span> <span class="dt">char</span> &amp;c) {print(x), putchar(c);}</span>
+<span id="cb2-38"><a aria-hidden="true" href="#cb2-38"></a><span class="dt">void</span> output() {fwrite(obuf, __pO - obuf, <span class="dv">1</span>, stdout);}</span>
+<span id="cb2-39"><a aria-hidden="true" href="#cb2-39"></a>} <span class="co">// namespace fastIO</span></span>
+<span id="cb2-40"><a aria-hidden="true" href="#cb2-40"></a></span>
+<span id="cb2-41"><a aria-hidden="true" href="#cb2-41"></a><span class="kw">using</span> <span class="kw">namespace</span> fastIO;</span>
+<span id="cb2-42"><a aria-hidden="true" href="#cb2-42"></a></span>
+<span id="cb2-43"><a aria-hidden="true" href="#cb2-43"></a><span class="kw">template</span>&lt;<span class="kw">typename</span> T&gt; il T max(<span class="at">const</span> T &amp;a, <span class="at">const</span> T &amp;b) {<span class="cf">return</span> a &gt; b ? a : b;}</span>
+<span id="cb2-44"><a aria-hidden="true" href="#cb2-44"></a><span class="kw">template</span>&lt;<span class="kw">typename</span> T&gt; il T min(<span class="at">const</span> T &amp;a, <span class="at">const</span> T &amp;b) {<span class="cf">return</span> a &lt; b ? a : b;}</span>
+<span id="cb2-45"><a aria-hidden="true" href="#cb2-45"></a><span class="kw">template</span>&lt;<span class="kw">typename</span> T&gt; il T myabs(<span class="at">const</span> T &amp;a) {<span class="cf">return</span> a &gt;= <span class="dv">0</span> ? a : -a;}</span>
+<span id="cb2-46"><a aria-hidden="true" href="#cb2-46"></a><span class="kw">template</span>&lt;<span class="kw">typename</span> T&gt; il <span class="dt">void</span> myswap(T &amp;a, T &amp;b) {</span>
+<span id="cb2-47"><a aria-hidden="true" href="#cb2-47"></a>    T t = a;</span>
+<span id="cb2-48"><a aria-hidden="true" href="#cb2-48"></a>    a = b, b = t;</span>
+<span id="cb2-49"><a aria-hidden="true" href="#cb2-49"></a>    <span class="cf">return</span>;</span>
+<span id="cb2-50"><a aria-hidden="true" href="#cb2-50"></a>}</span>
+<span id="cb2-51"><a aria-hidden="true" href="#cb2-51"></a></span>
+<span id="cb2-52"><a aria-hidden="true" href="#cb2-52"></a><span class="dt">int</span> main() {</span>
+<span id="cb2-53"><a aria-hidden="true" href="#cb2-53"></a>    <span class="cf">return</span> output(), <span class="dv">0</span>;</span>
+<span id="cb2-54"><a aria-hidden="true" href="#cb2-54"></a>}</span></code></pre></div>
+<h2 id="附-1完整测试结果">附 1：完整测试结果</h2>
+<h3 id="本机-i5">本机 i5</h3>
+<p>Intel Core i5-7200U <span class="citation" data-cites="2.5Ghz">@2.5Ghz</span>，Windows 10 LTSC。</p>
+<p>读入测试：</p>
+<div class="table-wrapper"><table>
+<thead>
+<tr class="header">
+<th style="text-align: center;"><strong>case</strong></th>
+<th style="text-align: center;"><strong>printf</strong></th>
+<th style="text-align: center;"><strong>cout</strong></th>
+<th style="text-align: center;"><strong>cout_endl</strong></th>
+<th style="text-align: center;"><strong>putchar</strong></th>
+<th style="text-align: center;"><strong>fwrite</strong></th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: center;">1</td>
+<td style="text-align: center;">3314</td>
+<td style="text-align: center;">1480</td>
+<td style="text-align: center;">36724</td>
+<td style="text-align: center;">3870</td>
+<td style="text-align: center;">3984</td>
+</tr>
+<tr class="even">
+<td style="text-align: center;">2</td>
+<td style="text-align: center;">3547</td>
+<td style="text-align: center;">1688</td>
+<td style="text-align: center;">38312</td>
+<td style="text-align: center;">2971</td>
+<td style="text-align: center;">3240</td>
+</tr>
+<tr class="odd">
+<td style="text-align: center;">3</td>
+<td style="text-align: center;">3825</td>
+<td style="text-align: center;">1542</td>
+<td style="text-align: center;">35739</td>
+<td style="text-align: center;">3720</td>
+<td style="text-align: center;">3022</td>
+</tr>
+<tr class="even">
+<td style="text-align: center;">4</td>
+<td style="text-align: center;">5375</td>
+<td style="text-align: center;">1685</td>
+<td style="text-align: center;">35577</td>
+<td style="text-align: center;">3387</td>
+<td style="text-align: center;">2600</td>
+</tr>
+<tr class="odd">
+<td style="text-align: center;">5</td>
+<td style="text-align: center;">4626</td>
+<td style="text-align: center;">1857</td>
+<td style="text-align: center;">32677</td>
+<td style="text-align: center;">3168</td>
+<td style="text-align: center;">2497</td>
+</tr>
+<tr class="even">
+<td style="text-align: center;">6</td>
+<td style="text-align: center;">3705</td>
+<td style="text-align: center;">1582</td>
+<td style="text-align: center;">32974</td>
+<td style="text-align: center;">3725</td>
+<td style="text-align: center;">2796</td>
+</tr>
+<tr class="odd">
+<td style="text-align: center;">7</td>
+<td style="text-align: center;">4214</td>
+<td style="text-align: center;">2192</td>
+<td style="text-align: center;">36730</td>
+<td style="text-align: center;">4043</td>
+<td style="text-align: center;">2793</td>
+</tr>
+<tr class="even">
+<td style="text-align: center;">8</td>
+<td style="text-align: center;">3777</td>
+<td style="text-align: center;">1615</td>
+<td style="text-align: center;">37561</td>
+<td style="text-align: center;">3217</td>
+<td style="text-align: center;">3505</td>
+</tr>
+<tr class="odd">
+<td style="text-align: center;">9</td>
+<td style="text-align: center;">4650</td>
+<td style="text-align: center;">1507</td>
+<td style="text-align: center;">36534</td>
+<td style="text-align: center;">3287</td>
+<td style="text-align: center;">3079</td>
+</tr>
+<tr class="even">
+<td style="text-align: center;">10</td>
+<td style="text-align: center;">3984</td>
+<td style="text-align: center;">2096</td>
+<td style="text-align: center;">36103</td>
+<td style="text-align: center;">2937</td>
+<td style="text-align: center;">3290</td>
+</tr>
+<tr class="odd">
+<td style="text-align: center;">11</td>
+<td style="text-align: center;">3773</td>
+<td style="text-align: center;">1444</td>
+<td style="text-align: center;">31294</td>
+<td style="text-align: center;">3062</td>
+<td style="text-align: center;">2546</td>
+</tr>
+<tr class="even">
+<td style="text-align: center;">12</td>
+<td style="text-align: center;">3599</td>
+<td style="text-align: center;">1456</td>
+<td style="text-align: center;">32554</td>
+<td style="text-align: center;">2825</td>
+<td style="text-align: center;">3408</td>
+</tr>
+<tr class="odd">
+<td style="text-align: center;">13</td>
+<td style="text-align: center;">3804</td>
+<td style="text-align: center;">1609</td>
+<td style="text-align: center;">33589</td>
+<td style="text-align: center;">3048</td>
+<td style="text-align: center;">2495</td>
+</tr>
+<tr class="even">
+<td style="text-align: center;">14</td>
+<td style="text-align: center;">3598</td>
+<td style="text-align: center;">1434</td>
+<td style="text-align: center;">30778</td>
+<td style="text-align: center;">3090</td>
+<td style="text-align: center;">2499</td>
+</tr>
+<tr class="odd">
+<td style="text-align: center;">15</td>
+<td style="text-align: center;">3710</td>
+<td style="text-align: center;">1449</td>
+<td style="text-align: center;">31659</td>
+<td style="text-align: center;">3153</td>
+<td style="text-align: center;">2476</td>
+</tr>
+<tr class="even">
+<td style="text-align: center;">16</td>
+<td style="text-align: center;">3638</td>
+<td style="text-align: center;">1445</td>
+<td style="text-align: center;">30739</td>
+<td style="text-align: center;">3045</td>
+<td style="text-align: center;">2619</td>
+</tr>
+<tr class="odd">
+<td style="text-align: center;">17</td>
+<td style="text-align: center;">3816</td>
+<td style="text-align: center;">1475</td>
+<td style="text-align: center;">30838</td>
+<td style="text-align: center;">3063</td>
+<td style="text-align: center;">2509</td>
+</tr>
+<tr class="even">
+<td style="text-align: center;">18</td>
+<td style="text-align: center;">3588</td>
+<td style="text-align: center;">1437</td>
+<td style="text-align: center;">30844</td>
+<td style="text-align: center;">3045</td>
+<td style="text-align: center;">2501</td>
+</tr>
+<tr class="odd">
+<td style="text-align: center;">19</td>
+<td style="text-align: center;">3591</td>
+<td style="text-align: center;">1443</td>
+<td style="text-align: center;">30862</td>
+<td style="text-align: center;">3071</td>
+<td style="text-align: center;">2861</td>
+</tr>
+<tr class="even">
+<td style="text-align: center;">20</td>
+<td style="text-align: center;">3728</td>
+<td style="text-align: center;">1443</td>
+<td style="text-align: center;">30964</td>
+<td style="text-align: center;">3061</td>
+<td style="text-align: center;">2529</td>
+</tr>
+<tr class="odd">
+<td style="text-align: center;">avr</td>
+<td style="text-align: center;">4101.7</td>
+<td style="text-align: center;">1724.4</td>
+<td style="text-align: center;">35893.1</td>
+<td style="text-align: center;">3432.5</td>
+<td style="text-align: center;">3080.6</td>
+</tr>
+<tr class="even">
+<td style="text-align: center;">avr_O2</td>
+<td style="text-align: center;">3684.5</td>
+<td style="text-align: center;">1463.5</td>
+<td style="text-align: center;">31412.1</td>
+<td style="text-align: center;">3046.3</td>
+<td style="text-align: center;">2644.3</td>
+</tr>
+</tbody>
+</table></div>
+<h3 id="amd-r5-2600">AMD R5 2600</h3>
+<p>AMD R5 2600 <span class="citation" data-cites="3.40Ghz">@3.40Ghz</span>，Windows 10 LTSC。</p>
+<p>输入测试：</p>
+<div class="table-wrapper"><table>
+<thead>
+<tr class="header">
+<th style="text-align: center;"><strong>case</strong></th>
+<th style="text-align: center;"><strong>scanf</strong></th>
+<th style="text-align: center;"><strong>cin</strong></th>
+<th style="text-align: center;"><strong>cin2</strong></th>
+<th style="text-align: center;"><strong>getchar</strong></th>
+<th style="text-align: center;"><strong>fread</strong></th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: center;">1</td>
+<td style="text-align: center;">5755</td>
+<td style="text-align: center;">6403</td>
+<td style="text-align: center;">1654</td>
+<td style="text-align: center;">1469</td>
+<td style="text-align: center;">298</td>
+</tr>
+<tr class="even">
+<td style="text-align: center;">2</td>
+<td style="text-align: center;">5725</td>
+<td style="text-align: center;">6441</td>
+<td style="text-align: center;">1651</td>
+<td style="text-align: center;">1467</td>
+<td style="text-align: center;">301</td>
+</tr>
+<tr class="odd">
+<td style="text-align: center;">3</td>
+<td style="text-align: center;">5740</td>
+<td style="text-align: center;">6452</td>
+<td style="text-align: center;">1661</td>
+<td style="text-align: center;">1472</td>
+<td style="text-align: center;">301</td>
+</tr>
+<tr class="even">
+<td style="text-align: center;">4</td>
+<td style="text-align: center;">5749</td>
+<td style="text-align: center;">6435</td>
+<td style="text-align: center;">1670</td>
+<td style="text-align: center;">1484</td>
+<td style="text-align: center;">298</td>
+</tr>
+<tr class="odd">
+<td style="text-align: center;">5</td>
+<td style="text-align: center;">5739</td>
+<td style="text-align: center;">6437</td>
+<td style="text-align: center;">1671</td>
+<td style="text-align: center;">1471</td>
+<td style="text-align: center;">299</td>
+</tr>
+<tr class="even">
+<td style="text-align: center;">6</td>
+<td style="text-align: center;">5761</td>
+<td style="text-align: center;">6428</td>
+<td style="text-align: center;">1661</td>
+<td style="text-align: center;">1474</td>
+<td style="text-align: center;">298</td>
+</tr>
+<tr class="odd">
+<td style="text-align: center;">7</td>
+<td style="text-align: center;">5769</td>
+<td style="text-align: center;">6424</td>
+<td style="text-align: center;">1660</td>
+<td style="text-align: center;">1463</td>
+<td style="text-align: center;">297</td>
+</tr>
+<tr class="even">
+<td style="text-align: center;">8</td>
+<td style="text-align: center;">5761</td>
+<td style="text-align: center;">6429</td>
+<td style="text-align: center;">1662</td>
+<td style="text-align: center;">1461</td>
+<td style="text-align: center;">301</td>
+</tr>
+<tr class="odd">
+<td style="text-align: center;">9</td>
+<td style="text-align: center;">5735</td>
+<td style="text-align: center;">6395</td>
+<td style="text-align: center;">1668</td>
+<td style="text-align: center;">1464</td>
+<td style="text-align: center;">295</td>
+</tr>
+<tr class="even">
+<td style="text-align: center;">10</td>
+<td style="text-align: center;">5735</td>
+<td style="text-align: center;">6420</td>
+<td style="text-align: center;">1654</td>
+<td style="text-align: center;">1462</td>
+<td style="text-align: center;">302</td>
+</tr>
+<tr class="odd">
+<td style="text-align: center;">11</td>
+<td style="text-align: center;">5781</td>
+<td style="text-align: center;">6388</td>
+<td style="text-align: center;">1658</td>
+<td style="text-align: center;">1403</td>
+<td style="text-align: center;">99</td>
+</tr>
+<tr class="even">
+<td style="text-align: center;">12</td>
+<td style="text-align: center;">5725</td>
+<td style="text-align: center;">6379</td>
+<td style="text-align: center;">1641</td>
+<td style="text-align: center;">1397</td>
+<td style="text-align: center;">99</td>
+</tr>
+<tr class="odd">
+<td style="text-align: center;">13</td>
+<td style="text-align: center;">5725</td>
+<td style="text-align: center;">6342</td>
+<td style="text-align: center;">1636</td>
+<td style="text-align: center;">1401</td>
+<td style="text-align: center;">98</td>
+</tr>
+<tr class="even">
+<td style="text-align: center;">14</td>
+<td style="text-align: center;">5727</td>
+<td style="text-align: center;">6335</td>
+<td style="text-align: center;">1634</td>
+<td style="text-align: center;">1405</td>
+<td style="text-align: center;">99</td>
+</tr>
+<tr class="odd">
+<td style="text-align: center;">15</td>
+<td style="text-align: center;">5778</td>
+<td style="text-align: center;">6354</td>
+<td style="text-align: center;">1630</td>
+<td style="text-align: center;">1400</td>
+<td style="text-align: center;">98</td>
+</tr>
+<tr class="even">
+<td style="text-align: center;">16</td>
+<td style="text-align: center;">5700</td>
+<td style="text-align: center;">6388</td>
+<td style="text-align: center;">1635</td>
+<td style="text-align: center;">1401</td>
+<td style="text-align: center;">98</td>
+</tr>
+<tr class="odd">
+<td style="text-align: center;">17</td>
+<td style="text-align: center;">5750</td>
+<td style="text-align: center;">6368</td>
+<td style="text-align: center;">1639</td>
+<td style="text-align: center;">1401</td>
+<td style="text-align: center;">99</td>
+</tr>
+<tr class="even">
+<td style="text-align: center;">18</td>
+<td style="text-align: center;">5731</td>
+<td style="text-align: center;">6372</td>
+<td style="text-align: center;">1638</td>
+<td style="text-align: center;">1404</td>
+<td style="text-align: center;">99</td>
+</tr>
+<tr class="odd">
+<td style="text-align: center;">19</td>
+<td style="text-align: center;">5715</td>
+<td style="text-align: center;">6386</td>
+<td style="text-align: center;">1642</td>
+<td style="text-align: center;">1406</td>
+<td style="text-align: center;">99</td>
+</tr>
+<tr class="even">
+<td style="text-align: center;">20</td>
+<td style="text-align: center;">5713</td>
+<td style="text-align: center;">6376</td>
+<td style="text-align: center;">1638</td>
+<td style="text-align: center;">1396</td>
+<td style="text-align: center;">98</td>
+</tr>
+<tr class="odd">
+<td style="text-align: center;"><strong>avr</strong></td>
+<td style="text-align: center;"><strong>5746.9</strong></td>
+<td style="text-align: center;"><strong>6426.4</strong></td>
+<td style="text-align: center;"><strong>1661.2</strong></td>
+<td style="text-align: center;"><strong>1468.7</strong></td>
+<td style="text-align: center;"><strong>299</strong></td>
+</tr>
+<tr class="even">
+<td style="text-align: center;"><strong>avr_O2</strong></td>
+<td style="text-align: center;"><strong>5734.5</strong></td>
+<td style="text-align: center;"><strong>6368.8</strong></td>
+<td style="text-align: center;"><strong>1639.1</strong></td>
+<td style="text-align: center;"><strong>1401.4</strong></td>
+<td style="text-align: center;"><strong>98.6</strong></td>
+</tr>
+</tbody>
+</table></div>
+<p>输出测试：</p>
+<div class="table-wrapper"><table>
+<thead>
+<tr class="header">
+<th style="text-align: center;"><strong>case</strong></th>
+<th style="text-align: center;"><strong>printf</strong></th>
+<th style="text-align: center;"><strong>cout</strong></th>
+<th style="text-align: center;"><strong>cout_endl</strong></th>
+<th style="text-align: center;"><strong>putchar</strong></th>
+<th style="text-align: center;"><strong>fwrite</strong></th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: center;">1</td>
+<td style="text-align: center;">16545</td>
+<td style="text-align: center;">1004</td>
+<td style="text-align: center;">39836</td>
+<td style="text-align: center;">1693</td>
+<td style="text-align: center;">1594</td>
+</tr>
+<tr class="even">
+<td style="text-align: center;">2</td>
+<td style="text-align: center;">16756</td>
+<td style="text-align: center;">1044</td>
+<td style="text-align: center;">40895</td>
+<td style="text-align: center;">1695</td>
+<td style="text-align: center;">1581</td>
+</tr>
+<tr class="odd">
+<td style="text-align: center;">3</td>
+<td style="text-align: center;">16820</td>
+<td style="text-align: center;">1032</td>
+<td style="text-align: center;">40841</td>
+<td style="text-align: center;">1692</td>
+<td style="text-align: center;">1565</td>
+</tr>
+<tr class="even">
+<td style="text-align: center;">4</td>
+<td style="text-align: center;">16655</td>
+<td style="text-align: center;">1014</td>
+<td style="text-align: center;">40853</td>
+<td style="text-align: center;">1737</td>
+<td style="text-align: center;">1593</td>
+</tr>
+<tr class="odd">
+<td style="text-align: center;">5</td>
+<td style="text-align: center;">17147</td>
+<td style="text-align: center;">1078</td>
+<td style="text-align: center;">41379</td>
+<td style="text-align: center;">1736</td>
+<td style="text-align: center;">1599</td>
+</tr>
+<tr class="even">
+<td style="text-align: center;">6</td>
+<td style="text-align: center;">16965</td>
+<td style="text-align: center;">1065</td>
+<td style="text-align: center;">41250</td>
+<td style="text-align: center;">1749</td>
+<td style="text-align: center;">1608</td>
+</tr>
+<tr class="odd">
+<td style="text-align: center;">7</td>
+<td style="text-align: center;">17099</td>
+<td style="text-align: center;">1048</td>
+<td style="text-align: center;">40937</td>
+<td style="text-align: center;">1712</td>
+<td style="text-align: center;">1586</td>
+</tr>
+<tr class="even">
+<td style="text-align: center;">8</td>
+<td style="text-align: center;">16981</td>
+<td style="text-align: center;">1021</td>
+<td style="text-align: center;">40266</td>
+<td style="text-align: center;">1698</td>
+<td style="text-align: center;">1568</td>
+</tr>
+<tr class="odd">
+<td style="text-align: center;">9</td>
+<td style="text-align: center;">16814</td>
+<td style="text-align: center;">1016</td>
+<td style="text-align: center;">40719</td>
+<td style="text-align: center;">1712</td>
+<td style="text-align: center;">1590</td>
+</tr>
+<tr class="even">
+<td style="text-align: center;">10</td>
+<td style="text-align: center;">16826</td>
+<td style="text-align: center;">1037</td>
+<td style="text-align: center;">40460</td>
+<td style="text-align: center;">1673</td>
+<td style="text-align: center;">1563</td>
+</tr>
+<tr class="odd">
+<td style="text-align: center;">11</td>
+<td style="text-align: center;">16470</td>
+<td style="text-align: center;">994</td>
+<td style="text-align: center;">39597</td>
+<td style="text-align: center;">1513</td>
+<td style="text-align: center;">1356</td>
+</tr>
+<tr class="even">
+<td style="text-align: center;">12</td>
+<td style="text-align: center;">16584</td>
+<td style="text-align: center;">1009</td>
+<td style="text-align: center;">39748</td>
+<td style="text-align: center;">1511</td>
+<td style="text-align: center;">1365</td>
+</tr>
+<tr class="odd">
+<td style="text-align: center;">13</td>
+<td style="text-align: center;">16669</td>
+<td style="text-align: center;">996</td>
+<td style="text-align: center;">40008</td>
+<td style="text-align: center;">1529</td>
+<td style="text-align: center;">1362</td>
+</tr>
+<tr class="even">
+<td style="text-align: center;">14</td>
+<td style="text-align: center;">16725</td>
+<td style="text-align: center;">1002</td>
+<td style="text-align: center;">39792</td>
+<td style="text-align: center;">1515</td>
+<td style="text-align: center;">1352</td>
+</tr>
+<tr class="odd">
+<td style="text-align: center;">15</td>
+<td style="text-align: center;">16647</td>
+<td style="text-align: center;">997</td>
+<td style="text-align: center;">39718</td>
+<td style="text-align: center;">1509</td>
+<td style="text-align: center;">1368</td>
+</tr>
+<tr class="even">
+<td style="text-align: center;">16</td>
+<td style="text-align: center;">16654</td>
+<td style="text-align: center;">979</td>
+<td style="text-align: center;">39874</td>
+<td style="text-align: center;">1512</td>
+<td style="text-align: center;">1355</td>
+</tr>
+<tr class="odd">
+<td style="text-align: center;">17</td>
+<td style="text-align: center;">16628</td>
+<td style="text-align: center;">1000</td>
+<td style="text-align: center;">39667</td>
+<td style="text-align: center;">1514</td>
+<td style="text-align: center;">1354</td>
+</tr>
+<tr class="even">
+<td style="text-align: center;">18</td>
+<td style="text-align: center;">16660</td>
+<td style="text-align: center;">968</td>
+<td style="text-align: center;">39887</td>
+<td style="text-align: center;">1533</td>
+<td style="text-align: center;">1369</td>
+</tr>
+<tr class="odd">
+<td style="text-align: center;">19</td>
+<td style="text-align: center;">16643</td>
+<td style="text-align: center;">987</td>
+<td style="text-align: center;">39732</td>
+<td style="text-align: center;">1514</td>
+<td style="text-align: center;">1362</td>
+</tr>
+<tr class="even">
+<td style="text-align: center;">20</td>
+<td style="text-align: center;">16778</td>
+<td style="text-align: center;">968</td>
+<td style="text-align: center;">39850</td>
+<td style="text-align: center;">1513</td>
+<td style="text-align: center;">1356</td>
+</tr>
+<tr class="odd">
+<td style="text-align: center;"><strong>avr</strong></td>
+<td style="text-align: center;"><strong>16860.8</strong></td>
+<td style="text-align: center;"><strong>1035.9</strong></td>
+<td style="text-align: center;"><strong>40743.6</strong></td>
+<td style="text-align: center;"><strong>1709.7</strong></td>
+<td style="text-align: center;"><strong>1584.7</strong></td>
+</tr>
+<tr class="even">
+<td style="text-align: center;"><strong>avr_O2</strong></td>
+<td style="text-align: center;"><strong>16645.8</strong></td>
+<td style="text-align: center;"><strong>990</strong></td>
+<td style="text-align: center;"><strong>39787.3</strong></td>
+<td style="text-align: center;"><strong>1516.3</strong></td>
+<td style="text-align: center;"><strong>1359.9</strong></td>
+</tr>
+</tbody>
+</table></div>
+<h3 id="虚拟机-noi-linux-2.0">虚拟机 NOI Linux 2.0</h3>
+<p>输入测试：</p>
+<div class="table-wrapper"><table>
+<thead>
+<tr class="header">
+<th style="text-align: center;"><strong>case</strong></th>
+<th style="text-align: center;"><strong>scanf</strong></th>
+<th style="text-align: center;"><strong>cin</strong></th>
+<th style="text-align: center;"><strong>cin2</strong></th>
+<th style="text-align: center;"><strong>getchar</strong></th>
+<th style="text-align: center;"><strong>fread</strong></th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: center;">1</td>
+<td style="text-align: center;">1.554</td>
+<td style="text-align: center;">2.897</td>
+<td style="text-align: center;">0.677</td>
+<td style="text-align: center;">0.532</td>
+<td style="text-align: center;">0.856</td>
+</tr>
+<tr class="even">
+<td style="text-align: center;">2</td>
+<td style="text-align: center;">1.523</td>
+<td style="text-align: center;">2.91</td>
+<td style="text-align: center;">0.674</td>
+<td style="text-align: center;">0.531</td>
+<td style="text-align: center;">0.851</td>
+</tr>
+<tr class="odd">
+<td style="text-align: center;">3</td>
+<td style="text-align: center;">1.498</td>
+<td style="text-align: center;">2.947</td>
+<td style="text-align: center;">0.675</td>
+<td style="text-align: center;">0.527</td>
+<td style="text-align: center;">0.852</td>
+</tr>
+<tr class="even">
+<td style="text-align: center;">4</td>
+<td style="text-align: center;">1.51</td>
+<td style="text-align: center;">2.839</td>
+<td style="text-align: center;">0.674</td>
+<td style="text-align: center;">0.532</td>
+<td style="text-align: center;">0.854</td>
+</tr>
+<tr class="odd">
+<td style="text-align: center;">5</td>
+<td style="text-align: center;">1.526</td>
+<td style="text-align: center;">2.899</td>
+<td style="text-align: center;">0.676</td>
+<td style="text-align: center;">0.532</td>
+<td style="text-align: center;">0.852</td>
+</tr>
+<tr class="even">
+<td style="text-align: center;">6</td>
+<td style="text-align: center;">1.55</td>
+<td style="text-align: center;">2.896</td>
+<td style="text-align: center;">0.675</td>
+<td style="text-align: center;">0.533</td>
+<td style="text-align: center;">0.852</td>
+</tr>
+<tr class="odd">
+<td style="text-align: center;">7</td>
+<td style="text-align: center;">1.553</td>
+<td style="text-align: center;">2.86</td>
+<td style="text-align: center;">0.675</td>
+<td style="text-align: center;">0.525</td>
+<td style="text-align: center;">0.853</td>
+</tr>
+<tr class="even">
+<td style="text-align: center;">8</td>
+<td style="text-align: center;">1.496</td>
+<td style="text-align: center;">2.935</td>
+<td style="text-align: center;">0.675</td>
+<td style="text-align: center;">0.529</td>
+<td style="text-align: center;">0.852</td>
+</tr>
+<tr class="odd">
+<td style="text-align: center;">9</td>
+<td style="text-align: center;">1.545</td>
+<td style="text-align: center;">2.836</td>
+<td style="text-align: center;">0.673</td>
+<td style="text-align: center;">0.532</td>
+<td style="text-align: center;">0.852</td>
+</tr>
+<tr class="even">
+<td style="text-align: center;">10</td>
+<td style="text-align: center;">1.536</td>
+<td style="text-align: center;">2.874</td>
+<td style="text-align: center;">0.676</td>
+<td style="text-align: center;">0.532</td>
+<td style="text-align: center;">0.851</td>
+</tr>
+<tr class="odd">
+<td style="text-align: center;">11</td>
+<td style="text-align: center;">0.957</td>
+<td style="text-align: center;">2.656</td>
+<td style="text-align: center;">0.59</td>
+<td style="text-align: center;">0.242</td>
+<td style="text-align: center;">0.086</td>
+</tr>
+<tr class="even">
+<td style="text-align: center;">12</td>
+<td style="text-align: center;">0.966</td>
+<td style="text-align: center;">2.613</td>
+<td style="text-align: center;">0.588</td>
+<td style="text-align: center;">0.243</td>
+<td style="text-align: center;">0.087</td>
+</tr>
+<tr class="odd">
+<td style="text-align: center;">13</td>
+<td style="text-align: center;">0.954</td>
+<td style="text-align: center;">2.547</td>
+<td style="text-align: center;">0.591</td>
+<td style="text-align: center;">0.243</td>
+<td style="text-align: center;">0.086</td>
+</tr>
+<tr class="even">
+<td style="text-align: center;">14</td>
+<td style="text-align: center;">0.948</td>
+<td style="text-align: center;">2.546</td>
+<td style="text-align: center;">0.588</td>
+<td style="text-align: center;">0.242</td>
+<td style="text-align: center;">0.086</td>
+</tr>
+<tr class="odd">
+<td style="text-align: center;">15</td>
+<td style="text-align: center;">0.968</td>
+<td style="text-align: center;">2.564</td>
+<td style="text-align: center;">0.588</td>
+<td style="text-align: center;">0.242</td>
+<td style="text-align: center;">0.086</td>
+</tr>
+<tr class="even">
+<td style="text-align: center;">16</td>
+<td style="text-align: center;">0.942</td>
+<td style="text-align: center;">2.549</td>
+<td style="text-align: center;">0.593</td>
+<td style="text-align: center;">0.243</td>
+<td style="text-align: center;">0.086</td>
+</tr>
+<tr class="odd">
+<td style="text-align: center;">17</td>
+<td style="text-align: center;">0.993</td>
+<td style="text-align: center;">2.61</td>
+<td style="text-align: center;">0.59</td>
+<td style="text-align: center;">0.243</td>
+<td style="text-align: center;">0.086</td>
+</tr>
+<tr class="even">
+<td style="text-align: center;">18</td>
+<td style="text-align: center;">0.945</td>
+<td style="text-align: center;">2.611</td>
+<td style="text-align: center;">0.591</td>
+<td style="text-align: center;">0.243</td>
+<td style="text-align: center;">0.086</td>
+</tr>
+<tr class="odd">
+<td style="text-align: center;">19</td>
+<td style="text-align: center;">0.955</td>
+<td style="text-align: center;">2.621</td>
+<td style="text-align: center;">0.593</td>
+<td style="text-align: center;">0.243</td>
+<td style="text-align: center;">0.087</td>
+</tr>
+<tr class="even">
+<td style="text-align: center;">20</td>
+<td style="text-align: center;">0.977</td>
+<td style="text-align: center;">2.672</td>
+<td style="text-align: center;">0.593</td>
+<td style="text-align: center;">0.243</td>
+<td style="text-align: center;">0.087</td>
+</tr>
+<tr class="odd">
+<td style="text-align: center;"><strong>avr</strong></td>
+<td style="text-align: center;"><strong>1.5291</strong></td>
+<td style="text-align: center;"><strong>2.8893</strong></td>
+<td style="text-align: center;"><strong>0.675</strong></td>
+<td style="text-align: center;"><strong>0.5305</strong></td>
+<td style="text-align: center;"><strong>0.8525</strong></td>
+</tr>
+<tr class="even">
+<td style="text-align: center;"><strong>avr_O2</strong></td>
+<td style="text-align: center;"><strong>0.9605</strong></td>
+<td style="text-align: center;"><strong>2.5989</strong></td>
+<td style="text-align: center;"><strong>0.5905</strong></td>
+<td style="text-align: center;"><strong>0.2427</strong></td>
+<td style="text-align: center;"><strong>0.0863</strong></td>
+</tr>
+</tbody>
+</table></div>
+<p>输出测试：</p>
+<div class="table-wrapper"><table>
+<thead>
+<tr class="header">
+<th style="text-align: center;"><strong>case</strong></th>
+<th style="text-align: center;"><strong>printf</strong></th>
+<th style="text-align: center;"><strong>cout</strong></th>
+<th style="text-align: center;"><strong>cout_endl</strong></th>
+<th style="text-align: center;"><strong>putchar</strong></th>
+<th style="text-align: center;"><strong>fwrite</strong></th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: center;">1</td>
+<td style="text-align: center;">858</td>
+<td style="text-align: center;">924</td>
+<td style="text-align: center;">15804</td>
+<td style="text-align: center;">988</td>
+<td style="text-align: center;">946</td>
+</tr>
+<tr class="even">
+<td style="text-align: center;">2</td>
+<td style="text-align: center;">811</td>
+<td style="text-align: center;">929</td>
+<td style="text-align: center;">15878</td>
+<td style="text-align: center;">1007</td>
+<td style="text-align: center;">970</td>
+</tr>
+<tr class="odd">
+<td style="text-align: center;">3</td>
+<td style="text-align: center;">831</td>
+<td style="text-align: center;">942</td>
+<td style="text-align: center;">15617</td>
+<td style="text-align: center;">1007</td>
+<td style="text-align: center;">977</td>
+</tr>
+<tr class="even">
+<td style="text-align: center;">4</td>
+<td style="text-align: center;">815</td>
+<td style="text-align: center;">927</td>
+<td style="text-align: center;">15745</td>
+<td style="text-align: center;">1016</td>
+<td style="text-align: center;">945</td>
+</tr>
+<tr class="odd">
+<td style="text-align: center;">5</td>
+<td style="text-align: center;">741</td>
+<td style="text-align: center;">925</td>
+<td style="text-align: center;">16205</td>
+<td style="text-align: center;">990</td>
+<td style="text-align: center;">948</td>
+</tr>
+<tr class="even">
+<td style="text-align: center;">6</td>
+<td style="text-align: center;">818</td>
+<td style="text-align: center;">931</td>
+<td style="text-align: center;">15274</td>
+<td style="text-align: center;">1040</td>
+<td style="text-align: center;">956</td>
+</tr>
+<tr class="odd">
+<td style="text-align: center;">7</td>
+<td style="text-align: center;">790</td>
+<td style="text-align: center;">931</td>
+<td style="text-align: center;">15607</td>
+<td style="text-align: center;">1014</td>
+<td style="text-align: center;">965</td>
+</tr>
+<tr class="even">
+<td style="text-align: center;">8</td>
+<td style="text-align: center;">864</td>
+<td style="text-align: center;">926</td>
+<td style="text-align: center;">15554</td>
+<td style="text-align: center;">1001</td>
+<td style="text-align: center;">957</td>
+</tr>
+<tr class="odd">
+<td style="text-align: center;">9</td>
+<td style="text-align: center;">824</td>
+<td style="text-align: center;">950</td>
+<td style="text-align: center;">15842</td>
+<td style="text-align: center;">1007</td>
+<td style="text-align: center;">954</td>
+</tr>
+<tr class="even">
+<td style="text-align: center;">10</td>
+<td style="text-align: center;">793</td>
+<td style="text-align: center;">951</td>
+<td style="text-align: center;">16484</td>
+<td style="text-align: center;">1007</td>
+<td style="text-align: center;">957</td>
+</tr>
+<tr class="odd">
+<td style="text-align: center;">11</td>
+<td style="text-align: center;">792</td>
+<td style="text-align: center;">949</td>
+<td style="text-align: center;">16338</td>
+<td style="text-align: center;">483</td>
+<td style="text-align: center;">456</td>
+</tr>
+<tr class="even">
+<td style="text-align: center;">12</td>
+<td style="text-align: center;">854</td>
+<td style="text-align: center;">969</td>
+<td style="text-align: center;">15373</td>
+<td style="text-align: center;">467</td>
+<td style="text-align: center;">445</td>
+</tr>
+<tr class="odd">
+<td style="text-align: center;">13</td>
+<td style="text-align: center;">845</td>
+<td style="text-align: center;">992</td>
+<td style="text-align: center;">16049</td>
+<td style="text-align: center;">472</td>
+<td style="text-align: center;">440</td>
+</tr>
+<tr class="even">
+<td style="text-align: center;">14</td>
+<td style="text-align: center;">796</td>
+<td style="text-align: center;">923</td>
+<td style="text-align: center;">15824</td>
+<td style="text-align: center;">478</td>
+<td style="text-align: center;">443</td>
+</tr>
+<tr class="odd">
+<td style="text-align: center;">15</td>
+<td style="text-align: center;">878</td>
+<td style="text-align: center;">960</td>
+<td style="text-align: center;">16087</td>
+<td style="text-align: center;">474</td>
+<td style="text-align: center;">437</td>
+</tr>
+<tr class="even">
+<td style="text-align: center;">16</td>
+<td style="text-align: center;">817</td>
+<td style="text-align: center;">936</td>
+<td style="text-align: center;">16525</td>
+<td style="text-align: center;">485</td>
+<td style="text-align: center;">449</td>
+</tr>
+<tr class="odd">
+<td style="text-align: center;">17</td>
+<td style="text-align: center;">800</td>
+<td style="text-align: center;">941</td>
+<td style="text-align: center;">15988</td>
+<td style="text-align: center;">474</td>
+<td style="text-align: center;">438</td>
+</tr>
+<tr class="even">
+<td style="text-align: center;">18</td>
+<td style="text-align: center;">845</td>
+<td style="text-align: center;">934</td>
+<td style="text-align: center;">15650</td>
+<td style="text-align: center;">466</td>
+<td style="text-align: center;">435</td>
+</tr>
+<tr class="odd">
+<td style="text-align: center;">19</td>
+<td style="text-align: center;">836</td>
+<td style="text-align: center;">901</td>
+<td style="text-align: center;">15754</td>
+<td style="text-align: center;">476</td>
+<td style="text-align: center;">434</td>
+</tr>
+<tr class="even">
+<td style="text-align: center;">20</td>
+<td style="text-align: center;">839</td>
+<td style="text-align: center;">948</td>
+<td style="text-align: center;">16705</td>
+<td style="text-align: center;">489</td>
+<td style="text-align: center;">449</td>
+</tr>
+<tr class="odd">
+<td style="text-align: center;">avr</td>
+<td style="text-align: center;">814.5</td>
+<td style="text-align: center;">933.6</td>
+<td style="text-align: center;">15801</td>
+<td style="text-align: center;">1007.7</td>
+<td style="text-align: center;">957.5</td>
+</tr>
+<tr class="even">
+<td style="text-align: center;">avr_O2</td>
+<td style="text-align: center;">830.2</td>
+<td style="text-align: center;">945.3</td>
+<td style="text-align: center;">16029.3</td>
+<td style="text-align: center;">476.4</td>
+<td style="text-align: center;">442.6</td>
+</tr>
+</tbody>
+</table></div>
+<h2 id="附-2测试代码">附 2：测试代码</h2>
+<h3 id="输入效率测试-1">输入效率测试</h3>
+<p><code>IOtest.cpp</code>：</p>
+<div class="sourceCode" id="cb3"><pre class="sourceCode cpp"><code class="sourceCode cpp"><span id="cb3-1"><a aria-hidden="true" href="#cb3-1"></a><span class="pp">#include </span><span class="im">&lt;bits/stdc++.h&gt;</span></span>
+<span id="cb3-2"><a aria-hidden="true" href="#cb3-2"></a><span class="pp">#define il </span><span class="kw">inline</span></span>
+<span id="cb3-3"><a aria-hidden="true" href="#cb3-3"></a></span>
+<span id="cb3-4"><a aria-hidden="true" href="#cb3-4"></a><span class="at">const</span> <span class="dt">int</span> maxn = <span class="fl">1e7</span> + <span class="dv">5</span>, N = <span class="fl">1e7</span>;</span>
+<span id="cb3-5"><a aria-hidden="true" href="#cb3-5"></a><span class="dt">int</span> a[maxn];</span>
+<span id="cb3-6"><a aria-hidden="true" href="#cb3-6"></a></span>
+<span id="cb3-7"><a aria-hidden="true" href="#cb3-7"></a><span class="dt">void</span> gen() {</span>
+<span id="cb3-8"><a aria-hidden="true" href="#cb3-8"></a>    freopen(<span class="st">"io.in"</span>, <span class="st">"w"</span>, stdout);</span>
+<span id="cb3-9"><a aria-hidden="true" href="#cb3-9"></a>    <span class="cf">for</span> (<span class="dt">int</span> i = <span class="dv">1</span>; i &lt;= N; ++i) printf(<span class="st">"</span><span class="sc">%d\n</span><span class="st">"</span>, i);</span>
+<span id="cb3-10"><a aria-hidden="true" href="#cb3-10"></a>    fclose(stdout);</span>
+<span id="cb3-11"><a aria-hidden="true" href="#cb3-11"></a>}</span>
+<span id="cb3-12"><a aria-hidden="true" href="#cb3-12"></a></span>
+<span id="cb3-13"><a aria-hidden="true" href="#cb3-13"></a><span class="dt">int</span> read1() {</span>
+<span id="cb3-14"><a aria-hidden="true" href="#cb3-14"></a>    <span class="dt">char</span> c = getchar();</span>
+<span id="cb3-15"><a aria-hidden="true" href="#cb3-15"></a>    <span class="dt">int</span> n = <span class="dv">0</span>;</span>
+<span id="cb3-16"><a aria-hidden="true" href="#cb3-16"></a>    <span class="cf">while</span> (!isdigit(c)) c = getchar();</span>
+<span id="cb3-17"><a aria-hidden="true" href="#cb3-17"></a>    <span class="cf">while</span> (isdigit(c)) n = n * <span class="dv">10</span> + c - <span class="ch">'0'</span>, c = getchar();</span>
+<span id="cb3-18"><a aria-hidden="true" href="#cb3-18"></a>    <span class="cf">return</span> n;</span>
+<span id="cb3-19"><a aria-hidden="true" href="#cb3-19"></a>}</span>
+<span id="cb3-20"><a aria-hidden="true" href="#cb3-20"></a></span>
+<span id="cb3-21"><a aria-hidden="true" href="#cb3-21"></a><span class="dt">clock_t</span> getcharread() {</span>
+<span id="cb3-22"><a aria-hidden="true" href="#cb3-22"></a>    <span class="dt">clock_t</span> st = clock();</span>
+<span id="cb3-23"><a aria-hidden="true" href="#cb3-23"></a>    <span class="cf">for</span> (<span class="dt">int</span> i = <span class="dv">1</span>; i &lt;= N; i++) a[i] = read1();</span>
+<span id="cb3-24"><a aria-hidden="true" href="#cb3-24"></a>    <span class="dt">clock_t</span> ed = clock();</span>
+<span id="cb3-25"><a aria-hidden="true" href="#cb3-25"></a>    <span class="cf">return</span> ed - st;</span>
+<span id="cb3-26"><a aria-hidden="true" href="#cb3-26"></a>}</span>
+<span id="cb3-27"><a aria-hidden="true" href="#cb3-27"></a></span>
+<span id="cb3-28"><a aria-hidden="true" href="#cb3-28"></a><span class="dt">clock_t</span> scanfread() {</span>
+<span id="cb3-29"><a aria-hidden="true" href="#cb3-29"></a>    <span class="dt">clock_t</span> st = clock();</span>
+<span id="cb3-30"><a aria-hidden="true" href="#cb3-30"></a>    <span class="cf">for</span> (<span class="dt">int</span> i = <span class="dv">1</span>; i &lt;= N; i++) scanf(<span class="st">"</span><span class="sc">%d</span><span class="st">"</span>, a + i);</span>
+<span id="cb3-31"><a aria-hidden="true" href="#cb3-31"></a>    <span class="dt">clock_t</span> ed = clock();</span>
+<span id="cb3-32"><a aria-hidden="true" href="#cb3-32"></a>    <span class="cf">return</span> ed - st;</span>
+<span id="cb3-33"><a aria-hidden="true" href="#cb3-33"></a>}</span>
+<span id="cb3-34"><a aria-hidden="true" href="#cb3-34"></a></span>
+<span id="cb3-35"><a aria-hidden="true" href="#cb3-35"></a><span class="dt">clock_t</span> cinread() {</span>
+<span id="cb3-36"><a aria-hidden="true" href="#cb3-36"></a>    <span class="dt">clock_t</span> st = clock();</span>
+<span id="cb3-37"><a aria-hidden="true" href="#cb3-37"></a>    <span class="cf">for</span> (<span class="dt">int</span> i = <span class="dv">1</span>; i &lt;= N; i++) <span class="bu">std::</span>cin &gt;&gt; a[i];</span>
+<span id="cb3-38"><a aria-hidden="true" href="#cb3-38"></a>    <span class="dt">clock_t</span> ed = clock();</span>
+<span id="cb3-39"><a aria-hidden="true" href="#cb3-39"></a>    <span class="cf">return</span> ed - st;</span>
+<span id="cb3-40"><a aria-hidden="true" href="#cb3-40"></a>}</span>
+<span id="cb3-41"><a aria-hidden="true" href="#cb3-41"></a></span>
+<span id="cb3-42"><a aria-hidden="true" href="#cb3-42"></a><span class="dt">clock_t</span> cinread2() {</span>
+<span id="cb3-43"><a aria-hidden="true" href="#cb3-43"></a>    <span class="bu">std::</span>ios<span class="bu">::</span>sync_with_stdio(<span class="kw">false</span>);</span>
+<span id="cb3-44"><a aria-hidden="true" href="#cb3-44"></a>    <span class="bu">std::</span>cin.tie(NULL);</span>
+<span id="cb3-45"><a aria-hidden="true" href="#cb3-45"></a>    <span class="dt">clock_t</span> st = clock();</span>
+<span id="cb3-46"><a aria-hidden="true" href="#cb3-46"></a>    <span class="cf">for</span> (<span class="dt">int</span> i = <span class="dv">1</span>; i &lt;= N; i++) <span class="bu">std::</span>cin &gt;&gt; a[i];</span>
+<span id="cb3-47"><a aria-hidden="true" href="#cb3-47"></a>    <span class="dt">clock_t</span> ed = clock();</span>
+<span id="cb3-48"><a aria-hidden="true" href="#cb3-48"></a>    <span class="cf">return</span> ed - st;</span>
+<span id="cb3-49"><a aria-hidden="true" href="#cb3-49"></a>}</span>
+<span id="cb3-50"><a aria-hidden="true" href="#cb3-50"></a></span>
+<span id="cb3-51"><a aria-hidden="true" href="#cb3-51"></a><span class="kw">namespace</span> fastIO {</span>
+<span id="cb3-52"><a aria-hidden="true" href="#cb3-52"></a><span class="at">const</span> <span class="dt">int</span> maxc = <span class="dv">1</span> &lt;&lt; <span class="dv">26</span>;</span>
+<span id="cb3-53"><a aria-hidden="true" href="#cb3-53"></a><span class="dt">char</span> ibuf[maxc], *__p1 = ibuf, *__p2 = ibuf;</span>
+<span id="cb3-54"><a aria-hidden="true" href="#cb3-54"></a>il <span class="dt">char</span> getchar() {<span class="cf">return</span> __p1 == __p2 &amp;&amp; (__p2 = (__p1 = ibuf) + fread(ibuf, <span class="dv">1</span>, maxc, stdin), __p1 == __p2) ? EOF : *__p1++;}</span>
+<span id="cb3-55"><a aria-hidden="true" href="#cb3-55"></a><span class="kw">template</span>&lt;<span class="kw">typename</span> T&gt; <span class="dt">void</span> read(T &amp;n) {</span>
+<span id="cb3-56"><a aria-hidden="true" href="#cb3-56"></a>    <span class="dt">int</span> x = <span class="dv">0</span>; n = <span class="dv">0</span>;</span>
+<span id="cb3-57"><a aria-hidden="true" href="#cb3-57"></a>    <span class="dt">char</span> c = getchar();</span>
+<span id="cb3-58"><a aria-hidden="true" href="#cb3-58"></a>    <span class="cf">while</span> (!isdigit(c))</span>
+<span id="cb3-59"><a aria-hidden="true" href="#cb3-59"></a>        x |= (c == <span class="ch">'-'</span>), c = getchar();</span>
+<span id="cb3-60"><a aria-hidden="true" href="#cb3-60"></a>    <span class="cf">while</span> (isdigit(c))</span>
+<span id="cb3-61"><a aria-hidden="true" href="#cb3-61"></a>        n = n * <span class="dv">10</span> + c - <span class="ch">'0'</span>, c = getchar();</span>
+<span id="cb3-62"><a aria-hidden="true" href="#cb3-62"></a>    n = x ? -n : n;</span>
+<span id="cb3-63"><a aria-hidden="true" href="#cb3-63"></a>}</span>
+<span id="cb3-64"><a aria-hidden="true" href="#cb3-64"></a>}</span>
+<span id="cb3-65"><a aria-hidden="true" href="#cb3-65"></a></span>
+<span id="cb3-66"><a aria-hidden="true" href="#cb3-66"></a><span class="dt">clock_t</span> freadread() {</span>
+<span id="cb3-67"><a aria-hidden="true" href="#cb3-67"></a>    <span class="kw">using</span> <span class="kw">namespace</span> fastIO;</span>
+<span id="cb3-68"><a aria-hidden="true" href="#cb3-68"></a>    <span class="dt">clock_t</span> st = clock();</span>
+<span id="cb3-69"><a aria-hidden="true" href="#cb3-69"></a>    <span class="cf">for</span> (<span class="dt">int</span> i = <span class="dv">1</span>; i &lt;= N; i++) read(a[i]);</span>
+<span id="cb3-70"><a aria-hidden="true" href="#cb3-70"></a>    <span class="dt">clock_t</span> ed = clock();</span>
+<span id="cb3-71"><a aria-hidden="true" href="#cb3-71"></a>    <span class="cf">return</span> ed - st;</span>
+<span id="cb3-72"><a aria-hidden="true" href="#cb3-72"></a>}</span>
+<span id="cb3-73"><a aria-hidden="true" href="#cb3-73"></a></span>
+<span id="cb3-74"><a aria-hidden="true" href="#cb3-74"></a><span class="dt">void</span> flush() {</span>
+<span id="cb3-75"><a aria-hidden="true" href="#cb3-75"></a>    fclose(stdin);</span>
+<span id="cb3-76"><a aria-hidden="true" href="#cb3-76"></a>    freopen(<span class="st">"io.in"</span>, <span class="st">"r"</span>, stdin);</span>
+<span id="cb3-77"><a aria-hidden="true" href="#cb3-77"></a>    <span class="cf">return</span>;</span>
+<span id="cb3-78"><a aria-hidden="true" href="#cb3-78"></a>}</span>
+<span id="cb3-79"><a aria-hidden="true" href="#cb3-79"></a></span>
+<span id="cb3-80"><a aria-hidden="true" href="#cb3-80"></a><span class="dt">int</span> main() {</span>
+<span id="cb3-81"><a aria-hidden="true" href="#cb3-81"></a>    freopen(<span class="st">"iotmp.txt"</span>, <span class="st">"w"</span>, stdout);</span>
+<span id="cb3-82"><a aria-hidden="true" href="#cb3-82"></a>    flush(), printf(<span class="st">"</span><span class="sc">%ld\t</span><span class="st">"</span>, scanfread());</span>
+<span id="cb3-83"><a aria-hidden="true" href="#cb3-83"></a>    flush(), printf(<span class="st">"</span><span class="sc">%ld\t</span><span class="st">"</span>, cinread());</span>
+<span id="cb3-84"><a aria-hidden="true" href="#cb3-84"></a>    flush(), printf(<span class="st">"</span><span class="sc">%ld\t</span><span class="st">"</span>, cinread2());</span>
+<span id="cb3-85"><a aria-hidden="true" href="#cb3-85"></a>    flush(), printf(<span class="st">"</span><span class="sc">%ld\t</span><span class="st">"</span>, getcharread());</span>
+<span id="cb3-86"><a aria-hidden="true" href="#cb3-86"></a>    flush(), printf(<span class="st">"</span><span class="sc">%ld\n</span><span class="st">"</span>, freadread());</span>
+<span id="cb3-87"><a aria-hidden="true" href="#cb3-87"></a>}</span></code></pre></div>
+<p><code>IOtest2.cpp</code>：</p>
+<div class="sourceCode" id="cb4"><pre class="sourceCode cpp"><code class="sourceCode cpp"><span id="cb4-1"><a aria-hidden="true" href="#cb4-1"></a><span class="pp">#include </span><span class="im">&lt;bits/stdc++.h&gt;</span></span>
+<span id="cb4-2"><a aria-hidden="true" href="#cb4-2"></a></span>
+<span id="cb4-3"><a aria-hidden="true" href="#cb4-3"></a><span class="dt">int</span> main() {</span>
+<span id="cb4-4"><a aria-hidden="true" href="#cb4-4"></a>    freopen(<span class="st">"iotest.csv"</span>, <span class="st">"w"</span>, stdout);</span>
+<span id="cb4-5"><a aria-hidden="true" href="#cb4-5"></a>    printf(<span class="st">"case,scanf,cin,cin2,getchar,fread</span><span class="sc">\n</span><span class="st">"</span>);</span>
+<span id="cb4-6"><a aria-hidden="true" href="#cb4-6"></a>    <span class="cf">for</span> (<span class="dt">int</span> i = <span class="dv">1</span>; i &lt;= <span class="dv">10</span>; ++i) {</span>
+<span id="cb4-7"><a aria-hidden="true" href="#cb4-7"></a>        system(<span class="st">"IOtest.exe"</span>);</span>
+<span id="cb4-8"><a aria-hidden="true" href="#cb4-8"></a>        freopen(<span class="st">"iotmp.txt"</span>, <span class="st">"r"</span>, stdin);</span>
+<span id="cb4-9"><a aria-hidden="true" href="#cb4-9"></a>        printf(<span class="st">"</span><span class="sc">%d</span><span class="st">,"</span>, i);</span>
+<span id="cb4-10"><a aria-hidden="true" href="#cb4-10"></a>        <span class="cf">for</span> (<span class="dt">int</span> j = <span class="dv">1</span>, tmp; j &lt;= <span class="dv">5</span>; ++j) {</span>
+<span id="cb4-11"><a aria-hidden="true" href="#cb4-11"></a>            scanf(<span class="st">"</span><span class="sc">%d</span><span class="st">"</span>, &amp;tmp);</span>
+<span id="cb4-12"><a aria-hidden="true" href="#cb4-12"></a>            printf(<span class="st">"</span><span class="sc">%d%c</span><span class="st">"</span>, tmp, j == <span class="dv">5</span> ? <span class="ch">'</span><span class="sc">\n</span><span class="ch">'</span> : <span class="ch">','</span>);</span>
+<span id="cb4-13"><a aria-hidden="true" href="#cb4-13"></a>        }</span>
+<span id="cb4-14"><a aria-hidden="true" href="#cb4-14"></a>        fclose(stdin);</span>
+<span id="cb4-15"><a aria-hidden="true" href="#cb4-15"></a>    }</span>
+<span id="cb4-16"><a aria-hidden="true" href="#cb4-16"></a>}</span></code></pre></div>
+<h3 id="输出效率测试-1">输出效率测试</h3>
+<p><code>IOtest.cpp</code>：</p>
+<div class="sourceCode" id="cb5"><pre class="sourceCode cpp"><code class="sourceCode cpp"><span id="cb5-1"><a aria-hidden="true" href="#cb5-1"></a><span class="pp">#include </span><span class="im">&lt;bits/stdc++.h&gt;</span></span>
+<span id="cb5-2"><a aria-hidden="true" href="#cb5-2"></a><span class="pp">#define il </span><span class="kw">inline</span></span>
+<span id="cb5-3"><a aria-hidden="true" href="#cb5-3"></a></span>
+<span id="cb5-4"><a aria-hidden="true" href="#cb5-4"></a><span class="at">const</span> <span class="dt">int</span> maxn = <span class="fl">1e7</span> + <span class="dv">5</span>, N = <span class="fl">1e7</span>;</span>
+<span id="cb5-5"><a aria-hidden="true" href="#cb5-5"></a><span class="dt">int</span> a[maxn];</span>
+<span id="cb5-6"><a aria-hidden="true" href="#cb5-6"></a></span>
+<span id="cb5-7"><a aria-hidden="true" href="#cb5-7"></a><span class="dt">void</span> gen() {</span>
+<span id="cb5-8"><a aria-hidden="true" href="#cb5-8"></a>    freopen(<span class="st">"io.in"</span>, <span class="st">"w"</span>, stdout);</span>
+<span id="cb5-9"><a aria-hidden="true" href="#cb5-9"></a>    <span class="cf">for</span> (<span class="dt">int</span> i = <span class="dv">1</span>; i &lt;= N; ++i) printf(<span class="st">"</span><span class="sc">%d\n</span><span class="st">"</span>, i);</span>
+<span id="cb5-10"><a aria-hidden="true" href="#cb5-10"></a>    fclose(stdout);</span>
+<span id="cb5-11"><a aria-hidden="true" href="#cb5-11"></a>}</span>
+<span id="cb5-12"><a aria-hidden="true" href="#cb5-12"></a><span class="dt">clock_t</span> printf() {</span>
+<span id="cb5-13"><a aria-hidden="true" href="#cb5-13"></a>    freopen(<span class="st">"io.out"</span>, <span class="st">"w"</span>, stdout);</span>
+<span id="cb5-14"><a aria-hidden="true" href="#cb5-14"></a>    <span class="dt">clock_t</span> st = clock();</span>
+<span id="cb5-15"><a aria-hidden="true" href="#cb5-15"></a>    <span class="cf">for</span> (<span class="dt">int</span> i = <span class="dv">1</span>; i &lt;= N; ++i) printf(<span class="st">"</span><span class="sc">%d\n</span><span class="st">"</span>, i);</span>
+<span id="cb5-16"><a aria-hidden="true" href="#cb5-16"></a>    <span class="dt">clock_t</span> ed = clock();</span>
+<span id="cb5-17"><a aria-hidden="true" href="#cb5-17"></a>    fclose(stdout);</span>
+<span id="cb5-18"><a aria-hidden="true" href="#cb5-18"></a>    <span class="cf">return</span> ed - st;</span>
+<span id="cb5-19"><a aria-hidden="true" href="#cb5-19"></a>}</span>
+<span id="cb5-20"><a aria-hidden="true" href="#cb5-20"></a></span>
+<span id="cb5-21"><a aria-hidden="true" href="#cb5-21"></a><span class="dt">clock_t</span> cout() {</span>
+<span id="cb5-22"><a aria-hidden="true" href="#cb5-22"></a>    freopen(<span class="st">"io.out"</span>, <span class="st">"w"</span>, stdout);</span>
+<span id="cb5-23"><a aria-hidden="true" href="#cb5-23"></a>    <span class="dt">clock_t</span> st = clock();</span>
+<span id="cb5-24"><a aria-hidden="true" href="#cb5-24"></a>    <span class="cf">for</span> (<span class="dt">int</span> i = <span class="dv">1</span>; i &lt;= N; ++i) <span class="bu">std::</span>cout &lt;&lt; i &lt;&lt; <span class="ch">'</span><span class="sc">\n</span><span class="ch">'</span>;</span>
+<span id="cb5-25"><a aria-hidden="true" href="#cb5-25"></a>    <span class="dt">clock_t</span> ed = clock();</span>
+<span id="cb5-26"><a aria-hidden="true" href="#cb5-26"></a>    fclose(stdout);</span>
+<span id="cb5-27"><a aria-hidden="true" href="#cb5-27"></a>    <span class="cf">return</span> ed - st;</span>
+<span id="cb5-28"><a aria-hidden="true" href="#cb5-28"></a>}</span>
+<span id="cb5-29"><a aria-hidden="true" href="#cb5-29"></a></span>
+<span id="cb5-30"><a aria-hidden="true" href="#cb5-30"></a><span class="dt">clock_t</span> cout_endl() {</span>
+<span id="cb5-31"><a aria-hidden="true" href="#cb5-31"></a>    freopen(<span class="st">"io.out"</span>, <span class="st">"w"</span>, stdout);</span>
+<span id="cb5-32"><a aria-hidden="true" href="#cb5-32"></a>    <span class="dt">clock_t</span> st = clock();</span>
+<span id="cb5-33"><a aria-hidden="true" href="#cb5-33"></a>    <span class="cf">for</span> (<span class="dt">int</span> i = <span class="dv">1</span>; i &lt;= N; ++i) <span class="bu">std::</span>cout &lt;&lt; i &lt;&lt; <span class="bu">std::</span>endl;</span>
+<span id="cb5-34"><a aria-hidden="true" href="#cb5-34"></a>    <span class="dt">clock_t</span> ed = clock();</span>
+<span id="cb5-35"><a aria-hidden="true" href="#cb5-35"></a>    fclose(stdout);</span>
+<span id="cb5-36"><a aria-hidden="true" href="#cb5-36"></a>    <span class="cf">return</span> ed - st;</span>
+<span id="cb5-37"><a aria-hidden="true" href="#cb5-37"></a>}</span>
+<span id="cb5-38"><a aria-hidden="true" href="#cb5-38"></a></span>
+<span id="cb5-39"><a aria-hidden="true" href="#cb5-39"></a><span class="dt">void</span> print(<span class="dt">int</span> x) {</span>
+<span id="cb5-40"><a aria-hidden="true" href="#cb5-40"></a>    <span class="cf">if</span> (x &gt;= <span class="dv">10</span>) print(x / <span class="dv">10</span>);</span>
+<span id="cb5-41"><a aria-hidden="true" href="#cb5-41"></a>    putchar(x % <span class="dv">10</span> + <span class="ch">'0'</span>);</span>
+<span id="cb5-42"><a aria-hidden="true" href="#cb5-42"></a>    <span class="cf">return</span>;</span>
+<span id="cb5-43"><a aria-hidden="true" href="#cb5-43"></a>}</span>
+<span id="cb5-44"><a aria-hidden="true" href="#cb5-44"></a></span>
+<span id="cb5-45"><a aria-hidden="true" href="#cb5-45"></a><span class="dt">clock_t</span> putchar() {</span>
+<span id="cb5-46"><a aria-hidden="true" href="#cb5-46"></a>    freopen(<span class="st">"io.out"</span>, <span class="st">"w"</span>, stdout);</span>
+<span id="cb5-47"><a aria-hidden="true" href="#cb5-47"></a>    <span class="dt">clock_t</span> st = clock();</span>
+<span id="cb5-48"><a aria-hidden="true" href="#cb5-48"></a>    <span class="cf">for</span> (<span class="dt">int</span> i = <span class="dv">1</span>; i &lt;= N; ++i) print(i), putchar(<span class="ch">'</span><span class="sc">\n</span><span class="ch">'</span>);</span>
+<span id="cb5-49"><a aria-hidden="true" href="#cb5-49"></a>    <span class="dt">clock_t</span> ed = clock();</span>
+<span id="cb5-50"><a aria-hidden="true" href="#cb5-50"></a>    fclose(stdout);</span>
+<span id="cb5-51"><a aria-hidden="true" href="#cb5-51"></a>    <span class="cf">return</span> ed - st;</span>
+<span id="cb5-52"><a aria-hidden="true" href="#cb5-52"></a>}</span>
+<span id="cb5-53"><a aria-hidden="true" href="#cb5-53"></a></span>
+<span id="cb5-54"><a aria-hidden="true" href="#cb5-54"></a><span class="kw">namespace</span> fastIO {</span>
+<span id="cb5-55"><a aria-hidden="true" href="#cb5-55"></a><span class="dt">char</span> obuf[<span class="dv">1</span> &lt;&lt; <span class="dv">26</span>], *__pO = obuf;</span>
+<span id="cb5-56"><a aria-hidden="true" href="#cb5-56"></a>il <span class="dt">void</span> putchar(<span class="dt">char</span> c) {*__pO++ = c;}</span>
+<span id="cb5-57"><a aria-hidden="true" href="#cb5-57"></a><span class="kw">template</span>&lt;<span class="kw">typename</span> T&gt; <span class="dt">void</span> print(<span class="at">const</span> T &amp;x) {</span>
+<span id="cb5-58"><a aria-hidden="true" href="#cb5-58"></a>    <span class="cf">if</span> (x &gt; <span class="dv">9</span>) print(x / <span class="dv">10</span>);</span>
+<span id="cb5-59"><a aria-hidden="true" href="#cb5-59"></a>    putchar(x % <span class="dv">10</span> + <span class="ch">'0'</span>);</span>
+<span id="cb5-60"><a aria-hidden="true" href="#cb5-60"></a>    <span class="cf">return</span>;</span>
+<span id="cb5-61"><a aria-hidden="true" href="#cb5-61"></a>}</span>
+<span id="cb5-62"><a aria-hidden="true" href="#cb5-62"></a><span class="dt">void</span> output() {fwrite(obuf, __pO - obuf, <span class="dv">1</span>, stdout);}</span>
+<span id="cb5-63"><a aria-hidden="true" href="#cb5-63"></a>}</span>
+<span id="cb5-64"><a aria-hidden="true" href="#cb5-64"></a></span>
+<span id="cb5-65"><a aria-hidden="true" href="#cb5-65"></a><span class="dt">clock_t</span> fastio() {</span>
+<span id="cb5-66"><a aria-hidden="true" href="#cb5-66"></a>    freopen(<span class="st">"io.out"</span>, <span class="st">"w"</span>, stdout);</span>
+<span id="cb5-67"><a aria-hidden="true" href="#cb5-67"></a>    freopen(<span class="st">"io.out"</span>, <span class="st">"w"</span>, stdout);</span>
+<span id="cb5-68"><a aria-hidden="true" href="#cb5-68"></a>    <span class="kw">using</span> <span class="kw">namespace</span> fastIO;</span>
+<span id="cb5-69"><a aria-hidden="true" href="#cb5-69"></a>    <span class="dt">clock_t</span> st = clock();</span>
+<span id="cb5-70"><a aria-hidden="true" href="#cb5-70"></a>    <span class="cf">for</span> (<span class="dt">int</span> i = <span class="dv">1</span>; i &lt;= N; ++i) print(i), putchar(<span class="ch">'</span><span class="sc">\n</span><span class="ch">'</span>);</span>
+<span id="cb5-71"><a aria-hidden="true" href="#cb5-71"></a>    output();</span>
+<span id="cb5-72"><a aria-hidden="true" href="#cb5-72"></a>    <span class="dt">clock_t</span> ed = clock();</span>
+<span id="cb5-73"><a aria-hidden="true" href="#cb5-73"></a>    fclose(stdout);</span>
+<span id="cb5-74"><a aria-hidden="true" href="#cb5-74"></a>    <span class="cf">return</span> ed - st;</span>
+<span id="cb5-75"><a aria-hidden="true" href="#cb5-75"></a>}</span>
+<span id="cb5-76"><a aria-hidden="true" href="#cb5-76"></a></span>
+<span id="cb5-77"><a aria-hidden="true" href="#cb5-77"></a><span class="dt">int</span> main() {</span>
+<span id="cb5-78"><a aria-hidden="true" href="#cb5-78"></a>    <span class="dt">clock_t</span> a[<span class="dv">6</span>];</span>
+<span id="cb5-79"><a aria-hidden="true" href="#cb5-79"></a>    a[<span class="dv">1</span>] = printf();</span>
+<span id="cb5-80"><a aria-hidden="true" href="#cb5-80"></a>    a[<span class="dv">2</span>] = cout();</span>
+<span id="cb5-81"><a aria-hidden="true" href="#cb5-81"></a>    a[<span class="dv">3</span>] = cout_endl();</span>
+<span id="cb5-82"><a aria-hidden="true" href="#cb5-82"></a>    a[<span class="dv">4</span>] = putchar();</span>
+<span id="cb5-83"><a aria-hidden="true" href="#cb5-83"></a>    a[<span class="dv">5</span>] = fastio();</span>
+<span id="cb5-84"><a aria-hidden="true" href="#cb5-84"></a>    freopen(<span class="st">"iotmp.txt"</span>, <span class="st">"w"</span>, stdout);</span>
+<span id="cb5-85"><a aria-hidden="true" href="#cb5-85"></a>    <span class="cf">for</span> (<span class="dt">int</span> i = <span class="dv">1</span>; i &lt;= <span class="dv">5</span>; ++i) printf(<span class="st">"</span><span class="sc">%d\n</span><span class="st">"</span>, a[i]);</span>
+<span id="cb5-86"><a aria-hidden="true" href="#cb5-86"></a>    <span class="cf">return</span> <span class="dv">0</span>;</span>
+<span id="cb5-87"><a aria-hidden="true" href="#cb5-87"></a>}</span></code></pre></div>
+<p><code>IOtest2.cpp</code></p>
+<div class="sourceCode" id="cb6"><pre class="sourceCode cpp"><code class="sourceCode cpp"><span id="cb6-1"><a aria-hidden="true" href="#cb6-1"></a><span class="pp">#include </span><span class="im">&lt;bits/stdc++.h&gt;</span></span>
+<span id="cb6-2"><a aria-hidden="true" href="#cb6-2"></a></span>
+<span id="cb6-3"><a aria-hidden="true" href="#cb6-3"></a><span class="dt">int</span> main() {</span>
+<span id="cb6-4"><a aria-hidden="true" href="#cb6-4"></a>    freopen(<span class="st">"iotest.csv"</span>, <span class="st">"w"</span>, stdout);</span>
+<span id="cb6-5"><a aria-hidden="true" href="#cb6-5"></a>    printf(<span class="st">"case,printf,cout,cout_endl,putchar,fwrite</span><span class="sc">\n</span><span class="st">"</span>);</span>
+<span id="cb6-6"><a aria-hidden="true" href="#cb6-6"></a>    <span class="cf">for</span> (<span class="dt">int</span> i = <span class="dv">1</span>; i &lt;= <span class="dv">10</span>; ++i) {</span>
+<span id="cb6-7"><a aria-hidden="true" href="#cb6-7"></a>        system(<span class="st">"IOtest.exe"</span>);</span>
+<span id="cb6-8"><a aria-hidden="true" href="#cb6-8"></a>        freopen(<span class="st">"iotmp.txt"</span>, <span class="st">"r"</span>, stdin);</span>
+<span id="cb6-9"><a aria-hidden="true" href="#cb6-9"></a>        printf(<span class="st">"</span><span class="sc">%d</span><span class="st">,"</span>, i);</span>
+<span id="cb6-10"><a aria-hidden="true" href="#cb6-10"></a>        <span class="cf">for</span> (<span class="dt">int</span> j = <span class="dv">1</span>, tmp; j &lt;= <span class="dv">5</span>; ++j) {</span>
+<span id="cb6-11"><a aria-hidden="true" href="#cb6-11"></a>            scanf(<span class="st">"</span><span class="sc">%d</span><span class="st">"</span>, &amp;tmp);</span>
+<span id="cb6-12"><a aria-hidden="true" href="#cb6-12"></a>            printf(<span class="st">"</span><span class="sc">%d%c</span><span class="st">"</span>, tmp, j == <span class="dv">5</span> ? <span class="ch">'</span><span class="sc">\n</span><span class="ch">'</span> : <span class="ch">','</span>);</span>
+<span id="cb6-13"><a aria-hidden="true" href="#cb6-13"></a>        }</span>
+<span id="cb6-14"><a aria-hidden="true" href="#cb6-14"></a>        fclose(stdin);</span>
+<span id="cb6-15"><a aria-hidden="true" href="#cb6-15"></a>    }</span>
+<span id="cb6-16"><a aria-hidden="true" href="#cb6-16"></a>}</span></code></pre></div>
+</section>
+<footer class="article-footer">
+<section class="article-tags">
+<a href="/tags/OI/">OI</a>
+<a href="/tags/note/">笔记</a>
+</section>
+<section class="article-copyright">
+<svg class="icon icon-tabler icon-tabler-copyright" fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+<path d="M0 0h24v24H0z" stroke="none"></path>
+<circle cx="12" cy="12" r="9"></circle>
+<path d="M14.5 9a3.5 4 0 1 0 0 6"></path>
+</svg>
+<span>Licensed under CC BY-NC-SA 4.0</span>
+</section>
+</footer>
+<link crossorigin="anonymous" href="https://cdn.jsdelivr.net/npm/katex@0.13.13/dist/katex.min.css" integrity="sha384-RZU/ijkSsFbcmivfdRBQDtwuwVqK7GMOw6IMvKyeWL2K5UAlyp6WonmB8m7Jd0Hn" rel="stylesheet"/><script crossorigin="anonymous" defer="" integrity="sha384-pK1WpvzWVBQiP0/GjnvRxV4mOb0oxFuyRxJlk6vVw146n3egcN5C925NCP7a7BY8" src="https://cdn.jsdelivr.net/npm/katex@0.13.13/dist/katex.min.js">
+</script><script crossorigin="anonymous" defer="" integrity="sha384-vZTG03m+2yp6N6BNi5iM4rW4oIwk5DfcNdFfxkk9ZWpDriOkXX8voJBFrAO7MpVl" src="https://cdn.jsdelivr.net/npm/katex@0.13.13/dist/contrib/auto-render.min.js">
+</script><script>
+    window.addEventListener("DOMContentLoaded", () => {
+        renderMathInElement(document.querySelector(`.article-content`), {
+            delimiters: [
+                { left: "$$", right: "$$", display: true },
+                { left: "$", right: "$", display: false },
+                { left: "\\(", right: "\\)", display: false },
+                { left: "\\[", right: "\\]", display: true }
+            ]
+        });})
+</script>
+</article>
+<aside class="related-contents--wrapper">
+<h2 class="section-title">相关文章</h2>
+<div class="related-contents">
+<div class="flex article-list--tile">
+<article class="has-image">
+<a href="/note-gf/">
+<div class="article-image">
+<img data-hash="https://yangty-pic.oss-cn-beijing.aliyuncs.com/bg28.webp" data-key="" loading="lazy" src="https://yangty-pic.oss-cn-beijing.aliyuncs.com/bg28.webp"/>
+</div>
+<div class="article-details">
+<h2 class="article-title">生成函数胡扯</h2>
+</div>
+</a>
+</article>
+<article class="has-image">
+<a href="/note-set-power-series/">
+<div class="article-image">
+<img data-hash="https://yangty-pic.oss-cn-beijing.aliyuncs.com/bg39.webp" data-key="" loading="lazy" src="https://yangty-pic.oss-cn-beijing.aliyuncs.com/bg39.webp"/>
+</div>
+<div class="article-details">
+<h2 class="article-title">集合幂级数胡扯</h2>
+</div>
+</a>
+</article>
+<article class="has-image">
+<a href="/note-linear-basis/">
+<div class="article-image">
+<img data-hash="https://yangty-pic.oss-cn-beijing.aliyuncs.com/bg19.webp" data-key="" loading="lazy" src="https://yangty-pic.oss-cn-beijing.aliyuncs.com/bg19.webp"/>
+</div>
+<div class="article-details">
+<h2 class="article-title">线性基学习笔记</h2>
+</div>
+</a>
+</article>
+<article class="has-image">
+<a href="/note-wqs/">
+<div class="article-image">
+<img data-hash="https://yangty-pic.oss-cn-beijing.aliyuncs.com/bg28.webp" data-key="" loading="lazy" src="https://yangty-pic.oss-cn-beijing.aliyuncs.com/bg28.webp"/>
+</div>
+<div class="article-details">
+<h2 class="article-title">wqs 二分学习笔记</h2>
+</div>
+</a>
+</article>
+<article class="has-image">
+<a href="/note-builtin/">
+<div class="article-image">
+<img data-hash="https://yangty-pic.oss-cn-beijing.aliyuncs.com/bg9.webp" data-key="" loading="lazy" src="https://yangty-pic.oss-cn-beijing.aliyuncs.com/bg9.webp"/>
+</div>
+<div class="article-details">
+<h2 class="article-title">__builtin 系列函数总结</h2>
+</div>
+</a>
+</article>
+</div>
+</div>
+</aside>
+<footer class="site-footer">
+<section class="copyright">
+        © 
+        
+            2019 - 
+        
+        2024 清烛的博客
+    </section>
+<section class="powerby">
+        Built with <a href="https://gohugo.io/" rel="noopener" target="_blank">Hugo</a> <br/>
+        主题 <b><a data-version="3.11.0" href="https://github.com/CaiJimmy/hugo-theme-stack" rel="noopener" target="_blank">Stack</a></b> 由 <a href="https://jimmycai.com" rel="noopener" target="_blank">Jimmy</a> 设计
+    </section>
+</footer>
+<div aria-hidden="true" class="pswp" role="dialog" tabindex="-1">
+<div class="pswp__bg"></div>
+<div class="pswp__scroll-wrap">
+<div class="pswp__container">
+<div class="pswp__item"></div>
+<div class="pswp__item"></div>
+<div class="pswp__item"></div>
+</div>
+<div class="pswp__ui pswp__ui--hidden">
+<div class="pswp__top-bar">
+<div class="pswp__counter"></div>
+<button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+<button class="pswp__button pswp__button--share" title="Share"></button>
+<button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+<button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+<div class="pswp__preloader">
+<div class="pswp__preloader__icn">
+<div class="pswp__preloader__cut">
+<div class="pswp__preloader__donut"></div>
+</div>
+</div>
+</div>
+</div>
+<div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+<div class="pswp__share-tooltip"></div>
+</div>
+<button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+</button>
+<button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+</button>
+<div class="pswp__caption">
+<div class="pswp__caption__center"></div>
+</div>
+</div>
+</div>
+</div><script crossorigin="anonymous" defer="" integrity="sha256-ePwmChbbvXbsO02lbM3HoHbSHTHFAeChekF1xKJdleo=" src="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe.min.js">
+</script><script crossorigin="anonymous" defer="" integrity="sha256-UKkzOn/w1mBxRmLLGrSeyB4e1xbrp4xylgAWb3M42pU=" src="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe-ui-default.min.js">
+</script><link crossorigin="anonymous" href="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/default-skin/default-skin.css" integrity="sha256-c0uckgykQ9v5k+IqViZOZKc47Jn7KQil4/MP3ySA3F8=" rel="stylesheet"/><link crossorigin="anonymous" href="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe.css" integrity="sha256-SBLU4vv6CA6lHsZ1XyTdhyjJxCjPif/TRkjnsyGAGnE=" rel="stylesheet"/>
+</main>
+</div>
+<script crossorigin="anonymous" integrity="sha256-5NovOZc4iwiAWTYIFiIM7DxKUXKWvpVEuMEPLzcm5/g=" src="https://cdn.jsdelivr.net/npm/node-vibrant@3.1.5/dist/vibrant.min.js">
+</script><script defer="" src="/ts/main.js" type="text/javascript"></script>
+<script>
+    (function () {
+        const customFont = document.createElement('link');
+        customFont.href = "https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&display=swap";
+
+        customFont.type = "text/css";
+        customFont.rel = "stylesheet";
+
+        document.head.appendChild(customFont);
+    }());
+</script>
+</body>
+</html>

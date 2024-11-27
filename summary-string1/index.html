@@ -1,0 +1,679 @@
+<!DOCTYPE html>
+<html dir="ltr" lang="zh-CN">
+<head><meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1" name="viewport"/><meta content="前言 字符串下标从 \(1\) 开始，长度一般默认为 \(n\)； 用 \(s[i]\) 表示 \(s\) 的第 \(i\) 个字符； \(s[i..j]\) 表示 \(s\) 中从 \(s[i]\) 开始，到 \(s[j]\) 结束的一段子串； “后缀 \(i\)”表示以 \(s[i]\) 开头的后缀，即 \(s[i..n]\)； “前缀 \(i\)”表示以 \(s[i]\) 结尾的前缀，即 \(s[1..n]\)。 几乎所有的字符串算法都有一个特性：基于所求信息的特殊性质与已经求出的信息，使用增量法均摊复杂度求得所有信息。可以着重体会此类思想。
+Hash 简介 主要思想：将字符串映射到一个整数上。
+计算方式： \[ f(s) \equiv \sum_{i = 1}^ls[i]\times b^{l - i}\pmod m \] 即对于字符串 \(\texttt{xyz}\)，其哈希值为 \(24b^2 + 25b + 26\)。其中 \(m\) 使用大质数，\(b\) 取 \(29\) 或 \(31\) 之类的数。
+为了减少哈希冲突考虑实现双模哈希。
+常见取子串问题：求 \(f(s[l.. r])\) 的哈希值。维护哈希值的前缀和即可。注意到 \[ \begin{aligned} f(s[1.. l - 1]) &amp;amp;\equiv \sum_{i = 1}^{l - 1}s[i]\times b^{l - 1 - i}\\ f(s[1." name="description"/><title>字符串复习 1（字符串基础算法）</title>
+<link href="https://oi.imyangty.com/summary-string1/" rel="canonical"/>
+<link href="/scss/style.min.a5821f3d3ab84ce5a0ac21477e347a2e0ca00292e398d16c5e8e36ded6e35a23.css" rel="stylesheet"/><meta content="字符串复习 1（字符串基础算法）" property="og:title"/>
+<meta content="前言 字符串下标从 \(1\) 开始，长度一般默认为 \(n\)； 用 \(s[i]\) 表示 \(s\) 的第 \(i\) 个字符； \(s[i..j]\) 表示 \(s\) 中从 \(s[i]\) 开始，到 \(s[j]\) 结束的一段子串； “后缀 \(i\)”表示以 \(s[i]\) 开头的后缀，即 \(s[i..n]\)； “前缀 \(i\)”表示以 \(s[i]\) 结尾的前缀，即 \(s[1..n]\)。 几乎所有的字符串算法都有一个特性：基于所求信息的特殊性质与已经求出的信息，使用增量法均摊复杂度求得所有信息。可以着重体会此类思想。
+Hash 简介 主要思想：将字符串映射到一个整数上。
+计算方式： \[ f(s) \equiv \sum_{i = 1}^ls[i]\times b^{l - i}\pmod m \] 即对于字符串 \(\texttt{xyz}\)，其哈希值为 \(24b^2 + 25b + 26\)。其中 \(m\) 使用大质数，\(b\) 取 \(29\) 或 \(31\) 之类的数。
+为了减少哈希冲突考虑实现双模哈希。
+常见取子串问题：求 \(f(s[l.. r])\) 的哈希值。维护哈希值的前缀和即可。注意到 \[ \begin{aligned} f(s[1.. l - 1]) &amp;amp;\equiv \sum_{i = 1}^{l - 1}s[i]\times b^{l - 1 - i}\\ f(s[1." property="og:description"/>
+<meta content="https://oi.imyangty.com/summary-string1/" property="og:url"/>
+<meta content="清烛的博客" property="og:site_name"/>
+<meta content="article" property="og:type"/><meta content="Post" property="article:section"/><meta content="OI" property="article:tag"/><meta content="笔记" property="article:tag"/><meta content="2021-09-08T19:55:30+08:00" property="article:published_time"/><meta content="2021-09-08T19:55:30+08:00" property="article:modified_time"/><meta content="https://yangty-pic.oss-cn-beijing.aliyuncs.com/bg17.webp" property="og:image"/>
+<meta content="字符串复习 1（字符串基础算法）" name="twitter:title"/>
+<meta content="前言 字符串下标从 \(1\) 开始，长度一般默认为 \(n\)； 用 \(s[i]\) 表示 \(s\) 的第 \(i\) 个字符； \(s[i..j]\) 表示 \(s\) 中从 \(s[i]\) 开始，到 \(s[j]\) 结束的一段子串； “后缀 \(i\)”表示以 \(s[i]\) 开头的后缀，即 \(s[i..n]\)； “前缀 \(i\)”表示以 \(s[i]\) 结尾的前缀，即 \(s[1..n]\)。 几乎所有的字符串算法都有一个特性：基于所求信息的特殊性质与已经求出的信息，使用增量法均摊复杂度求得所有信息。可以着重体会此类思想。
+Hash 简介 主要思想：将字符串映射到一个整数上。
+计算方式： \[ f(s) \equiv \sum_{i = 1}^ls[i]\times b^{l - i}\pmod m \] 即对于字符串 \(\texttt{xyz}\)，其哈希值为 \(24b^2 + 25b + 26\)。其中 \(m\) 使用大质数，\(b\) 取 \(29\) 或 \(31\) 之类的数。
+为了减少哈希冲突考虑实现双模哈希。
+常见取子串问题：求 \(f(s[l.. r])\) 的哈希值。维护哈希值的前缀和即可。注意到 \[ \begin{aligned} f(s[1.. l - 1]) &amp;amp;\equiv \sum_{i = 1}^{l - 1}s[i]\times b^{l - 1 - i}\\ f(s[1." name="twitter:description"/><meta content="summary_large_image" name="twitter:card"/>
+<meta content="https://yangty-pic.oss-cn-beijing.aliyuncs.com/bg17.webp" name="twitter:image"/>
+<link href="https://q1.qlogo.cn/g?b=qq&amp;nk=375836877&amp;s=5" rel="shortcut icon"/>
+<link href="https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.5.1/build/styles/github-dark-dimmed.min.css" rel="stylesheet"/>
+<script src="https://cdn.jsdelivr.net/gh/highlightjs/cdn-release/build/highlight.min.js"></script>
+<script>hljs.highlightAll();</script>
+</head>
+<body class="article-page">
+<script>
+        (function() {
+            const colorSchemeKey = 'StackColorScheme';
+            if(!localStorage.getItem(colorSchemeKey)){
+                localStorage.setItem(colorSchemeKey, "auto");
+            }
+        })();
+    </script><script>
+    (function() {
+        const colorSchemeKey = 'StackColorScheme';
+        const colorSchemeItem = localStorage.getItem(colorSchemeKey);
+        const supportDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches === true;
+
+        if (colorSchemeItem == 'dark' || colorSchemeItem === 'auto' && supportDarkMode) {
+            
+
+            document.documentElement.dataset.scheme = 'dark';
+        } else {
+            document.documentElement.dataset.scheme = 'light';
+        }
+    })();
+</script>
+<div class="container main-container flex on-phone--column extended"><aside class="sidebar left-sidebar sticky">
+<button aria-label="切换菜单" class="hamburger hamburger--spin" id="toggle-menu" type="button">
+<span class="hamburger-box">
+<span class="hamburger-inner"></span>
+</span>
+</button>
+<header>
+<figure class="site-avatar">
+<a href="/">
+<img alt="Avatar" class="site-logo" height="300" loading="lazy" src="/img/avatar_huea3ce2119467b51fdd2a81393644a76d_51594_300x0_resize_q75_box.jpg" width="300"/>
+</a>
+<span class="emoji">😅</span>
+</figure>
+<div class="site-meta">
+<h1 class="site-name"><a href="/">清烛的博客</a></h1>
+<h2 class="site-description">烟火已谢，笙歌未停</h2>
+</div>
+</header><ol class="social-menu">
+<li>
+<a href="mailto:i@imyangty.com" target="_blank" title="email">
+<svg class="icon icon-tabler icon-tabler-mail" fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" viewbox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+<path d="M0 0h24v24H0z" fill="none" stroke="none"></path>
+<rect height="14" rx="2" width="18" x="3" y="5"></rect>
+<polyline points="3 7 12 13 21 7"></polyline>
+</svg>
+</a>
+</li>
+<li>
+<a href="https://github.com/Cgfyufsygsm" target="_blank" title="GitHub">
+<svg class="icon icon-tabler icon-tabler-brand-github" fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+<path d="M0 0h24v24H0z" fill="none" stroke="none"></path>
+<path d="M9 19c-4.3 1.4 -4.3 -2.5 -6 -3m12 5v-3.5c0 -1 .1 -1.4 -.5 -2c2.8 -.3 5.5 -1.4 5.5 -6a4.6 4.6 0 0 0 -1.3 -3.2a4.2 4.2 0 0 0 -.1 -3.2s-1.1 -.3 -3.5 1.3a12.3 12.3 0 0 0 -6.2 0c-2.4 -1.6 -3.5 -1.3 -3.5 -1.3a4.2 4.2 0 0 0 -.1 3.2a4.6 4.6 0 0 0 -1.3 3.2c0 4.6 2.7 5.7 5.5 6c-.6 .6 -.6 1.2 -.5 2v3.5"></path>
+</svg>
+</a>
+</li>
+<li>
+<a href="https://t.me/Cgfyufsygsm" target="_blank" title="Telegram">
+<svg class="icon icon-tabler icon-tabler-brand-telegram" fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" viewbox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+<path d="M0 0h24v24H0z" fill="none" stroke="none"></path>
+<path d="M15 10l-4 4l6 6l4 -16l-18 7l4 2l2 6l3 -4"></path>
+</svg>
+</a>
+</li>
+<li>
+<a href="https://twitter.com/Cgfyufsygsm" target="_blank" title="Twitter">
+<svg class="icon icon-tabler icon-tabler-brand-twitter" fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+<path d="M0 0h24v24H0z" fill="none" stroke="none"></path>
+<path d="M22 4.01c-1 .49 -1.98 .689 -3 .99c-1.121 -1.265 -2.783 -1.335 -4.38 -.737s-2.643 2.06 -2.62 3.737v1c-3.245 .083 -6.135 -1.395 -8 -4c0 0 -4.182 7.433 4 11c-1.872 1.247 -3.739 2.088 -6 2c3.308 1.803 6.913 2.423 10.034 1.517c3.58 -1.04 6.522 -3.723 7.651 -7.742a13.84 13.84 0 0 0 .497 -3.753c-.002 -.249 1.51 -2.772 1.818 -4.013z"></path>
+</svg>
+</a>
+</li>
+</ol><ol class="menu" id="main-menu">
+<li>
+<a href="/">
+<svg class="icon icon-tabler icon-tabler-home" fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+<path d="M0 0h24v24H0z" stroke="none"></path>
+<polyline points="5 12 3 12 12 3 21 12 19 12"></polyline>
+<path d="M5 12v7a2 2 0 0 0 2 2h10a2 2 0 0 0 2 -2v-7"></path>
+<path d="M9 21v-6a2 2 0 0 1 2 -2h2a2 2 0 0 1 2 2v6"></path>
+</svg>
+<span>主页</span>
+</a>
+</li>
+<li>
+<a href="/about/">
+<svg class="icon icon-tabler icon-tabler-user" fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+<path d="M0 0h24v24H0z" stroke="none"></path>
+<circle cx="12" cy="7" r="4"></circle>
+<path d="M6 21v-2a4 4 0 0 1 4 -4h4a4 4 0 0 1 4 4v2"></path>
+</svg>
+<span>关于</span>
+</a>
+</li>
+<li>
+<a href="/idx/">
+<svg class="icon icon-tabler icon-tabler-hash" fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+<path d="M0 0h24v24H0z" stroke="none"></path>
+<line x1="5" x2="19" y1="9" y2="9"></line>
+<line x1="5" x2="19" y1="15" y2="15"></line>
+<line x1="11" x2="7" y1="4" y2="20"></line>
+<line x1="17" x2="13" y1="4" y2="20"></line>
+</svg>
+<span>导航</span>
+</a>
+</li>
+<li>
+<a href="/archives/">
+<svg class="icon icon-tabler icon-tabler-archive" fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+<path d="M0 0h24v24H0z" stroke="none"></path>
+<rect height="4" rx="2" width="18" x="3" y="4"></rect>
+<path d="M5 8v10a2 2 0 0 0 2 2h10a2 2 0 0 0 2 -2v-10"></path>
+<line x1="10" x2="14" y1="12" y2="12"></line>
+</svg>
+<span>归档</span>
+</a>
+</li>
+<li>
+<a href="/search/">
+<svg class="icon icon-tabler icon-tabler-search" fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+<path d="M0 0h24v24H0z" stroke="none"></path>
+<circle cx="10" cy="10" r="7"></circle>
+<line x1="21" x2="15" y1="21" y2="15"></line>
+</svg>
+<span>搜索</span>
+</a>
+</li>
+<li>
+<a href="/friends/">
+<svg class="icon icon-tabler icon-tabler-link" fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+<path d="M0 0h24v24H0z" stroke="none"></path>
+<path d="M10 14a3.5 3.5 0 0 0 5 0l4 -4a3.5 3.5 0 0 0 -5 -5l-.5 .5"></path>
+<path d="M14 10a3.5 3.5 0 0 0 -5 0l-4 4a3.5 3.5 0 0 0 5 5l.5 -.5"></path>
+</svg>
+<span>友链</span>
+</a>
+</li>
+<li>
+<a href="https://blog.imyangty.com" target="_blank">
+<svg class="icon icon-tabler icon-tabler-home" fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+<path d="M0 0h24v24H0z" stroke="none"></path>
+<polyline points="5 12 3 12 12 3 21 12 19 12"></polyline>
+<path d="M5 12v7a2 2 0 0 0 2 2h10a2 2 0 0 0 2 -2v-7"></path>
+<path d="M9 21v-6a2 2 0 0 1 2 -2h2a2 2 0 0 1 2 2v6"></path>
+</svg>
+<span>主博客</span>
+</a>
+</li>
+<div class="menu-bottom-section">
+<li id="dark-mode-toggle">
+<svg class="icon icon-tabler icon-tabler-toggle-left" fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+<path d="M0 0h24v24H0z" stroke="none"></path>
+<circle cx="8" cy="12" r="2"></circle>
+<rect height="12" rx="6" width="20" x="2" y="6"></rect>
+</svg>
+<svg class="icon icon-tabler icon-tabler-toggle-right" fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+<path d="M0 0h24v24H0z" stroke="none"></path>
+<circle cx="16" cy="12" r="2"></circle>
+<rect height="12" rx="6" width="20" x="2" y="6"></rect>
+</svg>
+<span>暗色模式</span>
+</li>
+</div>
+</ol>
+</aside>
+<main class="main full-width">
+<article class="has-image main-article">
+<header class="article-header">
+<div class="article-image">
+<a href="/summary-string1/">
+<img alt="Featured image of post 字符串复习 1（字符串基础算法）" loading="lazy" src="https://yangty-pic.oss-cn-beijing.aliyuncs.com/bg17.webp"/>
+</a>
+</div>
+<div class="article-details">
+<header class="article-category">
+<a href="/categories/oi/">
+                OI
+            </a>
+<a href="/categories/summary/">
+                总结
+            </a>
+</header>
+<div class="article-title-wrapper">
+<h2 class="article-title">
+<a href="/summary-string1/">字符串复习 1（字符串基础算法）</a>
+</h2>
+</div>
+<footer class="article-time">
+<div>
+<svg class="icon icon-tabler icon-tabler-calendar-time" fill="none" height="56" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="56" xmlns="http://www.w3.org/2000/svg">
+<path d="M0 0h24v24H0z" stroke="none"></path>
+<path d="M11.795 21h-6.795a2 2 0 0 1 -2 -2v-12a2 2 0 0 1 2 -2h12a2 2 0 0 1 2 2v4"></path>
+<circle cx="18" cy="18" r="4"></circle>
+<path d="M15 3v4"></path>
+<path d="M7 3v4"></path>
+<path d="M3 11h16"></path>
+<path d="M18 16.496v1.504l1 1"></path>
+</svg>
+<time class="article-time--published">Sep 08, 2021</time>
+</div>
+<div>
+<svg class="icon icon-tabler icon-tabler-clock" fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+<path d="M0 0h24v24H0z" stroke="none"></path>
+<circle cx="12" cy="12" r="9"></circle>
+<polyline points="12 7 12 12 15 15"></polyline>
+</svg>
+<time class="article-time--reading">
+                    阅读时长: 7 分钟
+                </time>
+</div>
+</footer>
+</div>
+</header>
+<section class="article-content">
+<h2 id="前言">前言</h2>
+<ul>
+<li>字符串下标从 <span class="math inline">\(1\)</span> 开始，长度一般默认为 <span class="math inline">\(n\)</span>；</li>
+<li>用 <span class="math inline">\(s[i]\)</span> 表示 <span class="math inline">\(s\)</span> 的第 <span class="math inline">\(i\)</span> 个字符；</li>
+<li><span class="math inline">\(s[i..j]\)</span> 表示 <span class="math inline">\(s\)</span> 中从 <span class="math inline">\(s[i]\)</span> 开始，到 <span class="math inline">\(s[j]\)</span> 结束的一段子串；</li>
+<li>“后缀 <span class="math inline">\(i\)</span>”表示以 <span class="math inline">\(s[i]\)</span> 开头的后缀，即 <span class="math inline">\(s[i..n]\)</span>；</li>
+<li>“前缀 <span class="math inline">\(i\)</span>”表示以 <span class="math inline">\(s[i]\)</span> 结尾的前缀，即 <span class="math inline">\(s[1..n]\)</span>。</li>
+</ul>
+<p>几乎所有的字符串算法都有一个特性：基于<strong>所求信息的特殊性质</strong>与<strong>已经求出的信息</strong>，使用<strong>增量法均摊复杂度</strong>求得所有信息。可以着重体会此类思想。</p>
+<h2 id="hash">Hash</h2>
+<h3 id="简介">简介</h3>
+<p>主要思想：将字符串映射到一个整数上。</p>
+<p>计算方式： <span class="math display">\[
+f(s) \equiv \sum_{i = 1}^ls[i]\times b^{l - i}\pmod m
+\]</span> 即对于字符串 <span class="math inline">\(\texttt{xyz}\)</span>，其哈希值为 <span class="math inline">\(24b^2 + 25b + 26\)</span>。其中 <span class="math inline">\(m\)</span> 使用大质数，<span class="math inline">\(b\)</span> 取 <span class="math inline">\(29\)</span> 或 <span class="math inline">\(31\)</span> 之类的数。</p>
+<p>为了减少哈希冲突考虑实现双模哈希。</p>
+<p>常见取子串问题：求 <span class="math inline">\(f(s[l.. r])\)</span> 的哈希值。维护哈希值的前缀和即可。注意到 <span class="math display">\[
+\begin{aligned}
+f(s[1.. l - 1]) &amp;\equiv \sum_{i = 1}^{l - 1}s[i]\times b^{l - 1 - i}\\
+f(s[1.. r]) &amp;\equiv \sum_{i = 1}^r s[i]\times b^{r - i}\\
+f(s[l.. r]) &amp;\equiv \sum_{i = l}^rs[i]\times b^{r - l + 1 - i}
+\end{aligned}
+\]</span> 所以有 <span class="math display">\[
+f(s[l.. r]) \equiv f(s[1.. r]) -f(s[1.. l - 1]) \times b^{r - l + 1}
+\]</span> 可以快速判断两子串是否相等，还可结合周期进行考察。</p>
+<h3 id="应用">应用</h3>
+<ul>
+<li><strong>二分 + 哈希是很有效的乱搞！！</strong></li>
+<li><strong>二分 + 哈希是很有效的乱搞！！</strong></li>
+<li><strong>二分 + 哈希是很有效的乱搞！！</strong></li>
+<li><strong>二分 + 哈希是很有效的乱搞！！</strong></li>
+<li><strong>二分 + 哈希是很有效的乱搞！！</strong></li>
+</ul>
+<blockquote>
+<p>例题 <span class="math inline">\(1\)</span>：<a href="https://www.luogu.com.cn/problem/P4503">P4503 [CTSC2014]企鹅QQ</a></p>
+<p>给定 <span class="math inline">\(n\le 30000\)</span> 个长度为 <span class="math inline">\(l\le 200\)</span> 的字符串，问有多少对字符串满足只有一位不同。</p>
+</blockquote>
+<p>首先处理出所有串的哈希，然后考虑枚举这不同的一位，然后使用求出所有串去掉这一位之后所有的哈希值，排个序来找相同的数量。</p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode cpp"><code class="sourceCode cpp"><span id="cb1-1"><a aria-hidden="true" href="#cb1-1"></a><span class="pp">#include </span><span class="im">&lt;cstdio&gt;</span></span>
+<span id="cb1-2"><a aria-hidden="true" href="#cb1-2"></a><span class="pp">#include </span><span class="im">&lt;cstring&gt;</span></span>
+<span id="cb1-3"><a aria-hidden="true" href="#cb1-3"></a><span class="pp">#include </span><span class="im">&lt;algorithm&gt;</span></span>
+<span id="cb1-4"><a aria-hidden="true" href="#cb1-4"></a><span class="pp">#define FOR</span>(i,<span class="pp"> </span>a,<span class="pp"> </span>b)<span class="pp"> </span><span class="cf">for</span><span class="pp"> </span>(<span class="dt">int</span><span class="pp"> </span>i<span class="pp"> </span>=<span class="pp"> </span>a;<span class="pp"> </span>i<span class="pp"> </span>&lt;=<span class="pp"> </span>b;<span class="pp"> </span>++i)</span>
+<span id="cb1-5"><a aria-hidden="true" href="#cb1-5"></a></span>
+<span id="cb1-6"><a aria-hidden="true" href="#cb1-6"></a><span class="kw">typedef</span> <span class="dt">unsigned</span> <span class="dt">long</span> <span class="dt">long</span> ll;</span>
+<span id="cb1-7"><a aria-hidden="true" href="#cb1-7"></a></span>
+<span id="cb1-8"><a aria-hidden="true" href="#cb1-8"></a><span class="at">const</span> <span class="dt">int</span> maxn = <span class="dv">30000</span> + <span class="dv">5</span>, maxl = <span class="dv">200</span> + <span class="dv">7</span>;</span>
+<span id="cb1-9"><a aria-hidden="true" href="#cb1-9"></a><span class="at">const</span> ll p = <span class="dv">233</span>;</span>
+<span id="cb1-10"><a aria-hidden="true" href="#cb1-10"></a></span>
+<span id="cb1-11"><a aria-hidden="true" href="#cb1-11"></a><span class="dt">char</span> s[maxn][maxl];</span>
+<span id="cb1-12"><a aria-hidden="true" href="#cb1-12"></a>ll hash[maxn][maxl], powp[maxl], tmp[maxn];</span>
+<span id="cb1-13"><a aria-hidden="true" href="#cb1-13"></a><span class="dt">int</span> n, l;</span>
+<span id="cb1-14"><a aria-hidden="true" href="#cb1-14"></a></span>
+<span id="cb1-15"><a aria-hidden="true" href="#cb1-15"></a><span class="dt">int</span> main() {</span>
+<span id="cb1-16"><a aria-hidden="true" href="#cb1-16"></a>    scanf(<span class="st">"</span><span class="sc">%d</span><span class="st"> </span><span class="sc">%d</span><span class="st"> </span><span class="sc">%d</span><span class="st">"</span>, &amp;n, &amp;l, &amp;powp[<span class="dv">0</span>]);</span>
+<span id="cb1-17"><a aria-hidden="true" href="#cb1-17"></a>    powp[<span class="dv">0</span>] = <span class="dv">1</span>;</span>
+<span id="cb1-18"><a aria-hidden="true" href="#cb1-18"></a>    FOR(i, <span class="dv">1</span>, l)</span>
+<span id="cb1-19"><a aria-hidden="true" href="#cb1-19"></a>        powp[i] = powp[i - <span class="dv">1</span>] * p;</span>
+<span id="cb1-20"><a aria-hidden="true" href="#cb1-20"></a>    FOR(k, <span class="dv">1</span>, n) {</span>
+<span id="cb1-21"><a aria-hidden="true" href="#cb1-21"></a>        scanf(<span class="st">"</span><span class="sc">%s</span><span class="st">"</span>, &amp;s[k][<span class="dv">1</span>]);</span>
+<span id="cb1-22"><a aria-hidden="true" href="#cb1-22"></a>        FOR(i, <span class="dv">1</span>, l)</span>
+<span id="cb1-23"><a aria-hidden="true" href="#cb1-23"></a>            hash[k][i] = (hash[k][i - <span class="dv">1</span>] * p + s[k][i]);</span>
+<span id="cb1-24"><a aria-hidden="true" href="#cb1-24"></a>    }</span>
+<span id="cb1-25"><a aria-hidden="true" href="#cb1-25"></a>    <span class="dt">int</span> ans = <span class="dv">0</span>;</span>
+<span id="cb1-26"><a aria-hidden="true" href="#cb1-26"></a>    FOR(k, <span class="dv">1</span>, l) {</span>
+<span id="cb1-27"><a aria-hidden="true" href="#cb1-27"></a>        FOR(i, <span class="dv">1</span>, n)</span>
+<span id="cb1-28"><a aria-hidden="true" href="#cb1-28"></a>            tmp[i] = hash[i][k - <span class="dv">1</span>] * powp[l - k] + hash[i][l] - hash[i][k] * powp[l - k] ;</span>
+<span id="cb1-29"><a aria-hidden="true" href="#cb1-29"></a>        <span class="bu">std::</span>sort(tmp + <span class="dv">1</span>, tmp + n + <span class="dv">1</span>);</span>
+<span id="cb1-30"><a aria-hidden="true" href="#cb1-30"></a>        <span class="dt">int</span> sum = <span class="dv">1</span>;</span>
+<span id="cb1-31"><a aria-hidden="true" href="#cb1-31"></a>        FOR(i, <span class="dv">2</span>, n)</span>
+<span id="cb1-32"><a aria-hidden="true" href="#cb1-32"></a>            <span class="cf">if</span> (tmp[i] == tmp[i - <span class="dv">1</span>])</span>
+<span id="cb1-33"><a aria-hidden="true" href="#cb1-33"></a>                ans += (sum++);</span>
+<span id="cb1-34"><a aria-hidden="true" href="#cb1-34"></a>            <span class="cf">else</span> sum = <span class="dv">1</span>;</span>
+<span id="cb1-35"><a aria-hidden="true" href="#cb1-35"></a>    }</span>
+<span id="cb1-36"><a aria-hidden="true" href="#cb1-36"></a>    printf(<span class="st">"</span><span class="sc">%d\n</span><span class="st">"</span>, ans);</span>
+<span id="cb1-37"><a aria-hidden="true" href="#cb1-37"></a>    <span class="cf">return</span> <span class="dv">0</span>;</span>
+<span id="cb1-38"><a aria-hidden="true" href="#cb1-38"></a>}</span></code></pre></div>
+<blockquote>
+<p>例题 <span class="math inline">\(2\)</span>：<a href="https://www.luogu.com.cn/problem/P3538">P3538 [POI2012]OKR-A Horrible Poem</a></p>
+<p>字符串 <span class="math inline">\(S\)</span>，<span class="math inline">\(|S|\le 5\times 10^5\)</span>，<span class="math inline">\(q\le 2\times 10^6\)</span> 次询问子串 <span class="math inline">\(S[a..b]\)</span> 的最短循环节长度。注意循环节 = 整周期。</p>
+</blockquote>
+<p>hash 与循环节的经典应用。有若干经典结论：</p>
+<ul>
+<li>若 <span class="math inline">\(kl\)</span> 为循环节，则 <span class="math inline">\(l\)</span> 也为循环节；</li>
+<li><span class="math inline">\(S[1..n-l] = S[1+l..n]\)</span> 是 <span class="math inline">\(l\)</span> 为 <span class="math inline">\(S[1..n]\)</span> 的循环节的充要条件（即有一个 <span class="math inline">\(n-l+1\)</span> 长度的 Border）。</li>
+</ul>
+<p>在本题中，暴力枚举 <span class="math inline">\(b - a + 1\)</span> 的约数不可行，时间复杂度 <span class="math inline">\(O(q\sqrt{|S|})\)</span>，考虑线性筛素数并预处理每个数最小质因子，然后每次判断即可。</p>
+<div class="sourceCode" id="cb2"><pre class="sourceCode cpp"><code class="sourceCode cpp"><span id="cb2-1"><a aria-hidden="true" href="#cb2-1"></a><span class="dt">int</span> work(<span class="dt">int</span> l, <span class="dt">int</span> r) {</span>
+<span id="cb2-2"><a aria-hidden="true" href="#cb2-2"></a>    <span class="dt">int</span> len = r - l + <span class="dv">1</span>, ans = len;</span>
+<span id="cb2-3"><a aria-hidden="true" href="#cb2-3"></a>    <span class="cf">while</span> (len &gt; <span class="dv">1</span>) {</span>
+<span id="cb2-4"><a aria-hidden="true" href="#cb2-4"></a>        <span class="cf">if</span> (gethash(l + ans / minfact[len], r) == gethash(l, r - ans / minfact[len]))</span>
+<span id="cb2-5"><a aria-hidden="true" href="#cb2-5"></a>            ans /= minfact[len];</span>
+<span id="cb2-6"><a aria-hidden="true" href="#cb2-6"></a>        len /= minfact[len];</span>
+<span id="cb2-7"><a aria-hidden="true" href="#cb2-7"></a>    }</span>
+<span id="cb2-8"><a aria-hidden="true" href="#cb2-8"></a>    <span class="cf">return</span> ans;</span>
+<span id="cb2-9"><a aria-hidden="true" href="#cb2-9"></a>}</span></code></pre></div>
+<blockquote>
+<p>例题 <span class="math inline">\(3\)</span>：<a href="https://www.luogu.com.cn/problem/P4036">P4036 [JSOI2008]火星人</a></p>
+<p>动态修改字符串（插入字符，修改字符），每次询问 <span class="math inline">\(\operatorname{LCP}(x,y)\)</span>。<span class="math inline">\(m\le 1.5\times 10^5\)</span>，<span class="math inline">\(L\le 10^5\)</span>。</p>
+</blockquote>
+<p>如果不考虑动态修改那么就是 SA 的板子题，而注意到 LCP 可以通过二分 + 哈希解决，所以考虑使用平衡树来维护整个字符串的哈希值，支持查询区间哈希值即可。</p>
+<blockquote>
+<p>例题 <span class="math inline">\(4\)</span>：<a href="https://www.luogu.com.cn/problem/P3318">P3318 [SDOI2015]双旋转字符串</a></p>
+<p>给定字符串集合 <span class="math inline">\(S\)</span> 和 <span class="math inline">\(T\)</span>，满足 <span class="math inline">\(S\)</span> 内字符串长度均为 <span class="math inline">\(n\)</span>，<span class="math inline">\(T\)</span> 内字符串长度均为 <span class="math inline">\(m\)</span>，且 <span class="math inline">\(n+m\)</span> 为偶数。问有多少对 <span class="math inline">\((i,j)\)</span> 满足 <span class="math inline">\(s_i + t_j\)</span> 为“双旋转字符串”。</p>
+<p>双旋转字符串的定义是，其长度为偶数，且后一半是前一半的循环同构。<span class="math inline">\(2\le n\times |S| + m\times |T|\le 4\times 10^6\)</span>。</p>
+</blockquote>
+<p>考虑将 <span class="math inline">\(T\)</span> 中的串哈希好，放进 <code>unordered_map</code> 内预处理。然后对于 <span class="math inline">\(S\)</span> 内的每个串，关于前 <span class="math inline">\((n + m) / 2\)</span> 位倍长之，然后看每个循环移位的前缀是不是 <span class="math inline">\(S_i[(n + m) / 2..n]\)</span>，是的话就在哈希表里面查有多少个对应的 <span class="math inline">\(T\)</span>。</p>
+<div class="sourceCode" id="cb3"><pre class="sourceCode cpp"><code class="sourceCode cpp"><span id="cb3-1"><a aria-hidden="true" href="#cb3-1"></a><span class="pp">#include </span><span class="im">&lt;bits/stdc++.h&gt;</span></span>
+<span id="cb3-2"><a aria-hidden="true" href="#cb3-2"></a><span class="pp">#define FOR</span>(i,<span class="pp"> </span>a,<span class="pp"> </span>b)<span class="pp"> </span><span class="cf">for</span><span class="pp"> </span>(<span class="dt">int</span><span class="pp"> </span>i<span class="pp"> </span>=<span class="pp"> </span>(a);<span class="pp"> </span>i<span class="pp"> </span>&lt;=<span class="pp"> </span>(b);<span class="pp"> </span>++i)</span>
+<span id="cb3-3"><a aria-hidden="true" href="#cb3-3"></a></span>
+<span id="cb3-4"><a aria-hidden="true" href="#cb3-4"></a><span class="kw">using</span> <span class="kw">namespace</span> std;</span>
+<span id="cb3-5"><a aria-hidden="true" href="#cb3-5"></a><span class="kw">using</span> uint64 = <span class="dt">unsigned</span> <span class="dt">long</span> <span class="dt">long</span>;</span>
+<span id="cb3-6"><a aria-hidden="true" href="#cb3-6"></a><span class="at">const</span> uint64 base = <span class="dv">1331</span>;</span>
+<span id="cb3-7"><a aria-hidden="true" href="#cb3-7"></a><span class="at">const</span> <span class="dt">int</span> maxn = <span class="fl">4e6</span> + <span class="dv">5</span>;</span>
+<span id="cb3-8"><a aria-hidden="true" href="#cb3-8"></a><span class="dt">int</span> n, m, totS, totT, ans, len, vis[maxn];</span>
+<span id="cb3-9"><a aria-hidden="true" href="#cb3-9"></a>string s[maxn], t[maxn];</span>
+<span id="cb3-10"><a aria-hidden="true" href="#cb3-10"></a>uint64 pw[maxn], hsh[maxn];</span>
+<span id="cb3-11"><a aria-hidden="true" href="#cb3-11"></a>unordered_map&lt;uint64, <span class="dt">int</span>&gt; hashT;</span>
+<span id="cb3-12"><a aria-hidden="true" href="#cb3-12"></a></span>
+<span id="cb3-13"><a aria-hidden="true" href="#cb3-13"></a>uint64 getHash(string s, <span class="dt">int</span> len) {</span>
+<span id="cb3-14"><a aria-hidden="true" href="#cb3-14"></a>    uint64 res = <span class="dv">0</span>;</span>
+<span id="cb3-15"><a aria-hidden="true" href="#cb3-15"></a>    FOR(i, <span class="dv">0</span>, len - <span class="dv">1</span>) res = base * res + s[i];</span>
+<span id="cb3-16"><a aria-hidden="true" href="#cb3-16"></a>    <span class="cf">return</span> res;</span>
+<span id="cb3-17"><a aria-hidden="true" href="#cb3-17"></a>}</span>
+<span id="cb3-18"><a aria-hidden="true" href="#cb3-18"></a></span>
+<span id="cb3-19"><a aria-hidden="true" href="#cb3-19"></a>uint64 getHash(<span class="dt">int</span> l, <span class="dt">int</span> r) {</span>
+<span id="cb3-20"><a aria-hidden="true" href="#cb3-20"></a>    <span class="cf">return</span> hsh[r] - hsh[l - <span class="dv">1</span>] * pw[r - l + <span class="dv">1</span>];</span>
+<span id="cb3-21"><a aria-hidden="true" href="#cb3-21"></a>}</span>
+<span id="cb3-22"><a aria-hidden="true" href="#cb3-22"></a></span>
+<span id="cb3-23"><a aria-hidden="true" href="#cb3-23"></a><span class="dt">int</span> solve(string &amp;s, <span class="dt">int</span> id) {</span>
+<span id="cb3-24"><a aria-hidden="true" href="#cb3-24"></a>    <span class="dt">int</span> ret = <span class="dv">0</span>;</span>
+<span id="cb3-25"><a aria-hidden="true" href="#cb3-25"></a>    string tmp = <span class="st">"?"</span> + s.substr(<span class="dv">0</span>, len) + s.substr(<span class="dv">0</span>, len);</span>
+<span id="cb3-26"><a aria-hidden="true" href="#cb3-26"></a>    FOR(i, <span class="dv">1</span>, len &lt;&lt; <span class="dv">1</span>) hsh[i] = hsh[i - <span class="dv">1</span>] * base + tmp[i];</span>
+<span id="cb3-27"><a aria-hidden="true" href="#cb3-27"></a>    uint64 hshVal = getHash(s.substr(len, n - len), n - len);</span>
+<span id="cb3-28"><a aria-hidden="true" href="#cb3-28"></a>    unordered_set&lt;uint64&gt; vis;</span>
+<span id="cb3-29"><a aria-hidden="true" href="#cb3-29"></a>    <span class="cf">for</span> (<span class="dt">int</span> i = <span class="dv">1</span>, j = len; i &lt;= len; ++i, ++j) {</span>
+<span id="cb3-30"><a aria-hidden="true" href="#cb3-30"></a>        uint64 cur = getHash(i, j);</span>
+<span id="cb3-31"><a aria-hidden="true" href="#cb3-31"></a>        <span class="cf">if</span> (vis.count(cur)) <span class="cf">continue</span>;</span>
+<span id="cb3-32"><a aria-hidden="true" href="#cb3-32"></a>        vis.insert(cur);</span>
+<span id="cb3-33"><a aria-hidden="true" href="#cb3-33"></a>        <span class="cf">if</span> (getHash(i, i + n - len - <span class="dv">1</span>) == hshVal)</span>
+<span id="cb3-34"><a aria-hidden="true" href="#cb3-34"></a>            ret += hashT[getHash(i + n - len, j)];</span>
+<span id="cb3-35"><a aria-hidden="true" href="#cb3-35"></a>    }</span>
+<span id="cb3-36"><a aria-hidden="true" href="#cb3-36"></a>    <span class="cf">return</span> ret;</span>
+<span id="cb3-37"><a aria-hidden="true" href="#cb3-37"></a>}</span>
+<span id="cb3-38"><a aria-hidden="true" href="#cb3-38"></a></span>
+<span id="cb3-39"><a aria-hidden="true" href="#cb3-39"></a><span class="dt">int</span> main() {</span>
+<span id="cb3-40"><a aria-hidden="true" href="#cb3-40"></a>    ios::sync_with_stdio(<span class="kw">false</span>);</span>
+<span id="cb3-41"><a aria-hidden="true" href="#cb3-41"></a>    pw[<span class="dv">0</span>] = <span class="dv">1</span>;</span>
+<span id="cb3-42"><a aria-hidden="true" href="#cb3-42"></a>    FOR(i, <span class="dv">1</span>, (<span class="dt">int</span>)<span class="fl">4e6</span>) pw[i] = pw[i - <span class="dv">1</span>] * base;</span>
+<span id="cb3-43"><a aria-hidden="true" href="#cb3-43"></a>    cin &gt;&gt; totS &gt;&gt; totT &gt;&gt; n &gt;&gt; m;</span>
+<span id="cb3-44"><a aria-hidden="true" href="#cb3-44"></a>    <span class="cf">if</span> (n &lt; m) swap(totS, totT), swap(n, m);</span>
+<span id="cb3-45"><a aria-hidden="true" href="#cb3-45"></a>    len = (n + m) &gt;&gt; <span class="dv">1</span>;</span>
+<span id="cb3-46"><a aria-hidden="true" href="#cb3-46"></a>    FOR(i, <span class="dv">1</span>, totS) cin &gt;&gt; s[i];</span>
+<span id="cb3-47"><a aria-hidden="true" href="#cb3-47"></a>    FOR(i, <span class="dv">1</span>, totT) {</span>
+<span id="cb3-48"><a aria-hidden="true" href="#cb3-48"></a>        cin &gt;&gt; t[i];</span>
+<span id="cb3-49"><a aria-hidden="true" href="#cb3-49"></a>        ++hashT[getHash(t[i], m)];</span>
+<span id="cb3-50"><a aria-hidden="true" href="#cb3-50"></a>    }</span>
+<span id="cb3-51"><a aria-hidden="true" href="#cb3-51"></a>    FOR(i, <span class="dv">1</span>, totS) ans += solve(s[i], i);</span>
+<span id="cb3-52"><a aria-hidden="true" href="#cb3-52"></a>    printf(<span class="st">"</span><span class="sc">%d\n</span><span class="st">"</span>, ans);</span>
+<span id="cb3-53"><a aria-hidden="true" href="#cb3-53"></a>    <span class="cf">return</span> <span class="dv">0</span>;</span>
+<span id="cb3-54"><a aria-hidden="true" href="#cb3-54"></a>}</span></code></pre></div>
+<h2 id="manacher-算法">Manacher 算法</h2>
+<h3 id="算法流程">算法流程</h3>
+<p>用来求解回文子串。首先我们随便举两种回文串出来：<span class="math inline">\(\texttt{aba}\)</span> 和 <span class="math inline">\(\texttt{abba}\)</span>，会发现前者和后者的区别在于回文中心的有无。为了避免这种麻烦的分类讨论，在真正求解问题的时候提前将<strong>相同的</strong>分隔符加入，如 <span class="math inline">\(\texttt{\&amp;a\#b\#b\#a}\)</span>，开头的不同的分隔符之后再说。</p>
+<p>设以 <span class="math inline">\(s[i]\)</span> 为对称中心的最长回文半径为 <span class="math inline">\(p_i\)</span>，即 <span class="math inline">\(s[i-p_i +1..i+p_i-1]\)</span> 是回文串。</p>
+<p>考虑从左往右扫，依次求解 <span class="math inline">\(p_{1,\cdots, n}\)</span>。维护一下最右侧的回文串延伸到的位置 <span class="math inline">\(r\)</span> 以及对应的回文中心 <span class="math inline">\(d\)</span>，然后当前要求 <span class="math inline">\(p_i\)</span> 的时候：</p>
+<ul>
+<li><p>若 <span class="math inline">\(i&gt;r\)</span>，则直接暴力求 <span class="math inline">\(p_i\)</span>，同时更新 <span class="math inline">\(r\)</span> 和 <span class="math inline">\(d\)</span>。</p></li>
+<li><p>若 <span class="math inline">\(i\le r\)</span>，则先设 <span class="math inline">\(p_i = \min(r - i + 1, p_{2d-i})\)</span>，考虑到 <span class="math inline">\(i\)</span> 和 <span class="math inline">\(2d- i\)</span> 是对称的，且 <span class="math inline">\([2d-r, r]\)</span> 是回文的，那么 <span class="math inline">\(2d-i\)</span> 对应的回文的部分也能对应到 <span class="math inline">\(i\)</span> 的位置上面。</p>
+<p>若 <span class="math inline">\(p_{2d-i} &lt; r - i + 1\)</span> 说明 <span class="math inline">\(p_i = p_{2d-i}\)</span>，一定不会存在更大的回文半径。</p>
+<p>若 <span class="math inline">\(p_{2d-i}\ge r - i + 1\)</span>，那么把 <span class="math inline">\(p_i\)</span> 初始化为 <span class="math inline">\(r - i + 1\)</span> 然后慢慢往右边扩展，注意到这个时候 <span class="math inline">\(r\)</span> 指针会被移动。</p>
+<figure>
+<img alt="" src="https://yangty-pic.oss-cn-beijing.aliyuncs.com/manacher1.png"/><figcaption>manacher1</figcaption>
+</figure></li>
+</ul>
+<p>时间复杂度：考虑 <span class="math inline">\(r\)</span> 指针移动的次数是线性的。</p>
+<div class="sourceCode" id="cb4"><pre class="sourceCode cpp"><code class="sourceCode cpp"><span id="cb4-1"><a aria-hidden="true" href="#cb4-1"></a><span class="at">const</span> <span class="dt">int</span> maxn = <span class="fl">1.1e7</span> + <span class="dv">5</span>;</span>
+<span id="cb4-2"><a aria-hidden="true" href="#cb4-2"></a></span>
+<span id="cb4-3"><a aria-hidden="true" href="#cb4-3"></a><span class="dt">char</span> s[maxn &lt;&lt; <span class="dv">1</span>];</span>
+<span id="cb4-4"><a aria-hidden="true" href="#cb4-4"></a><span class="dt">int</span> len[maxn &lt;&lt; <span class="dv">1</span>], cnt, ans;</span>
+<span id="cb4-5"><a aria-hidden="true" href="#cb4-5"></a></span>
+<span id="cb4-6"><a aria-hidden="true" href="#cb4-6"></a><span class="kw">inline</span> <span class="dt">int</span> min(<span class="dt">int</span> a, <span class="dt">int</span> b) {<span class="cf">return</span> a &lt; b ? a : b;}</span>
+<span id="cb4-7"><a aria-hidden="true" href="#cb4-7"></a></span>
+<span id="cb4-8"><a aria-hidden="true" href="#cb4-8"></a><span class="dt">void</span> read() {</span>
+<span id="cb4-9"><a aria-hidden="true" href="#cb4-9"></a>    <span class="dt">char</span> c = getchar();</span>
+<span id="cb4-10"><a aria-hidden="true" href="#cb4-10"></a>    s[<span class="dv">0</span>] = <span class="ch">'&amp;'</span>, s[cnt = <span class="dv">1</span>] = <span class="ch">'#'</span>;</span>
+<span id="cb4-11"><a aria-hidden="true" href="#cb4-11"></a>    <span class="cf">while</span> (!isalpha(c)) c = getchar();</span>
+<span id="cb4-12"><a aria-hidden="true" href="#cb4-12"></a>    <span class="cf">while</span> (isalpha(c)) s[++cnt] = c, s[++cnt] = <span class="ch">'#'</span>, c = getchar();</span>
+<span id="cb4-13"><a aria-hidden="true" href="#cb4-13"></a>    <span class="cf">return</span>;</span>
+<span id="cb4-14"><a aria-hidden="true" href="#cb4-14"></a>}</span>
+<span id="cb4-15"><a aria-hidden="true" href="#cb4-15"></a></span>
+<span id="cb4-16"><a aria-hidden="true" href="#cb4-16"></a><span class="dt">int</span> main() {</span>
+<span id="cb4-17"><a aria-hidden="true" href="#cb4-17"></a>    read();</span>
+<span id="cb4-18"><a aria-hidden="true" href="#cb4-18"></a>    <span class="cf">for</span> (<span class="dt">int</span> i = <span class="dv">1</span>, r = <span class="dv">0</span>, mid = <span class="dv">0</span>; i &lt;= cnt; ++i) {</span>
+<span id="cb4-19"><a aria-hidden="true" href="#cb4-19"></a>        <span class="cf">if</span> (i &lt;= r)</span>
+<span id="cb4-20"><a aria-hidden="true" href="#cb4-20"></a>            len[i] = min(len[(mid &lt;&lt; <span class="dv">1</span>) - i], r - i + <span class="dv">1</span>);</span>
+<span id="cb4-21"><a aria-hidden="true" href="#cb4-21"></a>        <span class="cf">while</span> (s[i - len[i]] == s[i + len[i]]) ++len[i];</span>
+<span id="cb4-22"><a aria-hidden="true" href="#cb4-22"></a>        <span class="cf">if</span> (i + len[i] &gt; r) r = i + len[i] - <span class="dv">1</span>, mid = i;</span>
+<span id="cb4-23"><a aria-hidden="true" href="#cb4-23"></a>        <span class="cf">if</span> (len[i] &gt; ans) ans = len[i];</span>
+<span id="cb4-24"><a aria-hidden="true" href="#cb4-24"></a>    }</span>
+<span id="cb4-25"><a aria-hidden="true" href="#cb4-25"></a>    printf(<span class="st">"</span><span class="sc">%d\n</span><span class="st">"</span>, ans - <span class="dv">1</span>);</span>
+<span id="cb4-26"><a aria-hidden="true" href="#cb4-26"></a>    <span class="cf">return</span> <span class="dv">0</span>;</span>
+<span id="cb4-27"><a aria-hidden="true" href="#cb4-27"></a>}</span></code></pre></div>
+<h3 id="应用-1">应用</h3>
+<p>首先有一个技巧就是在 manacher 的过程中我们可以求出以 <span class="math inline">\(s[i]\)</span> 开头/结尾的最长回文子串的长度，具体地在扩展 <span class="math inline">\(r\)</span> 指针的时候进行处理，详见例题 <span class="math inline">\(1\)</span>。</p>
+<blockquote>
+<p>例题 <span class="math inline">\(1\)</span>：<a href="https://www.luogu.com.cn/problem/P4555">P4555 [国家集训队]最长双回文串</a></p>
+<p>求 <span class="math inline">\(S\)</span> 的最长双回文子串。一个串 <span class="math inline">\(T\)</span> 双回文是指其能表示为两个回文串的拼接。</p>
+</blockquote>
+<p>会发现找到 <span class="math inline">\(r_i\)</span> 和 <span class="math inline">\(l_i\)</span>（以 <span class="math inline">\(s[i]\)</span> 结尾/开头的最长回文子串）后答案就是 <span class="math inline">\(\max\{l_i+r_i\}\)</span>。</p>
+<div class="sourceCode" id="cb5"><pre class="sourceCode cpp"><code class="sourceCode cpp"><span id="cb5-1"><a aria-hidden="true" href="#cb5-1"></a><span class="pp">#include </span><span class="im">&lt;cstdio&gt;</span></span>
+<span id="cb5-2"><a aria-hidden="true" href="#cb5-2"></a><span class="pp">#include </span><span class="im">&lt;cstring&gt;</span></span>
+<span id="cb5-3"><a aria-hidden="true" href="#cb5-3"></a><span class="pp">#define FOR</span>(i,<span class="pp"> </span>a,<span class="pp"> </span>b)<span class="pp"> </span><span class="cf">for</span><span class="pp"> </span>(<span class="dt">int</span><span class="pp"> </span>i<span class="pp"> </span>=<span class="pp"> </span>a;<span class="pp"> </span>i<span class="pp"> </span>&lt;=<span class="pp"> </span>b;<span class="pp"> </span>++i)</span>
+<span id="cb5-4"><a aria-hidden="true" href="#cb5-4"></a><span class="pp">#define DEC</span>(i,<span class="pp"> </span>a,<span class="pp"> </span>b)<span class="pp"> </span><span class="cf">for</span><span class="pp"> </span>(<span class="dt">int</span><span class="pp"> </span>i<span class="pp"> </span>=<span class="pp"> </span>a;<span class="pp"> </span>i<span class="pp"> </span>&gt;=<span class="pp"> </span>b;<span class="pp"> </span>--i)</span>
+<span id="cb5-5"><a aria-hidden="true" href="#cb5-5"></a></span>
+<span id="cb5-6"><a aria-hidden="true" href="#cb5-6"></a><span class="kw">inline</span> <span class="dt">int</span> max(<span class="dt">int</span> a, <span class="dt">int</span> b) {<span class="cf">return</span> a &gt; b ? a : b;}</span>
+<span id="cb5-7"><a aria-hidden="true" href="#cb5-7"></a><span class="kw">inline</span> <span class="dt">int</span> min(<span class="dt">int</span> a, <span class="dt">int</span> b) {<span class="cf">return</span> a &lt; b ? a : b;}</span>
+<span id="cb5-8"><a aria-hidden="true" href="#cb5-8"></a></span>
+<span id="cb5-9"><a aria-hidden="true" href="#cb5-9"></a><span class="at">const</span> <span class="dt">int</span> maxn = <span class="fl">1e5</span> + <span class="dv">5</span>;</span>
+<span id="cb5-10"><a aria-hidden="true" href="#cb5-10"></a></span>
+<span id="cb5-11"><a aria-hidden="true" href="#cb5-11"></a><span class="dt">char</span> s[maxn &lt;&lt; <span class="dv">1</span>], real[maxn];</span>
+<span id="cb5-12"><a aria-hidden="true" href="#cb5-12"></a><span class="dt">int</span> n, len[maxn &lt;&lt; <span class="dv">1</span>], cnt;</span>
+<span id="cb5-13"><a aria-hidden="true" href="#cb5-13"></a><span class="dt">int</span> fl[maxn &lt;&lt; <span class="dv">1</span>], fr[maxn &lt;&lt; <span class="dv">1</span>];</span>
+<span id="cb5-14"><a aria-hidden="true" href="#cb5-14"></a></span>
+<span id="cb5-15"><a aria-hidden="true" href="#cb5-15"></a><span class="dt">int</span> main() {</span>
+<span id="cb5-16"><a aria-hidden="true" href="#cb5-16"></a>    scanf(<span class="st">"</span><span class="sc">%s</span><span class="st">"</span>, real + <span class="dv">1</span>);</span>
+<span id="cb5-17"><a aria-hidden="true" href="#cb5-17"></a>    n = strlen(real + <span class="dv">1</span>);</span>
+<span id="cb5-18"><a aria-hidden="true" href="#cb5-18"></a>    s[cnt = <span class="dv">0</span>] = <span class="ch">'&amp;'</span>, s[++cnt] = <span class="ch">'#'</span>;</span>
+<span id="cb5-19"><a aria-hidden="true" href="#cb5-19"></a>    FOR(i, <span class="dv">1</span>, n) s[++cnt] = real[i], s[++cnt] = <span class="ch">'#'</span>;</span>
+<span id="cb5-20"><a aria-hidden="true" href="#cb5-20"></a>    <span class="cf">for</span> (<span class="dt">int</span> i = <span class="dv">1</span>, r = <span class="dv">0</span>, mid = <span class="dv">0</span>; i &lt;= cnt; ++i) {</span>
+<span id="cb5-21"><a aria-hidden="true" href="#cb5-21"></a>        <span class="cf">if</span> (i &lt;= r) len[i] = min(len[(mid &lt;&lt; <span class="dv">1</span>) - i], r - i + <span class="dv">1</span>);</span>
+<span id="cb5-22"><a aria-hidden="true" href="#cb5-22"></a>        <span class="cf">while</span> (s[i - len[i]] == s[i + len[i]]) ++len[i];</span>
+<span id="cb5-23"><a aria-hidden="true" href="#cb5-23"></a>        <span class="cf">if</span> (i + len[i] &gt; r) r = i + len[i] - <span class="dv">1</span>, mid = i;</span>
+<span id="cb5-24"><a aria-hidden="true" href="#cb5-24"></a>        fl[i + len[i] - <span class="dv">1</span>] = max(fl[i + len[i] - <span class="dv">1</span>], len[i] - <span class="dv">1</span>);</span>
+<span id="cb5-25"><a aria-hidden="true" href="#cb5-25"></a>        fr[i - len[i] + <span class="dv">1</span>] = max(fr[i - len[i] + <span class="dv">1</span>], len[i] - <span class="dv">1</span>);</span>
+<span id="cb5-26"><a aria-hidden="true" href="#cb5-26"></a>    }</span>
+<span id="cb5-27"><a aria-hidden="true" href="#cb5-27"></a>    FOR(i, <span class="dv">1</span>, cnt) fr[i] = max(fr[i], fr[i - <span class="dv">2</span>] - <span class="dv">2</span>);</span>
+<span id="cb5-28"><a aria-hidden="true" href="#cb5-28"></a>    DEC(i, cnt, <span class="dv">1</span>) fl[i] = max(fl[i], fl[i + <span class="dv">2</span>] - <span class="dv">2</span>);</span>
+<span id="cb5-29"><a aria-hidden="true" href="#cb5-29"></a>    <span class="dt">int</span> ans = <span class="dv">0</span>;</span>
+<span id="cb5-30"><a aria-hidden="true" href="#cb5-30"></a>    <span class="cf">for</span> (<span class="dt">int</span> i = <span class="dv">1</span>; i &lt; cnt; i += <span class="dv">2</span>) <span class="cf">if</span> (fl[i] &amp;&amp; fr[i]) ans = max(fl[i] + fr[i], ans);</span>
+<span id="cb5-31"><a aria-hidden="true" href="#cb5-31"></a>    printf(<span class="st">"</span><span class="sc">%d\n</span><span class="st">"</span>, ans);</span>
+<span id="cb5-32"><a aria-hidden="true" href="#cb5-32"></a>    <span class="cf">return</span> <span class="dv">0</span>;</span>
+<span id="cb5-33"><a aria-hidden="true" href="#cb5-33"></a>}</span></code></pre></div>
+<blockquote>
+<p>例题 <span class="math inline">\(2\)</span>：<a href="https://www.luogu.com.cn/problem/P1659">P1659 [国家集训队]拉拉队排练</a></p>
+<p>求将所有长度为奇数的回文串按照长度降序排序后，前 <span class="math inline">\(k\)</span> 个回文串的串长之积。</p>
+</blockquote>
+<p>不用加分隔符，直接跑 manacher，注意到以 <span class="math inline">\(i\)</span> 为中心的回文串们的长度覆盖了 <span class="math inline">\([1,2p_i-1]\)</span>，跑的时候差分一下最后做前缀和，然后贡献用快速幂啥的算一算就行。</p>
+<blockquote>
+<p>例题 <span class="math inline">\(3\)</span>：<a href="https://www.luogu.com.cn/problem/P5446">P5446 [THUPC2018]绿绿和串串</a></p>
+<p>定义对串 <span class="math inline">\(R\)</span> 进行翻转操作为将其关于最后一个字符轴对称，如 <span class="math inline">\(\texttt{aab}\to\texttt{aabaa}\)</span>。</p>
+<p>已知将 <span class="math inline">\(R\)</span> 翻转若干次后得到的串的一前缀为 <span class="math inline">\(S\)</span>。求不超过 <span class="math inline">\(|S|\)</span> 的 <span class="math inline">\(|R|\)</span> 的所有可能值。</p>
+</blockquote>
+<p>发现这个东西跟回文肯定是脱不开干系的，考虑跑一遍 manacher（注意到这里考虑的回文串都是奇回文串所以只需要补头尾的特殊字符）。然后考虑只翻转一次的情况：发现 <span class="math inline">\(p_i = n - i + 1\)</span> 的时候这个位置可以作为串长，然后考虑翻转多次的情况：设 <span class="math inline">\(f_i\)</span> 表示 <span class="math inline">\(i\)</span> 能否作为答案，则不难发现当 <span class="math inline">\(i\)</span> 开头的回文串能到达串首并且位置 <span class="math inline">\(f_{2i - 1}\)</span> 满足即可，倒着 dp 一遍就 OK 了。</p>
+<h2 id="kmp-算法与-z-algo">KMP 算法与 Z-Algo</h2>
+<h3 id="kmp-算法">KMP 算法</h3>
+<p>朴素地进行字符串匹配的时间复杂度上界可能达到 <span class="math inline">\(O(nm)\)</span>，这是我们所不希望看到的。</p>
+<p>最关键的问题就在于当前位置失配后，如果再从下一个位置继续匹配就太蠢了，我们想找到一个最往后的能使得其可能匹配上的位置。考虑我们拿 <span class="math inline">\(T\)</span> 去匹配 <span class="math inline">\(S\)</span>，则求 <span class="math inline">\(S\)</span> 中出现的 <span class="math inline">\(T\)</span> 的位置。</p>
+<figure>
+<img alt="" src="https://yangty-pic.oss-cn-beijing.aliyuncs.com/KMP1.png"/><figcaption>KMP1</figcaption>
+</figure>
+<p>比如说，<span class="math inline">\(T[j]\)</span> 在 <span class="math inline">\(S[i]\)</span> 处失配了，那么若我们直接考虑将 <span class="math inline">\(T\)</span> 右移一位去匹配肯定也是不优的。怎么办呢？考虑找到一个最大的 <span class="math inline">\(x\)</span>，满足 <span class="math inline">\(T[1..x] = T[j - x + 1..j]\)</span>，然后直接将 <span class="math inline">\(T\)</span> 右移 <span class="math inline">\(j-x+1\)</span> 格来匹配。</p>
+<p>这是为什么？相当于我们重复利用了 <span class="math inline">\(T[1..x]\)</span> 已经匹配好了的信息，不再需要从头来进行匹配。而 <span class="math inline">\(x\)</span> 最大又使得我们不会漏掉信息。</p>
+<p>对于每个位置 <span class="math inline">\(j\)</span> 都求出对应的 <span class="math inline">\(x\)</span>，记作 <span class="math inline">\(\pi(j)\)</span>（前缀函数，下文会提到），求出所有 <span class="math inline">\(\pi(j)\)</span> 之后就可以以线性的复杂度进行匹配，不会证明。但现在问题在于你需要求出 <span class="math inline">\(\pi(j)\)</span>。哎其实那就相当于拿自己匹配自己：</p>
+<figure>
+<img alt="" src="https://yangty-pic.oss-cn-beijing.aliyuncs.com/KMP2.png"/><figcaption>KMP2</figcaption>
+</figure>
+<p>如下图，若没法匹配下去，则从 <span class="math inline">\(\pi(\pi(i))\)</span> 这样下去反复跳 <span class="math inline">\(\pi\)</span> 来匹配，这样也是线性的。</p>
+<h3 id="z-算法">Z 算法</h3>
+<p>对字符串 <span class="math inline">\(S\)</span>，定义 <span class="math inline">\(z\)</span> 函数 <span class="math inline">\(z(i)\)</span> 表示 <span class="math inline">\(S[i..n]\)</span> 与 <span class="math inline">\(S\)</span> 的最长公共前缀（LCP）的长度。一般地令 <span class="math inline">\(z(1) = n\)</span>。</p>
+<p>解法和 Manacher 算法很类似。不妨设 <span class="math inline">\([i,i+z(i) - 1]\)</span> 为 <span class="math inline">\(i\)</span> 的匹配段，也叫做 Z-box。维护最靠右的 Z-box <span class="math inline">\([l,r]\)</span>，则根据定义有 <span class="math inline">\(S[l..r]\)</span> 是 <span class="math inline">\(S\)</span> 的前缀，分类讨论一下：</p>
+<ul>
+<li>若 <span class="math inline">\(i&gt;r\)</span>，则直接暴力扩展。</li>
+<li>若 <span class="math inline">\(i\le r\)</span>，则根据 <span class="math inline">\(S[l..r] = S[1..r-l+1]\)</span>，有 <span class="math inline">\(S[i..r] = S[i-l+1..r-l +1]\)</span>，所以将 <span class="math inline">\(z(i)\)</span> 初始化为 <span class="math inline">\(\min(r - i + 1, z(i - l + 1))\)</span>，然后再暴力扩展即可。在</li>
+</ul>
+<figure>
+<img alt="" src="https://yangty-pic.oss-cn-beijing.aliyuncs.com/Z-func.png"/><figcaption>Z-func</figcaption>
+</figure>
+<p>时间复杂度仍然是优秀的线性。</p>
+<h2 id="border-理论基础与-fail-树">Border 理论基础与 fail 树</h2>
+</section>
+<footer class="article-footer">
+<section class="article-tags">
+<a href="/tags/OI/">OI</a>
+<a href="/tags/note/">笔记</a>
+</section>
+<section class="article-copyright">
+<svg class="icon icon-tabler icon-tabler-copyright" fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+<path d="M0 0h24v24H0z" stroke="none"></path>
+<circle cx="12" cy="12" r="9"></circle>
+<path d="M14.5 9a3.5 4 0 1 0 0 6"></path>
+</svg>
+<span>Licensed under CC BY-NC-SA 4.0</span>
+</section>
+</footer>
+<link crossorigin="anonymous" href="https://cdn.jsdelivr.net/npm/katex@0.13.13/dist/katex.min.css" integrity="sha384-RZU/ijkSsFbcmivfdRBQDtwuwVqK7GMOw6IMvKyeWL2K5UAlyp6WonmB8m7Jd0Hn" rel="stylesheet"/><script crossorigin="anonymous" defer="" integrity="sha384-pK1WpvzWVBQiP0/GjnvRxV4mOb0oxFuyRxJlk6vVw146n3egcN5C925NCP7a7BY8" src="https://cdn.jsdelivr.net/npm/katex@0.13.13/dist/katex.min.js">
+</script><script crossorigin="anonymous" defer="" integrity="sha384-vZTG03m+2yp6N6BNi5iM4rW4oIwk5DfcNdFfxkk9ZWpDriOkXX8voJBFrAO7MpVl" src="https://cdn.jsdelivr.net/npm/katex@0.13.13/dist/contrib/auto-render.min.js">
+</script><script>
+    window.addEventListener("DOMContentLoaded", () => {
+        renderMathInElement(document.querySelector(`.article-content`), {
+            delimiters: [
+                { left: "$$", right: "$$", display: true },
+                { left: "$", right: "$", display: false },
+                { left: "\\(", right: "\\)", display: false },
+                { left: "\\[", right: "\\]", display: true }
+            ]
+        });})
+</script>
+</article>
+<aside class="related-contents--wrapper">
+<h2 class="section-title">相关文章</h2>
+<div class="related-contents">
+<div class="flex article-list--tile">
+<article class="has-image">
+<a href="/note-gf/">
+<div class="article-image">
+<img data-hash="https://yangty-pic.oss-cn-beijing.aliyuncs.com/bg28.webp" data-key="" loading="lazy" src="https://yangty-pic.oss-cn-beijing.aliyuncs.com/bg28.webp"/>
+</div>
+<div class="article-details">
+<h2 class="article-title">生成函数胡扯</h2>
+</div>
+</a>
+</article>
+<article class="has-image">
+<a href="/note-set-power-series/">
+<div class="article-image">
+<img data-hash="https://yangty-pic.oss-cn-beijing.aliyuncs.com/bg39.webp" data-key="" loading="lazy" src="https://yangty-pic.oss-cn-beijing.aliyuncs.com/bg39.webp"/>
+</div>
+<div class="article-details">
+<h2 class="article-title">集合幂级数胡扯</h2>
+</div>
+</a>
+</article>
+<article class="has-image">
+<a href="/note-linear-basis/">
+<div class="article-image">
+<img data-hash="https://yangty-pic.oss-cn-beijing.aliyuncs.com/bg19.webp" data-key="" loading="lazy" src="https://yangty-pic.oss-cn-beijing.aliyuncs.com/bg19.webp"/>
+</div>
+<div class="article-details">
+<h2 class="article-title">线性基学习笔记</h2>
+</div>
+</a>
+</article>
+<article class="has-image">
+<a href="/note-wqs/">
+<div class="article-image">
+<img data-hash="https://yangty-pic.oss-cn-beijing.aliyuncs.com/bg28.webp" data-key="" loading="lazy" src="https://yangty-pic.oss-cn-beijing.aliyuncs.com/bg28.webp"/>
+</div>
+<div class="article-details">
+<h2 class="article-title">wqs 二分学习笔记</h2>
+</div>
+</a>
+</article>
+<article class="has-image">
+<a href="/note-builtin/">
+<div class="article-image">
+<img data-hash="https://yangty-pic.oss-cn-beijing.aliyuncs.com/bg9.webp" data-key="" loading="lazy" src="https://yangty-pic.oss-cn-beijing.aliyuncs.com/bg9.webp"/>
+</div>
+<div class="article-details">
+<h2 class="article-title">__builtin 系列函数总结</h2>
+</div>
+</a>
+</article>
+</div>
+</div>
+</aside>
+<footer class="site-footer">
+<section class="copyright">
+        © 
+        
+            2019 - 
+        
+        2024 清烛的博客
+    </section>
+<section class="powerby">
+        Built with <a href="https://gohugo.io/" rel="noopener" target="_blank">Hugo</a> <br/>
+        主题 <b><a data-version="3.11.0" href="https://github.com/CaiJimmy/hugo-theme-stack" rel="noopener" target="_blank">Stack</a></b> 由 <a href="https://jimmycai.com" rel="noopener" target="_blank">Jimmy</a> 设计
+    </section>
+</footer>
+<div aria-hidden="true" class="pswp" role="dialog" tabindex="-1">
+<div class="pswp__bg"></div>
+<div class="pswp__scroll-wrap">
+<div class="pswp__container">
+<div class="pswp__item"></div>
+<div class="pswp__item"></div>
+<div class="pswp__item"></div>
+</div>
+<div class="pswp__ui pswp__ui--hidden">
+<div class="pswp__top-bar">
+<div class="pswp__counter"></div>
+<button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+<button class="pswp__button pswp__button--share" title="Share"></button>
+<button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+<button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+<div class="pswp__preloader">
+<div class="pswp__preloader__icn">
+<div class="pswp__preloader__cut">
+<div class="pswp__preloader__donut"></div>
+</div>
+</div>
+</div>
+</div>
+<div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+<div class="pswp__share-tooltip"></div>
+</div>
+<button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+</button>
+<button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+</button>
+<div class="pswp__caption">
+<div class="pswp__caption__center"></div>
+</div>
+</div>
+</div>
+</div><script crossorigin="anonymous" defer="" integrity="sha256-ePwmChbbvXbsO02lbM3HoHbSHTHFAeChekF1xKJdleo=" src="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe.min.js">
+</script><script crossorigin="anonymous" defer="" integrity="sha256-UKkzOn/w1mBxRmLLGrSeyB4e1xbrp4xylgAWb3M42pU=" src="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe-ui-default.min.js">
+</script><link crossorigin="anonymous" href="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/default-skin/default-skin.css" integrity="sha256-c0uckgykQ9v5k+IqViZOZKc47Jn7KQil4/MP3ySA3F8=" rel="stylesheet"/><link crossorigin="anonymous" href="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe.css" integrity="sha256-SBLU4vv6CA6lHsZ1XyTdhyjJxCjPif/TRkjnsyGAGnE=" rel="stylesheet"/>
+</main>
+</div>
+<script crossorigin="anonymous" integrity="sha256-5NovOZc4iwiAWTYIFiIM7DxKUXKWvpVEuMEPLzcm5/g=" src="https://cdn.jsdelivr.net/npm/node-vibrant@3.1.5/dist/vibrant.min.js">
+</script><script defer="" src="/ts/main.js" type="text/javascript"></script>
+<script>
+    (function () {
+        const customFont = document.createElement('link');
+        customFont.href = "https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&display=swap";
+
+        customFont.type = "text/css";
+        customFont.rel = "stylesheet";
+
+        document.head.appendChild(customFont);
+    }());
+</script>
+</body>
+</html>

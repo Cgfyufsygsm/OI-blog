@@ -1,0 +1,195 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+    <channel>
+        <title>QOJ on 清烛的博客</title>
+        <link>https://oi.imyangty.com/tags/QOJ/</link>
+        <description>Recent content in QOJ on 清烛的博客</description>
+        <generator>Hugo -- gohugo.io</generator>
+        <language>zh-CN</language>
+        <lastBuildDate>Fri, 08 Apr 2022 10:11:11 +0800</lastBuildDate><atom:link href="https://oi.imyangty.com/tags/QOJ/index.xml" rel="self" type="application/rss+xml" /><item>
+        <title>QOJ2812 [RMI 2021 Day 2] Paths</title>
+        <link>https://oi.imyangty.com/sol-qoj2812/</link>
+        <pubDate>Fri, 08 Apr 2022 10:11:11 +0800</pubDate>
+        
+        <guid>https://oi.imyangty.com/sol-qoj2812/</guid>
+        <description>&lt;img src="https://yangty-pic.oss-cn-beijing.aliyuncs.com/bg40.webp" alt="Featured image of post QOJ2812 [RMI 2021 Day 2] Paths" /&gt;&lt;h2 id=&#34;description&#34;&gt;Description&lt;/h2&gt;
+&lt;p&gt;给定 &lt;span class=&#34;math inline&#34;&gt;\(n\le 10^5\)&lt;/span&gt; 个节点的无根边带权树。对于根在 &lt;span class=&#34;math inline&#34;&gt;\(r\)&lt;/span&gt; 的情况，可以选择 &lt;span class=&#34;math inline&#34;&gt;\(k\)&lt;/span&gt; 个点（&lt;span class=&#34;math inline&#34;&gt;\(k\)&lt;/span&gt; 初始给定），然后将每个点到 &lt;span class=&#34;math inline&#34;&gt;\(r\)&lt;/span&gt; 的路径上的边打上标记，收益为所有带标记的边权和。&lt;/p&gt;
+&lt;p&gt;对每个 &lt;span class=&#34;math inline&#34;&gt;\(r\in[1,n]\)&lt;/span&gt; 求出答案。&lt;/p&gt;
+&lt;h2 id=&#34;solution&#34;&gt;Solution&lt;/h2&gt;
+&lt;p&gt;首先最显然的贪心策略很好想：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;选择贡献最大的叶子 &lt;span class=&#34;math inline&#34;&gt;\(u\)&lt;/span&gt; 并统计贡献。&lt;/li&gt;
+&lt;li&gt;将根到 &lt;span class=&#34;math inline&#34;&gt;\(u\)&lt;/span&gt; 的路径上的点打上标记，更新那些子树内的点的贡献。&lt;/li&gt;
+&lt;li&gt;回到第一步。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;然后会发现“动态更新”这个有点难搞，不妨先考虑 &lt;span class=&#34;math inline&#34;&gt;\(r = 1\)&lt;/span&gt; 的情况，然后发现一个叶子的贡献一定是他到某个祖先的一条链。&lt;/p&gt;
+&lt;p&gt;若我们设 &lt;span class=&#34;math inline&#34;&gt;\(\mathrm{down}_i\)&lt;/span&gt; 为 &lt;span class=&#34;math inline&#34;&gt;\(i\)&lt;/span&gt; 子树内距 &lt;span class=&#34;math inline&#34;&gt;\(i\)&lt;/span&gt; 最远的点，&lt;span class=&#34;math inline&#34;&gt;\(a_x\)&lt;/span&gt; 是满足 &lt;span class=&#34;math inline&#34;&gt;\(\mathrm{down}_v\ne x\)&lt;/span&gt; 的最深的祖先（若不存在则为 &lt;span class=&#34;math inline&#34;&gt;\(1\)&lt;/span&gt;）则叶子 &lt;span class=&#34;math inline&#34;&gt;\(x\)&lt;/span&gt; 的贡献为 &lt;span class=&#34;math inline&#34;&gt;\(a_x\)&lt;/span&gt; 到 &lt;span class=&#34;math inline&#34;&gt;\(x\)&lt;/span&gt; 的路径。&lt;/p&gt;
+&lt;p&gt;那么对于 &lt;span class=&#34;math inline&#34;&gt;\(r\)&lt;/span&gt; 固定的情况，我们就有了 &lt;span class=&#34;math inline&#34;&gt;\(O(n)\)&lt;/span&gt;（也许吧）做法，现在考虑 &lt;span class=&#34;math inline&#34;&gt;\(r\)&lt;/span&gt; 变动的情况，&lt;strong&gt;换根&lt;/strong&gt;。&lt;/p&gt;
+&lt;p&gt;再维护 &lt;span class=&#34;math inline&#34;&gt;\(\mathrm{up}_i\)&lt;/span&gt; 表示 &lt;span class=&#34;math inline&#34;&gt;\(i\)&lt;/span&gt; 子树外距 &lt;span class=&#34;math inline&#34;&gt;\(i\)&lt;/span&gt; 最远的点。考虑当 &lt;span class=&#34;math inline&#34;&gt;\(r\)&lt;/span&gt; 移动到自己的儿子 &lt;span class=&#34;math inline&#34;&gt;\(q\)&lt;/span&gt; 时，发生的变化：手玩发现所有的 &lt;span class=&#34;math inline&#34;&gt;\(a\)&lt;/span&gt; 中，只有 &lt;span class=&#34;math inline&#34;&gt;\(a_{\mathrm{up}_q}\)&lt;/span&gt; 和 &lt;span class=&#34;math inline&#34;&gt;\(a_{\mathrm{down}_q}\)&lt;/span&gt; 会从 &lt;span class=&#34;math inline&#34;&gt;\(r\)&lt;/span&gt; 变成 &lt;span class=&#34;math inline&#34;&gt;\(q\)&lt;/span&gt;，其他的均是不变的。&lt;/p&gt;
+&lt;p&gt;于是先以 &lt;span class=&#34;math inline&#34;&gt;\(1\)&lt;/span&gt; 为根跑一遍 dfs 预处理信息，然后再 dfs 枚举 &lt;span class=&#34;math inline&#34;&gt;\(r\)&lt;/span&gt; 换根，维护支持单点修改，前 &lt;span class=&#34;math inline&#34;&gt;\(k\)&lt;/span&gt; 大查询的可重集即可。&lt;/p&gt;
+&lt;p&gt;考场上贪心策略马上就想到了，可惜被限制了思维没有往移动换根的方向想。还是菜。&lt;/p&gt;
+&lt;h2 id=&#34;implementation&#34;&gt;Implementation&lt;/h2&gt;
+</description>
+        </item>
+        <item>
+        <title>QOJ1825 [NAC2021 I] The King&#39;s Guards</title>
+        <link>https://oi.imyangty.com/sol-qoj1825/</link>
+        <pubDate>Fri, 08 Apr 2022 08:05:35 +0800</pubDate>
+        
+        <guid>https://oi.imyangty.com/sol-qoj1825/</guid>
+        <description>&lt;img src="https://yangty-pic.oss-cn-beijing.aliyuncs.com/bg39.webp" alt="Featured image of post QOJ1825 [NAC2021 I] The King&#39;s Guards" /&gt;&lt;h2 id=&#34;description&#34;&gt;Description&lt;/h2&gt;
+&lt;p&gt;&lt;span class=&#34;math inline&#34;&gt;\(n\)&lt;/span&gt; 个点，&lt;span class=&#34;math inline&#34;&gt;\(m\)&lt;/span&gt; 条待修建的边 &lt;span class=&#34;math inline&#34;&gt;\((u_i, v_i, w_i)\)&lt;/span&gt;。&lt;span class=&#34;math inline&#34;&gt;\(k\)&lt;/span&gt; 个守卫，每个守卫进驻一个村子，第 &lt;span class=&#34;math inline&#34;&gt;\(i\)&lt;/span&gt; 个能进驻的集合为 &lt;span class=&#34;math inline&#34;&gt;\(S_i\)&lt;/span&gt;。要求每个点都能&lt;strong&gt;恰好被一个守卫&lt;/strong&gt;通过若干条边到达。&lt;/p&gt;
+&lt;p&gt;若存在修建边和放置守卫的方案，输出建边的最小代价，否则报告无解。&lt;span class=&#34;math inline&#34;&gt;\(1\le k\le n\le 300\)&lt;/span&gt;，&lt;span class=&#34;math inline&#34;&gt;\(1\le w_i\le 100\)&lt;/span&gt;。&lt;/p&gt;
+&lt;h2 id=&#34;solution&#34;&gt;Solution&lt;/h2&gt;
+&lt;p&gt;拟阵贪心属实有点神仙了，这里写写清新费用流做法。&lt;/p&gt;
+&lt;p&gt;对于这种类型的题，可以想到答案一定会在最小生成森林上面产生，否则总可以删掉那条不在最小生成森林上的边来获取一个不更劣的结果。所以先求出其最小生成森林。&lt;/p&gt;
+&lt;p&gt;那么问题就变成了树上的了。&lt;/p&gt;
+&lt;p&gt;而注意到，我们分配守卫这个事情可以看作将守卫匹配给连通块。而一个连通块肯定是一棵树，那么不妨认为每个守卫可以干碎其对应连通块里面的某条边。那么就可以考虑费用流了。&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;p&gt;拆每个原图的点为入点和出点，连边 &lt;span class=&#34;math inline&#34;&gt;\((u_{\mathrm{in}},u_{\mathrm{out}}, 1, 0)\)&lt;/span&gt;。&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;对于每个生成森林中的边 &lt;span class=&#34;math inline&#34;&gt;\((\mathrm{fa}_u, u, w)\)&lt;/span&gt; 连边 &lt;span class=&#34;math inline&#34;&gt;\((u_{\mathrm{out}}, T, 1, w)\)&lt;/span&gt; 和 &lt;span class=&#34;math inline&#34;&gt;\((u_{\mathrm{out}},{\mathrm{fa}_u}_{\mathrm{in}}, 1, 0)\)&lt;/span&gt;。&lt;/p&gt;
+&lt;p&gt;特别的，对于每个生成森林的根，连边 &lt;span class=&#34;math inline&#34;&gt;\((u_{\mathrm{out}}, T, 1, +\inf)\)&lt;/span&gt;。&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;对于每个守卫 &lt;span class=&#34;math inline&#34;&gt;\(i\)&lt;/span&gt;，连边 &lt;span class=&#34;math inline&#34;&gt;\((S, i, 1, 0)\)&lt;/span&gt;。&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;对于守卫 &lt;span class=&#34;math inline&#34;&gt;\(i\)&lt;/span&gt; 守卫的点 &lt;span class=&#34;math inline&#34;&gt;\(u\)&lt;/span&gt;，连边 &lt;span class=&#34;math inline&#34;&gt;\((i, u_{\mathrm{in}}, 1, 0)\)&lt;/span&gt;。&lt;/p&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;即，一个守卫对应一个流，每棵生成树的根的守卫产生的贡献单独处理（即 &lt;span class=&#34;math inline&#34;&gt;\(\inf\)&lt;/span&gt; 边），剩下的守卫考虑干碎一条自己所在连通块连向祖先的边（即断边）。对上面这个图跑最大费用流即可。&lt;/p&gt;
+&lt;p&gt;对于无解的情况，判断最大流是否为 &lt;span class=&#34;math inline&#34;&gt;\(k\)&lt;/span&gt; 以及 &lt;span class=&#34;math inline&#34;&gt;\(\inf\)&lt;/span&gt; 边是否满流即可。&lt;/p&gt;
+&lt;h2 id=&#34;implementation&#34;&gt;Implementation&lt;/h2&gt;
+&lt;div class=&#34;sourceCode&#34; id=&#34;cb1&#34;&gt;&lt;pre class=&#34;sourceCode cpp&#34;&gt;&lt;code class=&#34;sourceCode cpp&#34;&gt;&lt;span id=&#34;cb1-1&#34;&gt;&lt;a href=&#34;#cb1-1&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;&lt;span class=&#34;kw&#34;&gt;using&lt;/span&gt; ll = &lt;span class=&#34;dt&#34;&gt;long&lt;/span&gt; &lt;span class=&#34;dt&#34;&gt;long&lt;/span&gt;;&lt;/span&gt;
+&lt;span id=&#34;cb1-2&#34;&gt;&lt;a href=&#34;#cb1-2&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;&lt;span class=&#34;at&#34;&gt;const&lt;/span&gt; &lt;span class=&#34;dt&#34;&gt;int&lt;/span&gt; maxn = &lt;span class=&#34;dv&#34;&gt;1505&lt;/span&gt;, maxm = &lt;span class=&#34;fl&#34;&gt;3e5&lt;/span&gt; + &lt;span class=&#34;dv&#34;&gt;5&lt;/span&gt;;&lt;/span&gt;
+&lt;span id=&#34;cb1-3&#34;&gt;&lt;a href=&#34;#cb1-3&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;&lt;span class=&#34;dt&#34;&gt;int&lt;/span&gt; S, T;&lt;/span&gt;
+&lt;span id=&#34;cb1-4&#34;&gt;&lt;a href=&#34;#cb1-4&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;&lt;/span&gt;
+&lt;span id=&#34;cb1-5&#34;&gt;&lt;a href=&#34;#cb1-5&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;&lt;span class=&#34;kw&#34;&gt;class&lt;/span&gt; MCMF {&lt;/span&gt;
+&lt;span id=&#34;cb1-6&#34;&gt;&lt;a href=&#34;#cb1-6&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;  &lt;span class=&#34;kw&#34;&gt;private&lt;/span&gt;:&lt;/span&gt;
+&lt;span id=&#34;cb1-7&#34;&gt;&lt;a href=&#34;#cb1-7&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;    &lt;span class=&#34;dt&#34;&gt;int&lt;/span&gt; head[maxn], cur[maxn], cnte = &lt;span class=&#34;dv&#34;&gt;1&lt;/span&gt;;&lt;/span&gt;
+&lt;span id=&#34;cb1-8&#34;&gt;&lt;a href=&#34;#cb1-8&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;    &lt;span class=&#34;kw&#34;&gt;struct&lt;/span&gt; Edge {&lt;/span&gt;
+&lt;span id=&#34;cb1-9&#34;&gt;&lt;a href=&#34;#cb1-9&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;        &lt;span class=&#34;dt&#34;&gt;int&lt;/span&gt; to, nxt, w;&lt;/span&gt;
+&lt;span id=&#34;cb1-10&#34;&gt;&lt;a href=&#34;#cb1-10&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;        ll cost;&lt;/span&gt;
+&lt;span id=&#34;cb1-11&#34;&gt;&lt;a href=&#34;#cb1-11&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;    } e[maxm];&lt;/span&gt;
+&lt;span id=&#34;cb1-12&#34;&gt;&lt;a href=&#34;#cb1-12&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;    ll dis[maxn], maxCost;&lt;/span&gt;
+&lt;span id=&#34;cb1-13&#34;&gt;&lt;a href=&#34;#cb1-13&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;    &lt;span class=&#34;dt&#34;&gt;int&lt;/span&gt; pre[maxn], inq[maxn], flow[maxn], maxFlow;&lt;/span&gt;
+&lt;span id=&#34;cb1-14&#34;&gt;&lt;a href=&#34;#cb1-14&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;&lt;/span&gt;
+&lt;span id=&#34;cb1-15&#34;&gt;&lt;a href=&#34;#cb1-15&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;    &lt;span class=&#34;dt&#34;&gt;bool&lt;/span&gt; SPFA() {&lt;/span&gt;
+&lt;span id=&#34;cb1-16&#34;&gt;&lt;a href=&#34;#cb1-16&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;        memset(dis, &lt;span class=&#34;bn&#34;&gt;0x80&lt;/span&gt;, &lt;span class=&#34;kw&#34;&gt;sizeof&lt;/span&gt; dis);&lt;/span&gt;
+&lt;span id=&#34;cb1-17&#34;&gt;&lt;a href=&#34;#cb1-17&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;        memset(inq, &lt;span class=&#34;dv&#34;&gt;0&lt;/span&gt;, &lt;span class=&#34;kw&#34;&gt;sizeof&lt;/span&gt; inq);&lt;/span&gt;
+&lt;span id=&#34;cb1-18&#34;&gt;&lt;a href=&#34;#cb1-18&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;        queue&amp;lt;&lt;span class=&#34;dt&#34;&gt;int&lt;/span&gt;&amp;gt; q;&lt;/span&gt;
+&lt;span id=&#34;cb1-19&#34;&gt;&lt;a href=&#34;#cb1-19&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;        q.push(S);&lt;/span&gt;
+&lt;span id=&#34;cb1-20&#34;&gt;&lt;a href=&#34;#cb1-20&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;        inq[S] = &lt;span class=&#34;dv&#34;&gt;1&lt;/span&gt;, dis[S] = &lt;span class=&#34;dv&#34;&gt;0&lt;/span&gt;, flow[S] = numeric_limits&amp;lt;&lt;span class=&#34;dt&#34;&gt;int&lt;/span&gt;&amp;gt;::max();&lt;/span&gt;
+&lt;span id=&#34;cb1-21&#34;&gt;&lt;a href=&#34;#cb1-21&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;        &lt;span class=&#34;cf&#34;&gt;while&lt;/span&gt; (!q.empty()) {&lt;/span&gt;
+&lt;span id=&#34;cb1-22&#34;&gt;&lt;a href=&#34;#cb1-22&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;            &lt;span class=&#34;dt&#34;&gt;int&lt;/span&gt; u = q.front(); q.pop();&lt;/span&gt;
+&lt;span id=&#34;cb1-23&#34;&gt;&lt;a href=&#34;#cb1-23&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;            inq[u] = &lt;span class=&#34;dv&#34;&gt;0&lt;/span&gt;;&lt;/span&gt;
+&lt;span id=&#34;cb1-24&#34;&gt;&lt;a href=&#34;#cb1-24&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;            &lt;span class=&#34;cf&#34;&gt;for&lt;/span&gt; (&lt;span class=&#34;dt&#34;&gt;int&lt;/span&gt; i = head[u]; i; i = e[i].nxt) {&lt;/span&gt;
+&lt;span id=&#34;cb1-25&#34;&gt;&lt;a href=&#34;#cb1-25&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;                &lt;span class=&#34;dt&#34;&gt;int&lt;/span&gt; &amp;amp;v = e[i].to;&lt;/span&gt;
+&lt;span id=&#34;cb1-26&#34;&gt;&lt;a href=&#34;#cb1-26&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;                &lt;span class=&#34;cf&#34;&gt;if&lt;/span&gt; (e[i].w &amp;amp;&amp;amp; dis[v] &amp;lt; dis[u] + e[i].cost) {&lt;/span&gt;
+&lt;span id=&#34;cb1-27&#34;&gt;&lt;a href=&#34;#cb1-27&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;                    dis[v] = dis[u] + e[i].cost;&lt;/span&gt;
+&lt;span id=&#34;cb1-28&#34;&gt;&lt;a href=&#34;#cb1-28&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;                    flow[v] = min(flow[u], e[i].w);&lt;/span&gt;
+&lt;span id=&#34;cb1-29&#34;&gt;&lt;a href=&#34;#cb1-29&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;                    pre[v] = i;&lt;/span&gt;
+&lt;span id=&#34;cb1-30&#34;&gt;&lt;a href=&#34;#cb1-30&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;                    &lt;span class=&#34;cf&#34;&gt;if&lt;/span&gt; (!inq[v]) q.push(v), inq[v] = &lt;span class=&#34;dv&#34;&gt;1&lt;/span&gt;;&lt;/span&gt;
+&lt;span id=&#34;cb1-31&#34;&gt;&lt;a href=&#34;#cb1-31&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;                }&lt;/span&gt;
+&lt;span id=&#34;cb1-32&#34;&gt;&lt;a href=&#34;#cb1-32&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;            }&lt;/span&gt;
+&lt;span id=&#34;cb1-33&#34;&gt;&lt;a href=&#34;#cb1-33&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;        }&lt;/span&gt;
+&lt;span id=&#34;cb1-34&#34;&gt;&lt;a href=&#34;#cb1-34&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;        &lt;span class=&#34;cf&#34;&gt;return&lt;/span&gt; dis[T] &amp;gt; &lt;span class=&#34;kw&#34;&gt;static_cast&lt;/span&gt;&amp;lt;&lt;span class=&#34;dt&#34;&gt;int&lt;/span&gt;&amp;gt;(&lt;span class=&#34;bn&#34;&gt;0x80808080&lt;/span&gt;);&lt;/span&gt;
+&lt;span id=&#34;cb1-35&#34;&gt;&lt;a href=&#34;#cb1-35&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;    }&lt;/span&gt;
+&lt;span id=&#34;cb1-36&#34;&gt;&lt;a href=&#34;#cb1-36&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;&lt;/span&gt;
+&lt;span id=&#34;cb1-37&#34;&gt;&lt;a href=&#34;#cb1-37&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;    &lt;span class=&#34;dt&#34;&gt;void&lt;/span&gt; update() {&lt;/span&gt;
+&lt;span id=&#34;cb1-38&#34;&gt;&lt;a href=&#34;#cb1-38&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;        &lt;span class=&#34;dt&#34;&gt;int&lt;/span&gt; u = T;&lt;/span&gt;
+&lt;span id=&#34;cb1-39&#34;&gt;&lt;a href=&#34;#cb1-39&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;        &lt;span class=&#34;cf&#34;&gt;while&lt;/span&gt; (u != S) {&lt;/span&gt;
+&lt;span id=&#34;cb1-40&#34;&gt;&lt;a href=&#34;#cb1-40&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;            &lt;span class=&#34;dt&#34;&gt;int&lt;/span&gt; i = pre[u];&lt;/span&gt;
+&lt;span id=&#34;cb1-41&#34;&gt;&lt;a href=&#34;#cb1-41&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;            e[i].w -= flow[T], e[i ^ &lt;span class=&#34;dv&#34;&gt;1&lt;/span&gt;].w += flow[T];&lt;/span&gt;
+&lt;span id=&#34;cb1-42&#34;&gt;&lt;a href=&#34;#cb1-42&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;            u = e[i ^ &lt;span class=&#34;dv&#34;&gt;1&lt;/span&gt;].to;&lt;/span&gt;
+&lt;span id=&#34;cb1-43&#34;&gt;&lt;a href=&#34;#cb1-43&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;        }&lt;/span&gt;
+&lt;span id=&#34;cb1-44&#34;&gt;&lt;a href=&#34;#cb1-44&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;        maxCost += flow[T] * dis[T];&lt;/span&gt;
+&lt;span id=&#34;cb1-45&#34;&gt;&lt;a href=&#34;#cb1-45&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;        maxFlow += flow[T];&lt;/span&gt;
+&lt;span id=&#34;cb1-46&#34;&gt;&lt;a href=&#34;#cb1-46&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;        &lt;span class=&#34;cf&#34;&gt;return&lt;/span&gt;;&lt;/span&gt;
+&lt;span id=&#34;cb1-47&#34;&gt;&lt;a href=&#34;#cb1-47&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;    }&lt;/span&gt;
+&lt;span id=&#34;cb1-48&#34;&gt;&lt;a href=&#34;#cb1-48&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;  &lt;span class=&#34;kw&#34;&gt;public&lt;/span&gt;:&lt;/span&gt;
+&lt;span id=&#34;cb1-49&#34;&gt;&lt;a href=&#34;#cb1-49&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;    il &lt;span class=&#34;dt&#34;&gt;void&lt;/span&gt; addEdge(&lt;span class=&#34;dt&#34;&gt;int&lt;/span&gt; u, &lt;span class=&#34;dt&#34;&gt;int&lt;/span&gt; v, &lt;span class=&#34;dt&#34;&gt;int&lt;/span&gt; w, &lt;span class=&#34;dt&#34;&gt;int&lt;/span&gt; c) {&lt;/span&gt;
+&lt;span id=&#34;cb1-50&#34;&gt;&lt;a href=&#34;#cb1-50&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;        e[++cnte] = {v, head[u], w, c}, head[u] = cnte;&lt;/span&gt;
+&lt;span id=&#34;cb1-51&#34;&gt;&lt;a href=&#34;#cb1-51&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;        e[++cnte] = {u, head[v], &lt;span class=&#34;dv&#34;&gt;0&lt;/span&gt;, -c}, head[v] = cnte;&lt;/span&gt;
+&lt;span id=&#34;cb1-52&#34;&gt;&lt;a href=&#34;#cb1-52&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;        &lt;span class=&#34;cf&#34;&gt;return&lt;/span&gt;;&lt;/span&gt;
+&lt;span id=&#34;cb1-53&#34;&gt;&lt;a href=&#34;#cb1-53&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;    }&lt;/span&gt;
+&lt;span id=&#34;cb1-54&#34;&gt;&lt;a href=&#34;#cb1-54&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;&lt;/span&gt;
+&lt;span id=&#34;cb1-55&#34;&gt;&lt;a href=&#34;#cb1-55&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;    pair&amp;lt;&lt;span class=&#34;dt&#34;&gt;int&lt;/span&gt;, ll&amp;gt; work() {&lt;/span&gt;
+&lt;span id=&#34;cb1-56&#34;&gt;&lt;a href=&#34;#cb1-56&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;        &lt;span class=&#34;cf&#34;&gt;while&lt;/span&gt; (SPFA()) update();&lt;/span&gt;
+&lt;span id=&#34;cb1-57&#34;&gt;&lt;a href=&#34;#cb1-57&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;        &lt;span class=&#34;cf&#34;&gt;return&lt;/span&gt; {maxFlow, maxCost};&lt;/span&gt;
+&lt;span id=&#34;cb1-58&#34;&gt;&lt;a href=&#34;#cb1-58&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;    }&lt;/span&gt;
+&lt;span id=&#34;cb1-59&#34;&gt;&lt;a href=&#34;#cb1-59&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;&lt;/span&gt;
+&lt;span id=&#34;cb1-60&#34;&gt;&lt;a href=&#34;#cb1-60&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;} flow;&lt;/span&gt;
+&lt;span id=&#34;cb1-61&#34;&gt;&lt;a href=&#34;#cb1-61&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;&lt;/span&gt;
+&lt;span id=&#34;cb1-62&#34;&gt;&lt;a href=&#34;#cb1-62&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;&lt;span class=&#34;kw&#34;&gt;class&lt;/span&gt; UnionFind {&lt;/span&gt;
+&lt;span id=&#34;cb1-63&#34;&gt;&lt;a href=&#34;#cb1-63&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;  &lt;span class=&#34;kw&#34;&gt;private&lt;/span&gt;:&lt;/span&gt;
+&lt;span id=&#34;cb1-64&#34;&gt;&lt;a href=&#34;#cb1-64&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;    &lt;span class=&#34;dt&#34;&gt;int&lt;/span&gt; fa[maxn];&lt;/span&gt;
+&lt;span id=&#34;cb1-65&#34;&gt;&lt;a href=&#34;#cb1-65&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;    &lt;span class=&#34;dt&#34;&gt;int&lt;/span&gt; find(&lt;span class=&#34;dt&#34;&gt;int&lt;/span&gt; u) {&lt;span class=&#34;cf&#34;&gt;return&lt;/span&gt; u == fa[u] ? u : fa[u] = find(fa[u]);}&lt;/span&gt;
+&lt;span id=&#34;cb1-66&#34;&gt;&lt;a href=&#34;#cb1-66&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;  &lt;span class=&#34;kw&#34;&gt;public&lt;/span&gt;:&lt;/span&gt;
+&lt;span id=&#34;cb1-67&#34;&gt;&lt;a href=&#34;#cb1-67&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;    il &lt;span class=&#34;dt&#34;&gt;bool&lt;/span&gt; query(&lt;span class=&#34;dt&#34;&gt;int&lt;/span&gt; u, &lt;span class=&#34;dt&#34;&gt;int&lt;/span&gt; v) {&lt;span class=&#34;cf&#34;&gt;return&lt;/span&gt; find(u) == find(v);}&lt;/span&gt;
+&lt;span id=&#34;cb1-68&#34;&gt;&lt;a href=&#34;#cb1-68&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;    il &lt;span class=&#34;dt&#34;&gt;bool&lt;/span&gt; uni(&lt;span class=&#34;dt&#34;&gt;int&lt;/span&gt; u, &lt;span class=&#34;dt&#34;&gt;int&lt;/span&gt; v) {&lt;/span&gt;
+&lt;span id=&#34;cb1-69&#34;&gt;&lt;a href=&#34;#cb1-69&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;        u = find(u), v = find(v);&lt;/span&gt;
+&lt;span id=&#34;cb1-70&#34;&gt;&lt;a href=&#34;#cb1-70&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;        &lt;span class=&#34;cf&#34;&gt;if&lt;/span&gt; (u == v) &lt;span class=&#34;cf&#34;&gt;return&lt;/span&gt; &lt;span class=&#34;kw&#34;&gt;false&lt;/span&gt;;&lt;/span&gt;
+&lt;span id=&#34;cb1-71&#34;&gt;&lt;a href=&#34;#cb1-71&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;        fa[u] = v;&lt;/span&gt;
+&lt;span id=&#34;cb1-72&#34;&gt;&lt;a href=&#34;#cb1-72&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;        &lt;span class=&#34;cf&#34;&gt;return&lt;/span&gt; &lt;span class=&#34;kw&#34;&gt;true&lt;/span&gt;;&lt;/span&gt;
+&lt;span id=&#34;cb1-73&#34;&gt;&lt;a href=&#34;#cb1-73&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;    }&lt;/span&gt;
+&lt;span id=&#34;cb1-74&#34;&gt;&lt;a href=&#34;#cb1-74&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;    UnionFind() {&lt;/span&gt;
+&lt;span id=&#34;cb1-75&#34;&gt;&lt;a href=&#34;#cb1-75&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;        FOR(i, &lt;span class=&#34;dv&#34;&gt;1&lt;/span&gt;, maxn - &lt;span class=&#34;dv&#34;&gt;5&lt;/span&gt;) fa[i] = i;&lt;/span&gt;
+&lt;span id=&#34;cb1-76&#34;&gt;&lt;a href=&#34;#cb1-76&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;        &lt;span class=&#34;cf&#34;&gt;return&lt;/span&gt;;&lt;/span&gt;
+&lt;span id=&#34;cb1-77&#34;&gt;&lt;a href=&#34;#cb1-77&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;    }&lt;/span&gt;
+&lt;span id=&#34;cb1-78&#34;&gt;&lt;a href=&#34;#cb1-78&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;} ufs;&lt;/span&gt;
+&lt;span id=&#34;cb1-79&#34;&gt;&lt;a href=&#34;#cb1-79&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;&lt;/span&gt;
+&lt;span id=&#34;cb1-80&#34;&gt;&lt;a href=&#34;#cb1-80&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;&lt;span class=&#34;kw&#34;&gt;struct&lt;/span&gt; Edge {&lt;/span&gt;
+&lt;span id=&#34;cb1-81&#34;&gt;&lt;a href=&#34;#cb1-81&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;    &lt;span class=&#34;dt&#34;&gt;int&lt;/span&gt; u, v, w;&lt;/span&gt;
+&lt;span id=&#34;cb1-82&#34;&gt;&lt;a href=&#34;#cb1-82&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;    il &lt;span class=&#34;dt&#34;&gt;bool&lt;/span&gt; &lt;span class=&#34;kw&#34;&gt;operator&lt;/span&gt;&amp;lt;(&lt;span class=&#34;at&#34;&gt;const&lt;/span&gt; Edge &amp;amp;rhs) &lt;span class=&#34;at&#34;&gt;const&lt;/span&gt; {&lt;span class=&#34;cf&#34;&gt;return&lt;/span&gt; w &amp;lt; rhs.w;}&lt;/span&gt;
+&lt;span id=&#34;cb1-83&#34;&gt;&lt;a href=&#34;#cb1-83&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;} e[maxm];&lt;/span&gt;
+&lt;span id=&#34;cb1-84&#34;&gt;&lt;a href=&#34;#cb1-84&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;&lt;/span&gt;
+&lt;span id=&#34;cb1-85&#34;&gt;&lt;a href=&#34;#cb1-85&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;vector&amp;lt;pair&amp;lt;&lt;span class=&#34;dt&#34;&gt;int&lt;/span&gt;, &lt;span class=&#34;dt&#34;&gt;int&lt;/span&gt;&amp;gt;&amp;gt; tree[maxn];&lt;/span&gt;
+&lt;span id=&#34;cb1-86&#34;&gt;&lt;a href=&#34;#cb1-86&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;&lt;span class=&#34;dt&#34;&gt;int&lt;/span&gt; fap[maxn], fa[maxn], n, m, k, vis[maxn];&lt;/span&gt;
+&lt;span id=&#34;cb1-87&#34;&gt;&lt;a href=&#34;#cb1-87&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;ll totw;&lt;/span&gt;
+&lt;span id=&#34;cb1-88&#34;&gt;&lt;a href=&#34;#cb1-88&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;&lt;/span&gt;
+&lt;span id=&#34;cb1-89&#34;&gt;&lt;a href=&#34;#cb1-89&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;&lt;span class=&#34;dt&#34;&gt;void&lt;/span&gt; dfs(&lt;span class=&#34;dt&#34;&gt;int&lt;/span&gt; u, &lt;span class=&#34;dt&#34;&gt;int&lt;/span&gt; pre) {&lt;/span&gt;
+&lt;span id=&#34;cb1-90&#34;&gt;&lt;a href=&#34;#cb1-90&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;    &lt;span class=&#34;cf&#34;&gt;if&lt;/span&gt; (pre == -&lt;span class=&#34;dv&#34;&gt;1&lt;/span&gt;) fap[u] = &lt;span class=&#34;fl&#34;&gt;1e7&lt;/span&gt;;&lt;/span&gt;
+&lt;span id=&#34;cb1-91&#34;&gt;&lt;a href=&#34;#cb1-91&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;    vis[u] = &lt;span class=&#34;kw&#34;&gt;true&lt;/span&gt;, fa[u] = pre;&lt;/span&gt;
+&lt;span id=&#34;cb1-92&#34;&gt;&lt;a href=&#34;#cb1-92&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;    &lt;span class=&#34;cf&#34;&gt;for&lt;/span&gt; (&lt;span class=&#34;kw&#34;&gt;auto&lt;/span&gt; &amp;amp;p : tree[u]) {&lt;/span&gt;
+&lt;span id=&#34;cb1-93&#34;&gt;&lt;a href=&#34;#cb1-93&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;        &lt;span class=&#34;dt&#34;&gt;int&lt;/span&gt; &amp;amp;v = p.first;&lt;/span&gt;
+&lt;span id=&#34;cb1-94&#34;&gt;&lt;a href=&#34;#cb1-94&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;        &lt;span class=&#34;cf&#34;&gt;if&lt;/span&gt; (vis[v]) &lt;span class=&#34;cf&#34;&gt;continue&lt;/span&gt;;&lt;/span&gt;
+&lt;span id=&#34;cb1-95&#34;&gt;&lt;a href=&#34;#cb1-95&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;        fap[v] = p.second, dfs(v, u);&lt;/span&gt;
+&lt;span id=&#34;cb1-96&#34;&gt;&lt;a href=&#34;#cb1-96&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;    }&lt;/span&gt;
+&lt;span id=&#34;cb1-97&#34;&gt;&lt;a href=&#34;#cb1-97&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;    &lt;span class=&#34;cf&#34;&gt;return&lt;/span&gt;;&lt;/span&gt;
+&lt;span id=&#34;cb1-98&#34;&gt;&lt;a href=&#34;#cb1-98&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;}&lt;/span&gt;
+&lt;span id=&#34;cb1-99&#34;&gt;&lt;a href=&#34;#cb1-99&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;&lt;/span&gt;
+&lt;span id=&#34;cb1-100&#34;&gt;&lt;a href=&#34;#cb1-100&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;&lt;span class=&#34;dt&#34;&gt;int&lt;/span&gt; main() {&lt;/span&gt;
+&lt;span id=&#34;cb1-101&#34;&gt;&lt;a href=&#34;#cb1-101&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;    cin &amp;gt;&amp;gt; n &amp;gt;&amp;gt; m &amp;gt;&amp;gt; k;&lt;/span&gt;
+&lt;span id=&#34;cb1-102&#34;&gt;&lt;a href=&#34;#cb1-102&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;    FOR(i, &lt;span class=&#34;dv&#34;&gt;1&lt;/span&gt;, m) cin &amp;gt;&amp;gt; e[i].u &amp;gt;&amp;gt; e[i].v &amp;gt;&amp;gt; e[i].w;&lt;/span&gt;
+&lt;span id=&#34;cb1-103&#34;&gt;&lt;a href=&#34;#cb1-103&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;    sort(e + &lt;span class=&#34;dv&#34;&gt;1&lt;/span&gt;, e + m + &lt;span class=&#34;dv&#34;&gt;1&lt;/span&gt;);&lt;/span&gt;
+&lt;span id=&#34;cb1-104&#34;&gt;&lt;a href=&#34;#cb1-104&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;    FOR(i, &lt;span class=&#34;dv&#34;&gt;1&lt;/span&gt;, m) &lt;span class=&#34;cf&#34;&gt;if&lt;/span&gt; (ufs.uni(e[i].u, e[i].v)) {&lt;/span&gt;
+&lt;span id=&#34;cb1-105&#34;&gt;&lt;a href=&#34;#cb1-105&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;        totw += e[i].w;&lt;/span&gt;
+&lt;span id=&#34;cb1-106&#34;&gt;&lt;a href=&#34;#cb1-106&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;        tree[e[i].u].push_back({e[i].v, e[i].w});&lt;/span&gt;
+&lt;span id=&#34;cb1-107&#34;&gt;&lt;a href=&#34;#cb1-107&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;        tree[e[i].v].push_back({e[i].u, e[i].w});&lt;/span&gt;
+&lt;span id=&#34;cb1-108&#34;&gt;&lt;a href=&#34;#cb1-108&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;    }&lt;/span&gt;
+&lt;span id=&#34;cb1-109&#34;&gt;&lt;a href=&#34;#cb1-109&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;&lt;/span&gt;
+&lt;span id=&#34;cb1-110&#34;&gt;&lt;a href=&#34;#cb1-110&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;    S = &lt;span class=&#34;dv&#34;&gt;2&lt;/span&gt; * n + k + &lt;span class=&#34;dv&#34;&gt;1&lt;/span&gt;, T = S + &lt;span class=&#34;dv&#34;&gt;1&lt;/span&gt;;&lt;/span&gt;
+&lt;span id=&#34;cb1-111&#34;&gt;&lt;a href=&#34;#cb1-111&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;    FOR(i, &lt;span class=&#34;dv&#34;&gt;1&lt;/span&gt;, n) flow.addEdge(i, n + i, &lt;span class=&#34;dv&#34;&gt;1&lt;/span&gt;, &lt;span class=&#34;dv&#34;&gt;0&lt;/span&gt;);&lt;/span&gt;
+&lt;span id=&#34;cb1-112&#34;&gt;&lt;a href=&#34;#cb1-112&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;    FOR(i, &lt;span class=&#34;dv&#34;&gt;1&lt;/span&gt;, k) {&lt;/span&gt;
+&lt;span id=&#34;cb1-113&#34;&gt;&lt;a href=&#34;#cb1-113&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;        flow.addEdge(S, &lt;span class=&#34;dv&#34;&gt;2&lt;/span&gt; * n + i, &lt;span class=&#34;dv&#34;&gt;1&lt;/span&gt;, &lt;span class=&#34;dv&#34;&gt;0&lt;/span&gt;);&lt;/span&gt;
+&lt;span id=&#34;cb1-114&#34;&gt;&lt;a href=&#34;#cb1-114&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;        &lt;span class=&#34;dt&#34;&gt;int&lt;/span&gt; s; cin &amp;gt;&amp;gt; s;&lt;/span&gt;
+&lt;span id=&#34;cb1-115&#34;&gt;&lt;a href=&#34;#cb1-115&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;        &lt;span class=&#34;cf&#34;&gt;while&lt;/span&gt; (s--) {&lt;/span&gt;
+&lt;span id=&#34;cb1-116&#34;&gt;&lt;a href=&#34;#cb1-116&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;            &lt;span class=&#34;dt&#34;&gt;int&lt;/span&gt; v; cin &amp;gt;&amp;gt; v;&lt;/span&gt;
+&lt;span id=&#34;cb1-117&#34;&gt;&lt;a href=&#34;#cb1-117&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;            flow.addEdge(&lt;span class=&#34;dv&#34;&gt;2&lt;/span&gt; * n + i, v, &lt;span class=&#34;dv&#34;&gt;1&lt;/span&gt;, &lt;span class=&#34;dv&#34;&gt;0&lt;/span&gt;);&lt;/span&gt;
+&lt;span id=&#34;cb1-118&#34;&gt;&lt;a href=&#34;#cb1-118&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;        }&lt;/span&gt;
+&lt;span id=&#34;cb1-119&#34;&gt;&lt;a href=&#34;#cb1-119&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;    }&lt;/span&gt;
+&lt;span id=&#34;cb1-120&#34;&gt;&lt;a href=&#34;#cb1-120&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;&lt;/span&gt;
+&lt;span id=&#34;cb1-121&#34;&gt;&lt;a href=&#34;#cb1-121&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;    FOR(i, &lt;span class=&#34;dv&#34;&gt;1&lt;/span&gt;, n) &lt;span class=&#34;cf&#34;&gt;if&lt;/span&gt; (!vis[i]) dfs(i, -&lt;span class=&#34;dv&#34;&gt;1&lt;/span&gt;), totw += &lt;span class=&#34;fl&#34;&gt;1e7&lt;/span&gt;;&lt;/span&gt;
+&lt;span id=&#34;cb1-122&#34;&gt;&lt;a href=&#34;#cb1-122&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;&lt;/span&gt;
+&lt;span id=&#34;cb1-123&#34;&gt;&lt;a href=&#34;#cb1-123&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;    FOR(i, &lt;span class=&#34;dv&#34;&gt;1&lt;/span&gt;, n) {&lt;/span&gt;
+&lt;span id=&#34;cb1-124&#34;&gt;&lt;a href=&#34;#cb1-124&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;        flow.addEdge(n + i, T, &lt;span class=&#34;dv&#34;&gt;1&lt;/span&gt;, fap[i]);&lt;/span&gt;
+&lt;span id=&#34;cb1-125&#34;&gt;&lt;a href=&#34;#cb1-125&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;        &lt;span class=&#34;cf&#34;&gt;if&lt;/span&gt; (~fa[i]) flow.addEdge(n + i, fa[i], &lt;span class=&#34;dv&#34;&gt;1&lt;/span&gt;, &lt;span class=&#34;dv&#34;&gt;0&lt;/span&gt;);&lt;/span&gt;
+&lt;span id=&#34;cb1-126&#34;&gt;&lt;a href=&#34;#cb1-126&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;    }&lt;/span&gt;
+&lt;span id=&#34;cb1-127&#34;&gt;&lt;a href=&#34;#cb1-127&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;&lt;/span&gt;
+&lt;span id=&#34;cb1-128&#34;&gt;&lt;a href=&#34;#cb1-128&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;    &lt;span class=&#34;kw&#34;&gt;auto&lt;/span&gt; ret = flow.work();&lt;/span&gt;
+&lt;span id=&#34;cb1-129&#34;&gt;&lt;a href=&#34;#cb1-129&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;    ll ans = totw - ret.second;&lt;/span&gt;
+&lt;span id=&#34;cb1-130&#34;&gt;&lt;a href=&#34;#cb1-130&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;    cout &amp;lt;&amp;lt; ((ans &amp;gt;= &lt;span class=&#34;fl&#34;&gt;1e7&lt;/span&gt; || ret.first &amp;lt; k) ? -&lt;span class=&#34;dv&#34;&gt;1&lt;/span&gt; : ans);&lt;/span&gt;
+&lt;span id=&#34;cb1-131&#34;&gt;&lt;a href=&#34;#cb1-131&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;&lt;/span&gt;
+&lt;span id=&#34;cb1-132&#34;&gt;&lt;a href=&#34;#cb1-132&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;    &lt;span class=&#34;cf&#34;&gt;return&lt;/span&gt; &lt;span class=&#34;dv&#34;&gt;0&lt;/span&gt;;&lt;/span&gt;
+&lt;span id=&#34;cb1-133&#34;&gt;&lt;a href=&#34;#cb1-133&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;}&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+</description>
+        </item>
+        
+    </channel>
+</rss>

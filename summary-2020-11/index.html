@@ -1,0 +1,704 @@
+<!DOCTYPE html>
+<html dir="ltr" lang="zh-CN">
+<head><meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1" name="viewport"/><meta content="目标 撑过 CSP 复赛（确信） dpdpdp dsdsds 数论数论数论 图论图论图论 学习内容 树上差分 换根 dp 扫描线 网络流基础 斜率优化 做题记录 20/11/02 P3128 [USACO15DEC]Max Flow P 树上差分模板
+P4408 [NOI2003]逃学的小孩 求直径并枚举点即可，开 long long
+P2052 [NOI2011]道路修建 水
+P1967 货车运输 Kruskal 求最大瓶颈生成森林，然后树剖处理路径上最小边的询问
+20/11/03 P1983 车站分级 建图，拓扑排序找层数即可
+P2597 [ZJOI2012]灾难 一道紫题，思路比较巧妙。 首先对图拓扑排序，建出的拓扑序列保证后面的不是前面的猎物。然后尝试建一棵树，保证根节点灭绝后整个子树会跟着灭绝。考虑按照拓扑序列给树加点，每次将一个点加到其所有食物的 LCA 上（拓扑序保证了这些食物已经被加进树里面），求 LCA 的过程使用倍增维护。然后 dfs 一遍求出所有节点的子树大小即可。总时间复杂度 \(O(m\log n+n\log n)\)
+20/11/04 P3478 [POI2008]STA-Station 换根 dp 板子题，考虑当前节点的贡献以及父亲节点的贡献即可。
+P2986 [USACO10MAR]Great Cow Gathering G 还是换根 dp，ans 初始值要赋超级大（1e18）
+P3047 [USACO12FEB]Nearby Cows G 换根 dp，\(f_{i,k}\) 为答案，\(g_{i,k}\) 表示点 \(i\) 的儿子中到 \(i\) 的距离不超过 \(k\) 的权值和，则 \(f_{v,k}=f_{u,k-1}+g_{v,k}-g_{v,k-2}\)" name="description"/><title>2020年11月 OI学习记录</title>
+<link href="https://oi.imyangty.com/summary-2020-11/" rel="canonical"/>
+<link href="/scss/style.min.a5821f3d3ab84ce5a0ac21477e347a2e0ca00292e398d16c5e8e36ded6e35a23.css" rel="stylesheet"/><meta content="2020年11月 OI学习记录" property="og:title"/>
+<meta content="目标 撑过 CSP 复赛（确信） dpdpdp dsdsds 数论数论数论 图论图论图论 学习内容 树上差分 换根 dp 扫描线 网络流基础 斜率优化 做题记录 20/11/02 P3128 [USACO15DEC]Max Flow P 树上差分模板
+P4408 [NOI2003]逃学的小孩 求直径并枚举点即可，开 long long
+P2052 [NOI2011]道路修建 水
+P1967 货车运输 Kruskal 求最大瓶颈生成森林，然后树剖处理路径上最小边的询问
+20/11/03 P1983 车站分级 建图，拓扑排序找层数即可
+P2597 [ZJOI2012]灾难 一道紫题，思路比较巧妙。 首先对图拓扑排序，建出的拓扑序列保证后面的不是前面的猎物。然后尝试建一棵树，保证根节点灭绝后整个子树会跟着灭绝。考虑按照拓扑序列给树加点，每次将一个点加到其所有食物的 LCA 上（拓扑序保证了这些食物已经被加进树里面），求 LCA 的过程使用倍增维护。然后 dfs 一遍求出所有节点的子树大小即可。总时间复杂度 \(O(m\log n+n\log n)\)
+20/11/04 P3478 [POI2008]STA-Station 换根 dp 板子题，考虑当前节点的贡献以及父亲节点的贡献即可。
+P2986 [USACO10MAR]Great Cow Gathering G 还是换根 dp，ans 初始值要赋超级大（1e18）
+P3047 [USACO12FEB]Nearby Cows G 换根 dp，\(f_{i,k}\) 为答案，\(g_{i,k}\) 表示点 \(i\) 的儿子中到 \(i\) 的距离不超过 \(k\) 的权值和，则 \(f_{v,k}=f_{u,k-1}+g_{v,k}-g_{v,k-2}\)" property="og:description"/>
+<meta content="https://oi.imyangty.com/summary-2020-11/" property="og:url"/>
+<meta content="清烛的博客" property="og:site_name"/>
+<meta content="article" property="og:type"/><meta content="Post" property="article:section"/><meta content="OI" property="article:tag"/><meta content="2020-11-02T19:32:08+08:00" property="article:published_time"/><meta content="2020-11-02T19:32:08+08:00" property="article:modified_time"/><meta content="https://yangty-pic.oss-cn-beijing.aliyuncs.com/bg52.webp" property="og:image"/>
+<meta content="2020年11月 OI学习记录" name="twitter:title"/>
+<meta content="目标 撑过 CSP 复赛（确信） dpdpdp dsdsds 数论数论数论 图论图论图论 学习内容 树上差分 换根 dp 扫描线 网络流基础 斜率优化 做题记录 20/11/02 P3128 [USACO15DEC]Max Flow P 树上差分模板
+P4408 [NOI2003]逃学的小孩 求直径并枚举点即可，开 long long
+P2052 [NOI2011]道路修建 水
+P1967 货车运输 Kruskal 求最大瓶颈生成森林，然后树剖处理路径上最小边的询问
+20/11/03 P1983 车站分级 建图，拓扑排序找层数即可
+P2597 [ZJOI2012]灾难 一道紫题，思路比较巧妙。 首先对图拓扑排序，建出的拓扑序列保证后面的不是前面的猎物。然后尝试建一棵树，保证根节点灭绝后整个子树会跟着灭绝。考虑按照拓扑序列给树加点，每次将一个点加到其所有食物的 LCA 上（拓扑序保证了这些食物已经被加进树里面），求 LCA 的过程使用倍增维护。然后 dfs 一遍求出所有节点的子树大小即可。总时间复杂度 \(O(m\log n+n\log n)\)
+20/11/04 P3478 [POI2008]STA-Station 换根 dp 板子题，考虑当前节点的贡献以及父亲节点的贡献即可。
+P2986 [USACO10MAR]Great Cow Gathering G 还是换根 dp，ans 初始值要赋超级大（1e18）
+P3047 [USACO12FEB]Nearby Cows G 换根 dp，\(f_{i,k}\) 为答案，\(g_{i,k}\) 表示点 \(i\) 的儿子中到 \(i\) 的距离不超过 \(k\) 的权值和，则 \(f_{v,k}=f_{u,k-1}+g_{v,k}-g_{v,k-2}\)" name="twitter:description"/><meta content="summary_large_image" name="twitter:card"/>
+<meta content="https://yangty-pic.oss-cn-beijing.aliyuncs.com/bg52.webp" name="twitter:image"/>
+<link href="https://q1.qlogo.cn/g?b=qq&amp;nk=375836877&amp;s=5" rel="shortcut icon"/>
+<link href="https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.5.1/build/styles/github-dark-dimmed.min.css" rel="stylesheet"/>
+<script src="https://cdn.jsdelivr.net/gh/highlightjs/cdn-release/build/highlight.min.js"></script>
+<script>hljs.highlightAll();</script>
+</head>
+<body class="article-page">
+<script>
+        (function() {
+            const colorSchemeKey = 'StackColorScheme';
+            if(!localStorage.getItem(colorSchemeKey)){
+                localStorage.setItem(colorSchemeKey, "auto");
+            }
+        })();
+    </script><script>
+    (function() {
+        const colorSchemeKey = 'StackColorScheme';
+        const colorSchemeItem = localStorage.getItem(colorSchemeKey);
+        const supportDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches === true;
+
+        if (colorSchemeItem == 'dark' || colorSchemeItem === 'auto' && supportDarkMode) {
+            
+
+            document.documentElement.dataset.scheme = 'dark';
+        } else {
+            document.documentElement.dataset.scheme = 'light';
+        }
+    })();
+</script>
+<div class="container main-container flex on-phone--column extended"><aside class="sidebar left-sidebar sticky">
+<button aria-label="切换菜单" class="hamburger hamburger--spin" id="toggle-menu" type="button">
+<span class="hamburger-box">
+<span class="hamburger-inner"></span>
+</span>
+</button>
+<header>
+<figure class="site-avatar">
+<a href="/">
+<img alt="Avatar" class="site-logo" height="300" loading="lazy" src="/img/avatar_huea3ce2119467b51fdd2a81393644a76d_51594_300x0_resize_q75_box.jpg" width="300"/>
+</a>
+<span class="emoji">😅</span>
+</figure>
+<div class="site-meta">
+<h1 class="site-name"><a href="/">清烛的博客</a></h1>
+<h2 class="site-description">烟火已谢，笙歌未停</h2>
+</div>
+</header><ol class="social-menu">
+<li>
+<a href="mailto:i@imyangty.com" target="_blank" title="email">
+<svg class="icon icon-tabler icon-tabler-mail" fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" viewbox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+<path d="M0 0h24v24H0z" fill="none" stroke="none"></path>
+<rect height="14" rx="2" width="18" x="3" y="5"></rect>
+<polyline points="3 7 12 13 21 7"></polyline>
+</svg>
+</a>
+</li>
+<li>
+<a href="https://github.com/Cgfyufsygsm" target="_blank" title="GitHub">
+<svg class="icon icon-tabler icon-tabler-brand-github" fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+<path d="M0 0h24v24H0z" fill="none" stroke="none"></path>
+<path d="M9 19c-4.3 1.4 -4.3 -2.5 -6 -3m12 5v-3.5c0 -1 .1 -1.4 -.5 -2c2.8 -.3 5.5 -1.4 5.5 -6a4.6 4.6 0 0 0 -1.3 -3.2a4.2 4.2 0 0 0 -.1 -3.2s-1.1 -.3 -3.5 1.3a12.3 12.3 0 0 0 -6.2 0c-2.4 -1.6 -3.5 -1.3 -3.5 -1.3a4.2 4.2 0 0 0 -.1 3.2a4.6 4.6 0 0 0 -1.3 3.2c0 4.6 2.7 5.7 5.5 6c-.6 .6 -.6 1.2 -.5 2v3.5"></path>
+</svg>
+</a>
+</li>
+<li>
+<a href="https://t.me/Cgfyufsygsm" target="_blank" title="Telegram">
+<svg class="icon icon-tabler icon-tabler-brand-telegram" fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" viewbox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+<path d="M0 0h24v24H0z" fill="none" stroke="none"></path>
+<path d="M15 10l-4 4l6 6l4 -16l-18 7l4 2l2 6l3 -4"></path>
+</svg>
+</a>
+</li>
+<li>
+<a href="https://twitter.com/Cgfyufsygsm" target="_blank" title="Twitter">
+<svg class="icon icon-tabler icon-tabler-brand-twitter" fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+<path d="M0 0h24v24H0z" fill="none" stroke="none"></path>
+<path d="M22 4.01c-1 .49 -1.98 .689 -3 .99c-1.121 -1.265 -2.783 -1.335 -4.38 -.737s-2.643 2.06 -2.62 3.737v1c-3.245 .083 -6.135 -1.395 -8 -4c0 0 -4.182 7.433 4 11c-1.872 1.247 -3.739 2.088 -6 2c3.308 1.803 6.913 2.423 10.034 1.517c3.58 -1.04 6.522 -3.723 7.651 -7.742a13.84 13.84 0 0 0 .497 -3.753c-.002 -.249 1.51 -2.772 1.818 -4.013z"></path>
+</svg>
+</a>
+</li>
+</ol><ol class="menu" id="main-menu">
+<li>
+<a href="/">
+<svg class="icon icon-tabler icon-tabler-home" fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+<path d="M0 0h24v24H0z" stroke="none"></path>
+<polyline points="5 12 3 12 12 3 21 12 19 12"></polyline>
+<path d="M5 12v7a2 2 0 0 0 2 2h10a2 2 0 0 0 2 -2v-7"></path>
+<path d="M9 21v-6a2 2 0 0 1 2 -2h2a2 2 0 0 1 2 2v6"></path>
+</svg>
+<span>主页</span>
+</a>
+</li>
+<li>
+<a href="/about/">
+<svg class="icon icon-tabler icon-tabler-user" fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+<path d="M0 0h24v24H0z" stroke="none"></path>
+<circle cx="12" cy="7" r="4"></circle>
+<path d="M6 21v-2a4 4 0 0 1 4 -4h4a4 4 0 0 1 4 4v2"></path>
+</svg>
+<span>关于</span>
+</a>
+</li>
+<li>
+<a href="/idx/">
+<svg class="icon icon-tabler icon-tabler-hash" fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+<path d="M0 0h24v24H0z" stroke="none"></path>
+<line x1="5" x2="19" y1="9" y2="9"></line>
+<line x1="5" x2="19" y1="15" y2="15"></line>
+<line x1="11" x2="7" y1="4" y2="20"></line>
+<line x1="17" x2="13" y1="4" y2="20"></line>
+</svg>
+<span>导航</span>
+</a>
+</li>
+<li>
+<a href="/archives/">
+<svg class="icon icon-tabler icon-tabler-archive" fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+<path d="M0 0h24v24H0z" stroke="none"></path>
+<rect height="4" rx="2" width="18" x="3" y="4"></rect>
+<path d="M5 8v10a2 2 0 0 0 2 2h10a2 2 0 0 0 2 -2v-10"></path>
+<line x1="10" x2="14" y1="12" y2="12"></line>
+</svg>
+<span>归档</span>
+</a>
+</li>
+<li>
+<a href="/search/">
+<svg class="icon icon-tabler icon-tabler-search" fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+<path d="M0 0h24v24H0z" stroke="none"></path>
+<circle cx="10" cy="10" r="7"></circle>
+<line x1="21" x2="15" y1="21" y2="15"></line>
+</svg>
+<span>搜索</span>
+</a>
+</li>
+<li>
+<a href="/friends/">
+<svg class="icon icon-tabler icon-tabler-link" fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+<path d="M0 0h24v24H0z" stroke="none"></path>
+<path d="M10 14a3.5 3.5 0 0 0 5 0l4 -4a3.5 3.5 0 0 0 -5 -5l-.5 .5"></path>
+<path d="M14 10a3.5 3.5 0 0 0 -5 0l-4 4a3.5 3.5 0 0 0 5 5l.5 -.5"></path>
+</svg>
+<span>友链</span>
+</a>
+</li>
+<li>
+<a href="https://blog.imyangty.com" target="_blank">
+<svg class="icon icon-tabler icon-tabler-home" fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+<path d="M0 0h24v24H0z" stroke="none"></path>
+<polyline points="5 12 3 12 12 3 21 12 19 12"></polyline>
+<path d="M5 12v7a2 2 0 0 0 2 2h10a2 2 0 0 0 2 -2v-7"></path>
+<path d="M9 21v-6a2 2 0 0 1 2 -2h2a2 2 0 0 1 2 2v6"></path>
+</svg>
+<span>主博客</span>
+</a>
+</li>
+<div class="menu-bottom-section">
+<li id="dark-mode-toggle">
+<svg class="icon icon-tabler icon-tabler-toggle-left" fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+<path d="M0 0h24v24H0z" stroke="none"></path>
+<circle cx="8" cy="12" r="2"></circle>
+<rect height="12" rx="6" width="20" x="2" y="6"></rect>
+</svg>
+<svg class="icon icon-tabler icon-tabler-toggle-right" fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+<path d="M0 0h24v24H0z" stroke="none"></path>
+<circle cx="16" cy="12" r="2"></circle>
+<rect height="12" rx="6" width="20" x="2" y="6"></rect>
+</svg>
+<span>暗色模式</span>
+</li>
+</div>
+</ol>
+</aside>
+<main class="main full-width">
+<article class="has-image main-article">
+<header class="article-header">
+<div class="article-image">
+<a href="/summary-2020-11/">
+<img alt="Featured image of post 2020年11月 OI学习记录" loading="lazy" src="https://yangty-pic.oss-cn-beijing.aliyuncs.com/bg52.webp"/>
+</a>
+</div>
+<div class="article-details">
+<header class="article-category">
+<a href="/categories/oi/">
+                OI
+            </a>
+<a href="/categories/summary/">
+                总结
+            </a>
+</header>
+<div class="article-title-wrapper">
+<h2 class="article-title">
+<a href="/summary-2020-11/">2020年11月 OI学习记录</a>
+</h2>
+</div>
+<footer class="article-time">
+<div>
+<svg class="icon icon-tabler icon-tabler-calendar-time" fill="none" height="56" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="56" xmlns="http://www.w3.org/2000/svg">
+<path d="M0 0h24v24H0z" stroke="none"></path>
+<path d="M11.795 21h-6.795a2 2 0 0 1 -2 -2v-12a2 2 0 0 1 2 -2h12a2 2 0 0 1 2 2v4"></path>
+<circle cx="18" cy="18" r="4"></circle>
+<path d="M15 3v4"></path>
+<path d="M7 3v4"></path>
+<path d="M3 11h16"></path>
+<path d="M18 16.496v1.504l1 1"></path>
+</svg>
+<time class="article-time--published">Nov 02, 2020</time>
+</div>
+<div>
+<svg class="icon icon-tabler icon-tabler-clock" fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+<path d="M0 0h24v24H0z" stroke="none"></path>
+<circle cx="12" cy="12" r="9"></circle>
+<polyline points="12 7 12 12 15 15"></polyline>
+</svg>
+<time class="article-time--reading">
+                    阅读时长: 3 分钟
+                </time>
+</div>
+</footer>
+</div>
+</header>
+<section class="article-content">
+<h2 id="目标">目标</h2>
+<ul>
+<li>撑过 CSP 复赛（确信）</li>
+<li>dpdpdp</li>
+<li>dsdsds</li>
+<li>数论数论数论</li>
+<li>图论图论图论</li>
+</ul>
+<h2 id="学习内容">学习内容</h2>
+<ul>
+<li>树上差分</li>
+<li>换根 dp</li>
+<li>扫描线</li>
+<li>网络流基础</li>
+<li>斜率优化</li>
+</ul>
+<h2 id="做题记录">做题记录</h2>
+<h3 id="section">20/11/02</h3>
+<ul>
+<li><strong>P3128 [USACO15DEC]Max Flow P</strong></li>
+</ul>
+<p>树上差分模板</p>
+<ul>
+<li><strong>P4408 [NOI2003]逃学的小孩</strong></li>
+</ul>
+<p>求直径并枚举点即可，开 <code>long long</code></p>
+<ul>
+<li><strong>P2052 [NOI2011]道路修建</strong></li>
+</ul>
+<p>水</p>
+<ul>
+<li><strong>P1967 货车运输</strong></li>
+</ul>
+<p>Kruskal 求最大瓶颈生成森林，然后树剖处理路径上最小边的询问</p>
+<h3 id="section-1">20/11/03</h3>
+<ul>
+<li><strong>P1983 车站分级</strong></li>
+</ul>
+<p>建图，拓扑排序找层数即可</p>
+<ul>
+<li><strong>P2597 [ZJOI2012]灾难</strong></li>
+</ul>
+<p>一道紫题，思路比较巧妙。 首先对图拓扑排序，建出的拓扑序列保证后面的不是前面的猎物。然后尝试建一棵树，保证根节点灭绝后整个子树会跟着灭绝。考虑按照拓扑序列给树加点，每次将一个点加到其所有食物的 LCA 上（拓扑序保证了这些食物已经被加进树里面），求 LCA 的过程使用倍增维护。然后 dfs 一遍求出所有节点的子树大小即可。总时间复杂度 <span class="math inline">\(O(m\log n+n\log n)\)</span></p>
+<h3 id="section-2">20/11/04</h3>
+<ul>
+<li><strong>P3478 [POI2008]STA-Station</strong></li>
+</ul>
+<p>换根 dp 板子题，考虑当前节点的贡献以及父亲节点的贡献即可。</p>
+<ul>
+<li><strong>P2986 [USACO10MAR]Great Cow Gathering G</strong></li>
+</ul>
+<p>还是换根 dp，<strong>ans 初始值要赋超级大（1e18）</strong></p>
+<ul>
+<li><strong>P3047 [USACO12FEB]Nearby Cows G</strong></li>
+</ul>
+<p>换根 dp，<span class="math inline">\(f_{i,k}\)</span> 为答案，<span class="math inline">\(g_{i,k}\)</span> 表示点 <span class="math inline">\(i\)</span> 的儿子中到 <span class="math inline">\(i\)</span> 的距离不超过 <span class="math inline">\(k\)</span> 的权值和，则 <span class="math inline">\(f_{v,k}=f_{u,k-1}+g_{v,k}-g_{v,k-2}\)</span></p>
+<ul>
+<li><strong>CF1187E Tree Painting</strong></li>
+</ul>
+<p>题意：给定一棵n个点的树 初始全是白点 要求你做n步操作，每一次选定一个与一个黑点相隔一条边的白点，将它染成黑点，然后获得该白点被染色前所在的白色联通块大小的权值。 第一次操作可以任意选点。 求可获得的最大权值 设 <span class="math inline">\(f_u\)</span> 为先选 <span class="math inline">\(u\)</span> 号点获得的最大答案，<span class="math inline">\(g_u\)</span> 为先选 <span class="math inline">\(u\)</span> 点在子树中的最大答案，则 <span class="math inline">\(g_u=size(u)+\sum g_v\)</span>，然后通过换根求出 <span class="math inline">\(f_u\)</span> 即可。</p>
+<h3 id="csp-爆炸">20/11/07 csp 爆炸</h3>
+<h3 id="section-3">20/11/09</h3>
+<ul>
+<li><strong>P4427 [BJOI2018]求和</strong></li>
+</ul>
+<p>复习树剖模板</p>
+<ul>
+<li><strong>P1944 最长括号匹配</strong></li>
+</ul>
+<p>线性 dp，使用 dp 解决括号串匹配问题，找准转移关键即可。</p>
+<h3 id="section-4">20/11/10</h3>
+<ul>
+<li><strong>P2572 [SCOI2010]序列操作</strong></li>
+</ul>
+<p>sb 题，<strong>区间推平的时候要清空反转标记</strong>，维护区间和，前缀 0/1，后缀 0/1，最大连续 0/1 和两个懒标记即可。</p>
+<h3 id="section-5">20/11/11</h3>
+<ul>
+<li><strong>P1772 [ZJOI2006]物流运输</strong></li>
+</ul>
+<p>比较巧的线性 dp，设 <span class="math inline">\(f_i\)</span> 为到第 <span class="math inline">\(i\)</span> 天为止的最少花费。转移时对于第 <span class="math inline">\(i\)</span> 天，倒序枚举天数 <span class="math inline">\(j\)</span>，意思为从第 <span class="math inline">\(j\)</span> 天开始改线路，同时记录 <span class="math inline">\(\[j,i\]\)</span> 天不可用的点，跑最短路即可。 有 <span class="math inline">\(f_i=\min\lbrace f_{j-1}+k+\operatorname{dis}(1,m)\cdot (j-i+1)\rbrace\)</span>，即改了线之后的最短路乘以改线后的天数，并寻找最佳改线的时间点。</p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode cpp"><code class="sourceCode cpp"><span id="cb1-1"><a aria-hidden="true" href="#cb1-1"></a>f[<span class="dv">0</span>]=-k;<span class="co">//边界条件</span></span>
+<span id="cb1-2"><a aria-hidden="true" href="#cb1-2"></a>    <span class="cf">for</span>(<span class="dt">int</span> i=<span class="dv">1</span>;i&lt;=n;i++)</span>
+<span id="cb1-3"><a aria-hidden="true" href="#cb1-3"></a>    {</span>
+<span id="cb1-4"><a aria-hidden="true" href="#cb1-4"></a>        <span class="cf">for</span>(<span class="dt">int</span> j=<span class="dv">1</span>;j&lt;=m;j++)</span>
+<span id="cb1-5"><a aria-hidden="true" href="#cb1-5"></a>            now[j]=<span class="dv">0</span>;<span class="co">//now[u] 维护在 [j,i] 天区间内点 u 是否可用</span></span>
+<span id="cb1-6"><a aria-hidden="true" href="#cb1-6"></a>        <span class="cf">for</span>(<span class="dt">int</span> j=i;j&gt;=<span class="dv">1</span>;j--)</span>
+<span id="cb1-7"><a aria-hidden="true" href="#cb1-7"></a>        {</span>
+<span id="cb1-8"><a aria-hidden="true" href="#cb1-8"></a>            <span class="cf">for</span>(<span class="dt">int</span> u=<span class="dv">1</span>;u&lt;=m;u++)</span>
+<span id="cb1-9"><a aria-hidden="true" href="#cb1-9"></a>                <span class="cf">if</span>(avl[u][j])</span>
+<span id="cb1-10"><a aria-hidden="true" href="#cb1-10"></a>                    now[u]=<span class="dv">1</span>;</span>
+<span id="cb1-11"><a aria-hidden="true" href="#cb1-11"></a>            ll dis=dij();</span>
+<span id="cb1-12"><a aria-hidden="true" href="#cb1-12"></a>            <span class="cf">if</span>(dis&gt;=<span class="bn">0x3f3f3f3f</span>)<span class="co">//如果已经无法继续到达就可以直接结束</span></span>
+<span id="cb1-13"><a aria-hidden="true" href="#cb1-13"></a>                <span class="cf">break</span>;</span>
+<span id="cb1-14"><a aria-hidden="true" href="#cb1-14"></a>            f[i]=<span class="bu">std::</span>min(f[i],f[j-<span class="dv">1</span>]+(i-j+<span class="dv">1</span>)*dis+k);<span class="co">//状态转移</span></span>
+<span id="cb1-15"><a aria-hidden="true" href="#cb1-15"></a>        }</span>
+<span id="cb1-16"><a aria-hidden="true" href="#cb1-16"></a>    }</span></code></pre></div>
+<h3 id="section-6">20/11/12</h3>
+<ul>
+<li><strong>P5490 【模板】扫描线</strong></li>
+</ul>
+<p>扫描线求面积并模板</p>
+<ul>
+<li><strong>P1856 [USACO5.5]矩形周长Picture</strong></li>
+</ul>
+<p>扫描线求周长并模板</p>
+<h3 id="section-7">20/11/13</h3>
+<ul>
+<li><strong>P1502 窗口的星星</strong></li>
+</ul>
+<p>转化成扫描线问题</p>
+<ul>
+<li><strong>P2146 [NOI2015]软件包管理器</strong></li>
+</ul>
+<p>树剖，对于每个安装操作，统计从根到该节点上的和并全部赋 1，对于每个卸载操作，统计这个节点的子树大小并全部赋 0 即可。</p>
+<h3 id="section-8">20/11/14</h3>
+<ul>
+<li><strong>P1608 路径统计</strong></li>
+</ul>
+<p>最短路计数问题，注意判断重边（当然如果从 <span class="math inline">\(i\)</span> 到 <span class="math inline">\(j\)</span> 存在 <span class="math inline">\(w_1&lt;w_2\)</span> 的话显然选 <span class="math inline">\(w_1\)</span>，所以不能直接简单的 bool 数组判重）。跑 dij 的时候再记录 <span class="math inline">\(f_i\)</span> 表示到 <span class="math inline">\(i\)</span> 的最短路条数，恰当转移即可</p>
+<ul>
+<li><strong>P1144 最短路计数</strong></li>
+</ul>
+<p>无需思考重边和自环</p>
+<h3 id="section-9">20/11/15</h3>
+<ul>
+<li><strong>CF915E Physical Education Lessons</strong></li>
+</ul>
+<p>动态开点线段树</p>
+<ul>
+<li><strong>P5459 [BJOI2016]回转寿司</strong></li>
+</ul>
+<p>问有多少组 <span class="math inline">\((l,r)\)</span> 满足 $L_{i=l}^ra_i R $的 <span class="math inline">\((l,r)\)</span> 对数。 预处理前缀和 <span class="math inline">\(sum(i)\)</span>，变换式子后不难发现变为 <span class="math inline">\(sum(y)-R\le S_{x-1}\le sum(y)-L\)</span>，使用权值线段树维护即可。</p>
+<h3 id="section-10">20/11/17</h3>
+<ul>
+<li><strong>P1955 [NOI2015]程序自动分析</strong></li>
+</ul>
+<p>离散化+并查集</p>
+<ul>
+<li><strong>P2279 [HNOI2003]消防局的设立</strong></li>
+</ul>
+<p>树形dp，<a href="https://imyangty.com/oi/1216">https://imyangty.com/oi/1216</a></p>
+<h3 id="section-11">20/11/18</h3>
+<ul>
+<li><strong>UVA1347 旅行 Tour/P1523 旅行商简化版</strong></li>
+</ul>
+<p>dp</p>
+<h3 id="section-12">20/11/19</h3>
+<ul>
+<li><strong>UVA12563 劲歌金曲 Jin Ge Jin Qu hao</strong></li>
+</ul>
+<p>转化后即为 0-1 背包</p>
+<ul>
+<li><strong>UVA11400 照明系统设计 Lighting System Design</strong></li>
+</ul>
+<p>前缀和+线性dp</p>
+<ul>
+<li><strong>UVA11584 划分成回文串 Partitioning by Palindromes</strong></li>
+</ul>
+<p>划分为回文串的最小分割数，dp</p>
+<h3 id="section-13">20/11/21</h3>
+<ul>
+<li><strong>P3376 【模板】网络最大流</strong></li>
+</ul>
+<p>EK dinic</p>
+<ul>
+<li><strong>P2170 选学霸</strong></li>
+</ul>
+<p>并查集+ 0-1 背包</p>
+<ul>
+<li><strong>P2359 三素数数</strong></li>
+</ul>
+<p>比较神奇的 dp</p>
+<ul>
+<li><strong>P1799 数列</strong></li>
+</ul>
+<p>线性 dp</p>
+<ul>
+<li><strong>P1343 地震逃生</strong></li>
+</ul>
+<p>裸的最大流，AC400 祭</p>
+<h3 id="section-14">20/11/22</h3>
+<ul>
+<li><strong>P1453 城市环路</strong></li>
+</ul>
+<p>基环树 dp，考虑使用并查集找环然后暴力断环跑两次没有上司的舞会</p>
+<ul>
+<li><strong>P2607 [ZJOI2008]骑士</strong></li>
+</ul>
+<p>基环森林 dp，可以使用有向图，把 <span class="math inline">\(i\)</span> 讨厌的人 <span class="math inline">\(j\)</span> 设成 <span class="math inline">\(i\)</span> 的父亲，然后连边 <span class="math inline">\((j,i)\)</span>。这样的话只有“根节点”有机会形成环，这样就可以很容易的断环为链跑两次 dp 统计每个连通块的答案。</p>
+<ul>
+<li><strong>P5144 蜈蚣</strong></li>
+</ul>
+<p>水，线性 dp</p>
+<h3 id="section-15">20/11/23</h3>
+<ul>
+<li><strong>P3153 [CQOI2009]跳舞</strong></li>
+</ul>
+<p><a href="https://imyangty.com/oi/1218" title="最大流 + 二分答案">最大流 + 二分答案</a></p>
+<ul>
+<li><strong>P3381 【模板】最小费用最大流</strong></li>
+</ul>
+<p>EK+SPFA</p>
+<h3 id="section-16">20/11/24</h3>
+<ul>
+<li><strong>P3853 [TJOI2007]路标设置</strong></li>
+</ul>
+<p>二分答案</p>
+<ul>
+<li><strong>P3743 kotori的设备</strong></li>
+</ul>
+<p>二分答案，对于每个使用时间考虑每个设备需要充的总电量充电宝能不能提供，如果 <span class="math inline">\(\sum a_i\le p\)</span> 则输出 -1 即可</p>
+<ul>
+<li><strong>P1850 换教室</strong></li>
+</ul>
+<p><a href="https://imyangty.com/oi/1221" title="期望 dp">期望 dp</a></p>
+<h3 id="section-17">20/11/25</h3>
+<ul>
+<li><strong>P1281 书的复制</strong></li>
+</ul>
+<p>dp+贪心输出</p>
+<ul>
+<li><strong>P2370 yyy2015c01 的 U 盘</strong></li>
+</ul>
+<p>二分答案套背包</p>
+<ul>
+<li><strong>P1577 切绳子</strong></li>
+</ul>
+<p>二分答案</p>
+<h3 id="section-18">20/11/26</h3>
+<ul>
+<li><strong>UVA11582 巨大的斐波那契数！ Colossal Fibonacci Numbers!</strong></li>
+</ul>
+<p>斐波那契数列在模 <span class="math inline">\(n\)</span> 的意义下必然会出现循环节（如果 <span class="math inline">\(f_i=f_{i-1}=1\)</span> 且 <span class="math inline">\(i&gt;2\)</span>，则周期为 <span class="math inline">\(i-2\)</span>），注意到这一点之后打一个快速幂取模即可</p>
+<ul>
+<li><strong>UVA12169 不爽的裁判 Disgruntled Judge</strong></li>
+</ul>
+<p>水</p>
+<ul>
+<li><strong>UVA10375 选择与除法 Choose and divide</strong></li>
+</ul>
+<p>考虑给答案乘上 <span class="math inline">\(p^1q^{-1}(p-q)^{-1}r^{-1}s^1(r-s)^1\)</span>，对答案的质因数分解进行处理即可</p>
+<ul>
+<li><strong>UVA10791 最小公倍数的最小和 Minimum Sum LCM</strong></li>
+</ul>
+<p>注意到 <span class="math inline">\(n=\prod p_i^{a_i}\)</span>，所以每个数分别为 <span class="math inline">\(p_i^{a_i}\)</span> 时可以有最优解，注意 <span class="math inline">\(n=1\)</span> 时以及 <span class="math inline">\(n=p_i^{a_i}\)</span> 时的特判即可。</p>
+<ul>
+<li><strong>UVA12716 GCD等于XOR GCD XOR</strong></li>
+</ul>
+<p>比较巧的结论题，利用了 gcd 和异或的性质 <a href="https://imyangty.com/oi/1222">https://imyangty.com/oi/1222</a></p>
+<h3 id="section-19">20/11/27</h3>
+<ul>
+<li><strong>P1593 因子和</strong></li>
+</ul>
+<p>唯一分解定理，等比数列求和以及费马小定理求逆元的综合应用<a href="https://imyangty.com/oi/1223">https://imyangty.com/oi/1223</a></p>
+<h3 id="section-20">20/11/28</h3>
+<ul>
+<li><strong>P1156 垃圾陷阱</strong></li>
+</ul>
+<p>类背包的 dp，坑点较多</p>
+<ul>
+<li><strong>P3957 跳房子</strong></li>
+</ul>
+<p>二分答案套单调队列优化 dp 坑点：<strong>入队/出队顺序，二分上下界，答案初始化为-1，该状态无法被转移到时不能直接终止 dp</strong></p>
+<ul>
+<li><strong>P3195 [HNOI2008]玩具装箱</strong></li>
+</ul>
+<p><a href="https://imyangty.com/oi/1224" title="斜率优化模板">斜率优化模板</a></p>
+<ul>
+<li><strong>P2365 任务安排</strong></li>
+</ul>
+<p><span class="math inline">\(O(n^2)\)</span> 可过，但可斜率优化</p>
+<h3 id="section-21">20/11/29</h3>
+<ul>
+<li><strong>P5520 [yLOI2019] 青原樱</strong></li>
+</ul>
+<p>考虑种下的 <span class="math inline">\(m\)</span> 棵树之间必须要有至少 <span class="math inline">\(m-1\)</span> 个空位，将其空出来之后发现还有 <span class="math inline">\(n-m+1\)</span> 个位置可以种树，因此答案为 <span class="math inline">\(A_{n-m+1}^m=\frac{(n-m+1)\times(n-m)\times\cdots\times1}{(n-2m+1)\times(n-2m)\times(n-2m-1)\times\cdots\times1}=(n-m+1)\times(n-m)\times\cdots\times(n-2m+2)\)</span></p>
+<ul>
+<li><strong>P3197 [HNOI2008]越狱</strong></li>
+</ul>
+<p>考虑补集思想，所有的犯人状态有 <span class="math inline">\(m^n\)</span> 种，减去两两不相邻的 <span class="math inline">\(m(m-1)^{n-1}\)</span> 种即为答案，输出加上 mod 再取模。</p>
+<ul>
+<li><strong>P7076 动物园</strong></li>
+</ul>
+<p>CSP2020 赛题，要特判 <span class="math inline">\(n=0\)</span>，<span class="math inline">\(k=64\)</span> 的情况，输出 <span class="math inline">\(2^{64}\)</span>。</p>
+<h3 id="section-22">20/11/30</h3>
+<ul>
+<li><strong>P7077 函数调用</strong></li>
+</ul>
+<p>CSP2020 赛题，拓扑排序讨论乘法对加法产生的贡献</p>
+<ul>
+<li><strong>P5022 旅行</strong></li>
+</ul>
+<p>NOIP2018，考虑直接枚举基环树环上的边然后暴力断边</p>
+</section>
+<footer class="article-footer">
+<section class="article-tags">
+<a href="/tags/OI/">OI</a>
+</section>
+<section class="article-copyright">
+<svg class="icon icon-tabler icon-tabler-copyright" fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+<path d="M0 0h24v24H0z" stroke="none"></path>
+<circle cx="12" cy="12" r="9"></circle>
+<path d="M14.5 9a3.5 4 0 1 0 0 6"></path>
+</svg>
+<span>Licensed under CC BY-NC-SA 4.0</span>
+</section>
+</footer>
+<link crossorigin="anonymous" href="https://cdn.jsdelivr.net/npm/katex@0.13.13/dist/katex.min.css" integrity="sha384-RZU/ijkSsFbcmivfdRBQDtwuwVqK7GMOw6IMvKyeWL2K5UAlyp6WonmB8m7Jd0Hn" rel="stylesheet"/><script crossorigin="anonymous" defer="" integrity="sha384-pK1WpvzWVBQiP0/GjnvRxV4mOb0oxFuyRxJlk6vVw146n3egcN5C925NCP7a7BY8" src="https://cdn.jsdelivr.net/npm/katex@0.13.13/dist/katex.min.js">
+</script><script crossorigin="anonymous" defer="" integrity="sha384-vZTG03m+2yp6N6BNi5iM4rW4oIwk5DfcNdFfxkk9ZWpDriOkXX8voJBFrAO7MpVl" src="https://cdn.jsdelivr.net/npm/katex@0.13.13/dist/contrib/auto-render.min.js">
+</script><script>
+    window.addEventListener("DOMContentLoaded", () => {
+        renderMathInElement(document.querySelector(`.article-content`), {
+            delimiters: [
+                { left: "$$", right: "$$", display: true },
+                { left: "$", right: "$", display: false },
+                { left: "\\(", right: "\\)", display: false },
+                { left: "\\[", right: "\\]", display: true }
+            ]
+        });})
+</script>
+</article>
+<aside class="related-contents--wrapper">
+<h2 class="section-title">相关文章</h2>
+<div class="related-contents">
+<div class="flex article-list--tile">
+<article class="has-image">
+<a href="/sol-luogu-p5468/">
+<div class="article-image">
+<img data-hash="https://yangty-pic.oss-cn-beijing.aliyuncs.com/bg01.webp" data-key="" loading="lazy" src="https://yangty-pic.oss-cn-beijing.aliyuncs.com/bg01.webp"/>
+</div>
+<div class="article-details">
+<h2 class="article-title">P5468 [NOI2019] 回家路线</h2>
+</div>
+</a>
+</article>
+<article class="has-image">
+<a href="/travels-noi2022/">
+<div class="article-image">
+<img data-hash="https://yangty-pic.oss-cn-beijing.aliyuncs.com/bg01.webp" data-key="" loading="lazy" src="https://yangty-pic.oss-cn-beijing.aliyuncs.com/bg01.webp"/>
+</div>
+<div class="article-details">
+<h2 class="article-title">NOI2022 游记</h2>
+</div>
+</a>
+</article>
+<article class="has-image">
+<a href="/sol-cf715b/">
+<div class="article-image">
+<img data-hash="https://yangty-pic.oss-cn-beijing.aliyuncs.com/bg57.webp" data-key="" loading="lazy" src="https://yangty-pic.oss-cn-beijing.aliyuncs.com/bg57.webp"/>
+</div>
+<div class="article-details">
+<h2 class="article-title">CF715B Complete The Graph</h2>
+</div>
+</a>
+</article>
+<article class="has-image">
+<a href="/sol-agc027d/">
+<div class="article-image">
+<img data-hash="https://yangty-pic.oss-cn-beijing.aliyuncs.com/bg01.webp" data-key="" loading="lazy" src="https://yangty-pic.oss-cn-beijing.aliyuncs.com/bg01.webp"/>
+</div>
+<div class="article-details">
+<h2 class="article-title">AGC027D - Modulo Matrix</h2>
+</div>
+</a>
+</article>
+<article class="has-image">
+<a href="/sol-luogu-p5305/">
+<div class="article-image">
+<img data-hash="https://yangty-pic.oss-cn-beijing.aliyuncs.com/bg32.webp" data-key="" loading="lazy" src="https://yangty-pic.oss-cn-beijing.aliyuncs.com/bg32.webp"/>
+</div>
+<div class="article-details">
+<h2 class="article-title">P5305 [GXOI/GZOI2019]旧词</h2>
+</div>
+</a>
+</article>
+</div>
+</div>
+</aside>
+<footer class="site-footer">
+<section class="copyright">
+        © 
+        
+            2019 - 
+        
+        2024 清烛的博客
+    </section>
+<section class="powerby">
+        Built with <a href="https://gohugo.io/" rel="noopener" target="_blank">Hugo</a> <br/>
+        主题 <b><a data-version="3.11.0" href="https://github.com/CaiJimmy/hugo-theme-stack" rel="noopener" target="_blank">Stack</a></b> 由 <a href="https://jimmycai.com" rel="noopener" target="_blank">Jimmy</a> 设计
+    </section>
+</footer>
+<div aria-hidden="true" class="pswp" role="dialog" tabindex="-1">
+<div class="pswp__bg"></div>
+<div class="pswp__scroll-wrap">
+<div class="pswp__container">
+<div class="pswp__item"></div>
+<div class="pswp__item"></div>
+<div class="pswp__item"></div>
+</div>
+<div class="pswp__ui pswp__ui--hidden">
+<div class="pswp__top-bar">
+<div class="pswp__counter"></div>
+<button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+<button class="pswp__button pswp__button--share" title="Share"></button>
+<button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+<button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+<div class="pswp__preloader">
+<div class="pswp__preloader__icn">
+<div class="pswp__preloader__cut">
+<div class="pswp__preloader__donut"></div>
+</div>
+</div>
+</div>
+</div>
+<div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+<div class="pswp__share-tooltip"></div>
+</div>
+<button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+</button>
+<button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+</button>
+<div class="pswp__caption">
+<div class="pswp__caption__center"></div>
+</div>
+</div>
+</div>
+</div><script crossorigin="anonymous" defer="" integrity="sha256-ePwmChbbvXbsO02lbM3HoHbSHTHFAeChekF1xKJdleo=" src="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe.min.js">
+</script><script crossorigin="anonymous" defer="" integrity="sha256-UKkzOn/w1mBxRmLLGrSeyB4e1xbrp4xylgAWb3M42pU=" src="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe-ui-default.min.js">
+</script><link crossorigin="anonymous" href="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/default-skin/default-skin.css" integrity="sha256-c0uckgykQ9v5k+IqViZOZKc47Jn7KQil4/MP3ySA3F8=" rel="stylesheet"/><link crossorigin="anonymous" href="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe.css" integrity="sha256-SBLU4vv6CA6lHsZ1XyTdhyjJxCjPif/TRkjnsyGAGnE=" rel="stylesheet"/>
+</main>
+</div>
+<script crossorigin="anonymous" integrity="sha256-5NovOZc4iwiAWTYIFiIM7DxKUXKWvpVEuMEPLzcm5/g=" src="https://cdn.jsdelivr.net/npm/node-vibrant@3.1.5/dist/vibrant.min.js">
+</script><script defer="" src="/ts/main.js" type="text/javascript"></script>
+<script>
+    (function () {
+        const customFont = document.createElement('link');
+        customFont.href = "https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&display=swap";
+
+        customFont.type = "text/css";
+        customFont.rel = "stylesheet";
+
+        document.head.appendChild(customFont);
+    }());
+</script>
+</body>
+</html>

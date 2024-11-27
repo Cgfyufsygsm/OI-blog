@@ -1,0 +1,580 @@
+<!DOCTYPE html>
+<html dir="ltr" lang="zh-CN">
+<head><meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1" name="viewport"/><meta content="Update on 2024/11/27 将本旧博客翻出来并部署到 oi.imyangty.com 上。所有内容大概率均不会进行更新。
+本博客基于 hugo 构建，部署平台为 Github Pages。
+前言 你好，陌生人，这里是菜鸡 OIer 清烛。详细资料可以看关于页面。
+该页面将列出一些比较值得看的文章（雾）。可能会出现写作时间跨度过大以至码风不一样的情况，但不影响阅读。
+学习笔记 如果发现有什么错误，欢迎在 QQ 上爆 D 我。
+一些碎碎念 都是游记之类的吧，写的挺不好的（语文很差）。
+中考 唯一稍微成功上岸的考试吧。 CSP-S2020 第一次提高组的 CSP，失败。 NOIP2020 第一次 NOIP，十分失败。 WC2021 第一次 WC，线上的，仍是失败，但是居然有 Cu GZOI2021 第一次省选，失败，去世。 CSP-S2021 取消了（笑）。 NOIP2021 还是很失败的 NOIP（笑）。 GZOI2022 进队了，但开心不起来。 NOI2022 坑。 2022 省选 / NOI 复习笔记 持续更新中，如果没进省队这部分就烂尾好吧要把它填完。
+可以随时催我更新 。
+数据结构 数据结构复习 0 （基础数据结构） 数据结构复习 1 （简单树形数据结构） 数据结构复习 2 （高维问题） 数据结构复习 3 （树上信息维护） 数据结构复习 4 （根号数据结构） 数学 组合数学复习笔记 数论复习笔记 线性代数复习笔记 没写 计算几何 没学 字符串 字符串复习 1（字符串基础算法） 字符串复习 2（简单自动机相关） 字符串复习 3（后缀系列） 动态规划 没写 图论与网络流 图论复习 1（图论基础知识） 图论复习 2（高级图论） 图论复习 3（二分图与网络流） 图论复习 4（图论与线性代数） 数据结构 我的数据结构学的可烂了/kk。" name="description"/><title>导航</title>
+<link href="https://oi.imyangty.com/idx/" rel="canonical"/>
+<link href="/scss/style.min.a5821f3d3ab84ce5a0ac21477e347a2e0ca00292e398d16c5e8e36ded6e35a23.css" rel="stylesheet"/><meta content="导航" property="og:title"/>
+<meta content="Update on 2024/11/27 将本旧博客翻出来并部署到 oi.imyangty.com 上。所有内容大概率均不会进行更新。
+本博客基于 hugo 构建，部署平台为 Github Pages。
+前言 你好，陌生人，这里是菜鸡 OIer 清烛。详细资料可以看关于页面。
+该页面将列出一些比较值得看的文章（雾）。可能会出现写作时间跨度过大以至码风不一样的情况，但不影响阅读。
+学习笔记 如果发现有什么错误，欢迎在 QQ 上爆 D 我。
+一些碎碎念 都是游记之类的吧，写的挺不好的（语文很差）。
+中考 唯一稍微成功上岸的考试吧。 CSP-S2020 第一次提高组的 CSP，失败。 NOIP2020 第一次 NOIP，十分失败。 WC2021 第一次 WC，线上的，仍是失败，但是居然有 Cu GZOI2021 第一次省选，失败，去世。 CSP-S2021 取消了（笑）。 NOIP2021 还是很失败的 NOIP（笑）。 GZOI2022 进队了，但开心不起来。 NOI2022 坑。 2022 省选 / NOI 复习笔记 持续更新中，如果没进省队这部分就烂尾好吧要把它填完。
+可以随时催我更新 。
+数据结构 数据结构复习 0 （基础数据结构） 数据结构复习 1 （简单树形数据结构） 数据结构复习 2 （高维问题） 数据结构复习 3 （树上信息维护） 数据结构复习 4 （根号数据结构） 数学 组合数学复习笔记 数论复习笔记 线性代数复习笔记 没写 计算几何 没学 字符串 字符串复习 1（字符串基础算法） 字符串复习 2（简单自动机相关） 字符串复习 3（后缀系列） 动态规划 没写 图论与网络流 图论复习 1（图论基础知识） 图论复习 2（高级图论） 图论复习 3（二分图与网络流） 图论复习 4（图论与线性代数） 数据结构 我的数据结构学的可烂了/kk。" property="og:description"/>
+<meta content="https://oi.imyangty.com/idx/" property="og:url"/>
+<meta content="清烛的博客" property="og:site_name"/>
+<meta content="article" property="og:type"/><meta content="Post" property="article:section"/><meta content="站务" property="article:tag"/><meta content="2022-05-28T00:00:00+08:00" property="article:published_time"/><meta content="2022-05-28T00:00:00+08:00" property="article:modified_time"/><meta content="https://yangty-pic.oss-cn-beijing.aliyuncs.com/bg6.webp" property="og:image"/>
+<meta content="导航" name="twitter:title"/>
+<meta content="Update on 2024/11/27 将本旧博客翻出来并部署到 oi.imyangty.com 上。所有内容大概率均不会进行更新。
+本博客基于 hugo 构建，部署平台为 Github Pages。
+前言 你好，陌生人，这里是菜鸡 OIer 清烛。详细资料可以看关于页面。
+该页面将列出一些比较值得看的文章（雾）。可能会出现写作时间跨度过大以至码风不一样的情况，但不影响阅读。
+学习笔记 如果发现有什么错误，欢迎在 QQ 上爆 D 我。
+一些碎碎念 都是游记之类的吧，写的挺不好的（语文很差）。
+中考 唯一稍微成功上岸的考试吧。 CSP-S2020 第一次提高组的 CSP，失败。 NOIP2020 第一次 NOIP，十分失败。 WC2021 第一次 WC，线上的，仍是失败，但是居然有 Cu GZOI2021 第一次省选，失败，去世。 CSP-S2021 取消了（笑）。 NOIP2021 还是很失败的 NOIP（笑）。 GZOI2022 进队了，但开心不起来。 NOI2022 坑。 2022 省选 / NOI 复习笔记 持续更新中，如果没进省队这部分就烂尾好吧要把它填完。
+可以随时催我更新 。
+数据结构 数据结构复习 0 （基础数据结构） 数据结构复习 1 （简单树形数据结构） 数据结构复习 2 （高维问题） 数据结构复习 3 （树上信息维护） 数据结构复习 4 （根号数据结构） 数学 组合数学复习笔记 数论复习笔记 线性代数复习笔记 没写 计算几何 没学 字符串 字符串复习 1（字符串基础算法） 字符串复习 2（简单自动机相关） 字符串复习 3（后缀系列） 动态规划 没写 图论与网络流 图论复习 1（图论基础知识） 图论复习 2（高级图论） 图论复习 3（二分图与网络流） 图论复习 4（图论与线性代数） 数据结构 我的数据结构学的可烂了/kk。" name="twitter:description"/><meta content="summary_large_image" name="twitter:card"/>
+<meta content="https://yangty-pic.oss-cn-beijing.aliyuncs.com/bg6.webp" name="twitter:image"/>
+<link href="https://q1.qlogo.cn/g?b=qq&amp;nk=375836877&amp;s=5" rel="shortcut icon"/>
+<link href="https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.5.1/build/styles/github-dark-dimmed.min.css" rel="stylesheet"/>
+<script src="https://cdn.jsdelivr.net/gh/highlightjs/cdn-release/build/highlight.min.js"></script>
+<script>hljs.highlightAll();</script>
+</head>
+<body class="article-page">
+<script>
+        (function() {
+            const colorSchemeKey = 'StackColorScheme';
+            if(!localStorage.getItem(colorSchemeKey)){
+                localStorage.setItem(colorSchemeKey, "auto");
+            }
+        })();
+    </script><script>
+    (function() {
+        const colorSchemeKey = 'StackColorScheme';
+        const colorSchemeItem = localStorage.getItem(colorSchemeKey);
+        const supportDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches === true;
+
+        if (colorSchemeItem == 'dark' || colorSchemeItem === 'auto' && supportDarkMode) {
+            
+
+            document.documentElement.dataset.scheme = 'dark';
+        } else {
+            document.documentElement.dataset.scheme = 'light';
+        }
+    })();
+</script>
+<div class="container main-container flex on-phone--column extended"><aside class="sidebar left-sidebar sticky">
+<button aria-label="切换菜单" class="hamburger hamburger--spin" id="toggle-menu" type="button">
+<span class="hamburger-box">
+<span class="hamburger-inner"></span>
+</span>
+</button>
+<header>
+<figure class="site-avatar">
+<a href="/">
+<img alt="Avatar" class="site-logo" height="300" loading="lazy" src="/img/avatar_huea3ce2119467b51fdd2a81393644a76d_51594_300x0_resize_q75_box.jpg" width="300"/>
+</a>
+<span class="emoji">😅</span>
+</figure>
+<div class="site-meta">
+<h1 class="site-name"><a href="/">清烛的博客</a></h1>
+<h2 class="site-description">烟火已谢，笙歌未停</h2>
+</div>
+</header><ol class="social-menu">
+<li>
+<a href="mailto:i@imyangty.com" target="_blank" title="email">
+<svg class="icon icon-tabler icon-tabler-mail" fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" viewbox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+<path d="M0 0h24v24H0z" fill="none" stroke="none"></path>
+<rect height="14" rx="2" width="18" x="3" y="5"></rect>
+<polyline points="3 7 12 13 21 7"></polyline>
+</svg>
+</a>
+</li>
+<li>
+<a href="https://github.com/Cgfyufsygsm" target="_blank" title="GitHub">
+<svg class="icon icon-tabler icon-tabler-brand-github" fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+<path d="M0 0h24v24H0z" fill="none" stroke="none"></path>
+<path d="M9 19c-4.3 1.4 -4.3 -2.5 -6 -3m12 5v-3.5c0 -1 .1 -1.4 -.5 -2c2.8 -.3 5.5 -1.4 5.5 -6a4.6 4.6 0 0 0 -1.3 -3.2a4.2 4.2 0 0 0 -.1 -3.2s-1.1 -.3 -3.5 1.3a12.3 12.3 0 0 0 -6.2 0c-2.4 -1.6 -3.5 -1.3 -3.5 -1.3a4.2 4.2 0 0 0 -.1 3.2a4.6 4.6 0 0 0 -1.3 3.2c0 4.6 2.7 5.7 5.5 6c-.6 .6 -.6 1.2 -.5 2v3.5"></path>
+</svg>
+</a>
+</li>
+<li>
+<a href="https://t.me/Cgfyufsygsm" target="_blank" title="Telegram">
+<svg class="icon icon-tabler icon-tabler-brand-telegram" fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" viewbox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+<path d="M0 0h24v24H0z" fill="none" stroke="none"></path>
+<path d="M15 10l-4 4l6 6l4 -16l-18 7l4 2l2 6l3 -4"></path>
+</svg>
+</a>
+</li>
+<li>
+<a href="https://twitter.com/Cgfyufsygsm" target="_blank" title="Twitter">
+<svg class="icon icon-tabler icon-tabler-brand-twitter" fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+<path d="M0 0h24v24H0z" fill="none" stroke="none"></path>
+<path d="M22 4.01c-1 .49 -1.98 .689 -3 .99c-1.121 -1.265 -2.783 -1.335 -4.38 -.737s-2.643 2.06 -2.62 3.737v1c-3.245 .083 -6.135 -1.395 -8 -4c0 0 -4.182 7.433 4 11c-1.872 1.247 -3.739 2.088 -6 2c3.308 1.803 6.913 2.423 10.034 1.517c3.58 -1.04 6.522 -3.723 7.651 -7.742a13.84 13.84 0 0 0 .497 -3.753c-.002 -.249 1.51 -2.772 1.818 -4.013z"></path>
+</svg>
+</a>
+</li>
+</ol><ol class="menu" id="main-menu">
+<li>
+<a href="/">
+<svg class="icon icon-tabler icon-tabler-home" fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+<path d="M0 0h24v24H0z" stroke="none"></path>
+<polyline points="5 12 3 12 12 3 21 12 19 12"></polyline>
+<path d="M5 12v7a2 2 0 0 0 2 2h10a2 2 0 0 0 2 -2v-7"></path>
+<path d="M9 21v-6a2 2 0 0 1 2 -2h2a2 2 0 0 1 2 2v6"></path>
+</svg>
+<span>主页</span>
+</a>
+</li>
+<li>
+<a href="/about/">
+<svg class="icon icon-tabler icon-tabler-user" fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+<path d="M0 0h24v24H0z" stroke="none"></path>
+<circle cx="12" cy="7" r="4"></circle>
+<path d="M6 21v-2a4 4 0 0 1 4 -4h4a4 4 0 0 1 4 4v2"></path>
+</svg>
+<span>关于</span>
+</a>
+</li>
+<li class="current">
+<a href="/idx/">
+<svg class="icon icon-tabler icon-tabler-hash" fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+<path d="M0 0h24v24H0z" stroke="none"></path>
+<line x1="5" x2="19" y1="9" y2="9"></line>
+<line x1="5" x2="19" y1="15" y2="15"></line>
+<line x1="11" x2="7" y1="4" y2="20"></line>
+<line x1="17" x2="13" y1="4" y2="20"></line>
+</svg>
+<span>导航</span>
+</a>
+</li>
+<li>
+<a href="/archives/">
+<svg class="icon icon-tabler icon-tabler-archive" fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+<path d="M0 0h24v24H0z" stroke="none"></path>
+<rect height="4" rx="2" width="18" x="3" y="4"></rect>
+<path d="M5 8v10a2 2 0 0 0 2 2h10a2 2 0 0 0 2 -2v-10"></path>
+<line x1="10" x2="14" y1="12" y2="12"></line>
+</svg>
+<span>归档</span>
+</a>
+</li>
+<li>
+<a href="/search/">
+<svg class="icon icon-tabler icon-tabler-search" fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+<path d="M0 0h24v24H0z" stroke="none"></path>
+<circle cx="10" cy="10" r="7"></circle>
+<line x1="21" x2="15" y1="21" y2="15"></line>
+</svg>
+<span>搜索</span>
+</a>
+</li>
+<li>
+<a href="/friends/">
+<svg class="icon icon-tabler icon-tabler-link" fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+<path d="M0 0h24v24H0z" stroke="none"></path>
+<path d="M10 14a3.5 3.5 0 0 0 5 0l4 -4a3.5 3.5 0 0 0 -5 -5l-.5 .5"></path>
+<path d="M14 10a3.5 3.5 0 0 0 -5 0l-4 4a3.5 3.5 0 0 0 5 5l.5 -.5"></path>
+</svg>
+<span>友链</span>
+</a>
+</li>
+<li>
+<a href="https://blog.imyangty.com" target="_blank">
+<svg class="icon icon-tabler icon-tabler-home" fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+<path d="M0 0h24v24H0z" stroke="none"></path>
+<polyline points="5 12 3 12 12 3 21 12 19 12"></polyline>
+<path d="M5 12v7a2 2 0 0 0 2 2h10a2 2 0 0 0 2 -2v-7"></path>
+<path d="M9 21v-6a2 2 0 0 1 2 -2h2a2 2 0 0 1 2 2v6"></path>
+</svg>
+<span>主博客</span>
+</a>
+</li>
+<div class="menu-bottom-section">
+<li id="dark-mode-toggle">
+<svg class="icon icon-tabler icon-tabler-toggle-left" fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+<path d="M0 0h24v24H0z" stroke="none"></path>
+<circle cx="8" cy="12" r="2"></circle>
+<rect height="12" rx="6" width="20" x="2" y="6"></rect>
+</svg>
+<svg class="icon icon-tabler icon-tabler-toggle-right" fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+<path d="M0 0h24v24H0z" stroke="none"></path>
+<circle cx="16" cy="12" r="2"></circle>
+<rect height="12" rx="6" width="20" x="2" y="6"></rect>
+</svg>
+<span>暗色模式</span>
+</li>
+</div>
+</ol>
+</aside>
+<main class="main full-width">
+<article class="has-image main-article">
+<header class="article-header">
+<div class="article-image">
+<a href="/idx/">
+<img alt="Featured image of post 导航" loading="lazy" src="https://yangty-pic.oss-cn-beijing.aliyuncs.com/bg6.webp"/>
+</a>
+</div>
+<div class="article-details">
+<header class="article-category">
+<a href="/categories/site-issue/">
+                站务
+            </a>
+<a href="/categories/pinned/">
+                置顶
+            </a>
+</header>
+<div class="article-title-wrapper">
+<h2 class="article-title">
+<a href="/idx/">导航</a>
+</h2>
+</div>
+<footer class="article-time">
+<div>
+<svg class="icon icon-tabler icon-tabler-calendar-time" fill="none" height="56" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="56" xmlns="http://www.w3.org/2000/svg">
+<path d="M0 0h24v24H0z" stroke="none"></path>
+<path d="M11.795 21h-6.795a2 2 0 0 1 -2 -2v-12a2 2 0 0 1 2 -2h12a2 2 0 0 1 2 2v4"></path>
+<circle cx="18" cy="18" r="4"></circle>
+<path d="M15 3v4"></path>
+<path d="M7 3v4"></path>
+<path d="M3 11h16"></path>
+<path d="M18 16.496v1.504l1 1"></path>
+</svg>
+<time class="article-time--published">May 28, 2022</time>
+</div>
+<div>
+<svg class="icon icon-tabler icon-tabler-clock" fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+<path d="M0 0h24v24H0z" stroke="none"></path>
+<circle cx="12" cy="12" r="9"></circle>
+<polyline points="12 7 12 12 15 15"></polyline>
+</svg>
+<time class="article-time--reading">
+                    阅读时长: 2 分钟
+                </time>
+</div>
+</footer>
+</div>
+</header>
+<section class="article-content">
+<h2 id="update-on-20241127">Update on 2024/11/27</h2>
+<p>将本旧博客翻出来并部署到 oi.imyangty.com 上。所有内容大概率均不会进行更新。</p>
+<p>本博客基于 hugo 构建，部署平台为 Github Pages。</p>
+<h2 id="前言">前言</h2>
+<p>你好，陌生人，这里是菜鸡 OIer 清烛。详细资料可以看<a href="/about">关于页面</a>。</p>
+<p>该页面将列出一些比较值得看的文章（雾）。可能会出现写作时间跨度过大以至码风不一样的情况，<del>但不影响阅读</del>。</p>
+<h2 id="学习笔记">学习笔记</h2>
+<p>如果发现有什么错误，欢迎在 QQ 上爆 D 我<img src="https://啧.tk/kk"/>。</p>
+<h2 id="一些碎碎念">一些碎碎念</h2>
+<p>都是游记之类的吧，写的挺不好的（语文很差）。</p>
+<ul>
+<li><a href="/travels-zhongkao/">中考</a> 唯一稍微成功上岸的考试吧。</li>
+<li><a href="/travels-csps2020/">CSP-S2020</a> 第一次提高组的 CSP，失败。</li>
+<li><a href="/travels-noip2020/">NOIP2020</a> 第一次 NOIP，十分失败。</li>
+<li><a href="/travels-wc2021/">WC2021</a> 第一次 WC，线上的，仍是失败，<del>但是居然有 Cu</del></li>
+<li><a href="/travels-gzoi2021/">GZOI2021</a> 第一次省选，失败，去世。</li>
+<li><a href="/travels-csps2021/">CSP-S2021</a> 取消了（笑）。</li>
+<li><a href="/travels-noip2021">NOIP2021</a> 还是很失败的 NOIP（笑）。</li>
+<li><a href="/travels-gzoi2022/">GZOI2022</a> 进队了，但开心不起来。</li>
+<li><a href="">NOI2022</a> 坑。</li>
+</ul>
+<h3 id="省选-noi-复习笔记">2022 省选 / NOI 复习笔记</h3>
+<p>持续更新中，<del>如果没进省队这部分就烂尾</del>好吧要把它填完。</p>
+<p>可以随时催我更新 <img src="https://啧.tk/fn"/>。</p>
+<ul>
+<li>数据结构
+<ul>
+<li><a href="/summary-ds0">数据结构复习 0 （基础数据结构）</a></li>
+<li><a href="/summary-ds1">数据结构复习 1 （简单树形数据结构）</a></li>
+<li><a href="/summary-ds2">数据结构复习 2 （高维问题）</a></li>
+<li><a href="/summary-ds3">数据结构复习 3 （树上信息维护）</a></li>
+<li><a href="/summary-ds4">数据结构复习 4 （根号数据结构）</a></li>
+</ul></li>
+<li>数学
+<ul>
+<li><a href="/summary-combinatorics">组合数学复习笔记</a></li>
+<li><a href="/summary-number-theory">数论复习笔记</a></li>
+<li><a href="/summary-linear-algebra">线性代数复习笔记</a> 没写</li>
+<li>计算几何 没学</li>
+</ul></li>
+<li>字符串
+<ul>
+<li><a href="/summary-string1/">字符串复习 1（字符串基础算法）</a></li>
+<li><a href="/summary-string2/">字符串复习 2（简单自动机相关）</a></li>
+<li><a href="/summary-string3/">字符串复习 3（后缀系列）</a></li>
+</ul></li>
+<li>动态规划 没写</li>
+<li>图论与网络流
+<ul>
+<li><a href="/summary-graph1">图论复习 1（图论基础知识）</a></li>
+<li><a href="/summary-graph2">图论复习 2（高级图论）</a></li>
+<li><a href="/summary-graph3/">图论复习 3（二分图与网络流）</a></li>
+<li><a href="/summary-graph4/">图论复习 4（图论与线性代数）</a></li>
+</ul></li>
+</ul>
+<h3 id="数据结构">数据结构</h3>
+<p>我的数据结构学的可烂了/kk。</p>
+<ul>
+<li>新学算法笔记：
+<ul>
+<li><a href="/note-bst/">平衡树笔记</a>：写了三种主流平衡树的写法以及详细实现。</li>
+<li><a href="note-lichao/">李超树</a>：基本更新完毕。</li>
+<li><a href="/note-lct/">Link-Cut Tree</a>：LCT，实现已更新完，目前施工应用中。</li>
+</ul></li>
+</ul>
+<h3 id="dp">DP</h3>
+<p>根本不会 dp，下面的看看就行。</p>
+<ul>
+<li><a href="/note-slope-dp/">斜率优化</a>：基本完结。</li>
+<li><a href="/note-ddp/">动态 dp</a>：动态 dp 的入门教程。</li>
+</ul>
+<h3 id="数学">数学</h3>
+<p>数学推导能力=0。</p>
+<ul>
+<li>大型总结类文章：
+<ul>
+<li><a href="/summary-combinatorics/">组合数学</a>：正在更新。</li>
+<li><a href="/summary-linear-algebra/">线性代数</a>：填。</li>
+<li><a href="/summary-number-theory/">简单数论</a>：正在更新。</li>
+<li><a href="/note-poly/">多项式合集</a>：多项式全家桶，目前基本施工完毕。</li>
+</ul></li>
+<li>新学算法笔记：
+<ul>
+<li><a href="/note-lucas/">Lucas 定理学习笔记</a>：已投稿洛谷日报，Lucas 定理相关。</li>
+<li><a href="/note-akin-euclidean-algo/">类欧几里得算法</a>：类欧，基本施工完毕。</li>
+<li><a href="/note-group/">群计数相关</a>：基本完结。</li>
+<li><a href="/note-power-series/">集合幂级数相关</a>：现在只有 FWT。</li>
+<li><a href="/note-gf">生成函数胡扯</a>：胡扯。</li>
+</ul></li>
+</ul>
+<h3 id="图论">图论</h3>
+<ul>
+<li><a href="/note-bi-graph-and-networkflow/">二分图/网络流</a>：意识流。</li>
+<li><a href="/note-connectivity/">连通性相关</a>：圆方树没补完。</li>
+</ul>
+<h3 id="杂项">杂项</h3>
+<ul>
+<li><a href="/note-stl/">STL</a>：咕咕咕。</li>
+<li><a href="/note-geometry/">计算几何</a>：新坑。</li>
+</ul>
+<h2 id="套题题解">套题题解</h2>
+<ul>
+<li><a href="/summary-codeforces/">Codeforces 比赛日记</a>：比赛/VP 记录。</li>
+<li><a href="/summary-atcoder">AtCoder 比赛日记</a>：比赛/VP 记录。</li>
+<li><a href="/sol-cspj2019/">CSP-J 2019</a>：CSP-J 2019 题解。</li>
+<li><a href="/sol-csps2019/">CSP-S 2019</a>：CSP-S 2019 题解。</li>
+<li><a href="/sol-cspj2020/">CSP-J 2020</a>：CSP-J 2020 题解。</li>
+<li>施工中 <a href="/sol-csps2020/">CSP-S 2020</a>：CSP-S 2020 题解。</li>
+<li>施工中 <a href="/sol-noip2020/">NOIP2020</a>：NOIP2020 题解。</li>
+<li>施工中 <a href="/sol-lhsx2020/">联合省选 2020</a>：省选 2020 题解。</li>
+<li>施工中 <a href="/sol-lhsx2021/">联合省选 2021</a>：省选 2021 题解。</li>
+<li>施工中 <a href="/sol-csps2021/">CSP-S 2021</a>：CSP-S 2021 题解。</li>
+<li>施工中 <a href="/sol-noip2021/">NOIP2021</a>：NOIP2021 题解。</li>
+<li>施工中 <a href="/sol-lhsx2022/">联合省选 2022</a>：省选 2022 题解。</li>
+<li>施工中 <a href="/sol-past-noip/">历年 NOIP 真题选做</a>：补题。</li>
+<li>施工中 <a href="/sol-noiol/">NOI Online 选做</a>：补题。</li>
+</ul>
+<h2 id="大佬们的博文">大佬们的博文</h2>
+<h3 id="分治二分倍增等基础算法">分治/二分/倍增等基础算法</h3>
+<ul>
+<li><a href="https://www.luogu.com.cn/blog/daniu/wqs-er-fen">wqs 二分 洛谷日报 by 小跳蛙</a></li>
+<li><a href="https://www.cnblogs.com/mlystdcall/p/6219421.html">cdq 分治 by __stdcall</a></li>
+</ul>
+<h3 id="dp-1">DP</h3>
+<ul>
+<li><a href="https://loj.ac/d/3144"><span class="math inline">\(O(NW)\)</span> 的树形背包 by Planet6174</a></li>
+<li><a href="https://www.cnblogs.com/Xing-Ling/p/11210179.html">斜率优化 by 辰星凌</a></li>
+<li><a href="https://www.luogu.com.cn/blog/s-r-f/oi-bi-ji-shuo-wei-dp-ge-ji-dui-shuo-wei-dp-di-yi-dian-li-xie">[OI笔记]数位DP合集 &amp; 对数位DP的一点理解 by s_r_f</a></li>
+</ul>
+<h3 id="树上问题">树上问题</h3>
+<ul>
+<li><a href="https://loj.ac/d/1698">dfs 序 by Planet6174</a> LOJ 4 道 dfs 序系列的题解</li>
+<li><a href="https://www.cnblogs.com/ET2006/p/clpf.html">长链剖分小记 by tzc_wk</a> 长链剖分的应用</li>
+<li><a href="https://www.luogu.com.cn/blog/command-block/shu-fen-zhi-xiao-ji">树分治小记 by command_block</a> 点/边/链分治 + 全局平衡二叉树</li>
+<li><a href="https://liu-cheng-ao.blog.uoj.ac/blog/2969">一种基于错误的寻找重心方法的点分治的复杂度分析</a> 一个点分治</li>
+<li><a href="https://www.luogu.com.cn/blog/SSerxhs/qian-tan-xu-shu">浅谈虚树 by SSerxhs</a> 虚树的概念和应用</li>
+</ul>
+<h3 id="字符串">字符串</h3>
+<ul>
+<li><a href="https://www.luogu.com.cn/discuss/show/322224">关于广义 SAM 的讨论</a> 一种易错写法</li>
+<li><a href="https://www.cnblogs.com/zjp-shadow/p/9218214.html">SAM 学习笔记</a></li>
+<li><a href="https://www.luogu.com.cn/blog/Kesdiael3/hou-zhui-zi-dong-ji-yang-xie">史上最通俗的后缀自动机详解 by KesdiaelKen</a></li>
+</ul>
+<h3 id="数学-1">数学</h3>
+<h4 id="线性代数">线性代数</h4>
+<ul>
+<li><a href="https://loj.ac/d/2458">矩阵树定理的证明 on LOJ</a> 非常简短易懂的证明</li>
+<li><a href="https://oi.men.ci/linear-basis-notes/">线性基学习笔记 by Menci</a></li>
+</ul>
+<h4 id="多项式">多项式</h4>
+<ul>
+<li><a href="https://www.luogu.com.cn/blog/command-block/fft-xue-xi-bi-ji">FFT 学习笔记 by command_block</a> FFT 入门推荐</li>
+<li><a href="https://www.cnblogs.com/ET2006/p/fftnttdxsschs.html">FFT/NTT复习笔记&amp;多项式&amp;生成函数学习笔记Ⅰ by tzc_wk</a> 有较详细的例题及题解</li>
+</ul>
+<h4 id="博弈论">博弈论</h4>
+<ul>
+<li><a href="https://blog.csdn.net/A_Comme_Amour/article/details/79347291">Nim 游戏与 SG 函数</a></li>
+</ul>
+<h3 id="一些小-trick">一些小 trick</h3>
+<ul>
+<li><a href="https://blog.csdn.net/qq_35811706/article/details/83001781">【小技巧】O(1)快速乘</a></li>
+</ul>
+<h2 id="推荐题单">推荐题单</h2>
+<h3 id="数据结构-1">数据结构</h3>
+<ul>
+<li><a href="https://www.luogu.com.cn/training/1124">Limit の线段树题单</a></li>
+<li><a href="https://www.luogu.com.cn/training/3858">线段树合并：从入门到精通</a></li>
+<li><a href="https://www.luogu.com.cn/training/2914">【算法】莫队</a></li>
+<li><a href="https://www.luogu.com.cn/training/1654">树链剖分练习题</a></li>
+<li><a href="https://www.luogu.com.cn/training/5035">Marser的整体二分题单</a></li>
+</ul>
+<h3 id="字符串-1">字符串</h3>
+<ul>
+<li><a href="https://www.luogu.com.cn/training/53971">字符串从提高到省选#1</a></li>
+<li><a href="https://www.luogu.com.cn/training/60465">AC自动机</a></li>
+<li><a href="https://www.luogu.com.cn/training/3202">【字符串】后缀系列</a></li>
+</ul>
+<h3 id="图论-1">图论</h3>
+<ul>
+<li><a href="https://www.luogu.com.cn/training/6686">「二分图」の 学习题单</a></li>
+<li><a href="https://www.luogu.com.cn/training/79728">『二分图』从入门到入土</a></li>
+</ul>
+<h3 id="数学-2">数学</h3>
+<ul>
+<li><a href="https://www.luogu.com.cn/training/1055">莫比乌斯反演（函数）练习题单</a></li>
+<li><a href="https://www.luogu.com.cn/training/7403">基础矩阵加速</a></li>
+<li><a href="https://www.luogu.com.cn/training/5539">同余方程-从入门到入土</a></li>
+<li><a href="https://www.luogu.com.cn/training/48747">【线性代数】线性代数基础题</a></li>
+</ul>
+</section>
+<footer class="article-footer">
+<section class="article-tags">
+<a href="/tags/site-issue/">站务</a>
+</section>
+<section class="article-copyright">
+<svg class="icon icon-tabler icon-tabler-copyright" fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+<path d="M0 0h24v24H0z" stroke="none"></path>
+<circle cx="12" cy="12" r="9"></circle>
+<path d="M14.5 9a3.5 4 0 1 0 0 6"></path>
+</svg>
+<span>Licensed under CC BY-NC-SA 4.0</span>
+</section>
+</footer>
+<link crossorigin="anonymous" href="https://cdn.jsdelivr.net/npm/katex@0.13.13/dist/katex.min.css" integrity="sha384-RZU/ijkSsFbcmivfdRBQDtwuwVqK7GMOw6IMvKyeWL2K5UAlyp6WonmB8m7Jd0Hn" rel="stylesheet"/><script crossorigin="anonymous" defer="" integrity="sha384-pK1WpvzWVBQiP0/GjnvRxV4mOb0oxFuyRxJlk6vVw146n3egcN5C925NCP7a7BY8" src="https://cdn.jsdelivr.net/npm/katex@0.13.13/dist/katex.min.js">
+</script><script crossorigin="anonymous" defer="" integrity="sha384-vZTG03m+2yp6N6BNi5iM4rW4oIwk5DfcNdFfxkk9ZWpDriOkXX8voJBFrAO7MpVl" src="https://cdn.jsdelivr.net/npm/katex@0.13.13/dist/contrib/auto-render.min.js">
+</script><script>
+    window.addEventListener("DOMContentLoaded", () => {
+        renderMathInElement(document.querySelector(`.article-content`), {
+            delimiters: [
+                { left: "$$", right: "$$", display: true },
+                { left: "$", right: "$", display: false },
+                { left: "\\(", right: "\\)", display: false },
+                { left: "\\[", right: "\\]", display: true }
+            ]
+        });})
+</script>
+</article>
+<aside class="related-contents--wrapper">
+<h2 class="section-title">相关文章</h2>
+<div class="related-contents">
+<div class="flex article-list--tile">
+<article class="has-image">
+<a href="/switch-to-hugo/">
+<div class="article-image">
+<img data-hash="https://yangty-pic.oss-cn-beijing.aliyuncs.com/bg3.webp" data-key="" loading="lazy" src="https://yangty-pic.oss-cn-beijing.aliyuncs.com/bg3.webp"/>
+</div>
+<div class="article-details">
+<h2 class="article-title">博客迁移公告</h2>
+</div>
+</a>
+</article>
+<article class="has-image">
+<a href="/new-blog-post/">
+<div class="article-image">
+<img data-hash="https://yangty-pic.oss-cn-beijing.aliyuncs.com/bg5.webp" data-key="" loading="lazy" src="https://yangty-pic.oss-cn-beijing.aliyuncs.com/bg5.webp"/>
+</div>
+<div class="article-details">
+<h2 class="article-title">博客搬迁公告</h2>
+</div>
+</a>
+</article>
+<article class="has-image">
+<a href="/testblog/">
+<div class="article-image">
+<img data-hash="https://yangty-pic.oss-cn-beijing.aliyuncs.com/bg20.webp" data-key="" loading="lazy" src="https://yangty-pic.oss-cn-beijing.aliyuncs.com/bg20.webp"/>
+</div>
+<div class="article-details">
+<h2 class="article-title">testblog</h2>
+</div>
+</a>
+</article>
+</div>
+</div>
+</aside>
+<footer class="site-footer">
+<section class="copyright">
+        © 
+        
+            2019 - 
+        
+        2024 清烛的博客
+    </section>
+<section class="powerby">
+        Built with <a href="https://gohugo.io/" rel="noopener" target="_blank">Hugo</a> <br/>
+        主题 <b><a data-version="3.11.0" href="https://github.com/CaiJimmy/hugo-theme-stack" rel="noopener" target="_blank">Stack</a></b> 由 <a href="https://jimmycai.com" rel="noopener" target="_blank">Jimmy</a> 设计
+    </section>
+</footer>
+<div aria-hidden="true" class="pswp" role="dialog" tabindex="-1">
+<div class="pswp__bg"></div>
+<div class="pswp__scroll-wrap">
+<div class="pswp__container">
+<div class="pswp__item"></div>
+<div class="pswp__item"></div>
+<div class="pswp__item"></div>
+</div>
+<div class="pswp__ui pswp__ui--hidden">
+<div class="pswp__top-bar">
+<div class="pswp__counter"></div>
+<button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+<button class="pswp__button pswp__button--share" title="Share"></button>
+<button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+<button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+<div class="pswp__preloader">
+<div class="pswp__preloader__icn">
+<div class="pswp__preloader__cut">
+<div class="pswp__preloader__donut"></div>
+</div>
+</div>
+</div>
+</div>
+<div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+<div class="pswp__share-tooltip"></div>
+</div>
+<button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+</button>
+<button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+</button>
+<div class="pswp__caption">
+<div class="pswp__caption__center"></div>
+</div>
+</div>
+</div>
+</div><script crossorigin="anonymous" defer="" integrity="sha256-ePwmChbbvXbsO02lbM3HoHbSHTHFAeChekF1xKJdleo=" src="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe.min.js">
+</script><script crossorigin="anonymous" defer="" integrity="sha256-UKkzOn/w1mBxRmLLGrSeyB4e1xbrp4xylgAWb3M42pU=" src="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe-ui-default.min.js">
+</script><link crossorigin="anonymous" href="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/default-skin/default-skin.css" integrity="sha256-c0uckgykQ9v5k+IqViZOZKc47Jn7KQil4/MP3ySA3F8=" rel="stylesheet"/><link crossorigin="anonymous" href="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe.css" integrity="sha256-SBLU4vv6CA6lHsZ1XyTdhyjJxCjPif/TRkjnsyGAGnE=" rel="stylesheet"/>
+</main>
+</div>
+<script crossorigin="anonymous" integrity="sha256-5NovOZc4iwiAWTYIFiIM7DxKUXKWvpVEuMEPLzcm5/g=" src="https://cdn.jsdelivr.net/npm/node-vibrant@3.1.5/dist/vibrant.min.js">
+</script><script defer="" src="/ts/main.js" type="text/javascript"></script>
+<script>
+    (function () {
+        const customFont = document.createElement('link');
+        customFont.href = "https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&display=swap";
+
+        customFont.type = "text/css";
+        customFont.rel = "stylesheet";
+
+        document.head.appendChild(customFont);
+    }());
+</script>
+</body>
+</html>

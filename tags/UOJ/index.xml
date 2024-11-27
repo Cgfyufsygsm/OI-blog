@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+    <channel>
+        <title>UOJ on 清烛的博客</title>
+        <link>https://oi.imyangty.com/tags/UOJ/</link>
+        <description>Recent content in UOJ on 清烛的博客</description>
+        <generator>Hugo -- gohugo.io</generator>
+        <language>zh-CN</language>
+        <lastBuildDate>Wed, 26 Jan 2022 13:24:23 +0800</lastBuildDate><atom:link href="https://oi.imyangty.com/tags/UOJ/index.xml" rel="self" type="application/rss+xml" /><item>
+        <title>UOJ#604. 【UER 9】赶路</title>
+        <link>https://oi.imyangty.com/sol-uoj604/</link>
+        <pubDate>Wed, 26 Jan 2022 13:24:23 +0800</pubDate>
+        
+        <guid>https://oi.imyangty.com/sol-uoj604/</guid>
+        <description>&lt;img src="https://yangty-pic.oss-cn-beijing.aliyuncs.com/bg44.webp" alt="Featured image of post UOJ#604. 【UER 9】赶路" /&gt;&lt;h2 id=&#34;description&#34;&gt;Description&lt;/h2&gt;
+&lt;p&gt;给定二维平面上的 &lt;span class=&#34;math inline&#34;&gt;\(n\)&lt;/span&gt; 个点（&lt;span class=&#34;math inline&#34;&gt;\(2\le n\le 500\)&lt;/span&gt;），要求构造一条从 &lt;span class=&#34;math inline&#34;&gt;\(1\)&lt;/span&gt; 到 &lt;span class=&#34;math inline&#34;&gt;\(n\)&lt;/span&gt; 的不自交的路径。&lt;/p&gt;
+&lt;h2 id=&#34;solution&#34;&gt;Solution&lt;/h2&gt;
+&lt;p&gt;我们不妨考虑分治。考虑 &lt;span class=&#34;math inline&#34;&gt;\(\operatorname{solve}(s, t, A)\)&lt;/span&gt; 表示当前要解决从 &lt;span class=&#34;math inline&#34;&gt;\(s\)&lt;/span&gt; 到 &lt;span class=&#34;math inline&#34;&gt;\(t\)&lt;/span&gt;，经过的点集为 &lt;span class=&#34;math inline&#34;&gt;\(A\)&lt;/span&gt;。&lt;/p&gt;
+&lt;p&gt;随便从 &lt;span class=&#34;math inline&#34;&gt;\(A\)&lt;/span&gt; 中挑一个点 &lt;span class=&#34;math inline&#34;&gt;\(p\)&lt;/span&gt; 出来，然后从 &lt;span class=&#34;math inline&#34;&gt;\(s\)&lt;/span&gt; 到 &lt;span class=&#34;math inline&#34;&gt;\(p\)&lt;/span&gt; 连一条直线，然后将 &lt;span class=&#34;math inline&#34;&gt;\(A\)&lt;/span&gt; 中剩下的点按在直线的左侧/右侧划分到 &lt;span class=&#34;math inline&#34;&gt;\(A_1\)&lt;/span&gt; 和 &lt;span class=&#34;math inline&#34;&gt;\(A_2\)&lt;/span&gt; 中。这里假设 &lt;span class=&#34;math inline&#34;&gt;\(t\)&lt;/span&gt; 在直线右侧，反之同理。然后递归求解 &lt;span class=&#34;math inline&#34;&gt;\(\operatorname{solve}(s, p, A_1)\)&lt;/span&gt;，即我们先走左侧的点，中途要经过 &lt;span class=&#34;math inline&#34;&gt;\(p\)&lt;/span&gt;，之后再走右侧的点，即 &lt;span class=&#34;math inline&#34;&gt;\(\operatorname{solve}(p, t, A_2)\)&lt;/span&gt;。&lt;/p&gt;
+&lt;p&gt;这个过程中，&lt;span class=&#34;math inline&#34;&gt;\(A_1\)&lt;/span&gt; 和 &lt;span class=&#34;math inline&#34;&gt;\(A_2\)&lt;/span&gt; 中的路径是一定不会有交的，根据我们的构造，发现其一定有解。&lt;/p&gt;
+&lt;p&gt;于是就这样做，用叉积判一下方向啥的，就搞定了。&lt;/p&gt;
+&lt;h2 id=&#34;implementation&#34;&gt;Implementation&lt;/h2&gt;
+&lt;div class=&#34;sourceCode&#34; id=&#34;cb1&#34;&gt;&lt;pre class=&#34;sourceCode cpp&#34;&gt;&lt;code class=&#34;sourceCode cpp&#34;&gt;&lt;span id=&#34;cb1-1&#34;&gt;&lt;a href=&#34;#cb1-1&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;&lt;span class=&#34;kw&#34;&gt;using&lt;/span&gt; ll = &lt;span class=&#34;dt&#34;&gt;long&lt;/span&gt; &lt;span class=&#34;dt&#34;&gt;long&lt;/span&gt;;&lt;/span&gt;
+&lt;span id=&#34;cb1-2&#34;&gt;&lt;a href=&#34;#cb1-2&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;&lt;span class=&#34;at&#34;&gt;const&lt;/span&gt; &lt;span class=&#34;dt&#34;&gt;int&lt;/span&gt; maxn = &lt;span class=&#34;dv&#34;&gt;505&lt;/span&gt;;&lt;/span&gt;
+&lt;span id=&#34;cb1-3&#34;&gt;&lt;a href=&#34;#cb1-3&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;&lt;span class=&#34;dt&#34;&gt;int&lt;/span&gt; n;&lt;/span&gt;
+&lt;span id=&#34;cb1-4&#34;&gt;&lt;a href=&#34;#cb1-4&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;&lt;span class=&#34;kw&#34;&gt;struct&lt;/span&gt; Point {&lt;/span&gt;
+&lt;span id=&#34;cb1-5&#34;&gt;&lt;a href=&#34;#cb1-5&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;    &lt;span class=&#34;dt&#34;&gt;int&lt;/span&gt; x, y;&lt;/span&gt;
+&lt;span id=&#34;cb1-6&#34;&gt;&lt;a href=&#34;#cb1-6&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;    Point() {}&lt;/span&gt;
+&lt;span id=&#34;cb1-7&#34;&gt;&lt;a href=&#34;#cb1-7&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;    Point(&lt;span class=&#34;dt&#34;&gt;int&lt;/span&gt; _x, &lt;span class=&#34;dt&#34;&gt;int&lt;/span&gt; _y) : x(_x), y(_y) {}&lt;/span&gt;
+&lt;span id=&#34;cb1-8&#34;&gt;&lt;a href=&#34;#cb1-8&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;    &lt;span class=&#34;kw&#34;&gt;friend&lt;/span&gt; Point &lt;span class=&#34;kw&#34;&gt;operator&lt;/span&gt;-(&lt;span class=&#34;at&#34;&gt;const&lt;/span&gt; Point &amp;amp;a, &lt;span class=&#34;at&#34;&gt;const&lt;/span&gt; Point &amp;amp;b) {&lt;span class=&#34;cf&#34;&gt;return&lt;/span&gt; Point(a.x - b.x, a.y - b.y);}&lt;/span&gt;
+&lt;span id=&#34;cb1-9&#34;&gt;&lt;a href=&#34;#cb1-9&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;    &lt;span class=&#34;kw&#34;&gt;friend&lt;/span&gt; ll &lt;span class=&#34;kw&#34;&gt;operator&lt;/span&gt;^(&lt;span class=&#34;at&#34;&gt;const&lt;/span&gt; Point &amp;amp;a, &lt;span class=&#34;at&#34;&gt;const&lt;/span&gt; Point &amp;amp;b) {&lt;span class=&#34;cf&#34;&gt;return&lt;/span&gt; &lt;span class=&#34;dv&#34;&gt;1&lt;/span&gt;&lt;span class=&#34;bu&#34;&gt;ll&lt;/span&gt; * a.x * b.y - &lt;span class=&#34;dv&#34;&gt;1&lt;/span&gt;&lt;span class=&#34;bu&#34;&gt;ll&lt;/span&gt; * a.y * b.x;}&lt;/span&gt;
+&lt;span id=&#34;cb1-10&#34;&gt;&lt;a href=&#34;#cb1-10&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;} p[maxn];&lt;/span&gt;
+&lt;span id=&#34;cb1-11&#34;&gt;&lt;a href=&#34;#cb1-11&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;&lt;/span&gt;
+&lt;span id=&#34;cb1-12&#34;&gt;&lt;a href=&#34;#cb1-12&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;&lt;span class=&#34;dt&#34;&gt;bool&lt;/span&gt; check(&lt;span class=&#34;dt&#34;&gt;int&lt;/span&gt; a, &lt;span class=&#34;dt&#34;&gt;int&lt;/span&gt; b, &lt;span class=&#34;dt&#34;&gt;int&lt;/span&gt; c) {&lt;span class=&#34;cf&#34;&gt;return&lt;/span&gt; ((p[b] - p[a]) ^ (p[c] - p[a])) &amp;gt; &lt;span class=&#34;dv&#34;&gt;0&lt;/span&gt;;}&lt;/span&gt;
+&lt;span id=&#34;cb1-13&#34;&gt;&lt;a href=&#34;#cb1-13&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;&lt;/span&gt;
+&lt;span id=&#34;cb1-14&#34;&gt;&lt;a href=&#34;#cb1-14&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;&lt;span class=&#34;dt&#34;&gt;void&lt;/span&gt; solve(&lt;span class=&#34;dt&#34;&gt;int&lt;/span&gt; s, &lt;span class=&#34;dt&#34;&gt;int&lt;/span&gt; t, vector&amp;lt;&lt;span class=&#34;dt&#34;&gt;int&lt;/span&gt;&amp;gt; v) {&lt;/span&gt;
+&lt;span id=&#34;cb1-15&#34;&gt;&lt;a href=&#34;#cb1-15&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;    vector&amp;lt;&lt;span class=&#34;dt&#34;&gt;int&lt;/span&gt;&amp;gt; a[&lt;span class=&#34;dv&#34;&gt;2&lt;/span&gt;];&lt;/span&gt;
+&lt;span id=&#34;cb1-16&#34;&gt;&lt;a href=&#34;#cb1-16&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;    &lt;span class=&#34;cf&#34;&gt;for&lt;/span&gt; (&lt;span class=&#34;dt&#34;&gt;int&lt;/span&gt; i = &lt;span class=&#34;dv&#34;&gt;1&lt;/span&gt;; i &amp;lt; (&lt;span class=&#34;dt&#34;&gt;int&lt;/span&gt;)v.size(); ++i) a[check(s, v[&lt;span class=&#34;dv&#34;&gt;0&lt;/span&gt;], v[i])].push_back(v[i]);&lt;/span&gt;
+&lt;span id=&#34;cb1-17&#34;&gt;&lt;a href=&#34;#cb1-17&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;    &lt;span class=&#34;dt&#34;&gt;int&lt;/span&gt; k = check(s, v[&lt;span class=&#34;dv&#34;&gt;0&lt;/span&gt;], t);&lt;/span&gt;
+&lt;span id=&#34;cb1-18&#34;&gt;&lt;a href=&#34;#cb1-18&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;    &lt;span class=&#34;cf&#34;&gt;if&lt;/span&gt; (a[k ^ &lt;span class=&#34;dv&#34;&gt;1&lt;/span&gt;].size()) solve(s, v[&lt;span class=&#34;dv&#34;&gt;0&lt;/span&gt;], a[k ^ &lt;span class=&#34;dv&#34;&gt;1&lt;/span&gt;]);&lt;/span&gt;
+&lt;span id=&#34;cb1-19&#34;&gt;&lt;a href=&#34;#cb1-19&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;    print(v[&lt;span class=&#34;dv&#34;&gt;0&lt;/span&gt;], &lt;span class=&#34;ch&#34;&gt;&amp;#39; &amp;#39;&lt;/span&gt;);&lt;/span&gt;
+&lt;span id=&#34;cb1-20&#34;&gt;&lt;a href=&#34;#cb1-20&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;    &lt;span class=&#34;cf&#34;&gt;if&lt;/span&gt; (a[k].size()) solve(v[&lt;span class=&#34;dv&#34;&gt;0&lt;/span&gt;], t, a[k]);&lt;/span&gt;
+&lt;span id=&#34;cb1-21&#34;&gt;&lt;a href=&#34;#cb1-21&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;    &lt;span class=&#34;cf&#34;&gt;return&lt;/span&gt;;&lt;/span&gt;
+&lt;span id=&#34;cb1-22&#34;&gt;&lt;a href=&#34;#cb1-22&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;}&lt;/span&gt;
+&lt;span id=&#34;cb1-23&#34;&gt;&lt;a href=&#34;#cb1-23&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;&lt;/span&gt;
+&lt;span id=&#34;cb1-24&#34;&gt;&lt;a href=&#34;#cb1-24&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;&lt;span class=&#34;dt&#34;&gt;int&lt;/span&gt; main() {&lt;/span&gt;
+&lt;span id=&#34;cb1-25&#34;&gt;&lt;a href=&#34;#cb1-25&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;    &lt;span class=&#34;dt&#34;&gt;int&lt;/span&gt; T; read(T);&lt;/span&gt;
+&lt;span id=&#34;cb1-26&#34;&gt;&lt;a href=&#34;#cb1-26&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;    &lt;span class=&#34;cf&#34;&gt;while&lt;/span&gt; (T--) {&lt;/span&gt;
+&lt;span id=&#34;cb1-27&#34;&gt;&lt;a href=&#34;#cb1-27&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;        read(n);&lt;/span&gt;
+&lt;span id=&#34;cb1-28&#34;&gt;&lt;a href=&#34;#cb1-28&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;        FOR(i, &lt;span class=&#34;dv&#34;&gt;1&lt;/span&gt;, n) read(p[i].x, p[i].y);&lt;/span&gt;
+&lt;span id=&#34;cb1-29&#34;&gt;&lt;a href=&#34;#cb1-29&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;        vector&amp;lt;&lt;span class=&#34;dt&#34;&gt;int&lt;/span&gt;&amp;gt; tmp;&lt;/span&gt;
+&lt;span id=&#34;cb1-30&#34;&gt;&lt;a href=&#34;#cb1-30&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;        FOR(i, &lt;span class=&#34;dv&#34;&gt;2&lt;/span&gt;, n - &lt;span class=&#34;dv&#34;&gt;1&lt;/span&gt;) tmp.push_back(i);&lt;/span&gt;
+&lt;span id=&#34;cb1-31&#34;&gt;&lt;a href=&#34;#cb1-31&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;        print(&lt;span class=&#34;dv&#34;&gt;1&lt;/span&gt;, &lt;span class=&#34;ch&#34;&gt;&amp;#39; &amp;#39;&lt;/span&gt;), solve(&lt;span class=&#34;dv&#34;&gt;1&lt;/span&gt;, n, tmp), print(n, &lt;span class=&#34;ch&#34;&gt;&amp;#39; &amp;#39;&lt;/span&gt;);&lt;/span&gt;
+&lt;span id=&#34;cb1-32&#34;&gt;&lt;a href=&#34;#cb1-32&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;    }&lt;/span&gt;
+&lt;span id=&#34;cb1-33&#34;&gt;&lt;a href=&#34;#cb1-33&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;    &lt;span class=&#34;cf&#34;&gt;return&lt;/span&gt; output(), &lt;span class=&#34;dv&#34;&gt;0&lt;/span&gt;;&lt;/span&gt;
+&lt;span id=&#34;cb1-34&#34;&gt;&lt;a href=&#34;#cb1-34&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;}&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+</description>
+        </item>
+        
+    </channel>
+</rss>

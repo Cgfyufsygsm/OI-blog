@@ -1,0 +1,995 @@
+<!DOCTYPE html>
+<html dir="ltr" lang="zh-CN">
+<head><meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1" name="viewport"/><meta content="本文停止维护，更多内容详见数论总结。
+前言 本文主要介绍了 Lucas 定理及其扩展，并附以若干道相关习题。
+鉴于作者没有 MO 背景，写出来的东西可能更偏向 OI 的做题应用，望各位大佬海涵 qwq。
+公式可能偏多，但是只要静下心来慢慢读还剩可以读得懂的 qwq。
+本文用到了的前置知识：
+简单的排列组合 普及~提高的数论知识 二项式定理 简单的生成函数知识 乘法逆元 中国剩余定理（CRT） 欧拉定理（可选，习题涉及） 整除分块（习题涉及其思想） 普通 Lucas（模数为质数） 问题描述 求 \[ \binom n m\bmod p \] 的值，其中 \(n\) 和 \(m\) 可以很大，\(p\) 为一个不大的质数。
+结论（Lucas 定理） \[ \binom n m \equiv \binom{\lfloor\frac n p\rfloor}{\lfloor\frac m p\rfloor}\cdot \binom{n\bmod p}{m\bmod p}\pmod p \]
+体现在程序中就是：\(\binom{\lfloor\frac n p\rfloor}{\lfloor\frac m p\rfloor}\) 可以递归求解，\(\binom{n\bmod p}{m\bmod p}\) 可以直接算，时间复杂度为 \(O(f(p) + g(n)\log n)\)，其中 \(f(p)\) 为预处理组合数的时间复杂度，\(g(n)\) 为单次询问组合数的时间复杂度。" name="description"/><title>Lucas 定理</title>
+<link href="https://oi.imyangty.com/note-lucas/" rel="canonical"/>
+<link href="/scss/style.min.a5821f3d3ab84ce5a0ac21477e347a2e0ca00292e398d16c5e8e36ded6e35a23.css" rel="stylesheet"/><meta content="Lucas 定理" property="og:title"/>
+<meta content="本文停止维护，更多内容详见数论总结。
+前言 本文主要介绍了 Lucas 定理及其扩展，并附以若干道相关习题。
+鉴于作者没有 MO 背景，写出来的东西可能更偏向 OI 的做题应用，望各位大佬海涵 qwq。
+公式可能偏多，但是只要静下心来慢慢读还剩可以读得懂的 qwq。
+本文用到了的前置知识：
+简单的排列组合 普及~提高的数论知识 二项式定理 简单的生成函数知识 乘法逆元 中国剩余定理（CRT） 欧拉定理（可选，习题涉及） 整除分块（习题涉及其思想） 普通 Lucas（模数为质数） 问题描述 求 \[ \binom n m\bmod p \] 的值，其中 \(n\) 和 \(m\) 可以很大，\(p\) 为一个不大的质数。
+结论（Lucas 定理） \[ \binom n m \equiv \binom{\lfloor\frac n p\rfloor}{\lfloor\frac m p\rfloor}\cdot \binom{n\bmod p}{m\bmod p}\pmod p \]
+体现在程序中就是：\(\binom{\lfloor\frac n p\rfloor}{\lfloor\frac m p\rfloor}\) 可以递归求解，\(\binom{n\bmod p}{m\bmod p}\) 可以直接算，时间复杂度为 \(O(f(p) + g(n)\log n)\)，其中 \(f(p)\) 为预处理组合数的时间复杂度，\(g(n)\) 为单次询问组合数的时间复杂度。" property="og:description"/>
+<meta content="https://oi.imyangty.com/note-lucas/" property="og:url"/>
+<meta content="清烛的博客" property="og:site_name"/>
+<meta content="article" property="og:type"/><meta content="Post" property="article:section"/><meta content="OI" property="article:tag"/><meta content="笔记" property="article:tag"/><meta content="Lucas定理" property="article:tag"/><meta content="2021-05-10T21:25:50+08:00" property="article:published_time"/><meta content="2021-05-10T21:25:50+08:00" property="article:modified_time"/><meta content="https://yangty-pic.oss-cn-beijing.aliyuncs.com/bg20.webp" property="og:image"/>
+<meta content="Lucas 定理" name="twitter:title"/>
+<meta content="本文停止维护，更多内容详见数论总结。
+前言 本文主要介绍了 Lucas 定理及其扩展，并附以若干道相关习题。
+鉴于作者没有 MO 背景，写出来的东西可能更偏向 OI 的做题应用，望各位大佬海涵 qwq。
+公式可能偏多，但是只要静下心来慢慢读还剩可以读得懂的 qwq。
+本文用到了的前置知识：
+简单的排列组合 普及~提高的数论知识 二项式定理 简单的生成函数知识 乘法逆元 中国剩余定理（CRT） 欧拉定理（可选，习题涉及） 整除分块（习题涉及其思想） 普通 Lucas（模数为质数） 问题描述 求 \[ \binom n m\bmod p \] 的值，其中 \(n\) 和 \(m\) 可以很大，\(p\) 为一个不大的质数。
+结论（Lucas 定理） \[ \binom n m \equiv \binom{\lfloor\frac n p\rfloor}{\lfloor\frac m p\rfloor}\cdot \binom{n\bmod p}{m\bmod p}\pmod p \]
+体现在程序中就是：\(\binom{\lfloor\frac n p\rfloor}{\lfloor\frac m p\rfloor}\) 可以递归求解，\(\binom{n\bmod p}{m\bmod p}\) 可以直接算，时间复杂度为 \(O(f(p) + g(n)\log n)\)，其中 \(f(p)\) 为预处理组合数的时间复杂度，\(g(n)\) 为单次询问组合数的时间复杂度。" name="twitter:description"/><meta content="summary_large_image" name="twitter:card"/>
+<meta content="https://yangty-pic.oss-cn-beijing.aliyuncs.com/bg20.webp" name="twitter:image"/>
+<link href="https://q1.qlogo.cn/g?b=qq&amp;nk=375836877&amp;s=5" rel="shortcut icon"/>
+<link href="https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.5.1/build/styles/github-dark-dimmed.min.css" rel="stylesheet"/>
+<script src="https://cdn.jsdelivr.net/gh/highlightjs/cdn-release/build/highlight.min.js"></script>
+<script>hljs.highlightAll();</script>
+</head>
+<body class="article-page">
+<script>
+        (function() {
+            const colorSchemeKey = 'StackColorScheme';
+            if(!localStorage.getItem(colorSchemeKey)){
+                localStorage.setItem(colorSchemeKey, "auto");
+            }
+        })();
+    </script><script>
+    (function() {
+        const colorSchemeKey = 'StackColorScheme';
+        const colorSchemeItem = localStorage.getItem(colorSchemeKey);
+        const supportDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches === true;
+
+        if (colorSchemeItem == 'dark' || colorSchemeItem === 'auto' && supportDarkMode) {
+            
+
+            document.documentElement.dataset.scheme = 'dark';
+        } else {
+            document.documentElement.dataset.scheme = 'light';
+        }
+    })();
+</script>
+<div class="container main-container flex on-phone--column extended"><aside class="sidebar left-sidebar sticky">
+<button aria-label="切换菜单" class="hamburger hamburger--spin" id="toggle-menu" type="button">
+<span class="hamburger-box">
+<span class="hamburger-inner"></span>
+</span>
+</button>
+<header>
+<figure class="site-avatar">
+<a href="/">
+<img alt="Avatar" class="site-logo" height="300" loading="lazy" src="/img/avatar_huea3ce2119467b51fdd2a81393644a76d_51594_300x0_resize_q75_box.jpg" width="300"/>
+</a>
+<span class="emoji">😅</span>
+</figure>
+<div class="site-meta">
+<h1 class="site-name"><a href="/">清烛的博客</a></h1>
+<h2 class="site-description">烟火已谢，笙歌未停</h2>
+</div>
+</header><ol class="social-menu">
+<li>
+<a href="mailto:i@imyangty.com" target="_blank" title="email">
+<svg class="icon icon-tabler icon-tabler-mail" fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" viewbox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+<path d="M0 0h24v24H0z" fill="none" stroke="none"></path>
+<rect height="14" rx="2" width="18" x="3" y="5"></rect>
+<polyline points="3 7 12 13 21 7"></polyline>
+</svg>
+</a>
+</li>
+<li>
+<a href="https://github.com/Cgfyufsygsm" target="_blank" title="GitHub">
+<svg class="icon icon-tabler icon-tabler-brand-github" fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+<path d="M0 0h24v24H0z" fill="none" stroke="none"></path>
+<path d="M9 19c-4.3 1.4 -4.3 -2.5 -6 -3m12 5v-3.5c0 -1 .1 -1.4 -.5 -2c2.8 -.3 5.5 -1.4 5.5 -6a4.6 4.6 0 0 0 -1.3 -3.2a4.2 4.2 0 0 0 -.1 -3.2s-1.1 -.3 -3.5 1.3a12.3 12.3 0 0 0 -6.2 0c-2.4 -1.6 -3.5 -1.3 -3.5 -1.3a4.2 4.2 0 0 0 -.1 3.2a4.6 4.6 0 0 0 -1.3 3.2c0 4.6 2.7 5.7 5.5 6c-.6 .6 -.6 1.2 -.5 2v3.5"></path>
+</svg>
+</a>
+</li>
+<li>
+<a href="https://t.me/Cgfyufsygsm" target="_blank" title="Telegram">
+<svg class="icon icon-tabler icon-tabler-brand-telegram" fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" viewbox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+<path d="M0 0h24v24H0z" fill="none" stroke="none"></path>
+<path d="M15 10l-4 4l6 6l4 -16l-18 7l4 2l2 6l3 -4"></path>
+</svg>
+</a>
+</li>
+<li>
+<a href="https://twitter.com/Cgfyufsygsm" target="_blank" title="Twitter">
+<svg class="icon icon-tabler icon-tabler-brand-twitter" fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+<path d="M0 0h24v24H0z" fill="none" stroke="none"></path>
+<path d="M22 4.01c-1 .49 -1.98 .689 -3 .99c-1.121 -1.265 -2.783 -1.335 -4.38 -.737s-2.643 2.06 -2.62 3.737v1c-3.245 .083 -6.135 -1.395 -8 -4c0 0 -4.182 7.433 4 11c-1.872 1.247 -3.739 2.088 -6 2c3.308 1.803 6.913 2.423 10.034 1.517c3.58 -1.04 6.522 -3.723 7.651 -7.742a13.84 13.84 0 0 0 .497 -3.753c-.002 -.249 1.51 -2.772 1.818 -4.013z"></path>
+</svg>
+</a>
+</li>
+</ol><ol class="menu" id="main-menu">
+<li>
+<a href="/">
+<svg class="icon icon-tabler icon-tabler-home" fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+<path d="M0 0h24v24H0z" stroke="none"></path>
+<polyline points="5 12 3 12 12 3 21 12 19 12"></polyline>
+<path d="M5 12v7a2 2 0 0 0 2 2h10a2 2 0 0 0 2 -2v-7"></path>
+<path d="M9 21v-6a2 2 0 0 1 2 -2h2a2 2 0 0 1 2 2v6"></path>
+</svg>
+<span>主页</span>
+</a>
+</li>
+<li>
+<a href="/about/">
+<svg class="icon icon-tabler icon-tabler-user" fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+<path d="M0 0h24v24H0z" stroke="none"></path>
+<circle cx="12" cy="7" r="4"></circle>
+<path d="M6 21v-2a4 4 0 0 1 4 -4h4a4 4 0 0 1 4 4v2"></path>
+</svg>
+<span>关于</span>
+</a>
+</li>
+<li>
+<a href="/idx/">
+<svg class="icon icon-tabler icon-tabler-hash" fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+<path d="M0 0h24v24H0z" stroke="none"></path>
+<line x1="5" x2="19" y1="9" y2="9"></line>
+<line x1="5" x2="19" y1="15" y2="15"></line>
+<line x1="11" x2="7" y1="4" y2="20"></line>
+<line x1="17" x2="13" y1="4" y2="20"></line>
+</svg>
+<span>导航</span>
+</a>
+</li>
+<li>
+<a href="/archives/">
+<svg class="icon icon-tabler icon-tabler-archive" fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+<path d="M0 0h24v24H0z" stroke="none"></path>
+<rect height="4" rx="2" width="18" x="3" y="4"></rect>
+<path d="M5 8v10a2 2 0 0 0 2 2h10a2 2 0 0 0 2 -2v-10"></path>
+<line x1="10" x2="14" y1="12" y2="12"></line>
+</svg>
+<span>归档</span>
+</a>
+</li>
+<li>
+<a href="/search/">
+<svg class="icon icon-tabler icon-tabler-search" fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+<path d="M0 0h24v24H0z" stroke="none"></path>
+<circle cx="10" cy="10" r="7"></circle>
+<line x1="21" x2="15" y1="21" y2="15"></line>
+</svg>
+<span>搜索</span>
+</a>
+</li>
+<li>
+<a href="/friends/">
+<svg class="icon icon-tabler icon-tabler-link" fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+<path d="M0 0h24v24H0z" stroke="none"></path>
+<path d="M10 14a3.5 3.5 0 0 0 5 0l4 -4a3.5 3.5 0 0 0 -5 -5l-.5 .5"></path>
+<path d="M14 10a3.5 3.5 0 0 0 -5 0l-4 4a3.5 3.5 0 0 0 5 5l.5 -.5"></path>
+</svg>
+<span>友链</span>
+</a>
+</li>
+<li>
+<a href="https://blog.imyangty.com" target="_blank">
+<svg class="icon icon-tabler icon-tabler-home" fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+<path d="M0 0h24v24H0z" stroke="none"></path>
+<polyline points="5 12 3 12 12 3 21 12 19 12"></polyline>
+<path d="M5 12v7a2 2 0 0 0 2 2h10a2 2 0 0 0 2 -2v-7"></path>
+<path d="M9 21v-6a2 2 0 0 1 2 -2h2a2 2 0 0 1 2 2v6"></path>
+</svg>
+<span>主博客</span>
+</a>
+</li>
+<div class="menu-bottom-section">
+<li id="dark-mode-toggle">
+<svg class="icon icon-tabler icon-tabler-toggle-left" fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+<path d="M0 0h24v24H0z" stroke="none"></path>
+<circle cx="8" cy="12" r="2"></circle>
+<rect height="12" rx="6" width="20" x="2" y="6"></rect>
+</svg>
+<svg class="icon icon-tabler icon-tabler-toggle-right" fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+<path d="M0 0h24v24H0z" stroke="none"></path>
+<circle cx="16" cy="12" r="2"></circle>
+<rect height="12" rx="6" width="20" x="2" y="6"></rect>
+</svg>
+<span>暗色模式</span>
+</li>
+</div>
+</ol>
+</aside>
+<main class="main full-width">
+<article class="has-image main-article">
+<header class="article-header">
+<div class="article-image">
+<a href="/note-lucas/">
+<img alt="Featured image of post Lucas 定理" loading="lazy" src="https://yangty-pic.oss-cn-beijing.aliyuncs.com/bg20.webp"/>
+</a>
+</div>
+<div class="article-details">
+<header class="article-category">
+<a href="/categories/oi/">
+                OI
+            </a>
+<a href="/categories/note/">
+                笔记
+            </a>
+</header>
+<div class="article-title-wrapper">
+<h2 class="article-title">
+<a href="/note-lucas/">Lucas 定理</a>
+</h2>
+</div>
+<footer class="article-time">
+<div>
+<svg class="icon icon-tabler icon-tabler-calendar-time" fill="none" height="56" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="56" xmlns="http://www.w3.org/2000/svg">
+<path d="M0 0h24v24H0z" stroke="none"></path>
+<path d="M11.795 21h-6.795a2 2 0 0 1 -2 -2v-12a2 2 0 0 1 2 -2h12a2 2 0 0 1 2 2v4"></path>
+<circle cx="18" cy="18" r="4"></circle>
+<path d="M15 3v4"></path>
+<path d="M7 3v4"></path>
+<path d="M3 11h16"></path>
+<path d="M18 16.496v1.504l1 1"></path>
+</svg>
+<time class="article-time--published">May 10, 2021</time>
+</div>
+<div>
+<svg class="icon icon-tabler icon-tabler-clock" fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+<path d="M0 0h24v24H0z" stroke="none"></path>
+<circle cx="12" cy="12" r="9"></circle>
+<polyline points="12 7 12 12 15 15"></polyline>
+</svg>
+<time class="article-time--reading">
+                    阅读时长: 14 分钟
+                </time>
+</div>
+</footer>
+</div>
+</header>
+<section class="article-content">
+<p>本文停止维护，更多内容详见<a href="/summary-number-theory/">数论总结</a>。</p>
+<h2 id="前言">前言</h2>
+<p>本文主要介绍了 Lucas 定理及其扩展，并附以若干道相关习题。</p>
+<p>鉴于作者没有 MO 背景，写出来的东西可能更偏向 OI 的做题应用，望各位大佬海涵 qwq。</p>
+<p>公式可能偏多，但是只要静下心来慢慢读还剩可以读得懂的 qwq。</p>
+<p>本文用到了的前置知识：</p>
+<ul>
+<li><strong>简单的排列组合</strong></li>
+<li><strong>普及~提高的数论知识</strong></li>
+<li><strong>二项式定理</strong></li>
+<li>简单的生成函数知识</li>
+<li>乘法逆元</li>
+<li>中国剩余定理（CRT）</li>
+<li>欧拉定理（可选，习题涉及）</li>
+<li>整除分块（习题涉及其思想）</li>
+</ul>
+<h2 id="普通-lucas模数为质数">普通 Lucas（模数为质数）</h2>
+<h3 id="问题描述">问题描述</h3>
+<p>求 <span class="math display">\[
+\binom n m\bmod p
+\]</span> 的值，其中 <span class="math inline">\(n\)</span> 和 <span class="math inline">\(m\)</span> 可以很大，<span class="math inline">\(p\)</span> 为一个不大的质数。</p>
+<h3 id="结论lucas-定理">结论（Lucas 定理）</h3>
+<p><span class="math display">\[
+\binom n m \equiv \binom{\lfloor\frac n p\rfloor}{\lfloor\frac m p\rfloor}\cdot \binom{n\bmod p}{m\bmod p}\pmod p
+\]</span></p>
+<p>体现在程序中就是：<span class="math inline">\(\binom{\lfloor\frac n p\rfloor}{\lfloor\frac m p\rfloor}\)</span> 可以递归求解，<span class="math inline">\(\binom{n\bmod p}{m\bmod p}\)</span> 可以直接算，时间复杂度为 <span class="math inline">\(O(f(p) + g(n)\log n)\)</span>，其中 <span class="math inline">\(f(p)\)</span> 为预处理组合数的时间复杂度，<span class="math inline">\(g(n)\)</span> 为单次询问组合数的时间复杂度。</p>
+<h3 id="证明">证明</h3>
+<p>参考了 <a href="https://oi-wiki.org/math/lucas/">OI-Wiki</a> 的证明并加以了自己的说明和补充。</p>
+<h4 id="引理">引理</h4>
+<p>首先考虑 <span class="math display">\[
+\binom p n \bmod p
+\]</span> 的取值，注意到展开组合数之后其为如下形式： <span class="math display">\[
+\frac{p!}{n!(p-n)!}\bmod p
+\]</span> 而显然，由于分子中 <span class="math inline">\(p!\)</span> 是一定有质因子 <span class="math inline">\(p\)</span> 的，所以只有当 <span class="math inline">\(n = 0\lor n = p\)</span> 的时候（即 <span class="math inline">\(p!\)</span> 能被消干净）整体的结果为 <span class="math inline">\(1\)</span>，否则为 <span class="math inline">\(0\)</span>。即 <span class="math display">\[
+\binom p n\bmod p = [n = 0\lor n = p]
+\]</span> 进而我们可以得到 <span class="math display">\[
+\begin{aligned}
+(a + b)^p&amp;=\sum_{n = 0}^p\binom p na^nb^{p - n}\\
+&amp;\equiv \sum_{n= 0}^p[n = 0\lor n = p]a^nb^{p - n}\\
+&amp;\equiv a^p + b^p\pmod p
+\end{aligned}
+\]</span> 然后将其推广到二项式的情况， <span class="math display">\[
+\begin{aligned}
+(ax^n + bx^m)^p&amp;\equiv a^px^{np} + b^px^{mp}\\
+&amp;\equiv ax^{np} + bx^{mp}
+\end{aligned}
+\]</span> 即我们可以直接把指数 <span class="math inline">\(p\)</span> 给提进来。</p>
+<h4 id="证明-1">证明</h4>
+<h3 id="代码实现">代码实现</h3>
+<div class="sourceCode" id="cb1"><pre class="sourceCode cpp"><code class="sourceCode cpp"><span id="cb1-1"><a aria-hidden="true" href="#cb1-1"></a><span class="dt">int</span> lucas(<span class="dt">int</span> n, <span class="dt">int</span> m)</span>
+<span id="cb1-2"><a aria-hidden="true" href="#cb1-2"></a>{</span>
+<span id="cb1-3"><a aria-hidden="true" href="#cb1-3"></a>    <span class="cf">if</span> (!m) <span class="cf">return</span> <span class="dv">1</span>;</span>
+<span id="cb1-4"><a aria-hidden="true" href="#cb1-4"></a>    <span class="cf">return</span> <span class="dv">1</span><span class="bu">ll</span> * lucas(n / p, m / p) * C(n % p, m % p) % p;</span>
+<span id="cb1-5"><a aria-hidden="true" href="#cb1-5"></a>}</span></code></pre></div>
+<p>写的时候注意边界 <span class="math inline">\(m = 0\)</span> 即可，然后对于 <span class="math inline">\(\displaystyle\binom{\lfloor\frac n p\rfloor}{\lfloor\frac m p\rfloor}\)</span> 用 Lucas 定理继续递归计算，而右边的 <span class="math inline">\(\displaystyle\binom{n\bmod p}{m\bmod p}\)</span> 因为 <span class="math inline">\(p\)</span> 较小，直接求即可。</p>
+<p>总的实现：<a href="https://www.luogu.com.cn/problem/P3807">洛谷 P3807 【模板】卢卡斯定理</a></p>
+<div class="sourceCode" id="cb2"><pre class="sourceCode cpp"><code class="sourceCode cpp"><span id="cb2-1"><a aria-hidden="true" href="#cb2-1"></a><span class="pp">#include </span><span class="im">&lt;cstdio&gt;</span></span>
+<span id="cb2-2"><a aria-hidden="true" href="#cb2-2"></a><span class="pp">#include </span><span class="im">&lt;cctype&gt;</span></span>
+<span id="cb2-3"><a aria-hidden="true" href="#cb2-3"></a><span class="pp">#define FOR</span>(i,<span class="pp"> </span>a,<span class="pp"> </span>b)<span class="pp"> </span><span class="cf">for</span><span class="pp"> </span>(<span class="dt">int</span><span class="pp"> </span>i<span class="pp"> </span>=<span class="pp"> </span>a;<span class="pp"> </span>i<span class="pp"> </span>&lt;=<span class="pp"> </span>b;<span class="pp"> </span>++i)</span>
+<span id="cb2-4"><a aria-hidden="true" href="#cb2-4"></a><span class="pp">#define DEC</span>(i,<span class="pp"> </span>a,<span class="pp"> </span>b)<span class="pp"> </span><span class="cf">for</span><span class="pp"> </span>(<span class="dt">int</span><span class="pp"> </span>i<span class="pp"> </span>=<span class="pp"> </span>a;<span class="pp"> </span>i<span class="pp"> </span>&gt;=<span class="pp"> </span>b;<span class="pp"> </span>--i)</span>
+<span id="cb2-5"><a aria-hidden="true" href="#cb2-5"></a></span>
+<span id="cb2-6"><a aria-hidden="true" href="#cb2-6"></a><span class="dt">int</span> read()</span>
+<span id="cb2-7"><a aria-hidden="true" href="#cb2-7"></a>{</span>
+<span id="cb2-8"><a aria-hidden="true" href="#cb2-8"></a>    <span class="dt">int</span> s = <span class="dv">0</span>, x = <span class="dv">0</span>;</span>
+<span id="cb2-9"><a aria-hidden="true" href="#cb2-9"></a>    <span class="dt">char</span> c = getchar();</span>
+<span id="cb2-10"><a aria-hidden="true" href="#cb2-10"></a>    <span class="cf">while</span> (!isdigit(c))</span>
+<span id="cb2-11"><a aria-hidden="true" href="#cb2-11"></a>        x |= (c == <span class="ch">'-'</span>), c = getchar();</span>
+<span id="cb2-12"><a aria-hidden="true" href="#cb2-12"></a>    <span class="cf">while</span> (isdigit(c))</span>
+<span id="cb2-13"><a aria-hidden="true" href="#cb2-13"></a>        s = <span class="dv">10</span> * s + c - <span class="ch">'0'</span>, c = getchar();</span>
+<span id="cb2-14"><a aria-hidden="true" href="#cb2-14"></a>    <span class="cf">return</span> x ? -s : s;</span>
+<span id="cb2-15"><a aria-hidden="true" href="#cb2-15"></a>}</span>
+<span id="cb2-16"><a aria-hidden="true" href="#cb2-16"></a></span>
+<span id="cb2-17"><a aria-hidden="true" href="#cb2-17"></a><span class="at">const</span> <span class="dt">int</span> maxn = <span class="fl">3e5</span> + <span class="dv">5</span>;</span>
+<span id="cb2-18"><a aria-hidden="true" href="#cb2-18"></a><span class="dt">int</span> n, m, p, fact[maxn];</span>
+<span id="cb2-19"><a aria-hidden="true" href="#cb2-19"></a></span>
+<span id="cb2-20"><a aria-hidden="true" href="#cb2-20"></a><span class="dt">int</span> qpow(<span class="dt">int</span> base, <span class="dt">int</span> p, <span class="dt">int</span> mod)</span>
+<span id="cb2-21"><a aria-hidden="true" href="#cb2-21"></a>{</span>
+<span id="cb2-22"><a aria-hidden="true" href="#cb2-22"></a>    <span class="dt">int</span> ret = <span class="dv">1</span>;</span>
+<span id="cb2-23"><a aria-hidden="true" href="#cb2-23"></a>    <span class="cf">for</span> (; p; p &gt;&gt;= <span class="dv">1</span>, base = <span class="dv">1</span><span class="bu">ll</span> * base * base % mod)</span>
+<span id="cb2-24"><a aria-hidden="true" href="#cb2-24"></a>        <span class="cf">if</span> (p &amp; <span class="dv">1</span>) ret = <span class="dv">1</span><span class="bu">ll</span> * ret * base % mod;</span>
+<span id="cb2-25"><a aria-hidden="true" href="#cb2-25"></a>    <span class="cf">return</span> ret;</span>
+<span id="cb2-26"><a aria-hidden="true" href="#cb2-26"></a>}</span>
+<span id="cb2-27"><a aria-hidden="true" href="#cb2-27"></a></span>
+<span id="cb2-28"><a aria-hidden="true" href="#cb2-28"></a><span class="dt">int</span> C(<span class="dt">int</span> n, <span class="dt">int</span> m)</span>
+<span id="cb2-29"><a aria-hidden="true" href="#cb2-29"></a>{</span>
+<span id="cb2-30"><a aria-hidden="true" href="#cb2-30"></a>    <span class="cf">if</span> (m &gt; n) <span class="cf">return</span> <span class="dv">0</span>;</span>
+<span id="cb2-31"><a aria-hidden="true" href="#cb2-31"></a>    <span class="cf">return</span> <span class="dv">1</span><span class="bu">ll</span> * fact[n] * qpow(<span class="dv">1</span><span class="bu">ll</span> * fact[m] * fact[n - m] % p, p - <span class="dv">2</span>, p) % p;</span>
+<span id="cb2-32"><a aria-hidden="true" href="#cb2-32"></a>}</span>
+<span id="cb2-33"><a aria-hidden="true" href="#cb2-33"></a></span>
+<span id="cb2-34"><a aria-hidden="true" href="#cb2-34"></a><span class="dt">int</span> lucas(<span class="dt">int</span> n, <span class="dt">int</span> m)</span>
+<span id="cb2-35"><a aria-hidden="true" href="#cb2-35"></a>{</span>
+<span id="cb2-36"><a aria-hidden="true" href="#cb2-36"></a>    <span class="cf">if</span> (!m) <span class="cf">return</span> <span class="dv">1</span>;</span>
+<span id="cb2-37"><a aria-hidden="true" href="#cb2-37"></a>    <span class="cf">return</span> <span class="dv">1</span><span class="bu">ll</span> * lucas(n / p, m / p) * C(n % p, m % p) % p;</span>
+<span id="cb2-38"><a aria-hidden="true" href="#cb2-38"></a>}</span>
+<span id="cb2-39"><a aria-hidden="true" href="#cb2-39"></a></span>
+<span id="cb2-40"><a aria-hidden="true" href="#cb2-40"></a><span class="dt">int</span> main()</span>
+<span id="cb2-41"><a aria-hidden="true" href="#cb2-41"></a>{</span>
+<span id="cb2-42"><a aria-hidden="true" href="#cb2-42"></a>    <span class="dt">int</span> T = read();</span>
+<span id="cb2-43"><a aria-hidden="true" href="#cb2-43"></a>    <span class="cf">while</span> (T--)</span>
+<span id="cb2-44"><a aria-hidden="true" href="#cb2-44"></a>    {</span>
+<span id="cb2-45"><a aria-hidden="true" href="#cb2-45"></a>        m = read(), n = read() + m, p = read();</span>
+<span id="cb2-46"><a aria-hidden="true" href="#cb2-46"></a>        fact[<span class="dv">0</span>] = <span class="dv">1</span>;</span>
+<span id="cb2-47"><a aria-hidden="true" href="#cb2-47"></a>        FOR(i, <span class="dv">1</span>, <span class="fl">3e5</span>) fact[i] = <span class="dv">1</span><span class="bu">ll</span> * i * fact[i - <span class="dv">1</span>] % p;</span>
+<span id="cb2-48"><a aria-hidden="true" href="#cb2-48"></a>        printf(<span class="st">"</span><span class="sc">%d\n</span><span class="st">"</span>, lucas(n, m));</span>
+<span id="cb2-49"><a aria-hidden="true" href="#cb2-49"></a>    }</span>
+<span id="cb2-50"><a aria-hidden="true" href="#cb2-50"></a>    <span class="cf">return</span> <span class="dv">0</span>;</span>
+<span id="cb2-51"><a aria-hidden="true" href="#cb2-51"></a>}</span></code></pre></div>
+<h2 id="lucas-定理的另一种证明">Lucas 定理的另一种证明</h2>
+<p>参考了<strong>冯志刚版《初等数论》</strong>第37页。这个应该是大多数 MOer 先接触到的 Lucas 定理的版本。</p>
+<h3 id="lucas-定理的另一形式">Lucas 定理的另一形式</h3>
+<p>对于整数 <span class="math inline">\(a\)</span>，<span class="math inline">\(b\)</span> 和素数 <span class="math inline">\(p\)</span>，若 <span class="math display">\[
+\begin{aligned}
+a &amp;= \sum_{i = 0}^k a_ip^i\\
+b &amp;= \sum_{i = 0}^k b_ip^i
+\end{aligned}
+\]</span> （相当于把 <span class="math inline">\(a\)</span> 和 <span class="math inline">\(b\)</span> 在 <span class="math inline">\(p\)</span> 进制下表示）则 <span class="math display">\[
+\binom ab\equiv\prod_{i = 0}^k\binom{a_i}{b_i}\pmod p
+\]</span> 那么它和之前提到的 <span class="math display">\[
+\binom a b\equiv\binom{\lfloor\frac ap\rfloor}{\lfloor\frac bp\rfloor}\binom{a\bmod p}{b\bmod p}\pmod p
+\]</span> 为什么是等价的呢？</p>
+<p>这样子考虑，对 <span class="math inline">\(p\)</span> 取模相当于取了 <span class="math inline">\(p\)</span> 进制下的最低位，而除以 <span class="math inline">\(p\)</span> 向下取整就相当于 <span class="math inline">\(p\)</span> 进制下去掉最后一位，反复套用就发现两个形式是等价的了。</p>
+<h3 id="证明-2">证明</h3>
+<p>记号约定：设 <span class="math inline">\(\displaystyle f(x) = \sum_{i = 0}^na_ix^i\)</span>，<span class="math inline">\(\displaystyle g(x) = \sum_{i = 0}^nb_ix^i\)</span> 均为整系数多项式，若对于 <span class="math inline">\(\forall 0\le i\le n\)</span>，都有 <span class="math inline">\(a_i\equiv b_i\pmod m\)</span>，则称 <span class="math inline">\(f(x)\)</span> 与 <span class="math inline">\(g(x)\)</span> 对模 <span class="math inline">\(m\)</span> 同余，记作 <span class="math inline">\(f(x)\equiv g(x)\pmod m\)</span>。注意到若 <span class="math inline">\(f(x)\equiv g(x)\pmod m\)</span>，则对于 <span class="math inline">\(\forall a\in \mathbb Z\)</span>，都有 <span class="math inline">\(f(a)\equiv g(a)\pmod m\)</span>。</p>
+<p><strong>由于 <span class="math inline">\(p\)</span> 为素数</strong>，可知对于 <span class="math inline">\(1\le j\le p - 1\)</span>，都有 <span class="math display">\[
+\binom p j = \frac pj\binom{p - 1}{j - 1}\equiv0\pmod p
+\]</span> 所以 <span class="math display">\[
+\begin{aligned}
+(1 + x)^p &amp;= 1 + \binom p1x + \cdots + \binom{p}{p - 1}x^{p - 1} + x^p\\
+&amp;\equiv 1 + x^p\pmod p
+\end{aligned}
+\]</span> 利用这个结论，有 <span class="math display">\[
+\begin{aligned}
+(1 + x)^a &amp;= (1 + x)^{a_0}((1 + x)^p)^{a_1}\cdots((1 + x)^{p^k})^{a_k}\\
+&amp;\equiv (1 + x)^{a_0}(1 + x^p)^{a_1}\cdots(1 + x^{p^k})^{a_k}\pmod p
+\end{aligned}
+\]</span> 观察右边展开后得到的结果。发现每个括号中有且仅有一项对 <span class="math inline">\(x^b\)</span> 的系数产生了贡献（根据 <span class="math inline">\(p\)</span> 进制数的性质），再结合二项式定理，故 <span class="math display">\[
+\binom ab\equiv\prod_{i = 0}^k\binom{a_i}{b_i}\pmod p
+\]</span></p>
+<h2 id="exlucas模数不一定为质数">exLucas（模数不一定为质数）</h2>
+<p>继续之前，假定读者已熟练掌握乘法逆元和 CRT。</p>
+<p><del>这个东西除了和 Lucas 定理长得像之外和 Lucas 就没有半毛钱关系了，而且比 Lucas 阴间 n 多倍</del></p>
+<h3 id="问题描述-1">问题描述</h3>
+<p>求 <span class="math display">\[
+\binom nm\bmod p
+\]</span> 的值。其中 <span class="math inline">\(p\)</span> 不一定为质数且 <span class="math inline">\(p\)</span> 较小。</p>
+<h3 id="问题求解">问题求解</h3>
+<p>参考了 <a href="https://oi-wiki.org/math/lucas/">OI-Wiki</a> 并加以自己的说明和补充。</p>
+<h4 id="part-1">Part 1</h4>
+<p>使用唯一分解定理分解模数 <span class="math inline">\(p\)</span> 得到： <span class="math display">\[
+p = \prod_{i = 1}^rq_i^{k_i}
+\]</span> 然后由于 <span class="math inline">\(q_i^{k_i}\)</span> 和 <span class="math inline">\(q_j^{k_j}\)</span> 两两互质，所以可以构造如下的同余方程组 <span class="math display">\[
+\begin{cases}x\equiv\dbinom n m\pmod{q_1^{k_1}}\\x\equiv\dbinom n m\pmod{q_2^{k_2}}\\\quad\cdots\\x\equiv\dbinom n m\pmod{q_r^{k_r}}\end{cases}
+\]</span> 然后用 CRT 合并解即可。</p>
+<h4 id="part-2">Part 2</h4>
+<p>现在的问题变成了求 <span class="math inline">\(\displaystyle\binom n m \bmod{q^k}\)</span>（<span class="math inline">\(q\)</span> 为质数）的值。拆开组合数的式子，我们发现： <span class="math display">\[
+\binom n m \equiv \frac{n!}{m!(n - m)!}\pmod{q^k}
+\]</span> 然而下面那个东西不一定能算模 <span class="math inline">\(q^k\)</span> 意义下的乘法逆元，那么我们就把所有的 <span class="math inline">\(q\)</span> 提出来： <span class="math display">\[
+\frac{\frac{n!}{q^x}}{\frac{m!}{q^y}\frac{(n - m)!}{q^z}}q^{x - y - z}\bmod q^k
+\]</span> 其中 <span class="math inline">\(x\)</span> 表示 <span class="math inline">\(n!\)</span> 中质因子 <span class="math inline">\(q\)</span> 的次数，<span class="math inline">\(y\)</span> 和 <span class="math inline">\(z\)</span> 同理。这样子分数线下面的式子由于与 <span class="math inline">\(q^k\)</span> 互质，就可以求逆元了。</p>
+<h4 id="part-3">Part 3</h4>
+<p>现在需要解决的就是求 <span class="math display">\[
+f(n) \equiv \frac{n!}{q^x}\pmod{q^k}
+\]</span> 的值。</p>
+<p>先考虑 <span class="math inline">\(n!\bmod q^k\)</span> 的值。以一个最常见的例子：<span class="math inline">\(n = 22\)</span>，<span class="math inline">\(q = 3\)</span>，<span class="math inline">\(k = 2\)</span> 为例： <span class="math display">\[
+\begin{aligned}
+22! = 1\times2\times3\times4\times5\times6\times7\times8\times9\times10\times11\times12\\\times13\times14\times15\times16\times17\times18\times19\times20\times21\times22
+\end{aligned}
+\]</span> 把所有 <span class="math inline">\(q\)</span> 的倍数提取出来，即为 <span class="math display">\[
+\begin{aligned}
+22! =&amp; (3\times6\times9\times12\times15\times18\times21)\times1\times2\times4\times5\times7\\&amp;\times8\times10\times11\times13\times14\times16\times17\times19\times20\times22\\
+=&amp;3^7\times(1\times2\times3\times4\times5\times6\times7)\times1\times2\times4\times5\times7\\&amp;\times8\times10\times11\times13\times14\times16\times17\times19\times20\times22\\
+\end{aligned}
+\]</span> 注意一下这个分组</p>
+<ul>
+<li><p><span class="math inline">\(3^7\)</span> 即为 <span class="math inline">\(q^{\lfloor n/q\rfloor}\)</span></p></li>
+<li><p>还剩下一个 <span class="math inline">\(7!\)</span> 即为 <span class="math inline">\(\lfloor n/q\rfloor!\)</span>，这一部分可以递归进行求解。</p></li>
+<li><p>最后剩下来的就是 <span class="math inline">\(n!\)</span> 中与 <span class="math inline">\(q\)</span> 互质的部分的乘积。可以发现 <span class="math display">\[
+1\times2\times4\times5\times7\times8\equiv10\times11\times13\times14\times16\times17\pmod{3^2}
+\]</span> 所以其相当于就是一个循环节，我们再重新写一下 <span class="math inline">\(22!\)</span> 的展开： <span class="math display">\[
+22! \equiv 3^7\times7!\times(1\times2\times4\times5\times7\times8)^2\times(19\times20\times22)\pmod{3^2}
+\]</span> 关于循环节，可以这样理解： <span class="math display">\[
+\prod_{i,i\perp q}^{q^k}i\equiv\prod_{i,i\perp q}^{q^k}(i + tq^k)\pmod{q^k}
+\]</span> 其中 <span class="math inline">\(t\in\mathbb N^*\)</span>。这个循环节循环了 <span class="math inline">\(\displaystyle\left\lfloor\frac{n}{q^k}\right\rfloor\)</span> 次，所以考虑暴力把 <span class="math inline">\(\displaystyle\prod_{i,i\perp q}^{q^k}i\)</span> 求出来然后快速幂求一波 <span class="math inline">\(\displaystyle\left\lfloor\frac{n}{q^k}\right\rfloor\)</span> 次幂。当然最后是需要乘上余项 <span class="math inline">\(\displaystyle\prod_{i,i\perp q}^{n\bmod q^k}i\)</span>（对应上面的 <span class="math inline">\(19\times20\times22\)</span>），暴力就可以了。</p></li>
+</ul>
+<p>总结下来就是 <span class="math display">\[
+n!\equiv q^{\lfloor n/q\rfloor}\cdot\left(\left\lfloor\frac n q\right\rfloor\right)!\cdot\left(\prod_{i, i\perp q}^{q^k}i\right)^{\lfloor n / q^k\rfloor}\cdot \left(\prod_{i, i\perp q}^{n\bmod q^k}i\right)\pmod{q^k}
+\]</span> 而我们需要求的是 <span class="math inline">\(\displaystyle\frac{n!}{q^x}\bmod q^k\)</span>。</p>
+<p>变形一下上面的式子得到 <span class="math display">\[
+f(n)\equiv f\left(\left\lfloor\frac n q\right\rfloor\right)\cdot\left(\prod_{i, i\perp q}^{q^k}i\right)^{\lfloor n / q^k\rfloor}\cdot \left(\prod_{i, i\perp q}^{n\bmod q^k}i\right)\pmod{q^k}
+\]</span> （注意此时 <span class="math inline">\(n!\)</span> 中的质因子 <span class="math inline">\(q\)</span> 会在递归的过程中全部被消掉），此时我们就求得 <span class="math inline">\(f(n)\)</span> 的值了。</p>
+<p>这一部分的代码如下：</p>
+<div class="sourceCode" id="cb3"><pre class="sourceCode cpp"><code class="sourceCode cpp"><span id="cb3-1"><a aria-hidden="true" href="#cb3-1"></a>ll calc(ll n, ll q, ll qk)<span class="co">//传入的参数不再赘述</span></span>
+<span id="cb3-2"><a aria-hidden="true" href="#cb3-2"></a>{</span>
+<span id="cb3-3"><a aria-hidden="true" href="#cb3-3"></a>    <span class="cf">if</span> (!n) <span class="cf">return</span> <span class="dv">1</span>;<span class="co">//边界条件</span></span>
+<span id="cb3-4"><a aria-hidden="true" href="#cb3-4"></a>    ll ret = <span class="dv">1</span>;</span>
+<span id="cb3-5"><a aria-hidden="true" href="#cb3-5"></a>    FOR(i, <span class="dv">1</span>, qk)</span>
+<span id="cb3-6"><a aria-hidden="true" href="#cb3-6"></a>        <span class="cf">if</span> (i % q) ret = ret * i % qk;<span class="co">//处理循环节的部分</span></span>
+<span id="cb3-7"><a aria-hidden="true" href="#cb3-7"></a>    ret = qpow(ret, n / qk, qk);<span class="co">//给循环节进行快速幂</span></span>
+<span id="cb3-8"><a aria-hidden="true" href="#cb3-8"></a>    FOR(i, n / qk * qk + <span class="dv">1</span>, n)</span>
+<span id="cb3-9"><a aria-hidden="true" href="#cb3-9"></a>        <span class="cf">if</span> (i % q) ret = ret * (i % qk) % qk;<span class="co">//暴力合并余项，注意这里一定要先取模再乘不然会去世</span></span>
+<span id="cb3-10"><a aria-hidden="true" href="#cb3-10"></a>    <span class="cf">return</span> ret * calc(n / q, q, qk) % qk;<span class="co">//递归继续求解</span></span>
+<span id="cb3-11"><a aria-hidden="true" href="#cb3-11"></a>}</span></code></pre></div>
+<h4 id="part-4">Part 4</h4>
+<p>那么回到刚才的问题：求 <span class="math display">\[
+\frac{\frac{n!}{q^x}}{\frac{m!}{q^y}\frac{(n - m)!}{q^z}}q^{x - y - z}\bmod q^k
+\]</span> 左边分数的分子可以求，分母由于必然与 <span class="math inline">\(q^k\)</span> 互质是可以求逆元的，现在问题就是如何去求这个 <span class="math inline">\(q^{x - y - z}\)</span>。</p>
+<p>不妨设 <span class="math inline">\(g(n) = x\)</span>，则由刚才的推导过程可以知道 <span class="math display">\[
+g(n) = \left\lfloor\frac n q\right\rfloor + g\left(\left\lfloor\frac n q\right\rfloor\right)
+\]</span> （其实就是考虑当前求 <span class="math inline">\(n!\)</span> 中 <span class="math inline">\(q\)</span> 的倍数产生的贡献和下面求 <span class="math inline">\(\lfloor n / q\rfloor!\)</span> 中 <span class="math inline">\(q\)</span> 的倍数产生的贡献）</p>
+<p>当然我们其实有一种更加简洁的去求 <span class="math inline">\(x - y - z\)</span> 的方法：</p>
+<div class="sourceCode" id="cb4"><pre class="sourceCode cpp"><code class="sourceCode cpp"><span id="cb4-1"><a aria-hidden="true" href="#cb4-1"></a>ll cnt = <span class="dv">0</span>;</span>
+<span id="cb4-2"><a aria-hidden="true" href="#cb4-2"></a><span class="cf">for</span> (ll i = n; i; i /= q) cnt += i / q;</span>
+<span id="cb4-3"><a aria-hidden="true" href="#cb4-3"></a><span class="cf">for</span> (ll i = m; i; i /= q) cnt -= i / q;</span>
+<span id="cb4-4"><a aria-hidden="true" href="#cb4-4"></a><span class="cf">for</span> (ll i = n - m; i; i /= q) cnt -= i / q;</span></code></pre></div>
+<p>这样做的道理其实也很简单，完全就是把递归式的 <span class="math inline">\(g(n)\)</span> 换成了非递归式而已。</p>
+<p>那么所有的问题就已经搞定了。</p>
+<p>这一部分的代码如下：</p>
+<div class="sourceCode" id="cb5"><pre class="sourceCode cpp"><code class="sourceCode cpp"><span id="cb5-1"><a aria-hidden="true" href="#cb5-1"></a>ll multiLucas(ll n, ll m, ll q, ll qk)<span class="co">//求 \binom n m \pmod{q ^ k} 的值</span></span>
+<span id="cb5-2"><a aria-hidden="true" href="#cb5-2"></a>{</span>
+<span id="cb5-3"><a aria-hidden="true" href="#cb5-3"></a>    <span class="dt">int</span> cnt = <span class="dv">0</span>;</span>
+<span id="cb5-4"><a aria-hidden="true" href="#cb5-4"></a>    <span class="cf">for</span> (ll i = n; i; i /= q) cnt += i / q;</span>
+<span id="cb5-5"><a aria-hidden="true" href="#cb5-5"></a>    <span class="cf">for</span> (ll i = m; i; i /= q) cnt -= i / q;</span>
+<span id="cb5-6"><a aria-hidden="true" href="#cb5-6"></a>    <span class="cf">for</span> (ll i = n - m; i; i /= q) cnt -= i / q;</span>
+<span id="cb5-7"><a aria-hidden="true" href="#cb5-7"></a>    <span class="cf">return</span> qpow(q, cnt, qk) * calc(n, q, qk) % qk * inv(calc(m, q, qk), qk) % qk * inv(calc(n - m, q, qk), qk) % qk;</span>
+<span id="cb5-8"><a aria-hidden="true" href="#cb5-8"></a>}</span></code></pre></div>
+<h4 id="流程回顾">流程回顾</h4>
+<ol type="1">
+<li><p>对于 <span class="math inline">\(p\)</span> 分解质因数得到每个质因子 <span class="math inline">\(q^k\)</span>。</p></li>
+<li><p>对于每个质因子，求出 <span class="math display">\[
+\binom n m\equiv \frac{f(n)}{f(m)f(n - m)}\cdot q^{g(n) - g(m) - g(n - m)}\pmod{q^k}
+\]</span></p></li>
+<li><p>用 CRT 合并所有答案。</p></li>
+</ol>
+<h3 id="代码实现-1">代码实现</h3>
+<p>细节非常的繁冗，一定要注意关于取模/<code>long long</code>/是否爆范围之类的问题。</p>
+<p><a href="https://www.luogu.com.cn/problem/P4720">洛谷 P4720 【模板】扩展卢卡斯</a></p>
+<div class="sourceCode" id="cb6"><pre class="sourceCode cpp"><code class="sourceCode cpp"><span id="cb6-1"><a aria-hidden="true" href="#cb6-1"></a><span class="pp">#include </span><span class="im">&lt;cstdio&gt;</span></span>
+<span id="cb6-2"><a aria-hidden="true" href="#cb6-2"></a><span class="pp">#define FOR</span>(i,<span class="pp"> </span>a,<span class="pp"> </span>b)<span class="pp"> </span><span class="cf">for</span><span class="pp"> </span>(ll<span class="pp"> </span>i<span class="pp"> </span>=<span class="pp"> </span>a;<span class="pp"> </span>i<span class="pp"> </span>&lt;=<span class="pp"> </span>b;<span class="pp"> </span>++i)</span>
+<span id="cb6-3"><a aria-hidden="true" href="#cb6-3"></a><span class="pp">#define DEC</span>(i,<span class="pp"> </span>a,<span class="pp"> </span>b)<span class="pp"> </span><span class="cf">for</span><span class="pp"> </span>(ll<span class="pp"> </span>i<span class="pp"> </span>=<span class="pp"> </span>a;<span class="pp"> </span>i<span class="pp"> </span>&gt;=<span class="pp"> </span>b;<span class="pp"> </span>--i)</span>
+<span id="cb6-4"><a aria-hidden="true" href="#cb6-4"></a></span>
+<span id="cb6-5"><a aria-hidden="true" href="#cb6-5"></a><span class="kw">typedef</span> <span class="dt">long</span> <span class="dt">long</span> ll;</span>
+<span id="cb6-6"><a aria-hidden="true" href="#cb6-6"></a></span>
+<span id="cb6-7"><a aria-hidden="true" href="#cb6-7"></a>ll mod;</span>
+<span id="cb6-8"><a aria-hidden="true" href="#cb6-8"></a></span>
+<span id="cb6-9"><a aria-hidden="true" href="#cb6-9"></a><span class="dt">void</span> exgcd(ll a, ll b, ll &amp;x, ll &amp;y)</span>
+<span id="cb6-10"><a aria-hidden="true" href="#cb6-10"></a>{</span>
+<span id="cb6-11"><a aria-hidden="true" href="#cb6-11"></a>    <span class="cf">if</span> (!b)</span>
+<span id="cb6-12"><a aria-hidden="true" href="#cb6-12"></a>    {</span>
+<span id="cb6-13"><a aria-hidden="true" href="#cb6-13"></a>        x = <span class="dv">1</span>, y = <span class="dv">0</span>;</span>
+<span id="cb6-14"><a aria-hidden="true" href="#cb6-14"></a>        <span class="cf">return</span>;</span>
+<span id="cb6-15"><a aria-hidden="true" href="#cb6-15"></a>    }</span>
+<span id="cb6-16"><a aria-hidden="true" href="#cb6-16"></a>    exgcd(b, a % b, y, x);</span>
+<span id="cb6-17"><a aria-hidden="true" href="#cb6-17"></a>    y -= a / b * x;</span>
+<span id="cb6-18"><a aria-hidden="true" href="#cb6-18"></a>    <span class="cf">return</span>;</span>
+<span id="cb6-19"><a aria-hidden="true" href="#cb6-19"></a>}</span>
+<span id="cb6-20"><a aria-hidden="true" href="#cb6-20"></a></span>
+<span id="cb6-21"><a aria-hidden="true" href="#cb6-21"></a><span class="kw">inline</span> ll inv(ll n, ll p)</span>
+<span id="cb6-22"><a aria-hidden="true" href="#cb6-22"></a>{</span>
+<span id="cb6-23"><a aria-hidden="true" href="#cb6-23"></a>    ll x, y;</span>
+<span id="cb6-24"><a aria-hidden="true" href="#cb6-24"></a>    exgcd(n, p, x, y);</span>
+<span id="cb6-25"><a aria-hidden="true" href="#cb6-25"></a>    <span class="cf">return</span> (x + p) % p;</span>
+<span id="cb6-26"><a aria-hidden="true" href="#cb6-26"></a>}</span>
+<span id="cb6-27"><a aria-hidden="true" href="#cb6-27"></a></span>
+<span id="cb6-28"><a aria-hidden="true" href="#cb6-28"></a>ll qpow(ll base, ll p, ll mod)</span>
+<span id="cb6-29"><a aria-hidden="true" href="#cb6-29"></a>{</span>
+<span id="cb6-30"><a aria-hidden="true" href="#cb6-30"></a>    ll ret = <span class="dv">1</span>;</span>
+<span id="cb6-31"><a aria-hidden="true" href="#cb6-31"></a>    <span class="cf">for</span> (; p; p &gt;&gt;= <span class="dv">1</span>, base = base * base % mod)</span>
+<span id="cb6-32"><a aria-hidden="true" href="#cb6-32"></a>        <span class="cf">if</span> (p &amp; <span class="dv">1</span>)</span>
+<span id="cb6-33"><a aria-hidden="true" href="#cb6-33"></a>            ret = ret * base % mod;</span>
+<span id="cb6-34"><a aria-hidden="true" href="#cb6-34"></a>    <span class="cf">return</span> ret;</span>
+<span id="cb6-35"><a aria-hidden="true" href="#cb6-35"></a>}</span>
+<span id="cb6-36"><a aria-hidden="true" href="#cb6-36"></a></span>
+<span id="cb6-37"><a aria-hidden="true" href="#cb6-37"></a>ll CRT(<span class="dt">int</span> n, ll *a, ll *m)</span>
+<span id="cb6-38"><a aria-hidden="true" href="#cb6-38"></a>{</span>
+<span id="cb6-39"><a aria-hidden="true" href="#cb6-39"></a>    ll M = <span class="dv">1</span>, ret = <span class="dv">0</span>;</span>
+<span id="cb6-40"><a aria-hidden="true" href="#cb6-40"></a>    FOR(i, <span class="dv">1</span>, n) M *= m[i];</span>
+<span id="cb6-41"><a aria-hidden="true" href="#cb6-41"></a>    FOR(i, <span class="dv">1</span>, n)</span>
+<span id="cb6-42"><a aria-hidden="true" href="#cb6-42"></a>    {</span>
+<span id="cb6-43"><a aria-hidden="true" href="#cb6-43"></a>        ll w = M / m[i];</span>
+<span id="cb6-44"><a aria-hidden="true" href="#cb6-44"></a>        ret = (ret + a[i] * w % mod * inv(w, m[i]) % mod) % mod;</span>
+<span id="cb6-45"><a aria-hidden="true" href="#cb6-45"></a>    }</span>
+<span id="cb6-46"><a aria-hidden="true" href="#cb6-46"></a>    <span class="cf">return</span> (ret + mod) % mod;</span>
+<span id="cb6-47"><a aria-hidden="true" href="#cb6-47"></a>}</span>
+<span id="cb6-48"><a aria-hidden="true" href="#cb6-48"></a></span>
+<span id="cb6-49"><a aria-hidden="true" href="#cb6-49"></a>ll calc(ll n, ll q, ll qk)</span>
+<span id="cb6-50"><a aria-hidden="true" href="#cb6-50"></a>{</span>
+<span id="cb6-51"><a aria-hidden="true" href="#cb6-51"></a>    <span class="cf">if</span> (!n) <span class="cf">return</span> <span class="dv">1</span>;</span>
+<span id="cb6-52"><a aria-hidden="true" href="#cb6-52"></a>    ll ret = <span class="dv">1</span>;</span>
+<span id="cb6-53"><a aria-hidden="true" href="#cb6-53"></a>    FOR(i, <span class="dv">1</span>, qk)</span>
+<span id="cb6-54"><a aria-hidden="true" href="#cb6-54"></a>        <span class="cf">if</span> (i % q) ret = ret * i % qk;</span>
+<span id="cb6-55"><a aria-hidden="true" href="#cb6-55"></a>    ret = qpow(ret, n / qk, qk);</span>
+<span id="cb6-56"><a aria-hidden="true" href="#cb6-56"></a>    FOR(i, n / qk * qk + <span class="dv">1</span>, n)</span>
+<span id="cb6-57"><a aria-hidden="true" href="#cb6-57"></a>        <span class="cf">if</span> (i % q) ret = ret * (i % qk) % qk;</span>
+<span id="cb6-58"><a aria-hidden="true" href="#cb6-58"></a>    <span class="cf">return</span> ret * calc(n / q, q, qk) % qk;</span>
+<span id="cb6-59"><a aria-hidden="true" href="#cb6-59"></a>}</span>
+<span id="cb6-60"><a aria-hidden="true" href="#cb6-60"></a></span>
+<span id="cb6-61"><a aria-hidden="true" href="#cb6-61"></a>ll multiLucas(ll n, ll m, ll q, ll qk)</span>
+<span id="cb6-62"><a aria-hidden="true" href="#cb6-62"></a>{</span>
+<span id="cb6-63"><a aria-hidden="true" href="#cb6-63"></a>    <span class="dt">int</span> cnt = <span class="dv">0</span>;</span>
+<span id="cb6-64"><a aria-hidden="true" href="#cb6-64"></a>    <span class="cf">for</span> (ll i = n; i; i /= q) cnt += i / q;</span>
+<span id="cb6-65"><a aria-hidden="true" href="#cb6-65"></a>    <span class="cf">for</span> (ll i = m; i; i /= q) cnt -= i / q;</span>
+<span id="cb6-66"><a aria-hidden="true" href="#cb6-66"></a>    <span class="cf">for</span> (ll i = n - m; i; i /= q) cnt -= i / q;</span>
+<span id="cb6-67"><a aria-hidden="true" href="#cb6-67"></a>    <span class="cf">return</span> qpow(q, cnt, qk) * calc(n, q, qk) % qk * inv(calc(m, q, qk), qk) % qk * inv(calc(n - m, q, qk), qk) % qk;</span>
+<span id="cb6-68"><a aria-hidden="true" href="#cb6-68"></a>}</span>
+<span id="cb6-69"><a aria-hidden="true" href="#cb6-69"></a></span>
+<span id="cb6-70"><a aria-hidden="true" href="#cb6-70"></a>ll exLucas(ll n, ll m, ll p)</span>
+<span id="cb6-71"><a aria-hidden="true" href="#cb6-71"></a>{</span>
+<span id="cb6-72"><a aria-hidden="true" href="#cb6-72"></a>    <span class="dt">int</span> cnt = <span class="dv">0</span>;</span>
+<span id="cb6-73"><a aria-hidden="true" href="#cb6-73"></a>    ll qk[<span class="dv">20</span>], a[<span class="dv">20</span>];<span class="co">//存放所有的 q^k 和待合并答案的结果</span></span>
+<span id="cb6-74"><a aria-hidden="true" href="#cb6-74"></a>    <span class="cf">for</span> (ll i = <span class="dv">2</span>; i * i &lt;= p; ++i)<span class="co">//质因数分解</span></span>
+<span id="cb6-75"><a aria-hidden="true" href="#cb6-75"></a>    {</span>
+<span id="cb6-76"><a aria-hidden="true" href="#cb6-76"></a>        <span class="cf">if</span> (p % i == <span class="dv">0</span>)</span>
+<span id="cb6-77"><a aria-hidden="true" href="#cb6-77"></a>        {</span>
+<span id="cb6-78"><a aria-hidden="true" href="#cb6-78"></a>            qk[++cnt] = <span class="dv">1</span>;</span>
+<span id="cb6-79"><a aria-hidden="true" href="#cb6-79"></a>            <span class="cf">while</span> (p % i == <span class="dv">0</span>)</span>
+<span id="cb6-80"><a aria-hidden="true" href="#cb6-80"></a>                qk[cnt] *= i, p /= i;</span>
+<span id="cb6-81"><a aria-hidden="true" href="#cb6-81"></a>            a[cnt] = multiLucas(n, m, i, qk[cnt]);</span>
+<span id="cb6-82"><a aria-hidden="true" href="#cb6-82"></a>        }</span>
+<span id="cb6-83"><a aria-hidden="true" href="#cb6-83"></a>    }</span>
+<span id="cb6-84"><a aria-hidden="true" href="#cb6-84"></a>    <span class="cf">if</span> (p &gt; <span class="dv">1</span>) qk[++cnt] = p, a[cnt] = multiLucas(n, m, p, p);</span>
+<span id="cb6-85"><a aria-hidden="true" href="#cb6-85"></a>    <span class="cf">return</span> CRT(cnt, a, qk);<span class="co">//CRT 合并答案</span></span>
+<span id="cb6-86"><a aria-hidden="true" href="#cb6-86"></a>}</span>
+<span id="cb6-87"><a aria-hidden="true" href="#cb6-87"></a></span>
+<span id="cb6-88"><a aria-hidden="true" href="#cb6-88"></a><span class="dt">int</span> main()</span>
+<span id="cb6-89"><a aria-hidden="true" href="#cb6-89"></a>{</span>
+<span id="cb6-90"><a aria-hidden="true" href="#cb6-90"></a>    ll n, m, p;</span>
+<span id="cb6-91"><a aria-hidden="true" href="#cb6-91"></a>    scanf(<span class="st">"</span><span class="sc">%lld</span><span class="st"> </span><span class="sc">%lld</span><span class="st"> </span><span class="sc">%lld</span><span class="st">"</span>, &amp;n, &amp;m, &amp;p);</span>
+<span id="cb6-92"><a aria-hidden="true" href="#cb6-92"></a>    mod = p;</span>
+<span id="cb6-93"><a aria-hidden="true" href="#cb6-93"></a>    printf(<span class="st">"</span><span class="sc">%lld\n</span><span class="st">"</span>, exLucas(n, m, p));</span>
+<span id="cb6-94"><a aria-hidden="true" href="#cb6-94"></a>    <span class="cf">return</span> <span class="dv">0</span>;</span>
+<span id="cb6-95"><a aria-hidden="true" href="#cb6-95"></a>}</span></code></pre></div>
+<h2 id="习题">习题</h2>
+<p>两个模板</p>
+<ul>
+<li><a href="https://www.luogu.com.cn/problem/P3807">P3807 【模板】卢卡斯定理</a></li>
+<li><a href="https://www.luogu.com.cn/problem/P4720">P4720 【模板】扩展卢卡斯</a></li>
+</ul>
+<p>接下来就是应用到 Lucas 定理的习题了，难度应该是递增的，请放心食用。</p>
+<h3 id="国家集训队礼物">[国家集训队]礼物</h3>
+<p><a href="https://www.luogu.com.cn/problem/P2183">洛谷 P2183</a></p>
+<h4 id="description">Description</h4>
+<p><span class="math inline">\(n\)</span> 件礼物，送给 <span class="math inline">\(m\)</span> 个人，送给第 <span class="math inline">\(i\)</span> 个人礼物的数量为 <span class="math inline">\(w_i\)</span>。请计算出送礼物的方案数（两个方案被认为是不同的，当且仅当存在某个人在这两种方案中收到的礼物不同）模 <span class="math inline">\(P\)</span> 后的结果。</p>
+<p>数据范围：令 <span class="math inline">\(P = \prod_{i = 1}^tp_i^{c_i}\)</span>，其中 <span class="math inline">\(p_i\)</span> 为质数，有 <span class="math inline">\(1\le n\le10^9\)</span>，<span class="math inline">\(1\leq m\leq 5\)</span>，<span class="math inline">\(1\leq p_i^{c_i}\leq 10^5\)</span>，<span class="math inline">\(1\leq w_i \leq P\leq 10^9\)</span>。</p>
+<h4 id="hint">Hint</h4>
+<p>直接考虑组合意义。</p>
+<h4 id="solution">Solution</h4>
+<p>分析题意：直接一波乘法原理可得答案为 <span class="math display">\[
+\binom{n}{w_1}\times\binom{n - w_1}{w_2}\times\binom{n - w_1 - w_2}{w_3}\times\cdots\bmod P
+\]</span> （组合意义就是对于每个人看能取多少，第一个人取了 <span class="math inline">\(w_1\)</span> 个了所以第二个人能取的就只有 <span class="math inline">\(n - w_1\)</span> 个，以此类推）</p>
+<p>剩下就是套一个 exLucas 板子的事情了（因为 <span class="math inline">\(P\)</span> 不一定为质数）。</p>
+<div class="sourceCode" id="cb7"><pre class="sourceCode cpp"><code class="sourceCode cpp"><span id="cb7-1"><a aria-hidden="true" href="#cb7-1"></a><span class="pp">#include </span><span class="im">&lt;cstdio&gt;</span></span>
+<span id="cb7-2"><a aria-hidden="true" href="#cb7-2"></a><span class="pp">#define FOR</span>(i,<span class="pp"> </span>a,<span class="pp"> </span>b)<span class="pp"> </span><span class="cf">for</span><span class="pp"> </span>(ll<span class="pp"> </span>i<span class="pp"> </span>=<span class="pp"> </span>a;<span class="pp"> </span>i<span class="pp"> </span>&lt;=<span class="pp"> </span>b;<span class="pp"> </span>++i)</span>
+<span id="cb7-3"><a aria-hidden="true" href="#cb7-3"></a></span>
+<span id="cb7-4"><a aria-hidden="true" href="#cb7-4"></a><span class="kw">typedef</span> <span class="dt">long</span> <span class="dt">long</span> ll;</span>
+<span id="cb7-5"><a aria-hidden="true" href="#cb7-5"></a></span>
+<span id="cb7-6"><a aria-hidden="true" href="#cb7-6"></a>ll P, n, m, w[<span class="dv">6</span>];</span>
+<span id="cb7-7"><a aria-hidden="true" href="#cb7-7"></a></span>
+<span id="cb7-8"><a aria-hidden="true" href="#cb7-8"></a><span class="co">//.......//</span></span>
+<span id="cb7-9"><a aria-hidden="true" href="#cb7-9"></a></span>
+<span id="cb7-10"><a aria-hidden="true" href="#cb7-10"></a><span class="dt">int</span> main()</span>
+<span id="cb7-11"><a aria-hidden="true" href="#cb7-11"></a>{</span>
+<span id="cb7-12"><a aria-hidden="true" href="#cb7-12"></a>    scanf(<span class="st">"</span><span class="sc">%lld</span><span class="st">"</span>, &amp;P);</span>
+<span id="cb7-13"><a aria-hidden="true" href="#cb7-13"></a>    scanf(<span class="st">"</span><span class="sc">%lld</span><span class="st"> </span><span class="sc">%lld</span><span class="st">"</span>, &amp;n, &amp;m);</span>
+<span id="cb7-14"><a aria-hidden="true" href="#cb7-14"></a>    ll W = <span class="dv">0</span>;</span>
+<span id="cb7-15"><a aria-hidden="true" href="#cb7-15"></a>    FOR(i, <span class="dv">1</span>, m) scanf(<span class="st">"</span><span class="sc">%lld</span><span class="st">"</span>, w + i), W += w[i];</span>
+<span id="cb7-16"><a aria-hidden="true" href="#cb7-16"></a>    <span class="cf">if</span> (W &gt; n)</span>
+<span id="cb7-17"><a aria-hidden="true" href="#cb7-17"></a>    {</span>
+<span id="cb7-18"><a aria-hidden="true" href="#cb7-18"></a>        puts(<span class="st">"Impossible"</span>);</span>
+<span id="cb7-19"><a aria-hidden="true" href="#cb7-19"></a>        <span class="cf">return</span> <span class="dv">0</span>;</span>
+<span id="cb7-20"><a aria-hidden="true" href="#cb7-20"></a>    }</span>
+<span id="cb7-21"><a aria-hidden="true" href="#cb7-21"></a>    ll ans = <span class="dv">1</span>;</span>
+<span id="cb7-22"><a aria-hidden="true" href="#cb7-22"></a>    FOR(i, <span class="dv">1</span>, m)</span>
+<span id="cb7-23"><a aria-hidden="true" href="#cb7-23"></a>    {</span>
+<span id="cb7-24"><a aria-hidden="true" href="#cb7-24"></a>        ans = ans * exLucas(n, w[i], P) % P;</span>
+<span id="cb7-25"><a aria-hidden="true" href="#cb7-25"></a>        n -= w[i];</span>
+<span id="cb7-26"><a aria-hidden="true" href="#cb7-26"></a>    }</span>
+<span id="cb7-27"><a aria-hidden="true" href="#cb7-27"></a>    printf(<span class="st">"</span><span class="sc">%lld\n</span><span class="st">"</span>, ans);</span>
+<span id="cb7-28"><a aria-hidden="true" href="#cb7-28"></a>    <span class="cf">return</span> <span class="dv">0</span>;</span>
+<span id="cb7-29"><a aria-hidden="true" href="#cb7-29"></a>}</span></code></pre></div>
+<h3 id="sdoi2010古代猪文">[SDOI2010]古代猪文</h3>
+<p><a href="https://www.luogu.com.cn/problem/P2480">洛谷 P2480</a></p>
+<h4 id="description-1">Description</h4>
+<p>远古时期猪文文字总个数为 <span class="math inline">\(n\)</span>。</p>
+<p>iPig 打算研究古时某个朝代的猪文文字。该朝代流传的猪文文字恰好为远古时期的 <span class="math inline">\(1/k\)</span>，其中 <span class="math inline">\(k\)</span> 是 <span class="math inline">\(n\)</span> 的一个正约数（可以是 <span class="math inline">\(1\)</span> 或 <span class="math inline">\(n\)</span>）。</p>
+<p>iPig 觉得只要符合文献，每一种 <span class="math inline">\(k|n\)</span> 都是有可能的。他打算考虑到所有可能的 <span class="math inline">\(k\)</span>。显然当 <span class="math inline">\(k\)</span> 等于某个定值时，该朝的猪文文字个数为 <span class="math inline">\(n/k\)</span>。然而从 <span class="math inline">\(n\)</span> 个文字中保留下 <span class="math inline">\(n/k\)</span> 个的情况也是相当多的。iPig 预计，如果所有可能的 <span class="math inline">\(k\)</span> 的所有情况数加起来为 <span class="math inline">\(p\)</span> 的话，那么他研究古代文字的代价将会是 <span class="math inline">\(g^p\)</span>。</p>
+<p>现在他想知道猪王国研究古代文字的代价是多少。由于 iPig 觉得这个数字可能是天文数字，所以你只需要告诉他答案除以 <span class="math inline">\(999911659\)</span> 的余数就可以了。</p>
+<p>数据范围 <span class="math inline">\(1\le n,g \le 10^9\)</span>。</p>
+<h4 id="hint-1">Hint</h4>
+<p>考虑欧拉定理，将模数拆开，计算后用 CRT 合并答案。</p>
+<h4 id="solution-1">Solution</h4>
+<p>答案实际就为 <span class="math display">\[
+g^{\sum_{k\mid n}\binom n k}\bmod 999911659
+\]</span> 然后为了求这个东西，需要套一个欧拉定理： <span class="math display">\[
+g^{\sum_{k\mid n}\binom n k\bmod 999911658}\bmod 999911659
+\]</span> 现在问题的关键就是求出 <span class="math display">\[
+\sum_{k\mid n}\binom n k\bmod 999911658
+\]</span> <del>这波，这波啊直接 exLucas</del>，尝试一下分解 <span class="math inline">\(999911658=4679\times3\times2\times35617\)</span>，每一个质因子的次数都是 <span class="math inline">\(1\)</span>，所以只需要用 CRT 求解如下方程组 <span class="math display">\[
+\begin{cases}p \equiv \sum_{k\mid n}\dbinom n k\pmod{2}\\p \equiv \sum_{k\mid n}\dbinom n k\pmod{3}\\p \equiv \sum_{k\mid n}\dbinom n k\pmod{4679}\\p \equiv \sum_{k\mid n}\dbinom n k\pmod{35617}\end{cases}
+\]</span> 最后求一波快速幂，于是这题就做完了，注意代码细节即可。</p>
+<p>参考代码：</p>
+<div class="sourceCode" id="cb8"><pre class="sourceCode cpp"><code class="sourceCode cpp"><span id="cb8-1"><a aria-hidden="true" href="#cb8-1"></a><span class="pp">#include </span><span class="im">&lt;cstdio&gt;</span></span>
+<span id="cb8-2"><a aria-hidden="true" href="#cb8-2"></a><span class="pp">#define FOR</span>(i,<span class="pp"> </span>a,<span class="pp"> </span>b)<span class="pp"> </span><span class="cf">for</span><span class="pp"> </span>(ll<span class="pp"> </span>i<span class="pp"> </span>=<span class="pp"> </span>a;<span class="pp"> </span>i<span class="pp"> </span>&lt;=<span class="pp"> </span>b;<span class="pp"> </span>++i)</span>
+<span id="cb8-3"><a aria-hidden="true" href="#cb8-3"></a></span>
+<span id="cb8-4"><a aria-hidden="true" href="#cb8-4"></a><span class="kw">typedef</span> <span class="dt">long</span> <span class="dt">long</span> ll;</span>
+<span id="cb8-5"><a aria-hidden="true" href="#cb8-5"></a></span>
+<span id="cb8-6"><a aria-hidden="true" href="#cb8-6"></a><span class="at">const</span> ll mod[<span class="dv">5</span>] = {<span class="dv">999911659</span>, <span class="dv">2</span>, <span class="dv">3</span>, <span class="dv">4679</span>, <span class="dv">35617</span>};</span>
+<span id="cb8-7"><a aria-hidden="true" href="#cb8-7"></a></span>
+<span id="cb8-8"><a aria-hidden="true" href="#cb8-8"></a><span class="at">const</span> <span class="dt">int</span> maxp = <span class="dv">40005</span>;</span>
+<span id="cb8-9"><a aria-hidden="true" href="#cb8-9"></a>ll fact[maxp];</span>
+<span id="cb8-10"><a aria-hidden="true" href="#cb8-10"></a></span>
+<span id="cb8-11"><a aria-hidden="true" href="#cb8-11"></a>ll qpow(ll base, ll p, ll mod)</span>
+<span id="cb8-12"><a aria-hidden="true" href="#cb8-12"></a>{</span>
+<span id="cb8-13"><a aria-hidden="true" href="#cb8-13"></a>    ll ret = <span class="dv">1</span>;</span>
+<span id="cb8-14"><a aria-hidden="true" href="#cb8-14"></a>    <span class="cf">for</span> (; p; p &gt;&gt;= <span class="dv">1</span>, base = base * base % mod)</span>
+<span id="cb8-15"><a aria-hidden="true" href="#cb8-15"></a>        <span class="cf">if</span> (p &amp; <span class="dv">1</span>) ret = ret * base % mod;</span>
+<span id="cb8-16"><a aria-hidden="true" href="#cb8-16"></a>    <span class="cf">return</span> ret;</span>
+<span id="cb8-17"><a aria-hidden="true" href="#cb8-17"></a>}</span>
+<span id="cb8-18"><a aria-hidden="true" href="#cb8-18"></a></span>
+<span id="cb8-19"><a aria-hidden="true" href="#cb8-19"></a><span class="dt">void</span> init(ll p)</span>
+<span id="cb8-20"><a aria-hidden="true" href="#cb8-20"></a>{</span>
+<span id="cb8-21"><a aria-hidden="true" href="#cb8-21"></a>    fact[<span class="dv">0</span>] = <span class="dv">1</span>;</span>
+<span id="cb8-22"><a aria-hidden="true" href="#cb8-22"></a>    FOR(i, <span class="dv">1</span>, p)</span>
+<span id="cb8-23"><a aria-hidden="true" href="#cb8-23"></a>        fact[i] = fact[i - <span class="dv">1</span>] * i % p;</span>
+<span id="cb8-24"><a aria-hidden="true" href="#cb8-24"></a>    <span class="cf">return</span>;</span>
+<span id="cb8-25"><a aria-hidden="true" href="#cb8-25"></a>}</span>
+<span id="cb8-26"><a aria-hidden="true" href="#cb8-26"></a></span>
+<span id="cb8-27"><a aria-hidden="true" href="#cb8-27"></a>ll C(<span class="dt">int</span> n, <span class="dt">int</span> m, ll p)</span>
+<span id="cb8-28"><a aria-hidden="true" href="#cb8-28"></a>{</span>
+<span id="cb8-29"><a aria-hidden="true" href="#cb8-29"></a>    <span class="cf">if</span> (n &lt; m) <span class="cf">return</span> <span class="dv">0</span>;</span>
+<span id="cb8-30"><a aria-hidden="true" href="#cb8-30"></a>    <span class="cf">return</span> fact[n] * qpow(fact[m], p - <span class="dv">2</span>, p) % p * qpow(fact[n - m], p - <span class="dv">2</span>, p) % p;</span>
+<span id="cb8-31"><a aria-hidden="true" href="#cb8-31"></a>}</span>
+<span id="cb8-32"><a aria-hidden="true" href="#cb8-32"></a></span>
+<span id="cb8-33"><a aria-hidden="true" href="#cb8-33"></a>ll Lucas(ll n, ll m, ll p)</span>
+<span id="cb8-34"><a aria-hidden="true" href="#cb8-34"></a>{</span>
+<span id="cb8-35"><a aria-hidden="true" href="#cb8-35"></a>    <span class="cf">if</span> (n &lt; m) <span class="cf">return</span> <span class="dv">0</span>;</span>
+<span id="cb8-36"><a aria-hidden="true" href="#cb8-36"></a>    <span class="cf">if</span> (!n || !m) <span class="cf">return</span> <span class="dv">1</span>;</span>
+<span id="cb8-37"><a aria-hidden="true" href="#cb8-37"></a>    <span class="cf">return</span> Lucas(n / p, m / p, p) * C(n % p, m % p, p) % p;</span>
+<span id="cb8-38"><a aria-hidden="true" href="#cb8-38"></a>}</span>
+<span id="cb8-39"><a aria-hidden="true" href="#cb8-39"></a></span>
+<span id="cb8-40"><a aria-hidden="true" href="#cb8-40"></a>ll a[<span class="dv">5</span>];</span>
+<span id="cb8-41"><a aria-hidden="true" href="#cb8-41"></a></span>
+<span id="cb8-42"><a aria-hidden="true" href="#cb8-42"></a><span class="dt">int</span> main()</span>
+<span id="cb8-43"><a aria-hidden="true" href="#cb8-43"></a>{</span>
+<span id="cb8-44"><a aria-hidden="true" href="#cb8-44"></a>    ll n, g;</span>
+<span id="cb8-45"><a aria-hidden="true" href="#cb8-45"></a>    scanf(<span class="st">"</span><span class="sc">%lld</span><span class="st"> </span><span class="sc">%lld</span><span class="st">"</span>, &amp;n, &amp;g);</span>
+<span id="cb8-46"><a aria-hidden="true" href="#cb8-46"></a>    <span class="cf">if</span> (g % mod[<span class="dv">0</span>] == <span class="dv">0</span>)<span class="co">//特判</span></span>
+<span id="cb8-47"><a aria-hidden="true" href="#cb8-47"></a>    {</span>
+<span id="cb8-48"><a aria-hidden="true" href="#cb8-48"></a>        printf(<span class="st">"0</span><span class="sc">\n</span><span class="st">"</span>);</span>
+<span id="cb8-49"><a aria-hidden="true" href="#cb8-49"></a>        <span class="cf">return</span> <span class="dv">0</span>;</span>
+<span id="cb8-50"><a aria-hidden="true" href="#cb8-50"></a>    }</span>
+<span id="cb8-51"><a aria-hidden="true" href="#cb8-51"></a>    FOR(k, <span class="dv">1</span>, <span class="dv">4</span>)</span>
+<span id="cb8-52"><a aria-hidden="true" href="#cb8-52"></a>    {</span>
+<span id="cb8-53"><a aria-hidden="true" href="#cb8-53"></a>        init(mod[k]);</span>
+<span id="cb8-54"><a aria-hidden="true" href="#cb8-54"></a>        <span class="cf">for</span> (ll i = <span class="dv">1</span>; i * i &lt;= n; ++i)</span>
+<span id="cb8-55"><a aria-hidden="true" href="#cb8-55"></a>        {</span>
+<span id="cb8-56"><a aria-hidden="true" href="#cb8-56"></a>            <span class="cf">if</span> (n % i) <span class="cf">continue</span>;</span>
+<span id="cb8-57"><a aria-hidden="true" href="#cb8-57"></a>            a[k] = (a[k] + Lucas(n, i, mod[k])) % mod[k];</span>
+<span id="cb8-58"><a aria-hidden="true" href="#cb8-58"></a>            <span class="cf">if</span> (i * i != n)</span>
+<span id="cb8-59"><a aria-hidden="true" href="#cb8-59"></a>                a[k] = (a[k] + Lucas(n, n / i, mod[k])) % mod[k];</span>
+<span id="cb8-60"><a aria-hidden="true" href="#cb8-60"></a>        }</span>
+<span id="cb8-61"><a aria-hidden="true" href="#cb8-61"></a>    }</span>
+<span id="cb8-62"><a aria-hidden="true" href="#cb8-62"></a>    ll M = mod[<span class="dv">0</span>] - <span class="dv">1</span>, ans = <span class="dv">0</span>;</span>
+<span id="cb8-63"><a aria-hidden="true" href="#cb8-63"></a>    FOR(i, <span class="dv">1</span>, <span class="dv">4</span>)</span>
+<span id="cb8-64"><a aria-hidden="true" href="#cb8-64"></a>    {</span>
+<span id="cb8-65"><a aria-hidden="true" href="#cb8-65"></a>        <span class="dt">int</span> w = M / mod[i];</span>
+<span id="cb8-66"><a aria-hidden="true" href="#cb8-66"></a>        ans = (ans + a[i] * w % M * qpow(w, mod[i] - <span class="dv">2</span>, mod[i]) % M) % M;</span>
+<span id="cb8-67"><a aria-hidden="true" href="#cb8-67"></a>    }</span>
+<span id="cb8-68"><a aria-hidden="true" href="#cb8-68"></a>    printf(<span class="st">"</span><span class="sc">%lld\n</span><span class="st">"</span>, qpow(g, ans, mod[<span class="dv">0</span>]));</span>
+<span id="cb8-69"><a aria-hidden="true" href="#cb8-69"></a>    <span class="cf">return</span> <span class="dv">0</span>;</span>
+<span id="cb8-70"><a aria-hidden="true" href="#cb8-70"></a>}</span></code></pre></div>
+<h3 id="shoi2015超能粒子炮改">[SHOI2015]超能粒子炮·改</h3>
+<p><a href="https://www.luogu.com.cn/problem/P4345">洛谷 P4345</a></p>
+<h4 id="description-2">Description</h4>
+<p><span class="math inline">\(t\)</span> 组数据（<span class="math inline">\(1\le t\le 10^5\)</span>），给定 <span class="math inline">\(n\)</span>，<span class="math inline">\(k\)</span>（<span class="math inline">\(1\le n,k\le 10^{18}\)</span>），求 <span class="math display">\[
+\sum_{i = 0}^k\binom n k\bmod{2333}
+\]</span> 的值。</p>
+<h4 id="hint-2">Hint</h4>
+<p>考虑拆开式子，然后利用类似整除分块的思想处理，递归来做。</p>
+<h4 id="solution-2">Solution</h4>
+<p>由于数据组数很大并且 <span class="math inline">\(n\)</span> 和 <span class="math inline">\(k\)</span> 都很大，所以不能直接卢卡斯然后简单相加，时间会爆炸。考虑令 <span class="math display">\[
+f(n, k) = \sum_{i = 0}^k\binom n k\bmod p
+\]</span> 其中 <span class="math inline">\(p\)</span> 即为 <span class="math inline">\(2333\)</span>。然后使用卢卡斯定理拆开 <span class="math display">\[
+\begin{aligned}f(n,k) &amp;\equiv \sum_{i = 0}^k\binom n k\\&amp;\equiv \sum_{i = 0}^k\binom{n\bmod p}{i\bmod p}\binom{\lfloor\frac np\rfloor}{\lfloor\frac ip\rfloor}\pmod p\end{aligned}
+\]</span> 现在化简成了这样之后，注意到 <span class="math inline">\(p\)</span> 其实很小，可以类似整除分块的做法，按照 <span class="math inline">\(\displaystyle\left\lfloor\frac ip\right\rfloor\)</span> 的值分开来处理： <span class="math display">\[
+f(n,k) \equiv \binom{\lfloor\frac np\rfloor}{0}\sum_{i = 0}^{p - 1}\binom{n\bmod p}{i} + \binom{\lfloor\frac np\rfloor}{1}\sum_{i = 0}^{p - 1}\binom{n\bmod p}{i} + \cdots+\binom{\lfloor\frac np\rfloor}{\lfloor\frac kp\rfloor}\sum_{i = 0}^{k\bmod p}\binom{n\bmod p}{i}\pmod p
+\]</span> 前面有从 <span class="math inline">\(0\)</span> 到 <span class="math inline">\(\displaystyle\left\lfloor\frac kp\right\rfloor - 1\)</span> 的整块，把前面整块的部分拎出来化简：<br/>
+<span class="math display">\[
+\begin{aligned}&amp;\binom{\lfloor\frac np\rfloor}{0}\sum_{i = 0}^{p - 1}\binom{n\bmod p}{i} + \binom{\lfloor\frac np\rfloor}{1}\sum_{i = 0}^{p - 1}\binom{n\bmod p}{i} + \cdots + \binom{\lfloor\frac np\rfloor}{\left\lfloor\frac kp\right\rfloor - 1}\sum_{i = 0}^{p - 1}\binom{n\bmod p}{i}\\=&amp;\left(\sum_{i = 0}^{p - 1}\binom{n\bmod p}{i}\right)\cdot\left(\sum_{i = 0}^{\left\lfloor\frac kp\right\rfloor - 1}\binom{\lfloor\frac np\rfloor}{i}\right)\\=&amp;f(n\bmod p, p - 1)\times f(\lfloor n/p\rfloor, \lfloor k/p\rfloor - 1)\end{aligned}
+\]</span> 后面的余项即为 <span class="math display">\[
+\begin{aligned}&amp;\binom{\lfloor\frac np\rfloor}{\lfloor\frac kp\rfloor}\sum_{i = 0}^{k\bmod p}\binom{n\bmod p}{i}\\=&amp;\binom{\lfloor\frac np\rfloor}{\lfloor\frac kp\rfloor}f(n\bmod p, k\bmod p)\end{aligned}
+\]</span> 最后我们得到 <span class="math display">\[
+f(n, k) =f(n\bmod p, p - 1)\times f(\lfloor n/p\rfloor, \lfloor k/p\rfloor - 1) +\binom{\lfloor\frac np\rfloor}{\lfloor\frac kp\rfloor}f(n\bmod p, k\bmod p)\bmod p
+\]</span> <span class="math inline">\(\displaystyle\binom{\lfloor\frac np\rfloor}{\lfloor\frac kp\rfloor}\)</span> 可以直接 Lucas 定理，剩下的递归做就行，预处理 <span class="math inline">\(p\)</span> 以内的 <span class="math inline">\(f\)</span> 就可以很快的做了。</p>
+<p>主要代码：</p>
+<div class="sourceCode" id="cb9"><pre class="sourceCode cpp"><code class="sourceCode cpp"><span id="cb9-1"><a aria-hidden="true" href="#cb9-1"></a><span class="pp">#define int </span><span class="dt">long</span><span class="pp"> </span><span class="dt">long</span></span>
+<span id="cb9-2"><a aria-hidden="true" href="#cb9-2"></a><span class="pp">#define FOR</span>(i,<span class="pp"> </span>a,<span class="pp"> </span>b)<span class="pp"> </span><span class="cf">for</span><span class="pp"> </span>(<span class="dt">int</span><span class="pp"> </span>i<span class="pp"> </span>=<span class="pp"> </span>a;<span class="pp"> </span>i<span class="pp"> </span>&lt;=<span class="pp"> </span>b;<span class="pp"> </span>++i)<span class="at">const</span><span class="pp"> </span><span class="dt">int</span><span class="pp"> </span>p<span class="pp"> </span>=<span class="pp"> </span><span class="dv">2333</span>;</span>
+<span id="cb9-3"><a aria-hidden="true" href="#cb9-3"></a><span class="dt">int</span> C[p + <span class="dv">5</span>][p + <span class="dv">5</span>], f[p + <span class="dv">5</span>][p + <span class="dv">5</span>];</span>
+<span id="cb9-4"><a aria-hidden="true" href="#cb9-4"></a></span>
+<span id="cb9-5"><a aria-hidden="true" href="#cb9-5"></a><span class="dt">int</span> lucas(<span class="dt">int</span> n, <span class="dt">int</span> m)</span>
+<span id="cb9-6"><a aria-hidden="true" href="#cb9-6"></a>{</span>
+<span id="cb9-7"><a aria-hidden="true" href="#cb9-7"></a>    <span class="cf">if</span> (!m) <span class="cf">return</span> <span class="dv">1</span>;</span>
+<span id="cb9-8"><a aria-hidden="true" href="#cb9-8"></a>    <span class="cf">return</span> C[n % p][m % p] * lucas(n / p, m / p) % p;</span>
+<span id="cb9-9"><a aria-hidden="true" href="#cb9-9"></a>}</span>
+<span id="cb9-10"><a aria-hidden="true" href="#cb9-10"></a></span>
+<span id="cb9-11"><a aria-hidden="true" href="#cb9-11"></a><span class="dt">int</span> F(<span class="dt">int</span> n, <span class="dt">int</span> k)</span>
+<span id="cb9-12"><a aria-hidden="true" href="#cb9-12"></a>{</span>
+<span id="cb9-13"><a aria-hidden="true" href="#cb9-13"></a>    <span class="cf">if</span> (k &lt; <span class="dv">0</span>) <span class="cf">return</span> <span class="dv">0</span>;</span>
+<span id="cb9-14"><a aria-hidden="true" href="#cb9-14"></a>    <span class="cf">if</span> (!k || !n) <span class="cf">return</span> <span class="dv">1</span>;</span>
+<span id="cb9-15"><a aria-hidden="true" href="#cb9-15"></a>    <span class="cf">if</span> (n &lt; p &amp;&amp; k &lt; p) <span class="cf">return</span> f[n][k];</span>
+<span id="cb9-16"><a aria-hidden="true" href="#cb9-16"></a>    <span class="cf">return</span> (lucas(n / p, k / p) * f[n % p][k % p] % p + f[n % p][p - <span class="dv">1</span>] * F(n / p, k / p - <span class="dv">1</span>) % p) % p;</span>
+<span id="cb9-17"><a aria-hidden="true" href="#cb9-17"></a>}</span>
+<span id="cb9-18"><a aria-hidden="true" href="#cb9-18"></a></span>
+<span id="cb9-19"><a aria-hidden="true" href="#cb9-19"></a><span class="dt">signed</span> main()</span>
+<span id="cb9-20"><a aria-hidden="true" href="#cb9-20"></a>{</span>
+<span id="cb9-21"><a aria-hidden="true" href="#cb9-21"></a>    <span class="dt">int</span> t = read();</span>
+<span id="cb9-22"><a aria-hidden="true" href="#cb9-22"></a>    C[<span class="dv">0</span>][<span class="dv">0</span>] = <span class="dv">1</span>;</span>
+<span id="cb9-23"><a aria-hidden="true" href="#cb9-23"></a>    FOR(i, <span class="dv">1</span>, p)</span>
+<span id="cb9-24"><a aria-hidden="true" href="#cb9-24"></a>    {</span>
+<span id="cb9-25"><a aria-hidden="true" href="#cb9-25"></a>        C[i][<span class="dv">0</span>] = C[i][i] = <span class="dv">1</span>;</span>
+<span id="cb9-26"><a aria-hidden="true" href="#cb9-26"></a>        FOR(j, <span class="dv">1</span>, i - <span class="dv">1</span>)</span>
+<span id="cb9-27"><a aria-hidden="true" href="#cb9-27"></a>            C[i][j] = (C[i - <span class="dv">1</span>][j] + C[i - <span class="dv">1</span>][j - <span class="dv">1</span>]) % p;</span>
+<span id="cb9-28"><a aria-hidden="true" href="#cb9-28"></a>    }</span>
+<span id="cb9-29"><a aria-hidden="true" href="#cb9-29"></a>    f[<span class="dv">0</span>][<span class="dv">0</span>] = <span class="dv">1</span>;</span>
+<span id="cb9-30"><a aria-hidden="true" href="#cb9-30"></a>    FOR(i, <span class="dv">1</span>, p)</span>
+<span id="cb9-31"><a aria-hidden="true" href="#cb9-31"></a>        f[i][<span class="dv">0</span>] = <span class="dv">1</span>;</span>
+<span id="cb9-32"><a aria-hidden="true" href="#cb9-32"></a>    FOR(i, <span class="dv">0</span>, p)</span>
+<span id="cb9-33"><a aria-hidden="true" href="#cb9-33"></a>        FOR(j, <span class="dv">1</span>, p)</span>
+<span id="cb9-34"><a aria-hidden="true" href="#cb9-34"></a>            f[i][j] = (C[i][j] + f[i][j - <span class="dv">1</span>]) % p;</span>
+<span id="cb9-35"><a aria-hidden="true" href="#cb9-35"></a>    <span class="cf">while</span> (t--)</span>
+<span id="cb9-36"><a aria-hidden="true" href="#cb9-36"></a>    {</span>
+<span id="cb9-37"><a aria-hidden="true" href="#cb9-37"></a>        <span class="dt">int</span> n = read(), k = read();</span>
+<span id="cb9-38"><a aria-hidden="true" href="#cb9-38"></a>        printf(<span class="st">"</span><span class="sc">%lld\n</span><span class="st">"</span>, F(n, k));</span>
+<span id="cb9-39"><a aria-hidden="true" href="#cb9-39"></a>    }</span>
+<span id="cb9-40"><a aria-hidden="true" href="#cb9-40"></a>    <span class="cf">return</span> <span class="dv">0</span>;</span>
+<span id="cb9-41"><a aria-hidden="true" href="#cb9-41"></a>}</span></code></pre></div>
+<p>需要注意预处理 <span class="math inline">\(f\)</span> 的时候 <span class="math inline">\(f(0, i) = 1\)</span>，如果这里没处理的话会只有 55pts。</p>
+<h3 id="清华集训2016-组合数问题">[清华集训2016] 组合数问题</h3>
+<p><a href="https://www.luogu.com.cn/problem/P6669">洛谷 P6669</a></p>
+<h4 id="description-3">Description</h4>
+<p>给定 <span class="math inline">\(n\)</span>、<span class="math inline">\(m\)</span> 和 <span class="math inline">\(k\)</span>，问 <span class="math inline">\(\forall 0\le i\le n, 0\le j\le \min(i, m)\)</span> 有多少对 <span class="math inline">\((i, j)\)</span> 满足 <span class="math inline">\(k\mid \dbinom i j\)</span></p>
+<p>答案对 <span class="math inline">\(10^9 + 7\)</span> 取模，<span class="math inline">\(t\)</span> 组数据，<span class="math inline">\(k\)</span> 为一个素数，<span class="math inline">\(1\le n,m\le 10^{18}\)</span>，<span class="math inline">\(1\le t,k \le 100\)</span>。</p>
+<h4 id="hint-3">Hint</h4>
+<p>考虑 Lucas 定理在 <span class="math inline">\(p\)</span> 进制下的那种形式。</p>
+<h4 id="solution-3">Solution</h4>
+<p>总而言之就是 <span class="math inline">\(p\)</span> 进制下 <span class="math inline">\(i\)</span> 的每一位都不能小于 <span class="math inline">\(j\)</span>，这个东西可以数位 dp！</p>
+<p>代码很短！</p>
+<div class="sourceCode" id="cb10"><pre class="sourceCode cpp"><code class="sourceCode cpp"><span id="cb10-1"><a aria-hidden="true" href="#cb10-1"></a><span class="kw">typedef</span> <span class="dt">long</span> <span class="dt">long</span> ll;</span>
+<span id="cb10-2"><a aria-hidden="true" href="#cb10-2"></a><span class="at">const</span> ll mod = <span class="fl">1e9</span> + <span class="dv">7</span>;</span>
+<span id="cb10-3"><a aria-hidden="true" href="#cb10-3"></a>ll t, k, n, m, bn[<span class="dv">66</span>], bm[<span class="dv">66</span>];</span>
+<span id="cb10-4"><a aria-hidden="true" href="#cb10-4"></a>ll f[<span class="dv">66</span>][<span class="dv">2</span>][<span class="dv">2</span>][<span class="dv">2</span>][<span class="dv">2</span>];</span>
+<span id="cb10-5"><a aria-hidden="true" href="#cb10-5"></a></span>
+<span id="cb10-6"><a aria-hidden="true" href="#cb10-6"></a>ll solve(<span class="dt">int</span> cur, <span class="dt">bool</span> ok, <span class="dt">bool</span> dif, <span class="dt">bool</span> fn, <span class="dt">bool</span> fm) {</span>
+<span id="cb10-7"><a aria-hidden="true" href="#cb10-7"></a>    <span class="cf">if</span> (!cur) <span class="cf">return</span> ok;</span>
+<span id="cb10-8"><a aria-hidden="true" href="#cb10-8"></a>    ll &amp;res = f[cur][ok][dif][fn][fm];</span>
+<span id="cb10-9"><a aria-hidden="true" href="#cb10-9"></a>    <span class="cf">if</span> (~res) <span class="cf">return</span> res;</span>
+<span id="cb10-10"><a aria-hidden="true" href="#cb10-10"></a>    res = <span class="dv">0</span>;</span>
+<span id="cb10-11"><a aria-hidden="true" href="#cb10-11"></a>    <span class="dt">int</span> upn = fn ? k - <span class="dv">1</span> : bn[cur], upm = fm ? k - <span class="dv">1</span> : bm[cur];</span>
+<span id="cb10-12"><a aria-hidden="true" href="#cb10-12"></a>    FOR(i, <span class="dv">0</span>, upn)</span>
+<span id="cb10-13"><a aria-hidden="true" href="#cb10-13"></a>        <span class="cf">for</span> (<span class="dt">int</span> j = <span class="dv">0</span>; (j &lt;= i || dif) &amp;&amp; j &lt;= upm; ++j)</span>
+<span id="cb10-14"><a aria-hidden="true" href="#cb10-14"></a>            res = (res + solve(cur - <span class="dv">1</span>, ok | (i &lt; j), dif | (i != j), fn | (i &lt; upn), fm | (j &lt; upm))) % mod;</span>
+<span id="cb10-15"><a aria-hidden="true" href="#cb10-15"></a>    <span class="cf">return</span> res;</span>
+<span id="cb10-16"><a aria-hidden="true" href="#cb10-16"></a>}</span>
+<span id="cb10-17"><a aria-hidden="true" href="#cb10-17"></a></span>
+<span id="cb10-18"><a aria-hidden="true" href="#cb10-18"></a><span class="dt">int</span> main() {</span>
+<span id="cb10-19"><a aria-hidden="true" href="#cb10-19"></a>    read(t), read(k);</span>
+<span id="cb10-20"><a aria-hidden="true" href="#cb10-20"></a>    <span class="cf">while</span> (t--) {</span>
+<span id="cb10-21"><a aria-hidden="true" href="#cb10-21"></a>        read(n), read(m);</span>
+<span id="cb10-22"><a aria-hidden="true" href="#cb10-22"></a>        ll mx = n &gt; m ? n : m, len = <span class="dv">0</span>;</span>
+<span id="cb10-23"><a aria-hidden="true" href="#cb10-23"></a>        memset(f, -<span class="dv">1</span>, <span class="kw">sizeof</span> f);</span>
+<span id="cb10-24"><a aria-hidden="true" href="#cb10-24"></a>        <span class="cf">while</span> (mx) mx /= k, ++len;</span>
+<span id="cb10-25"><a aria-hidden="true" href="#cb10-25"></a>        FOR(i, <span class="dv">1</span>, len) bn[i] = n % k, n /= k;</span>
+<span id="cb10-26"><a aria-hidden="true" href="#cb10-26"></a>        FOR(i, <span class="dv">1</span>, len) bm[i] = m % k, m /= k;</span>
+<span id="cb10-27"><a aria-hidden="true" href="#cb10-27"></a>        print(solve(len, <span class="dv">0</span>, <span class="dv">0</span>, <span class="dv">0</span>, <span class="dv">0</span>)), putchar(<span class="ch">'</span><span class="sc">\n</span><span class="ch">'</span>);</span>
+<span id="cb10-28"><a aria-hidden="true" href="#cb10-28"></a>    }</span>
+<span id="cb10-29"><a aria-hidden="true" href="#cb10-29"></a>    <span class="cf">return</span> output(), <span class="dv">0</span>;</span>
+<span id="cb10-30"><a aria-hidden="true" href="#cb10-30"></a>}</span></code></pre></div>
+<h3 id="其他的好题">其他的好题</h3>
+<p>篇幅限制，不放在这里了。下面给出题解链接：</p>
+<ul>
+<li><a href="http://www.51nod.com/Challenge/Problem.html#problemId=1778">51nod1778 小Q的集合</a> <a href="/sol-51nod1778/">推式子好题</a></li>
+<li><a href="https://www.luogu.com.cn/problem/P3301">洛谷<strong>P3301</strong> [SDOI2013]方程</a> <a href="/sol-luogu-p3301/">容斥 + 扩展 Lucas</a></li>
+</ul>
+<h2 id="总结">总结</h2>
+<p>那么对于 Lucas 定理及其扩展的学习就告一段落了，除了这些列出来的习题外，Lucas 定理还可能出现在某些毒瘤组合题要你求组合数取模的值的时候，总的来说 Lucas 定理本身还是一个比较清新优美的定理的。</p>
+<p>省选爆炸没进省队的蒟蒻祝各位 NOI 加油。</p>
+</section>
+<footer class="article-footer">
+<section class="article-tags">
+<a href="/tags/OI/">OI</a>
+<a href="/tags/note/">笔记</a>
+<a href="/tags/lucas/">Lucas定理</a>
+</section>
+<section class="article-copyright">
+<svg class="icon icon-tabler icon-tabler-copyright" fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+<path d="M0 0h24v24H0z" stroke="none"></path>
+<circle cx="12" cy="12" r="9"></circle>
+<path d="M14.5 9a3.5 4 0 1 0 0 6"></path>
+</svg>
+<span>Licensed under CC BY-NC-SA 4.0</span>
+</section>
+</footer>
+<link crossorigin="anonymous" href="https://cdn.jsdelivr.net/npm/katex@0.13.13/dist/katex.min.css" integrity="sha384-RZU/ijkSsFbcmivfdRBQDtwuwVqK7GMOw6IMvKyeWL2K5UAlyp6WonmB8m7Jd0Hn" rel="stylesheet"/><script crossorigin="anonymous" defer="" integrity="sha384-pK1WpvzWVBQiP0/GjnvRxV4mOb0oxFuyRxJlk6vVw146n3egcN5C925NCP7a7BY8" src="https://cdn.jsdelivr.net/npm/katex@0.13.13/dist/katex.min.js">
+</script><script crossorigin="anonymous" defer="" integrity="sha384-vZTG03m+2yp6N6BNi5iM4rW4oIwk5DfcNdFfxkk9ZWpDriOkXX8voJBFrAO7MpVl" src="https://cdn.jsdelivr.net/npm/katex@0.13.13/dist/contrib/auto-render.min.js">
+</script><script>
+    window.addEventListener("DOMContentLoaded", () => {
+        renderMathInElement(document.querySelector(`.article-content`), {
+            delimiters: [
+                { left: "$$", right: "$$", display: true },
+                { left: "$", right: "$", display: false },
+                { left: "\\(", right: "\\)", display: false },
+                { left: "\\[", right: "\\]", display: true }
+            ]
+        });})
+</script>
+</article>
+<aside class="related-contents--wrapper">
+<h2 class="section-title">相关文章</h2>
+<div class="related-contents">
+<div class="flex article-list--tile">
+<article class="has-image">
+<a href="/note-gf/">
+<div class="article-image">
+<img data-hash="https://yangty-pic.oss-cn-beijing.aliyuncs.com/bg28.webp" data-key="" loading="lazy" src="https://yangty-pic.oss-cn-beijing.aliyuncs.com/bg28.webp"/>
+</div>
+<div class="article-details">
+<h2 class="article-title">生成函数胡扯</h2>
+</div>
+</a>
+</article>
+<article class="has-image">
+<a href="/note-set-power-series/">
+<div class="article-image">
+<img data-hash="https://yangty-pic.oss-cn-beijing.aliyuncs.com/bg39.webp" data-key="" loading="lazy" src="https://yangty-pic.oss-cn-beijing.aliyuncs.com/bg39.webp"/>
+</div>
+<div class="article-details">
+<h2 class="article-title">集合幂级数胡扯</h2>
+</div>
+</a>
+</article>
+<article class="has-image">
+<a href="/note-linear-basis/">
+<div class="article-image">
+<img data-hash="https://yangty-pic.oss-cn-beijing.aliyuncs.com/bg19.webp" data-key="" loading="lazy" src="https://yangty-pic.oss-cn-beijing.aliyuncs.com/bg19.webp"/>
+</div>
+<div class="article-details">
+<h2 class="article-title">线性基学习笔记</h2>
+</div>
+</a>
+</article>
+<article class="has-image">
+<a href="/note-wqs/">
+<div class="article-image">
+<img data-hash="https://yangty-pic.oss-cn-beijing.aliyuncs.com/bg28.webp" data-key="" loading="lazy" src="https://yangty-pic.oss-cn-beijing.aliyuncs.com/bg28.webp"/>
+</div>
+<div class="article-details">
+<h2 class="article-title">wqs 二分学习笔记</h2>
+</div>
+</a>
+</article>
+<article class="has-image">
+<a href="/note-builtin/">
+<div class="article-image">
+<img data-hash="https://yangty-pic.oss-cn-beijing.aliyuncs.com/bg9.webp" data-key="" loading="lazy" src="https://yangty-pic.oss-cn-beijing.aliyuncs.com/bg9.webp"/>
+</div>
+<div class="article-details">
+<h2 class="article-title">__builtin 系列函数总结</h2>
+</div>
+</a>
+</article>
+</div>
+</div>
+</aside>
+<footer class="site-footer">
+<section class="copyright">
+        © 
+        
+            2019 - 
+        
+        2024 清烛的博客
+    </section>
+<section class="powerby">
+        Built with <a href="https://gohugo.io/" rel="noopener" target="_blank">Hugo</a> <br/>
+        主题 <b><a data-version="3.11.0" href="https://github.com/CaiJimmy/hugo-theme-stack" rel="noopener" target="_blank">Stack</a></b> 由 <a href="https://jimmycai.com" rel="noopener" target="_blank">Jimmy</a> 设计
+    </section>
+</footer>
+<div aria-hidden="true" class="pswp" role="dialog" tabindex="-1">
+<div class="pswp__bg"></div>
+<div class="pswp__scroll-wrap">
+<div class="pswp__container">
+<div class="pswp__item"></div>
+<div class="pswp__item"></div>
+<div class="pswp__item"></div>
+</div>
+<div class="pswp__ui pswp__ui--hidden">
+<div class="pswp__top-bar">
+<div class="pswp__counter"></div>
+<button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+<button class="pswp__button pswp__button--share" title="Share"></button>
+<button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+<button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+<div class="pswp__preloader">
+<div class="pswp__preloader__icn">
+<div class="pswp__preloader__cut">
+<div class="pswp__preloader__donut"></div>
+</div>
+</div>
+</div>
+</div>
+<div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+<div class="pswp__share-tooltip"></div>
+</div>
+<button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+</button>
+<button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+</button>
+<div class="pswp__caption">
+<div class="pswp__caption__center"></div>
+</div>
+</div>
+</div>
+</div><script crossorigin="anonymous" defer="" integrity="sha256-ePwmChbbvXbsO02lbM3HoHbSHTHFAeChekF1xKJdleo=" src="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe.min.js">
+</script><script crossorigin="anonymous" defer="" integrity="sha256-UKkzOn/w1mBxRmLLGrSeyB4e1xbrp4xylgAWb3M42pU=" src="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe-ui-default.min.js">
+</script><link crossorigin="anonymous" href="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/default-skin/default-skin.css" integrity="sha256-c0uckgykQ9v5k+IqViZOZKc47Jn7KQil4/MP3ySA3F8=" rel="stylesheet"/><link crossorigin="anonymous" href="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe.css" integrity="sha256-SBLU4vv6CA6lHsZ1XyTdhyjJxCjPif/TRkjnsyGAGnE=" rel="stylesheet"/>
+</main>
+</div>
+<script crossorigin="anonymous" integrity="sha256-5NovOZc4iwiAWTYIFiIM7DxKUXKWvpVEuMEPLzcm5/g=" src="https://cdn.jsdelivr.net/npm/node-vibrant@3.1.5/dist/vibrant.min.js">
+</script><script defer="" src="/ts/main.js" type="text/javascript"></script>
+<script>
+    (function () {
+        const customFont = document.createElement('link');
+        customFont.href = "https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&display=swap";
+
+        customFont.type = "text/css";
+        customFont.rel = "stylesheet";
+
+        document.head.appendChild(customFont);
+    }());
+</script>
+</body>
+</html>

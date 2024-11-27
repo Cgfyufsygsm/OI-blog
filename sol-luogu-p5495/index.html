@@ -1,0 +1,440 @@
+<!DOCTYPE html>
+<html dir="ltr" lang="zh-CN">
+<head><meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1" name="viewport"/><meta content="Description 给定 \(\{a_n\}\)，求 \(\{b_n\}\) 满足 \[ b_i = \sum_{k\mid i}a_k\bmod 2^{32} \] 输出 \(\bigoplus_{i = 1}^nb_i\)。
+Solution 令 \(i = \prod p_k^{\alpha_k}\)，\(j = \prod_k p_k^{\beta_k}\)，则 \(a_i\) 能贡献到 \(b_j\) 当且仅当 \(\forall k, \alpha_k \le \beta_k\)。所以我们其实是在对质因子的指数做一个高维前缀和。类似埃氏筛，复杂度 \(O(n\log\log n)\)。
+这个东西和 FWT 很像。
+Implementation #include &amp;lt;cstdio&amp;gt; #define FOR(i, a, b) for (int i = (a); i &amp;lt;= (b); ++i) using uint = unsigned; uint seed; inline uint getnext() { seed ^= seed &amp;lt;&amp;lt; 13; seed ^= seed &amp;gt;&amp;gt; 17; seed ^= seed &amp;lt;&amp;lt; 5; return seed; } const int maxn = 2e7 + 5; int p[maxn], tot, isp[maxn], n; uint a[maxn]; int main() { scanf(&amp;quot;%d %u&amp;quot;, &amp;amp;n, &amp;amp;seed); FOR(i, 1, n) a[i] = getnext(); FOR(i, 2, n) { if (!" name="description"/><title>P5495 Dirichlet 前缀和</title>
+<link href="https://oi.imyangty.com/sol-luogu-p5495/" rel="canonical"/>
+<link href="/scss/style.min.a5821f3d3ab84ce5a0ac21477e347a2e0ca00292e398d16c5e8e36ded6e35a23.css" rel="stylesheet"/><meta content="P5495 Dirichlet 前缀和" property="og:title"/>
+<meta content="Description 给定 \(\{a_n\}\)，求 \(\{b_n\}\) 满足 \[ b_i = \sum_{k\mid i}a_k\bmod 2^{32} \] 输出 \(\bigoplus_{i = 1}^nb_i\)。
+Solution 令 \(i = \prod p_k^{\alpha_k}\)，\(j = \prod_k p_k^{\beta_k}\)，则 \(a_i\) 能贡献到 \(b_j\) 当且仅当 \(\forall k, \alpha_k \le \beta_k\)。所以我们其实是在对质因子的指数做一个高维前缀和。类似埃氏筛，复杂度 \(O(n\log\log n)\)。
+这个东西和 FWT 很像。
+Implementation #include &amp;lt;cstdio&amp;gt; #define FOR(i, a, b) for (int i = (a); i &amp;lt;= (b); ++i) using uint = unsigned; uint seed; inline uint getnext() { seed ^= seed &amp;lt;&amp;lt; 13; seed ^= seed &amp;gt;&amp;gt; 17; seed ^= seed &amp;lt;&amp;lt; 5; return seed; } const int maxn = 2e7 + 5; int p[maxn], tot, isp[maxn], n; uint a[maxn]; int main() { scanf(&amp;quot;%d %u&amp;quot;, &amp;amp;n, &amp;amp;seed); FOR(i, 1, n) a[i] = getnext(); FOR(i, 2, n) { if (!" property="og:description"/>
+<meta content="https://oi.imyangty.com/sol-luogu-p5495/" property="og:url"/>
+<meta content="清烛的博客" property="og:site_name"/>
+<meta content="article" property="og:type"/><meta content="Post" property="article:section"/><meta content="OI" property="article:tag"/><meta content="解题报告" property="article:tag"/><meta content="洛谷" property="article:tag"/><meta content="高维前缀和" property="article:tag"/><meta content="2021-10-10T19:38:45+08:00" property="article:published_time"/><meta content="2021-10-10T19:38:45+08:00" property="article:modified_time"/><meta content="https://yangty-pic.oss-cn-beijing.aliyuncs.com/bg14.webp" property="og:image"/>
+<meta content="P5495 Dirichlet 前缀和" name="twitter:title"/>
+<meta content="Description 给定 \(\{a_n\}\)，求 \(\{b_n\}\) 满足 \[ b_i = \sum_{k\mid i}a_k\bmod 2^{32} \] 输出 \(\bigoplus_{i = 1}^nb_i\)。
+Solution 令 \(i = \prod p_k^{\alpha_k}\)，\(j = \prod_k p_k^{\beta_k}\)，则 \(a_i\) 能贡献到 \(b_j\) 当且仅当 \(\forall k, \alpha_k \le \beta_k\)。所以我们其实是在对质因子的指数做一个高维前缀和。类似埃氏筛，复杂度 \(O(n\log\log n)\)。
+这个东西和 FWT 很像。
+Implementation #include &amp;lt;cstdio&amp;gt; #define FOR(i, a, b) for (int i = (a); i &amp;lt;= (b); ++i) using uint = unsigned; uint seed; inline uint getnext() { seed ^= seed &amp;lt;&amp;lt; 13; seed ^= seed &amp;gt;&amp;gt; 17; seed ^= seed &amp;lt;&amp;lt; 5; return seed; } const int maxn = 2e7 + 5; int p[maxn], tot, isp[maxn], n; uint a[maxn]; int main() { scanf(&amp;quot;%d %u&amp;quot;, &amp;amp;n, &amp;amp;seed); FOR(i, 1, n) a[i] = getnext(); FOR(i, 2, n) { if (!" name="twitter:description"/><meta content="summary_large_image" name="twitter:card"/>
+<meta content="https://yangty-pic.oss-cn-beijing.aliyuncs.com/bg14.webp" name="twitter:image"/>
+<link href="https://q1.qlogo.cn/g?b=qq&amp;nk=375836877&amp;s=5" rel="shortcut icon"/>
+<link href="https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.5.1/build/styles/github-dark-dimmed.min.css" rel="stylesheet"/>
+<script src="https://cdn.jsdelivr.net/gh/highlightjs/cdn-release/build/highlight.min.js"></script>
+<script>hljs.highlightAll();</script>
+</head>
+<body class="article-page">
+<script>
+        (function() {
+            const colorSchemeKey = 'StackColorScheme';
+            if(!localStorage.getItem(colorSchemeKey)){
+                localStorage.setItem(colorSchemeKey, "auto");
+            }
+        })();
+    </script><script>
+    (function() {
+        const colorSchemeKey = 'StackColorScheme';
+        const colorSchemeItem = localStorage.getItem(colorSchemeKey);
+        const supportDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches === true;
+
+        if (colorSchemeItem == 'dark' || colorSchemeItem === 'auto' && supportDarkMode) {
+            
+
+            document.documentElement.dataset.scheme = 'dark';
+        } else {
+            document.documentElement.dataset.scheme = 'light';
+        }
+    })();
+</script>
+<div class="container main-container flex on-phone--column extended"><aside class="sidebar left-sidebar sticky">
+<button aria-label="切换菜单" class="hamburger hamburger--spin" id="toggle-menu" type="button">
+<span class="hamburger-box">
+<span class="hamburger-inner"></span>
+</span>
+</button>
+<header>
+<figure class="site-avatar">
+<a href="/">
+<img alt="Avatar" class="site-logo" height="300" loading="lazy" src="/img/avatar_huea3ce2119467b51fdd2a81393644a76d_51594_300x0_resize_q75_box.jpg" width="300"/>
+</a>
+<span class="emoji">😅</span>
+</figure>
+<div class="site-meta">
+<h1 class="site-name"><a href="/">清烛的博客</a></h1>
+<h2 class="site-description">烟火已谢，笙歌未停</h2>
+</div>
+</header><ol class="social-menu">
+<li>
+<a href="mailto:i@imyangty.com" target="_blank" title="email">
+<svg class="icon icon-tabler icon-tabler-mail" fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" viewbox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+<path d="M0 0h24v24H0z" fill="none" stroke="none"></path>
+<rect height="14" rx="2" width="18" x="3" y="5"></rect>
+<polyline points="3 7 12 13 21 7"></polyline>
+</svg>
+</a>
+</li>
+<li>
+<a href="https://github.com/Cgfyufsygsm" target="_blank" title="GitHub">
+<svg class="icon icon-tabler icon-tabler-brand-github" fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+<path d="M0 0h24v24H0z" fill="none" stroke="none"></path>
+<path d="M9 19c-4.3 1.4 -4.3 -2.5 -6 -3m12 5v-3.5c0 -1 .1 -1.4 -.5 -2c2.8 -.3 5.5 -1.4 5.5 -6a4.6 4.6 0 0 0 -1.3 -3.2a4.2 4.2 0 0 0 -.1 -3.2s-1.1 -.3 -3.5 1.3a12.3 12.3 0 0 0 -6.2 0c-2.4 -1.6 -3.5 -1.3 -3.5 -1.3a4.2 4.2 0 0 0 -.1 3.2a4.6 4.6 0 0 0 -1.3 3.2c0 4.6 2.7 5.7 5.5 6c-.6 .6 -.6 1.2 -.5 2v3.5"></path>
+</svg>
+</a>
+</li>
+<li>
+<a href="https://t.me/Cgfyufsygsm" target="_blank" title="Telegram">
+<svg class="icon icon-tabler icon-tabler-brand-telegram" fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" viewbox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+<path d="M0 0h24v24H0z" fill="none" stroke="none"></path>
+<path d="M15 10l-4 4l6 6l4 -16l-18 7l4 2l2 6l3 -4"></path>
+</svg>
+</a>
+</li>
+<li>
+<a href="https://twitter.com/Cgfyufsygsm" target="_blank" title="Twitter">
+<svg class="icon icon-tabler icon-tabler-brand-twitter" fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+<path d="M0 0h24v24H0z" fill="none" stroke="none"></path>
+<path d="M22 4.01c-1 .49 -1.98 .689 -3 .99c-1.121 -1.265 -2.783 -1.335 -4.38 -.737s-2.643 2.06 -2.62 3.737v1c-3.245 .083 -6.135 -1.395 -8 -4c0 0 -4.182 7.433 4 11c-1.872 1.247 -3.739 2.088 -6 2c3.308 1.803 6.913 2.423 10.034 1.517c3.58 -1.04 6.522 -3.723 7.651 -7.742a13.84 13.84 0 0 0 .497 -3.753c-.002 -.249 1.51 -2.772 1.818 -4.013z"></path>
+</svg>
+</a>
+</li>
+</ol><ol class="menu" id="main-menu">
+<li>
+<a href="/">
+<svg class="icon icon-tabler icon-tabler-home" fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+<path d="M0 0h24v24H0z" stroke="none"></path>
+<polyline points="5 12 3 12 12 3 21 12 19 12"></polyline>
+<path d="M5 12v7a2 2 0 0 0 2 2h10a2 2 0 0 0 2 -2v-7"></path>
+<path d="M9 21v-6a2 2 0 0 1 2 -2h2a2 2 0 0 1 2 2v6"></path>
+</svg>
+<span>主页</span>
+</a>
+</li>
+<li>
+<a href="/about/">
+<svg class="icon icon-tabler icon-tabler-user" fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+<path d="M0 0h24v24H0z" stroke="none"></path>
+<circle cx="12" cy="7" r="4"></circle>
+<path d="M6 21v-2a4 4 0 0 1 4 -4h4a4 4 0 0 1 4 4v2"></path>
+</svg>
+<span>关于</span>
+</a>
+</li>
+<li>
+<a href="/idx/">
+<svg class="icon icon-tabler icon-tabler-hash" fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+<path d="M0 0h24v24H0z" stroke="none"></path>
+<line x1="5" x2="19" y1="9" y2="9"></line>
+<line x1="5" x2="19" y1="15" y2="15"></line>
+<line x1="11" x2="7" y1="4" y2="20"></line>
+<line x1="17" x2="13" y1="4" y2="20"></line>
+</svg>
+<span>导航</span>
+</a>
+</li>
+<li>
+<a href="/archives/">
+<svg class="icon icon-tabler icon-tabler-archive" fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+<path d="M0 0h24v24H0z" stroke="none"></path>
+<rect height="4" rx="2" width="18" x="3" y="4"></rect>
+<path d="M5 8v10a2 2 0 0 0 2 2h10a2 2 0 0 0 2 -2v-10"></path>
+<line x1="10" x2="14" y1="12" y2="12"></line>
+</svg>
+<span>归档</span>
+</a>
+</li>
+<li>
+<a href="/search/">
+<svg class="icon icon-tabler icon-tabler-search" fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+<path d="M0 0h24v24H0z" stroke="none"></path>
+<circle cx="10" cy="10" r="7"></circle>
+<line x1="21" x2="15" y1="21" y2="15"></line>
+</svg>
+<span>搜索</span>
+</a>
+</li>
+<li>
+<a href="/friends/">
+<svg class="icon icon-tabler icon-tabler-link" fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+<path d="M0 0h24v24H0z" stroke="none"></path>
+<path d="M10 14a3.5 3.5 0 0 0 5 0l4 -4a3.5 3.5 0 0 0 -5 -5l-.5 .5"></path>
+<path d="M14 10a3.5 3.5 0 0 0 -5 0l-4 4a3.5 3.5 0 0 0 5 5l.5 -.5"></path>
+</svg>
+<span>友链</span>
+</a>
+</li>
+<li>
+<a href="https://blog.imyangty.com" target="_blank">
+<svg class="icon icon-tabler icon-tabler-home" fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+<path d="M0 0h24v24H0z" stroke="none"></path>
+<polyline points="5 12 3 12 12 3 21 12 19 12"></polyline>
+<path d="M5 12v7a2 2 0 0 0 2 2h10a2 2 0 0 0 2 -2v-7"></path>
+<path d="M9 21v-6a2 2 0 0 1 2 -2h2a2 2 0 0 1 2 2v6"></path>
+</svg>
+<span>主博客</span>
+</a>
+</li>
+<div class="menu-bottom-section">
+<li id="dark-mode-toggle">
+<svg class="icon icon-tabler icon-tabler-toggle-left" fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+<path d="M0 0h24v24H0z" stroke="none"></path>
+<circle cx="8" cy="12" r="2"></circle>
+<rect height="12" rx="6" width="20" x="2" y="6"></rect>
+</svg>
+<svg class="icon icon-tabler icon-tabler-toggle-right" fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+<path d="M0 0h24v24H0z" stroke="none"></path>
+<circle cx="16" cy="12" r="2"></circle>
+<rect height="12" rx="6" width="20" x="2" y="6"></rect>
+</svg>
+<span>暗色模式</span>
+</li>
+</div>
+</ol>
+</aside>
+<main class="main full-width">
+<article class="has-image main-article">
+<header class="article-header">
+<div class="article-image">
+<a href="/sol-luogu-p5495/">
+<img alt="Featured image of post P5495 Dirichlet 前缀和" loading="lazy" src="https://yangty-pic.oss-cn-beijing.aliyuncs.com/bg14.webp"/>
+</a>
+</div>
+<div class="article-details">
+<header class="article-category">
+<a href="/categories/oi/">
+                OI
+            </a>
+<a href="/categories/tutorial/">
+                题解
+            </a>
+</header>
+<div class="article-title-wrapper">
+<h2 class="article-title">
+<a href="/sol-luogu-p5495/">P5495 Dirichlet 前缀和</a>
+</h2>
+</div>
+<footer class="article-time">
+<div>
+<svg class="icon icon-tabler icon-tabler-calendar-time" fill="none" height="56" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="56" xmlns="http://www.w3.org/2000/svg">
+<path d="M0 0h24v24H0z" stroke="none"></path>
+<path d="M11.795 21h-6.795a2 2 0 0 1 -2 -2v-12a2 2 0 0 1 2 -2h12a2 2 0 0 1 2 2v4"></path>
+<circle cx="18" cy="18" r="4"></circle>
+<path d="M15 3v4"></path>
+<path d="M7 3v4"></path>
+<path d="M3 11h16"></path>
+<path d="M18 16.496v1.504l1 1"></path>
+</svg>
+<time class="article-time--published">Oct 10, 2021</time>
+</div>
+<div>
+<svg class="icon icon-tabler icon-tabler-clock" fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+<path d="M0 0h24v24H0z" stroke="none"></path>
+<circle cx="12" cy="12" r="9"></circle>
+<polyline points="12 7 12 12 15 15"></polyline>
+</svg>
+<time class="article-time--reading">
+                    阅读时长: 1 分钟
+                </time>
+</div>
+</footer>
+</div>
+</header>
+<section class="article-content">
+<h2 id="description">Description</h2>
+<p>给定 <span class="math inline">\(\{a_n\}\)</span>，求 <span class="math inline">\(\{b_n\}\)</span> 满足 <span class="math display">\[
+b_i = \sum_{k\mid i}a_k\bmod 2^{32}
+\]</span> 输出 <span class="math inline">\(\bigoplus_{i = 1}^nb_i\)</span>。</p>
+<h2 id="solution">Solution</h2>
+<p>令 <span class="math inline">\(i = \prod p_k^{\alpha_k}\)</span>，<span class="math inline">\(j = \prod_k p_k^{\beta_k}\)</span>，则 <span class="math inline">\(a_i\)</span> 能贡献到 <span class="math inline">\(b_j\)</span> 当且仅当 <span class="math inline">\(\forall k, \alpha_k \le \beta_k\)</span>。所以我们其实是在对质因子的指数做一个高维前缀和。类似埃氏筛，复杂度 <span class="math inline">\(O(n\log\log n)\)</span>。</p>
+<p>这个东西和 FWT 很像。</p>
+<h2 id="implementation">Implementation</h2>
+<div class="sourceCode" id="cb1"><pre class="sourceCode cpp"><code class="sourceCode cpp"><span id="cb1-1"><a aria-hidden="true" href="#cb1-1"></a><span class="pp">#include </span><span class="im">&lt;cstdio&gt;</span></span>
+<span id="cb1-2"><a aria-hidden="true" href="#cb1-2"></a><span class="pp">#define FOR</span>(i,<span class="pp"> </span>a,<span class="pp"> </span>b)<span class="pp"> </span><span class="cf">for</span><span class="pp"> </span>(<span class="dt">int</span><span class="pp"> </span>i<span class="pp"> </span>=<span class="pp"> </span>(a);<span class="pp"> </span>i<span class="pp"> </span>&lt;=<span class="pp"> </span>(b);<span class="pp"> </span>++i)</span>
+<span id="cb1-3"><a aria-hidden="true" href="#cb1-3"></a></span>
+<span id="cb1-4"><a aria-hidden="true" href="#cb1-4"></a><span class="kw">using</span> <span class="ex">uint</span> = <span class="dt">unsigned</span>;</span>
+<span id="cb1-5"><a aria-hidden="true" href="#cb1-5"></a></span>
+<span id="cb1-6"><a aria-hidden="true" href="#cb1-6"></a><span class="ex">uint</span> seed;</span>
+<span id="cb1-7"><a aria-hidden="true" href="#cb1-7"></a><span class="kw">inline</span> <span class="ex">uint</span> getnext() {</span>
+<span id="cb1-8"><a aria-hidden="true" href="#cb1-8"></a>    seed ^= seed &lt;&lt; <span class="dv">13</span>;</span>
+<span id="cb1-9"><a aria-hidden="true" href="#cb1-9"></a>    seed ^= seed &gt;&gt; <span class="dv">17</span>;</span>
+<span id="cb1-10"><a aria-hidden="true" href="#cb1-10"></a>    seed ^= seed &lt;&lt; <span class="dv">5</span>;</span>
+<span id="cb1-11"><a aria-hidden="true" href="#cb1-11"></a>    <span class="cf">return</span> seed;</span>
+<span id="cb1-12"><a aria-hidden="true" href="#cb1-12"></a>}</span>
+<span id="cb1-13"><a aria-hidden="true" href="#cb1-13"></a></span>
+<span id="cb1-14"><a aria-hidden="true" href="#cb1-14"></a><span class="at">const</span> <span class="dt">int</span> maxn = <span class="fl">2e7</span> + <span class="dv">5</span>;</span>
+<span id="cb1-15"><a aria-hidden="true" href="#cb1-15"></a><span class="dt">int</span> p[maxn], tot, isp[maxn], n;</span>
+<span id="cb1-16"><a aria-hidden="true" href="#cb1-16"></a><span class="ex">uint</span> a[maxn];</span>
+<span id="cb1-17"><a aria-hidden="true" href="#cb1-17"></a></span>
+<span id="cb1-18"><a aria-hidden="true" href="#cb1-18"></a><span class="dt">int</span> main() {</span>
+<span id="cb1-19"><a aria-hidden="true" href="#cb1-19"></a>    scanf(<span class="st">"</span><span class="sc">%d</span><span class="st"> </span><span class="sc">%u</span><span class="st">"</span>, &amp;n, &amp;seed);</span>
+<span id="cb1-20"><a aria-hidden="true" href="#cb1-20"></a>    FOR(i, <span class="dv">1</span>, n) a[i] = getnext();</span>
+<span id="cb1-21"><a aria-hidden="true" href="#cb1-21"></a>    FOR(i, <span class="dv">2</span>, n) {</span>
+<span id="cb1-22"><a aria-hidden="true" href="#cb1-22"></a>        <span class="cf">if</span> (!isp[i]) p[++tot] = i;</span>
+<span id="cb1-23"><a aria-hidden="true" href="#cb1-23"></a>        <span class="cf">for</span> (<span class="dt">int</span> j = <span class="dv">1</span>; j &lt;= tot &amp;&amp; i * p[j] &lt;= n; ++j) {</span>
+<span id="cb1-24"><a aria-hidden="true" href="#cb1-24"></a>            isp[i * p[j]] = <span class="dv">1</span>;</span>
+<span id="cb1-25"><a aria-hidden="true" href="#cb1-25"></a>            <span class="cf">if</span> (i % p[j] == <span class="dv">0</span>) <span class="cf">break</span>;</span>
+<span id="cb1-26"><a aria-hidden="true" href="#cb1-26"></a>        }</span>
+<span id="cb1-27"><a aria-hidden="true" href="#cb1-27"></a>    }</span>
+<span id="cb1-28"><a aria-hidden="true" href="#cb1-28"></a>    FOR(j, <span class="dv">1</span>, tot) <span class="cf">for</span> (<span class="dt">int</span> i = <span class="dv">1</span>; i * p[j] &lt;= n; ++i) a[i * p[j]] += a[i];</span>
+<span id="cb1-29"><a aria-hidden="true" href="#cb1-29"></a>    <span class="ex">uint</span> ans = <span class="dv">0</span>;</span>
+<span id="cb1-30"><a aria-hidden="true" href="#cb1-30"></a>    FOR(i, <span class="dv">1</span>, n) ans ^= a[i];</span>
+<span id="cb1-31"><a aria-hidden="true" href="#cb1-31"></a>    printf(<span class="st">"</span><span class="sc">%u\n</span><span class="st">"</span>, ans);</span>
+<span id="cb1-32"><a aria-hidden="true" href="#cb1-32"></a>    <span class="cf">return</span> <span class="dv">0</span>;</span>
+<span id="cb1-33"><a aria-hidden="true" href="#cb1-33"></a>}</span></code></pre></div>
+</section>
+<footer class="article-footer">
+<section class="article-tags">
+<a href="/tags/OI/">OI</a>
+<a href="/tags/solution/">解题报告</a>
+<a href="/tags/luogu/">洛谷</a>
+<a href="/tags/sosdp/">高维前缀和</a>
+</section>
+<section class="article-copyright">
+<svg class="icon icon-tabler icon-tabler-copyright" fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+<path d="M0 0h24v24H0z" stroke="none"></path>
+<circle cx="12" cy="12" r="9"></circle>
+<path d="M14.5 9a3.5 4 0 1 0 0 6"></path>
+</svg>
+<span>Licensed under CC BY-NC-SA 4.0</span>
+</section>
+</footer>
+<link crossorigin="anonymous" href="https://cdn.jsdelivr.net/npm/katex@0.13.13/dist/katex.min.css" integrity="sha384-RZU/ijkSsFbcmivfdRBQDtwuwVqK7GMOw6IMvKyeWL2K5UAlyp6WonmB8m7Jd0Hn" rel="stylesheet"/><script crossorigin="anonymous" defer="" integrity="sha384-pK1WpvzWVBQiP0/GjnvRxV4mOb0oxFuyRxJlk6vVw146n3egcN5C925NCP7a7BY8" src="https://cdn.jsdelivr.net/npm/katex@0.13.13/dist/katex.min.js">
+</script><script crossorigin="anonymous" defer="" integrity="sha384-vZTG03m+2yp6N6BNi5iM4rW4oIwk5DfcNdFfxkk9ZWpDriOkXX8voJBFrAO7MpVl" src="https://cdn.jsdelivr.net/npm/katex@0.13.13/dist/contrib/auto-render.min.js">
+</script><script>
+    window.addEventListener("DOMContentLoaded", () => {
+        renderMathInElement(document.querySelector(`.article-content`), {
+            delimiters: [
+                { left: "$$", right: "$$", display: true },
+                { left: "$", right: "$", display: false },
+                { left: "\\(", right: "\\)", display: false },
+                { left: "\\[", right: "\\]", display: true }
+            ]
+        });})
+</script>
+</article>
+<aside class="related-contents--wrapper">
+<h2 class="section-title">相关文章</h2>
+<div class="related-contents">
+<div class="flex article-list--tile">
+<article class="has-image">
+<a href="/sol-luogu-p5468/">
+<div class="article-image">
+<img data-hash="https://yangty-pic.oss-cn-beijing.aliyuncs.com/bg01.webp" data-key="" loading="lazy" src="https://yangty-pic.oss-cn-beijing.aliyuncs.com/bg01.webp"/>
+</div>
+<div class="article-details">
+<h2 class="article-title">P5468 [NOI2019] 回家路线</h2>
+</div>
+</a>
+</article>
+<article class="has-image">
+<a href="/sol-luogu-p5305/">
+<div class="article-image">
+<img data-hash="https://yangty-pic.oss-cn-beijing.aliyuncs.com/bg32.webp" data-key="" loading="lazy" src="https://yangty-pic.oss-cn-beijing.aliyuncs.com/bg32.webp"/>
+</div>
+<div class="article-details">
+<h2 class="article-title">P5305 [GXOI/GZOI2019]旧词</h2>
+</div>
+</a>
+</article>
+<article class="has-image">
+<a href="/sol-luogu-p3544/">
+<div class="article-image">
+<img data-hash="https://yangty-pic.oss-cn-beijing.aliyuncs.com/bg68.webp" data-key="" loading="lazy" src="https://yangty-pic.oss-cn-beijing.aliyuncs.com/bg68.webp"/>
+</div>
+<div class="article-details">
+<h2 class="article-title">P3544 [POI2012]BEZ-Minimalist Security</h2>
+</div>
+</a>
+</article>
+<article class="has-image">
+<a href="/sol-luogu-p4689/">
+<div class="article-image">
+<img data-hash="https://yangty-pic.oss-cn-beijing.aliyuncs.com/bg67.webp" data-key="" loading="lazy" src="https://yangty-pic.oss-cn-beijing.aliyuncs.com/bg67.webp"/>
+</div>
+<div class="article-details">
+<h2 class="article-title">P4689 [Ynoi2016] 这是我自己的发明</h2>
+</div>
+</a>
+</article>
+<article class="has-image">
+<a href="/sol-luogu-p3242/">
+<div class="article-image">
+<img data-hash="https://yangty-pic.oss-cn-beijing.aliyuncs.com/bg5.webp" data-key="" loading="lazy" src="https://yangty-pic.oss-cn-beijing.aliyuncs.com/bg5.webp"/>
+</div>
+<div class="article-details">
+<h2 class="article-title">P3242 [HNOI2015] 接水果</h2>
+</div>
+</a>
+</article>
+</div>
+</div>
+</aside>
+<footer class="site-footer">
+<section class="copyright">
+        © 
+        
+            2019 - 
+        
+        2024 清烛的博客
+    </section>
+<section class="powerby">
+        Built with <a href="https://gohugo.io/" rel="noopener" target="_blank">Hugo</a> <br/>
+        主题 <b><a data-version="3.11.0" href="https://github.com/CaiJimmy/hugo-theme-stack" rel="noopener" target="_blank">Stack</a></b> 由 <a href="https://jimmycai.com" rel="noopener" target="_blank">Jimmy</a> 设计
+    </section>
+</footer>
+<div aria-hidden="true" class="pswp" role="dialog" tabindex="-1">
+<div class="pswp__bg"></div>
+<div class="pswp__scroll-wrap">
+<div class="pswp__container">
+<div class="pswp__item"></div>
+<div class="pswp__item"></div>
+<div class="pswp__item"></div>
+</div>
+<div class="pswp__ui pswp__ui--hidden">
+<div class="pswp__top-bar">
+<div class="pswp__counter"></div>
+<button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+<button class="pswp__button pswp__button--share" title="Share"></button>
+<button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+<button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+<div class="pswp__preloader">
+<div class="pswp__preloader__icn">
+<div class="pswp__preloader__cut">
+<div class="pswp__preloader__donut"></div>
+</div>
+</div>
+</div>
+</div>
+<div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+<div class="pswp__share-tooltip"></div>
+</div>
+<button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+</button>
+<button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+</button>
+<div class="pswp__caption">
+<div class="pswp__caption__center"></div>
+</div>
+</div>
+</div>
+</div><script crossorigin="anonymous" defer="" integrity="sha256-ePwmChbbvXbsO02lbM3HoHbSHTHFAeChekF1xKJdleo=" src="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe.min.js">
+</script><script crossorigin="anonymous" defer="" integrity="sha256-UKkzOn/w1mBxRmLLGrSeyB4e1xbrp4xylgAWb3M42pU=" src="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe-ui-default.min.js">
+</script><link crossorigin="anonymous" href="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/default-skin/default-skin.css" integrity="sha256-c0uckgykQ9v5k+IqViZOZKc47Jn7KQil4/MP3ySA3F8=" rel="stylesheet"/><link crossorigin="anonymous" href="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe.css" integrity="sha256-SBLU4vv6CA6lHsZ1XyTdhyjJxCjPif/TRkjnsyGAGnE=" rel="stylesheet"/>
+</main>
+</div>
+<script crossorigin="anonymous" integrity="sha256-5NovOZc4iwiAWTYIFiIM7DxKUXKWvpVEuMEPLzcm5/g=" src="https://cdn.jsdelivr.net/npm/node-vibrant@3.1.5/dist/vibrant.min.js">
+</script><script defer="" src="/ts/main.js" type="text/javascript"></script>
+<script>
+    (function () {
+        const customFont = document.createElement('link');
+        customFont.href = "https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&display=swap";
+
+        customFont.type = "text/css";
+        customFont.rel = "stylesheet";
+
+        document.head.appendChild(customFont);
+    }());
+</script>
+</body>
+</html>

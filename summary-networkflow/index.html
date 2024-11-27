@@ -1,0 +1,524 @@
+<!DOCTYPE html>
+<html dir="ltr" lang="zh-CN">
+<head><meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1" name="viewport"/><meta content="网络流好毒瘤 qwq
+最大流 20/11/21 P3376 【模板】网络最大流 学习最基础的网络流
+20/11/22 P1343 地震逃生 最大流模板
+20/11/23 P3153 舞会 最大流 + 二分答案 https://imyangty.com/oi/1218
+21/02/02 P3254 圆桌问题
+源向单位连大小为单位人数的边，餐桌向汇连大小为餐桌人数的边，每个单位连每个餐桌，跑最大流，满流有解，找流有东西的边输出即可
+21/02/02 P2763 试题库问题
+试题向属于的类型连 1，类型向汇连需要的题数，跑最大流，满流有解，输出方案。
+20/02/02 P2891 [USACO07OPEN]Dining G
+拆点，源-&amp;gt;食物-&amp;gt;牛in-&amp;gt;牛out-&amp;gt;饮料-&amp;gt;汇，保证流过牛的流量为 1，跑最大流即可
+21/02/04 P2766 最长不下降子序列问题
+第一问使用 \(n^2\) dp，然后拆点处理第二问和第三问。
+21/02/07 P2764 最小路径覆盖问题
+从每个路径长度为 \(0\) 开始想，此时有 \(n\) 条路径，然后考虑合并两个相邻的路径，发现每次合并都会造成路径个数减一。所以考虑使用网络流来做这件事情。 建源汇，拆点成入和出，源连向所有的入，所有的出连向汇，对于原图的每一条边将入连向出。所有的边容量都是 \(1\)，这样就可以跑出新图的最大匹配，使用原图的点数减去即可
+21/02/07 P2765 魔术球问题
+上题的加强版，考虑把每个柱子都看成一条路径，然后每个点像上题一样连边。从小到大枚举答案，在残量网络上跑 Dinic 跑出增加的流量，判断是否可行，然后像上题一样输出路径。 需要注意数组一定要开够，往大了开绝对不会出问题，然后注意点编号的映射
+21/02/07 P2754 [CTSC1999]家园 / 星际转移问题
+对于每天每个太空站都建点，枚举天数逐天加飞船边判断能流多少，流到了就成功了。一开始先用并查集判无解的情况。
+21/09/01 P2423 [HEOI2012]朋友圈
+求原图最大团等价于求补图最大独立集，建模成二分图。
+21/09/02 P1231 教辅的组成
+拆点最大流。" name="description"/><title>网络流记录合集</title>
+<link href="https://oi.imyangty.com/summary-networkflow/" rel="canonical"/>
+<link href="/scss/style.min.a5821f3d3ab84ce5a0ac21477e347a2e0ca00292e398d16c5e8e36ded6e35a23.css" rel="stylesheet"/><meta content="网络流记录合集" property="og:title"/>
+<meta content="网络流好毒瘤 qwq
+最大流 20/11/21 P3376 【模板】网络最大流 学习最基础的网络流
+20/11/22 P1343 地震逃生 最大流模板
+20/11/23 P3153 舞会 最大流 + 二分答案 https://imyangty.com/oi/1218
+21/02/02 P3254 圆桌问题
+源向单位连大小为单位人数的边，餐桌向汇连大小为餐桌人数的边，每个单位连每个餐桌，跑最大流，满流有解，找流有东西的边输出即可
+21/02/02 P2763 试题库问题
+试题向属于的类型连 1，类型向汇连需要的题数，跑最大流，满流有解，输出方案。
+20/02/02 P2891 [USACO07OPEN]Dining G
+拆点，源-&amp;gt;食物-&amp;gt;牛in-&amp;gt;牛out-&amp;gt;饮料-&amp;gt;汇，保证流过牛的流量为 1，跑最大流即可
+21/02/04 P2766 最长不下降子序列问题
+第一问使用 \(n^2\) dp，然后拆点处理第二问和第三问。
+21/02/07 P2764 最小路径覆盖问题
+从每个路径长度为 \(0\) 开始想，此时有 \(n\) 条路径，然后考虑合并两个相邻的路径，发现每次合并都会造成路径个数减一。所以考虑使用网络流来做这件事情。 建源汇，拆点成入和出，源连向所有的入，所有的出连向汇，对于原图的每一条边将入连向出。所有的边容量都是 \(1\)，这样就可以跑出新图的最大匹配，使用原图的点数减去即可
+21/02/07 P2765 魔术球问题
+上题的加强版，考虑把每个柱子都看成一条路径，然后每个点像上题一样连边。从小到大枚举答案，在残量网络上跑 Dinic 跑出增加的流量，判断是否可行，然后像上题一样输出路径。 需要注意数组一定要开够，往大了开绝对不会出问题，然后注意点编号的映射
+21/02/07 P2754 [CTSC1999]家园 / 星际转移问题
+对于每天每个太空站都建点，枚举天数逐天加飞船边判断能流多少，流到了就成功了。一开始先用并查集判无解的情况。
+21/09/01 P2423 [HEOI2012]朋友圈
+求原图最大团等价于求补图最大独立集，建模成二分图。
+21/09/02 P1231 教辅的组成
+拆点最大流。" property="og:description"/>
+<meta content="https://oi.imyangty.com/summary-networkflow/" property="og:url"/>
+<meta content="清烛的博客" property="og:site_name"/>
+<meta content="article" property="og:type"/><meta content="Post" property="article:section"/><meta content="OI" property="article:tag"/><meta content="网络流" property="article:tag"/><meta content="解题报告" property="article:tag"/><meta content="2020-11-23T22:02:23+08:00" property="article:published_time"/><meta content="2020-11-23T22:02:23+08:00" property="article:modified_time"/><meta content="https://yangty-pic.oss-cn-beijing.aliyuncs.com/bg15.webp" property="og:image"/>
+<meta content="网络流记录合集" name="twitter:title"/>
+<meta content="网络流好毒瘤 qwq
+最大流 20/11/21 P3376 【模板】网络最大流 学习最基础的网络流
+20/11/22 P1343 地震逃生 最大流模板
+20/11/23 P3153 舞会 最大流 + 二分答案 https://imyangty.com/oi/1218
+21/02/02 P3254 圆桌问题
+源向单位连大小为单位人数的边，餐桌向汇连大小为餐桌人数的边，每个单位连每个餐桌，跑最大流，满流有解，找流有东西的边输出即可
+21/02/02 P2763 试题库问题
+试题向属于的类型连 1，类型向汇连需要的题数，跑最大流，满流有解，输出方案。
+20/02/02 P2891 [USACO07OPEN]Dining G
+拆点，源-&amp;gt;食物-&amp;gt;牛in-&amp;gt;牛out-&amp;gt;饮料-&amp;gt;汇，保证流过牛的流量为 1，跑最大流即可
+21/02/04 P2766 最长不下降子序列问题
+第一问使用 \(n^2\) dp，然后拆点处理第二问和第三问。
+21/02/07 P2764 最小路径覆盖问题
+从每个路径长度为 \(0\) 开始想，此时有 \(n\) 条路径，然后考虑合并两个相邻的路径，发现每次合并都会造成路径个数减一。所以考虑使用网络流来做这件事情。 建源汇，拆点成入和出，源连向所有的入，所有的出连向汇，对于原图的每一条边将入连向出。所有的边容量都是 \(1\)，这样就可以跑出新图的最大匹配，使用原图的点数减去即可
+21/02/07 P2765 魔术球问题
+上题的加强版，考虑把每个柱子都看成一条路径，然后每个点像上题一样连边。从小到大枚举答案，在残量网络上跑 Dinic 跑出增加的流量，判断是否可行，然后像上题一样输出路径。 需要注意数组一定要开够，往大了开绝对不会出问题，然后注意点编号的映射
+21/02/07 P2754 [CTSC1999]家园 / 星际转移问题
+对于每天每个太空站都建点，枚举天数逐天加飞船边判断能流多少，流到了就成功了。一开始先用并查集判无解的情况。
+21/09/01 P2423 [HEOI2012]朋友圈
+求原图最大团等价于求补图最大独立集，建模成二分图。
+21/09/02 P1231 教辅的组成
+拆点最大流。" name="twitter:description"/><meta content="summary_large_image" name="twitter:card"/>
+<meta content="https://yangty-pic.oss-cn-beijing.aliyuncs.com/bg15.webp" name="twitter:image"/>
+<link href="https://q1.qlogo.cn/g?b=qq&amp;nk=375836877&amp;s=5" rel="shortcut icon"/>
+<link href="https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.5.1/build/styles/github-dark-dimmed.min.css" rel="stylesheet"/>
+<script src="https://cdn.jsdelivr.net/gh/highlightjs/cdn-release/build/highlight.min.js"></script>
+<script>hljs.highlightAll();</script>
+</head>
+<body class="article-page">
+<script>
+        (function() {
+            const colorSchemeKey = 'StackColorScheme';
+            if(!localStorage.getItem(colorSchemeKey)){
+                localStorage.setItem(colorSchemeKey, "auto");
+            }
+        })();
+    </script><script>
+    (function() {
+        const colorSchemeKey = 'StackColorScheme';
+        const colorSchemeItem = localStorage.getItem(colorSchemeKey);
+        const supportDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches === true;
+
+        if (colorSchemeItem == 'dark' || colorSchemeItem === 'auto' && supportDarkMode) {
+            
+
+            document.documentElement.dataset.scheme = 'dark';
+        } else {
+            document.documentElement.dataset.scheme = 'light';
+        }
+    })();
+</script>
+<div class="container main-container flex on-phone--column extended"><aside class="sidebar left-sidebar sticky">
+<button aria-label="切换菜单" class="hamburger hamburger--spin" id="toggle-menu" type="button">
+<span class="hamburger-box">
+<span class="hamburger-inner"></span>
+</span>
+</button>
+<header>
+<figure class="site-avatar">
+<a href="/">
+<img alt="Avatar" class="site-logo" height="300" loading="lazy" src="/img/avatar_huea3ce2119467b51fdd2a81393644a76d_51594_300x0_resize_q75_box.jpg" width="300"/>
+</a>
+<span class="emoji">😅</span>
+</figure>
+<div class="site-meta">
+<h1 class="site-name"><a href="/">清烛的博客</a></h1>
+<h2 class="site-description">烟火已谢，笙歌未停</h2>
+</div>
+</header><ol class="social-menu">
+<li>
+<a href="mailto:i@imyangty.com" target="_blank" title="email">
+<svg class="icon icon-tabler icon-tabler-mail" fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" viewbox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+<path d="M0 0h24v24H0z" fill="none" stroke="none"></path>
+<rect height="14" rx="2" width="18" x="3" y="5"></rect>
+<polyline points="3 7 12 13 21 7"></polyline>
+</svg>
+</a>
+</li>
+<li>
+<a href="https://github.com/Cgfyufsygsm" target="_blank" title="GitHub">
+<svg class="icon icon-tabler icon-tabler-brand-github" fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+<path d="M0 0h24v24H0z" fill="none" stroke="none"></path>
+<path d="M9 19c-4.3 1.4 -4.3 -2.5 -6 -3m12 5v-3.5c0 -1 .1 -1.4 -.5 -2c2.8 -.3 5.5 -1.4 5.5 -6a4.6 4.6 0 0 0 -1.3 -3.2a4.2 4.2 0 0 0 -.1 -3.2s-1.1 -.3 -3.5 1.3a12.3 12.3 0 0 0 -6.2 0c-2.4 -1.6 -3.5 -1.3 -3.5 -1.3a4.2 4.2 0 0 0 -.1 3.2a4.6 4.6 0 0 0 -1.3 3.2c0 4.6 2.7 5.7 5.5 6c-.6 .6 -.6 1.2 -.5 2v3.5"></path>
+</svg>
+</a>
+</li>
+<li>
+<a href="https://t.me/Cgfyufsygsm" target="_blank" title="Telegram">
+<svg class="icon icon-tabler icon-tabler-brand-telegram" fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" viewbox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+<path d="M0 0h24v24H0z" fill="none" stroke="none"></path>
+<path d="M15 10l-4 4l6 6l4 -16l-18 7l4 2l2 6l3 -4"></path>
+</svg>
+</a>
+</li>
+<li>
+<a href="https://twitter.com/Cgfyufsygsm" target="_blank" title="Twitter">
+<svg class="icon icon-tabler icon-tabler-brand-twitter" fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+<path d="M0 0h24v24H0z" fill="none" stroke="none"></path>
+<path d="M22 4.01c-1 .49 -1.98 .689 -3 .99c-1.121 -1.265 -2.783 -1.335 -4.38 -.737s-2.643 2.06 -2.62 3.737v1c-3.245 .083 -6.135 -1.395 -8 -4c0 0 -4.182 7.433 4 11c-1.872 1.247 -3.739 2.088 -6 2c3.308 1.803 6.913 2.423 10.034 1.517c3.58 -1.04 6.522 -3.723 7.651 -7.742a13.84 13.84 0 0 0 .497 -3.753c-.002 -.249 1.51 -2.772 1.818 -4.013z"></path>
+</svg>
+</a>
+</li>
+</ol><ol class="menu" id="main-menu">
+<li>
+<a href="/">
+<svg class="icon icon-tabler icon-tabler-home" fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+<path d="M0 0h24v24H0z" stroke="none"></path>
+<polyline points="5 12 3 12 12 3 21 12 19 12"></polyline>
+<path d="M5 12v7a2 2 0 0 0 2 2h10a2 2 0 0 0 2 -2v-7"></path>
+<path d="M9 21v-6a2 2 0 0 1 2 -2h2a2 2 0 0 1 2 2v6"></path>
+</svg>
+<span>主页</span>
+</a>
+</li>
+<li>
+<a href="/about/">
+<svg class="icon icon-tabler icon-tabler-user" fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+<path d="M0 0h24v24H0z" stroke="none"></path>
+<circle cx="12" cy="7" r="4"></circle>
+<path d="M6 21v-2a4 4 0 0 1 4 -4h4a4 4 0 0 1 4 4v2"></path>
+</svg>
+<span>关于</span>
+</a>
+</li>
+<li>
+<a href="/idx/">
+<svg class="icon icon-tabler icon-tabler-hash" fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+<path d="M0 0h24v24H0z" stroke="none"></path>
+<line x1="5" x2="19" y1="9" y2="9"></line>
+<line x1="5" x2="19" y1="15" y2="15"></line>
+<line x1="11" x2="7" y1="4" y2="20"></line>
+<line x1="17" x2="13" y1="4" y2="20"></line>
+</svg>
+<span>导航</span>
+</a>
+</li>
+<li>
+<a href="/archives/">
+<svg class="icon icon-tabler icon-tabler-archive" fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+<path d="M0 0h24v24H0z" stroke="none"></path>
+<rect height="4" rx="2" width="18" x="3" y="4"></rect>
+<path d="M5 8v10a2 2 0 0 0 2 2h10a2 2 0 0 0 2 -2v-10"></path>
+<line x1="10" x2="14" y1="12" y2="12"></line>
+</svg>
+<span>归档</span>
+</a>
+</li>
+<li>
+<a href="/search/">
+<svg class="icon icon-tabler icon-tabler-search" fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+<path d="M0 0h24v24H0z" stroke="none"></path>
+<circle cx="10" cy="10" r="7"></circle>
+<line x1="21" x2="15" y1="21" y2="15"></line>
+</svg>
+<span>搜索</span>
+</a>
+</li>
+<li>
+<a href="/friends/">
+<svg class="icon icon-tabler icon-tabler-link" fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+<path d="M0 0h24v24H0z" stroke="none"></path>
+<path d="M10 14a3.5 3.5 0 0 0 5 0l4 -4a3.5 3.5 0 0 0 -5 -5l-.5 .5"></path>
+<path d="M14 10a3.5 3.5 0 0 0 -5 0l-4 4a3.5 3.5 0 0 0 5 5l.5 -.5"></path>
+</svg>
+<span>友链</span>
+</a>
+</li>
+<li>
+<a href="https://blog.imyangty.com" target="_blank">
+<svg class="icon icon-tabler icon-tabler-home" fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+<path d="M0 0h24v24H0z" stroke="none"></path>
+<polyline points="5 12 3 12 12 3 21 12 19 12"></polyline>
+<path d="M5 12v7a2 2 0 0 0 2 2h10a2 2 0 0 0 2 -2v-7"></path>
+<path d="M9 21v-6a2 2 0 0 1 2 -2h2a2 2 0 0 1 2 2v6"></path>
+</svg>
+<span>主博客</span>
+</a>
+</li>
+<div class="menu-bottom-section">
+<li id="dark-mode-toggle">
+<svg class="icon icon-tabler icon-tabler-toggle-left" fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+<path d="M0 0h24v24H0z" stroke="none"></path>
+<circle cx="8" cy="12" r="2"></circle>
+<rect height="12" rx="6" width="20" x="2" y="6"></rect>
+</svg>
+<svg class="icon icon-tabler icon-tabler-toggle-right" fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+<path d="M0 0h24v24H0z" stroke="none"></path>
+<circle cx="16" cy="12" r="2"></circle>
+<rect height="12" rx="6" width="20" x="2" y="6"></rect>
+</svg>
+<span>暗色模式</span>
+</li>
+</div>
+</ol>
+</aside>
+<main class="main full-width">
+<article class="has-image main-article">
+<header class="article-header">
+<div class="article-image">
+<a href="/summary-networkflow/">
+<img alt="Featured image of post 网络流记录合集" loading="lazy" src="https://yangty-pic.oss-cn-beijing.aliyuncs.com/bg15.webp"/>
+</a>
+</div>
+<div class="article-details">
+<header class="article-category">
+<a href="/categories/oi/">
+                OI
+            </a>
+<a href="/categories/summary/">
+                总结
+            </a>
+</header>
+<div class="article-title-wrapper">
+<h2 class="article-title">
+<a href="/summary-networkflow/">网络流记录合集</a>
+</h2>
+</div>
+<footer class="article-time">
+<div>
+<svg class="icon icon-tabler icon-tabler-calendar-time" fill="none" height="56" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="56" xmlns="http://www.w3.org/2000/svg">
+<path d="M0 0h24v24H0z" stroke="none"></path>
+<path d="M11.795 21h-6.795a2 2 0 0 1 -2 -2v-12a2 2 0 0 1 2 -2h12a2 2 0 0 1 2 2v4"></path>
+<circle cx="18" cy="18" r="4"></circle>
+<path d="M15 3v4"></path>
+<path d="M7 3v4"></path>
+<path d="M3 11h16"></path>
+<path d="M18 16.496v1.504l1 1"></path>
+</svg>
+<time class="article-time--published">Nov 23, 2020</time>
+</div>
+<div>
+<svg class="icon icon-tabler icon-tabler-clock" fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+<path d="M0 0h24v24H0z" stroke="none"></path>
+<circle cx="12" cy="12" r="9"></circle>
+<polyline points="12 7 12 12 15 15"></polyline>
+</svg>
+<time class="article-time--reading">
+                    阅读时长: 2 分钟
+                </time>
+</div>
+</footer>
+</div>
+</header>
+<section class="article-content">
+<p>网络流好毒瘤 qwq</p>
+<h2 id="最大流">最大流</h2>
+<ul>
+<li><p>20/11/21 <strong>P3376 【模板】网络最大流</strong> 学习最基础的网络流</p></li>
+<li><p>20/11/22 <strong>P1343 地震逃生</strong> 最大流模板</p></li>
+<li><p>20/11/23 <strong>P3153 舞会</strong> 最大流 + 二分答案 <a href="https://imyangty.com/oi/1218">https://imyangty.com/oi/1218</a></p></li>
+<li><p>21/02/02 <strong>P3254 圆桌问题</strong></p>
+<p>源向单位连大小为单位人数的边，餐桌向汇连大小为餐桌人数的边，每个单位连每个餐桌，跑最大流，满流有解，找流有东西的边输出即可</p></li>
+<li><p>21/02/02 <strong>P2763 试题库问题</strong></p>
+<p>试题向属于的类型连 1，类型向汇连需要的题数，跑最大流，满流有解，输出方案。</p></li>
+<li><p>20/02/02 <strong>P2891 [USACO07OPEN]Dining G</strong></p>
+<p>拆点，源-&gt;食物-&gt;牛in-&gt;牛out-&gt;饮料-&gt;汇，保证流过牛的流量为 1，跑最大流即可</p></li>
+<li><p>21/02/04 <strong>P2766 最长不下降子序列问题</strong></p>
+<p>第一问使用 <span class="math inline">\(n^2\)</span> dp，然后拆点处理第二问和第三问。</p></li>
+<li><p>21/02/07 <strong>P2764 最小路径覆盖问题</strong></p>
+<p>从每个路径长度为 <span class="math inline">\(0\)</span> 开始想，此时有 <span class="math inline">\(n\)</span> 条路径，然后考虑合并两个相邻的路径，发现每次合并都会造成路径个数减一。所以考虑使用网络流来做这件事情。 建源汇，拆点成入和出，源连向所有的入，所有的出连向汇，对于原图的每一条边将入连向出。所有的边容量都是 <span class="math inline">\(1\)</span>，这样就可以跑出新图的最大匹配，使用原图的点数减去即可</p></li>
+<li><p>21/02/07 <strong>P2765 魔术球问题</strong></p>
+<p>上题的加强版，考虑把每个柱子都看成一条路径，然后每个点像上题一样连边。从小到大枚举答案，在残量网络上跑 Dinic 跑出增加的流量，判断是否可行，然后像上题一样输出路径。 需要注意数组一定要开够，往大了开绝对不会出问题，然后注意点编号的映射</p></li>
+<li><p>21/02/07 <strong>P2754 [CTSC1999]家园 / 星际转移问题</strong></p>
+<p>对于每天每个太空站都建点，枚举天数逐天加飞船边判断能流多少，流到了就成功了。一开始先用并查集判无解的情况。</p></li>
+<li><p>21/09/01 <strong><a href="https://www.luogu.com.cn/problem/P2423">P2423 [HEOI2012]朋友圈</a></strong></p>
+<p>求原图最大团等价于求补图最大独立集，建模成<a href="/sol-luogu-p2423">二分图</a>。</p></li>
+<li><p>21/09/02 <strong><a href="https://www.luogu.com.cn/problem/P1231">P1231 教辅的组成</a></strong></p>
+<p>拆点最大流。</p></li>
+<li><p>21/09/02 <strong><a href="https://www.luogu.com.cn/problem/P2472">P2472 [SCOI2007]蜥蜴</a></strong></p>
+<p>蜥蜴建成流，柱子拆点容量为高度，跑最大流即可。</p></li>
+</ul>
+<h2 id="费用流">费用流</h2>
+<ul>
+<li><p>20/11/23 <strong>P3381 【模板】最小费用最大流</strong> 学习基础费用流</p></li>
+<li><p>21/02/07 <strong>P4015 运输问题</strong></p>
+<p>基础费用流，第二问求最大费用时直接重新建图，把所有费用取反相反数然后求出的最小费用取相反数就是最大费用。</p></li>
+<li><p>21/02/07 <strong>P4016 负载平衡问题</strong></p>
+<p>不用拆点，源向每个点连对应初始货量的边，费用为 <span class="math inline">\(0\)</span>，每个点向汇连对应最后要达到的边，费用为 <span class="math inline">\(0\)</span>，相邻两个点之间连双向边，容量无限，费用 <span class="math inline">\(1\)</span>，跑费用流即可。</p></li>
+<li><p>21/02/08 <strong>P2770 航空路线问题</strong></p>
+<p>先逆向看问题，把问题转化为找到两条从左到右不相交的路径，然后在航线连边，费用 1，容量 1。拆点。每个入点向出点连容量 1，费用 0，特别地，最左和最右连的容量为 2（因为要走两次），跑最大费用最大流。最大流为 2 说明有解，城市数即为费用；最大流为 1 时特判航线从最左直飞到最右的情况即可。</p></li>
+<li><p>21/02/08 <strong>P4014 分配问题</strong></p>
+<p>二分图最大权完美匹配，KM 和费用流均可过。</p></li>
+<li><p>21/02/08 <strong>P4013 数字梯形问题</strong></p>
+<p>拆点 + 费用流。第一个子任务对应的是所有边容量为 1，第二个把原点与拆点之间的容量改成 inf，<strong>同时把最后一排到 t 的容量改为 inf</strong>，第三个直接把剩余除了 s 到第一排的都改为 inf 即可。原点与拆点间的费用为点权，剩余费用为 0。跑最大费用最大流。</p></li>
+<li><p>21/02/09 <strong>P3358 最长k可重区间集问题</strong></p>
+<p>所有重复了的区间最多被选择 <span class="math inline">\(k\)</span> 次，所以考虑流量为 <span class="math inline">\(k\)</span> 寻找费用流解法。离散化每个端点，然后从左到右连流量无限费用 <span class="math inline">\(0\)</span> 的边，然后对于每个区间从左往右连流量为 <span class="math inline">\(1\)</span> 费用为区间长度的边。跑最大费用最大流。</p></li>
+<li><p>21/02/16 <strong>P3357 最长k可重线段集问题</strong></p>
+<p>和上题基本类似，我们会发现只需要投影到 <span class="math inline">\(x\)</span> 轴上做并判断与 <span class="math inline">\(x\)</span> 轴垂直的线段即可。考虑将每个端点横坐标乘以二，对于 <span class="math inline">\((x_1, x_2)\)</span> 类型的我们再将 <span class="math inline">\(x_1 + 1\)</span>，对于 <span class="math inline">\((x,x)\)</span> 类型的变为 <span class="math inline">\((x, x + 1)\)</span>，不难发现这样可以轻松处理垂直的线段。</p></li>
+<li><p>21/02/16 <strong>P4012 深海机器人问题</strong></p>
+<p>比较简单的费用流。对于网格内每个能走的路径建两条边，一条表示取海洋生物，一条不取。源向每个起点连，每个终点连向汇。跑最大费用最大流即可。</p></li>
+<li><p>21/02/16 <strong>P1251 餐巾计划问题</strong></p>
+<p>非常清奇的建模。显然把每天拆成早上和晚上，<strong>每天晚上都会获得 <span class="math inline">\(r_i\)</span> 条脏餐巾，所以源向第 <span class="math inline">\(i\)</span> 天晚上连边</strong>，同理，每天早上都会送出去 <span class="math inline">\(r_i\)</span> 条干净餐巾，所以往汇连。购买操作从源买即可，算起费用，洗餐巾的操作同理。</p></li>
+<li><p>21/09/03 <strong><a href="https://www.luogu.com.cn/problem/P4452">P4452 [国家集训队]航班安排</a></strong></p>
+<p>对每个包机请求拆点来做。将飞机视作流。</p>
+<p>对于一个需求，如果 <span class="math inline">\(0\)</span> 能飞到起点，那么从假源点连 <span class="math inline">\((s_0, i_0 +\infty, w(0, a_i))\)</span>，如果能从终点飞回 <span class="math inline">\(0\)</span>，那么连 <span class="math inline">\((i_1, t, +\infty, w(b_i, 0)\)</span>，为了保证只有一架飞机飞连 <span class="math inline">\((i_0, i_1, t, -c)\)</span>（因为 <span class="math inline">\(c\)</span> 是净利润）。之后能一个飞完到另一个的也都连边，最后连 <span class="math inline">\((s, s_0, k, 0)\)</span>。跑最小费用最大流然后取相反数。</p></li>
+</ul>
+<h2 id="最小割">最小割</h2>
+<ul>
+<li><p>21/02/18 <strong>UVA1660 电视网络 Cable TV Network</strong></p>
+<p>考虑枚举不连通的两个点，作为源和汇。然后拆点，连容量为 <span class="math inline">\(1\)</span> 的边，再把原来的无向图的边化为出点到入点容量为 inf 的边，跑最大流就可以求出最小割，最小割即为容量为 <span class="math inline">\(1\)</span> 的边数——去掉的点数。如果最小割为 inf 说明没办法使图不连通。</p></li>
+<li><p>21/09/01 <strong><a href="https://www.luogu.com.cn/problem/P2057">P2057 [SHOI2007]善意的投票 / [JLOI2010]冠军调查</a></strong></p>
+<p>最小割之集合划分问题。</p></li>
+<li><p>21/09/01 <strong><a href="https://www.luogu.com.cn/problem/P4126">P4126 [AHOI2009]最小割</a></strong></p>
+<p><a href="/note-bi-graph-and-networkflow/">最小割的可行边和必须边问题</a>。</p></li>
+<li><p>21/09/11 <strong><a href="https://www.luogu.com.cn/problem/P2805">P2805 [NOI2009] 植物大战僵尸</a></strong></p>
+<p><a href="/sol-luogu-p2805/">最大权闭合图</a>，注意到存在环，所以需要拓扑排序把环先去掉。</p></li>
+</ul>
+<h2 id="上下界网络流">上下界网络流</h2>
+<ul>
+<li><p>21/02/06 <strong>LOJ#115. 无源汇有上下界可行流</strong></p>
+<p>无源汇有上下界可行流，考虑低保网络和增量网络，为了使增量网络和低保网络会在一起之后流量守恒，需建虚拟源/汇使得多了的流量有归宿</p></li>
+<li><p>21/02/06 <strong>LOJ#116. 有源汇有上下界最大流</strong></p>
+<p>转换模型，从原来的 <span class="math inline">\(t\)</span> 向 <span class="math inline">\(s\)</span> 连 <span class="math inline">\([0,+\infty)\)</span> 的边，保证源汇点流量平衡，然后就可以找到一个可行流（这个可行流的流量即为 <span class="math inline">\(&lt;t,s&gt;\)</span> 的流量。之后在残量网络上跑从 <span class="math inline">\(s\)</span> 到 <span class="math inline">\(t\)</span> 的最大流榨干剩余的流量即可。</p></li>
+<li><p>21/02/06 <strong>P5192 Zoj3229 Shoot the Bullet东方文花帖【模板】有源汇上下界最大流</strong></p>
+<p>源向每天连 <span class="math inline">\([0,D_i]\)</span> 的边，每天向对应的每个少女连对应 <span class="math inline">\([L,R]\)</span> 的边，每个少女向汇连 <span class="math inline">\([G_i,+\infty)\)</span> 的边，然后跑有源汇上下界最大流</p></li>
+</ul>
+</section>
+<footer class="article-footer">
+<section class="article-tags">
+<a href="/tags/OI/">OI</a>
+<a href="/tags/networkflow/">网络流</a>
+<a href="/tags/solution/">解题报告</a>
+</section>
+<section class="article-copyright">
+<svg class="icon icon-tabler icon-tabler-copyright" fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+<path d="M0 0h24v24H0z" stroke="none"></path>
+<circle cx="12" cy="12" r="9"></circle>
+<path d="M14.5 9a3.5 4 0 1 0 0 6"></path>
+</svg>
+<span>Licensed under CC BY-NC-SA 4.0</span>
+</section>
+</footer>
+<link crossorigin="anonymous" href="https://cdn.jsdelivr.net/npm/katex@0.13.13/dist/katex.min.css" integrity="sha384-RZU/ijkSsFbcmivfdRBQDtwuwVqK7GMOw6IMvKyeWL2K5UAlyp6WonmB8m7Jd0Hn" rel="stylesheet"/><script crossorigin="anonymous" defer="" integrity="sha384-pK1WpvzWVBQiP0/GjnvRxV4mOb0oxFuyRxJlk6vVw146n3egcN5C925NCP7a7BY8" src="https://cdn.jsdelivr.net/npm/katex@0.13.13/dist/katex.min.js">
+</script><script crossorigin="anonymous" defer="" integrity="sha384-vZTG03m+2yp6N6BNi5iM4rW4oIwk5DfcNdFfxkk9ZWpDriOkXX8voJBFrAO7MpVl" src="https://cdn.jsdelivr.net/npm/katex@0.13.13/dist/contrib/auto-render.min.js">
+</script><script>
+    window.addEventListener("DOMContentLoaded", () => {
+        renderMathInElement(document.querySelector(`.article-content`), {
+            delimiters: [
+                { left: "$$", right: "$$", display: true },
+                { left: "$", right: "$", display: false },
+                { left: "\\(", right: "\\)", display: false },
+                { left: "\\[", right: "\\]", display: true }
+            ]
+        });})
+</script>
+</article>
+<aside class="related-contents--wrapper">
+<h2 class="section-title">相关文章</h2>
+<div class="related-contents">
+<div class="flex article-list--tile">
+<article class="has-image">
+<a href="/sol-luogu-p2046/">
+<div class="article-image">
+<img data-hash="https://yangty-pic.oss-cn-beijing.aliyuncs.com/bg38.webp" data-key="" loading="lazy" src="https://yangty-pic.oss-cn-beijing.aliyuncs.com/bg38.webp"/>
+</div>
+<div class="article-details">
+<h2 class="article-title">P2046 [NOI2010] 海拔</h2>
+</div>
+</a>
+</article>
+<article class="has-image">
+<a href="/sol-luogu-p5039/">
+<div class="article-image">
+<img data-hash="https://yangty-pic.oss-cn-beijing.aliyuncs.com/bg8.webp" data-key="" loading="lazy" src="https://yangty-pic.oss-cn-beijing.aliyuncs.com/bg8.webp"/>
+</div>
+<div class="article-details">
+<h2 class="article-title">P5039 [SHOI2010]最小生成树</h2>
+</div>
+</a>
+</article>
+<article class="has-image">
+<a href="/sol-luogu-p3305/">
+<div class="article-image">
+<img data-hash="https://yangty-pic.oss-cn-beijing.aliyuncs.com/bg58.webp" data-key="" loading="lazy" src="https://yangty-pic.oss-cn-beijing.aliyuncs.com/bg58.webp"/>
+</div>
+<div class="article-details">
+<h2 class="article-title">P3305 [SDOI2013]费用流</h2>
+</div>
+</a>
+</article>
+<article class="has-image">
+<a href="/sol-luogu-p3163/">
+<div class="article-image">
+<img data-hash="https://yangty-pic.oss-cn-beijing.aliyuncs.com/bg50.webp" data-key="" loading="lazy" src="https://yangty-pic.oss-cn-beijing.aliyuncs.com/bg50.webp"/>
+</div>
+<div class="article-details">
+<h2 class="article-title">P3163 [CQOI2014]危桥</h2>
+</div>
+</a>
+</article>
+<article class="has-image">
+<a href="/sol-luogu-p2053/">
+<div class="article-image">
+<img data-hash="https://yangty-pic.oss-cn-beijing.aliyuncs.com/bg38.webp" data-key="" loading="lazy" src="https://yangty-pic.oss-cn-beijing.aliyuncs.com/bg38.webp"/>
+</div>
+<div class="article-details">
+<h2 class="article-title">P2053 [SCOI2007]修车</h2>
+</div>
+</a>
+</article>
+</div>
+</div>
+</aside>
+<footer class="site-footer">
+<section class="copyright">
+        © 
+        
+            2019 - 
+        
+        2024 清烛的博客
+    </section>
+<section class="powerby">
+        Built with <a href="https://gohugo.io/" rel="noopener" target="_blank">Hugo</a> <br/>
+        主题 <b><a data-version="3.11.0" href="https://github.com/CaiJimmy/hugo-theme-stack" rel="noopener" target="_blank">Stack</a></b> 由 <a href="https://jimmycai.com" rel="noopener" target="_blank">Jimmy</a> 设计
+    </section>
+</footer>
+<div aria-hidden="true" class="pswp" role="dialog" tabindex="-1">
+<div class="pswp__bg"></div>
+<div class="pswp__scroll-wrap">
+<div class="pswp__container">
+<div class="pswp__item"></div>
+<div class="pswp__item"></div>
+<div class="pswp__item"></div>
+</div>
+<div class="pswp__ui pswp__ui--hidden">
+<div class="pswp__top-bar">
+<div class="pswp__counter"></div>
+<button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+<button class="pswp__button pswp__button--share" title="Share"></button>
+<button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+<button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+<div class="pswp__preloader">
+<div class="pswp__preloader__icn">
+<div class="pswp__preloader__cut">
+<div class="pswp__preloader__donut"></div>
+</div>
+</div>
+</div>
+</div>
+<div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+<div class="pswp__share-tooltip"></div>
+</div>
+<button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+</button>
+<button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+</button>
+<div class="pswp__caption">
+<div class="pswp__caption__center"></div>
+</div>
+</div>
+</div>
+</div><script crossorigin="anonymous" defer="" integrity="sha256-ePwmChbbvXbsO02lbM3HoHbSHTHFAeChekF1xKJdleo=" src="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe.min.js">
+</script><script crossorigin="anonymous" defer="" integrity="sha256-UKkzOn/w1mBxRmLLGrSeyB4e1xbrp4xylgAWb3M42pU=" src="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe-ui-default.min.js">
+</script><link crossorigin="anonymous" href="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/default-skin/default-skin.css" integrity="sha256-c0uckgykQ9v5k+IqViZOZKc47Jn7KQil4/MP3ySA3F8=" rel="stylesheet"/><link crossorigin="anonymous" href="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe.css" integrity="sha256-SBLU4vv6CA6lHsZ1XyTdhyjJxCjPif/TRkjnsyGAGnE=" rel="stylesheet"/>
+</main>
+</div>
+<script crossorigin="anonymous" integrity="sha256-5NovOZc4iwiAWTYIFiIM7DxKUXKWvpVEuMEPLzcm5/g=" src="https://cdn.jsdelivr.net/npm/node-vibrant@3.1.5/dist/vibrant.min.js">
+</script><script defer="" src="/ts/main.js" type="text/javascript"></script>
+<script>
+    (function () {
+        const customFont = document.createElement('link');
+        customFont.href = "https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&display=swap";
+
+        customFont.type = "text/css";
+        customFont.rel = "stylesheet";
+
+        document.head.appendChild(customFont);
+    }());
+</script>
+</body>
+</html>

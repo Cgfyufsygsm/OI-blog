@@ -1,0 +1,887 @@
+<!DOCTYPE html>
+<html dir="ltr" lang="zh-CN">
+<head><meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1" name="viewport"/><meta content="前言 省选/NOI（如果能进省队）的个人复习资料。
+全凭个人喜好来搞。
+不会写的很严谨，实战导向型。
+本文内容概览：
+树的直径 LCA 树的重心 树分治 链分治 轻重链剖分 长链剖分 dsu on tree 点分治 静态点分治 动态点分治（点分树） 边分治 “全局平衡二叉树” 动态树 Link-Cut Tree Euler-Tour Tree 树哈希 树的直径 树的直径指的是树上最长的一条链。
+性质 下面假定边权非负。
+树的直径可以有若干条，其一定交于一点 \(x\)，且 \(x\) 为这些直径的中点。
+平凡，不证。
+到任意节点 \(u\) 最远的节点 \(v\) 一定是直径的某个端点。
+可以考虑调整法。
+树的直径的端点的度数必然是 \(1\)。
+还是考虑调整法。
+对于两棵树，直径端点分别为 \((a,b)\) 和 \((c,d)\)，则在两棵树中间连一条边合并之之后，新树的直径端点一定从 \(\{a,b,c,d\}\) 中产生。
+若新树的直径非原树的直径，则其一定过新加的边，根据性质 \(2\) 发现端点一定分别在两棵树的端点。
+如果在一棵树的叶子节点上接一个叶子节点，则最多改变直径的一个端点。
+可以发现这是必然的，懒得证明了。
+求法 树的直径一般有两种求法，一种是 dp，一种是贪心。
+dp 的话，先钦定根节点，然后令 \(f_{u}\) 为 \(u\) 到 \(u\) 子树内叶子的最大距离。然后在 dp 的过程中在子树的根节点合并答案。
+void dfs(int u, int fa) { for (int i = head[u]; i; i = e[i]." name="description"/><title>数据结构复习 3 （树上信息维护）</title>
+<link href="https://oi.imyangty.com/summary-ds3/" rel="canonical"/>
+<link href="/scss/style.min.a5821f3d3ab84ce5a0ac21477e347a2e0ca00292e398d16c5e8e36ded6e35a23.css" rel="stylesheet"/><meta content="数据结构复习 3 （树上信息维护）" property="og:title"/>
+<meta content="前言 省选/NOI（如果能进省队）的个人复习资料。
+全凭个人喜好来搞。
+不会写的很严谨，实战导向型。
+本文内容概览：
+树的直径 LCA 树的重心 树分治 链分治 轻重链剖分 长链剖分 dsu on tree 点分治 静态点分治 动态点分治（点分树） 边分治 “全局平衡二叉树” 动态树 Link-Cut Tree Euler-Tour Tree 树哈希 树的直径 树的直径指的是树上最长的一条链。
+性质 下面假定边权非负。
+树的直径可以有若干条，其一定交于一点 \(x\)，且 \(x\) 为这些直径的中点。
+平凡，不证。
+到任意节点 \(u\) 最远的节点 \(v\) 一定是直径的某个端点。
+可以考虑调整法。
+树的直径的端点的度数必然是 \(1\)。
+还是考虑调整法。
+对于两棵树，直径端点分别为 \((a,b)\) 和 \((c,d)\)，则在两棵树中间连一条边合并之之后，新树的直径端点一定从 \(\{a,b,c,d\}\) 中产生。
+若新树的直径非原树的直径，则其一定过新加的边，根据性质 \(2\) 发现端点一定分别在两棵树的端点。
+如果在一棵树的叶子节点上接一个叶子节点，则最多改变直径的一个端点。
+可以发现这是必然的，懒得证明了。
+求法 树的直径一般有两种求法，一种是 dp，一种是贪心。
+dp 的话，先钦定根节点，然后令 \(f_{u}\) 为 \(u\) 到 \(u\) 子树内叶子的最大距离。然后在 dp 的过程中在子树的根节点合并答案。
+void dfs(int u, int fa) { for (int i = head[u]; i; i = e[i]." property="og:description"/>
+<meta content="https://oi.imyangty.com/summary-ds3/" property="og:url"/>
+<meta content="清烛的博客" property="og:site_name"/>
+<meta content="article" property="og:type"/><meta content="Post" property="article:section"/><meta content="OI" property="article:tag"/><meta content="笔记" property="article:tag"/><meta content="2022-02-08T23:36:58+08:00" property="article:published_time"/><meta content="2022-02-08T23:36:58+08:00" property="article:modified_time"/><meta content="https://yangty-pic.oss-cn-beijing.aliyuncs.com/bg7.webp" property="og:image"/>
+<meta content="数据结构复习 3 （树上信息维护）" name="twitter:title"/>
+<meta content="前言 省选/NOI（如果能进省队）的个人复习资料。
+全凭个人喜好来搞。
+不会写的很严谨，实战导向型。
+本文内容概览：
+树的直径 LCA 树的重心 树分治 链分治 轻重链剖分 长链剖分 dsu on tree 点分治 静态点分治 动态点分治（点分树） 边分治 “全局平衡二叉树” 动态树 Link-Cut Tree Euler-Tour Tree 树哈希 树的直径 树的直径指的是树上最长的一条链。
+性质 下面假定边权非负。
+树的直径可以有若干条，其一定交于一点 \(x\)，且 \(x\) 为这些直径的中点。
+平凡，不证。
+到任意节点 \(u\) 最远的节点 \(v\) 一定是直径的某个端点。
+可以考虑调整法。
+树的直径的端点的度数必然是 \(1\)。
+还是考虑调整法。
+对于两棵树，直径端点分别为 \((a,b)\) 和 \((c,d)\)，则在两棵树中间连一条边合并之之后，新树的直径端点一定从 \(\{a,b,c,d\}\) 中产生。
+若新树的直径非原树的直径，则其一定过新加的边，根据性质 \(2\) 发现端点一定分别在两棵树的端点。
+如果在一棵树的叶子节点上接一个叶子节点，则最多改变直径的一个端点。
+可以发现这是必然的，懒得证明了。
+求法 树的直径一般有两种求法，一种是 dp，一种是贪心。
+dp 的话，先钦定根节点，然后令 \(f_{u}\) 为 \(u\) 到 \(u\) 子树内叶子的最大距离。然后在 dp 的过程中在子树的根节点合并答案。
+void dfs(int u, int fa) { for (int i = head[u]; i; i = e[i]." name="twitter:description"/><meta content="summary_large_image" name="twitter:card"/>
+<meta content="https://yangty-pic.oss-cn-beijing.aliyuncs.com/bg7.webp" name="twitter:image"/>
+<link href="https://q1.qlogo.cn/g?b=qq&amp;nk=375836877&amp;s=5" rel="shortcut icon"/>
+<link href="https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.5.1/build/styles/github-dark-dimmed.min.css" rel="stylesheet"/>
+<script src="https://cdn.jsdelivr.net/gh/highlightjs/cdn-release/build/highlight.min.js"></script>
+<script>hljs.highlightAll();</script>
+</head>
+<body class="article-page">
+<script>
+        (function() {
+            const colorSchemeKey = 'StackColorScheme';
+            if(!localStorage.getItem(colorSchemeKey)){
+                localStorage.setItem(colorSchemeKey, "auto");
+            }
+        })();
+    </script><script>
+    (function() {
+        const colorSchemeKey = 'StackColorScheme';
+        const colorSchemeItem = localStorage.getItem(colorSchemeKey);
+        const supportDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches === true;
+
+        if (colorSchemeItem == 'dark' || colorSchemeItem === 'auto' && supportDarkMode) {
+            
+
+            document.documentElement.dataset.scheme = 'dark';
+        } else {
+            document.documentElement.dataset.scheme = 'light';
+        }
+    })();
+</script>
+<div class="container main-container flex on-phone--column extended"><aside class="sidebar left-sidebar sticky">
+<button aria-label="切换菜单" class="hamburger hamburger--spin" id="toggle-menu" type="button">
+<span class="hamburger-box">
+<span class="hamburger-inner"></span>
+</span>
+</button>
+<header>
+<figure class="site-avatar">
+<a href="/">
+<img alt="Avatar" class="site-logo" height="300" loading="lazy" src="/img/avatar_huea3ce2119467b51fdd2a81393644a76d_51594_300x0_resize_q75_box.jpg" width="300"/>
+</a>
+<span class="emoji">😅</span>
+</figure>
+<div class="site-meta">
+<h1 class="site-name"><a href="/">清烛的博客</a></h1>
+<h2 class="site-description">烟火已谢，笙歌未停</h2>
+</div>
+</header><ol class="social-menu">
+<li>
+<a href="mailto:i@imyangty.com" target="_blank" title="email">
+<svg class="icon icon-tabler icon-tabler-mail" fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" viewbox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+<path d="M0 0h24v24H0z" fill="none" stroke="none"></path>
+<rect height="14" rx="2" width="18" x="3" y="5"></rect>
+<polyline points="3 7 12 13 21 7"></polyline>
+</svg>
+</a>
+</li>
+<li>
+<a href="https://github.com/Cgfyufsygsm" target="_blank" title="GitHub">
+<svg class="icon icon-tabler icon-tabler-brand-github" fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+<path d="M0 0h24v24H0z" fill="none" stroke="none"></path>
+<path d="M9 19c-4.3 1.4 -4.3 -2.5 -6 -3m12 5v-3.5c0 -1 .1 -1.4 -.5 -2c2.8 -.3 5.5 -1.4 5.5 -6a4.6 4.6 0 0 0 -1.3 -3.2a4.2 4.2 0 0 0 -.1 -3.2s-1.1 -.3 -3.5 1.3a12.3 12.3 0 0 0 -6.2 0c-2.4 -1.6 -3.5 -1.3 -3.5 -1.3a4.2 4.2 0 0 0 -.1 3.2a4.6 4.6 0 0 0 -1.3 3.2c0 4.6 2.7 5.7 5.5 6c-.6 .6 -.6 1.2 -.5 2v3.5"></path>
+</svg>
+</a>
+</li>
+<li>
+<a href="https://t.me/Cgfyufsygsm" target="_blank" title="Telegram">
+<svg class="icon icon-tabler icon-tabler-brand-telegram" fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" viewbox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+<path d="M0 0h24v24H0z" fill="none" stroke="none"></path>
+<path d="M15 10l-4 4l6 6l4 -16l-18 7l4 2l2 6l3 -4"></path>
+</svg>
+</a>
+</li>
+<li>
+<a href="https://twitter.com/Cgfyufsygsm" target="_blank" title="Twitter">
+<svg class="icon icon-tabler icon-tabler-brand-twitter" fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+<path d="M0 0h24v24H0z" fill="none" stroke="none"></path>
+<path d="M22 4.01c-1 .49 -1.98 .689 -3 .99c-1.121 -1.265 -2.783 -1.335 -4.38 -.737s-2.643 2.06 -2.62 3.737v1c-3.245 .083 -6.135 -1.395 -8 -4c0 0 -4.182 7.433 4 11c-1.872 1.247 -3.739 2.088 -6 2c3.308 1.803 6.913 2.423 10.034 1.517c3.58 -1.04 6.522 -3.723 7.651 -7.742a13.84 13.84 0 0 0 .497 -3.753c-.002 -.249 1.51 -2.772 1.818 -4.013z"></path>
+</svg>
+</a>
+</li>
+</ol><ol class="menu" id="main-menu">
+<li>
+<a href="/">
+<svg class="icon icon-tabler icon-tabler-home" fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+<path d="M0 0h24v24H0z" stroke="none"></path>
+<polyline points="5 12 3 12 12 3 21 12 19 12"></polyline>
+<path d="M5 12v7a2 2 0 0 0 2 2h10a2 2 0 0 0 2 -2v-7"></path>
+<path d="M9 21v-6a2 2 0 0 1 2 -2h2a2 2 0 0 1 2 2v6"></path>
+</svg>
+<span>主页</span>
+</a>
+</li>
+<li>
+<a href="/about/">
+<svg class="icon icon-tabler icon-tabler-user" fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+<path d="M0 0h24v24H0z" stroke="none"></path>
+<circle cx="12" cy="7" r="4"></circle>
+<path d="M6 21v-2a4 4 0 0 1 4 -4h4a4 4 0 0 1 4 4v2"></path>
+</svg>
+<span>关于</span>
+</a>
+</li>
+<li>
+<a href="/idx/">
+<svg class="icon icon-tabler icon-tabler-hash" fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+<path d="M0 0h24v24H0z" stroke="none"></path>
+<line x1="5" x2="19" y1="9" y2="9"></line>
+<line x1="5" x2="19" y1="15" y2="15"></line>
+<line x1="11" x2="7" y1="4" y2="20"></line>
+<line x1="17" x2="13" y1="4" y2="20"></line>
+</svg>
+<span>导航</span>
+</a>
+</li>
+<li>
+<a href="/archives/">
+<svg class="icon icon-tabler icon-tabler-archive" fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+<path d="M0 0h24v24H0z" stroke="none"></path>
+<rect height="4" rx="2" width="18" x="3" y="4"></rect>
+<path d="M5 8v10a2 2 0 0 0 2 2h10a2 2 0 0 0 2 -2v-10"></path>
+<line x1="10" x2="14" y1="12" y2="12"></line>
+</svg>
+<span>归档</span>
+</a>
+</li>
+<li>
+<a href="/search/">
+<svg class="icon icon-tabler icon-tabler-search" fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+<path d="M0 0h24v24H0z" stroke="none"></path>
+<circle cx="10" cy="10" r="7"></circle>
+<line x1="21" x2="15" y1="21" y2="15"></line>
+</svg>
+<span>搜索</span>
+</a>
+</li>
+<li>
+<a href="/friends/">
+<svg class="icon icon-tabler icon-tabler-link" fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+<path d="M0 0h24v24H0z" stroke="none"></path>
+<path d="M10 14a3.5 3.5 0 0 0 5 0l4 -4a3.5 3.5 0 0 0 -5 -5l-.5 .5"></path>
+<path d="M14 10a3.5 3.5 0 0 0 -5 0l-4 4a3.5 3.5 0 0 0 5 5l.5 -.5"></path>
+</svg>
+<span>友链</span>
+</a>
+</li>
+<li>
+<a href="https://blog.imyangty.com" target="_blank">
+<svg class="icon icon-tabler icon-tabler-home" fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+<path d="M0 0h24v24H0z" stroke="none"></path>
+<polyline points="5 12 3 12 12 3 21 12 19 12"></polyline>
+<path d="M5 12v7a2 2 0 0 0 2 2h10a2 2 0 0 0 2 -2v-7"></path>
+<path d="M9 21v-6a2 2 0 0 1 2 -2h2a2 2 0 0 1 2 2v6"></path>
+</svg>
+<span>主博客</span>
+</a>
+</li>
+<div class="menu-bottom-section">
+<li id="dark-mode-toggle">
+<svg class="icon icon-tabler icon-tabler-toggle-left" fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+<path d="M0 0h24v24H0z" stroke="none"></path>
+<circle cx="8" cy="12" r="2"></circle>
+<rect height="12" rx="6" width="20" x="2" y="6"></rect>
+</svg>
+<svg class="icon icon-tabler icon-tabler-toggle-right" fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+<path d="M0 0h24v24H0z" stroke="none"></path>
+<circle cx="16" cy="12" r="2"></circle>
+<rect height="12" rx="6" width="20" x="2" y="6"></rect>
+</svg>
+<span>暗色模式</span>
+</li>
+</div>
+</ol>
+</aside>
+<main class="main full-width">
+<article class="has-image main-article">
+<header class="article-header">
+<div class="article-image">
+<a href="/summary-ds3/">
+<img alt="Featured image of post 数据结构复习 3 （树上信息维护）" loading="lazy" src="https://yangty-pic.oss-cn-beijing.aliyuncs.com/bg7.webp"/>
+</a>
+</div>
+<div class="article-details">
+<header class="article-category">
+<a href="/categories/oi/">
+                OI
+            </a>
+<a href="/categories/summary/">
+                总结
+            </a>
+</header>
+<div class="article-title-wrapper">
+<h2 class="article-title">
+<a href="/summary-ds3/">数据结构复习 3 （树上信息维护）</a>
+</h2>
+</div>
+<footer class="article-time">
+<div>
+<svg class="icon icon-tabler icon-tabler-calendar-time" fill="none" height="56" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="56" xmlns="http://www.w3.org/2000/svg">
+<path d="M0 0h24v24H0z" stroke="none"></path>
+<path d="M11.795 21h-6.795a2 2 0 0 1 -2 -2v-12a2 2 0 0 1 2 -2h12a2 2 0 0 1 2 2v4"></path>
+<circle cx="18" cy="18" r="4"></circle>
+<path d="M15 3v4"></path>
+<path d="M7 3v4"></path>
+<path d="M3 11h16"></path>
+<path d="M18 16.496v1.504l1 1"></path>
+</svg>
+<time class="article-time--published">Feb 08, 2022</time>
+</div>
+<div>
+<svg class="icon icon-tabler icon-tabler-clock" fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+<path d="M0 0h24v24H0z" stroke="none"></path>
+<circle cx="12" cy="12" r="9"></circle>
+<polyline points="12 7 12 12 15 15"></polyline>
+</svg>
+<time class="article-time--reading">
+                    阅读时长: 9 分钟
+                </time>
+</div>
+</footer>
+</div>
+</header>
+<section class="article-content">
+<h2 id="前言">前言</h2>
+<p>省选/NOI（如果能进省队）的个人复习资料。</p>
+<p>全凭个人喜好来搞。</p>
+<p>不会写的很严谨，实战导向型。</p>
+<p>本文内容概览：</p>
+<ul>
+<li>树的直径</li>
+<li>LCA</li>
+<li>树的重心</li>
+<li>树分治
+<ul>
+<li>链分治
+<ul>
+<li>轻重链剖分</li>
+<li>长链剖分</li>
+<li>dsu on tree</li>
+</ul></li>
+<li>点分治
+<ul>
+<li>静态点分治</li>
+<li>动态点分治（点分树）</li>
+</ul></li>
+<li>边分治</li>
+<li>“全局平衡二叉树”</li>
+</ul></li>
+<li>动态树
+<ul>
+<li>Link-Cut Tree</li>
+<li>Euler-Tour Tree</li>
+</ul></li>
+<li>树哈希</li>
+</ul>
+<h2 id="树的直径">树的直径</h2>
+<p>树的直径指的是树上最长的一条链。</p>
+<h3 id="性质">性质</h3>
+<p>下面假定边权非负。</p>
+<ol type="1">
+<li><p>树的直径可以有若干条，其一定交于一点 <span class="math inline">\(x\)</span>，且 <span class="math inline">\(x\)</span> 为这些直径的中点。</p>
+<p>平凡，不证。</p></li>
+<li><p>到任意节点 <span class="math inline">\(u\)</span> 最远的节点 <span class="math inline">\(v\)</span> 一定是直径的某个端点。</p>
+<p>可以考虑调整法。</p></li>
+<li><p>树的直径的端点的度数必然是 <span class="math inline">\(1\)</span>。</p>
+<p>还是考虑调整法。</p></li>
+<li><p>对于两棵树，直径端点分别为 <span class="math inline">\((a,b)\)</span> 和 <span class="math inline">\((c,d)\)</span>，则在两棵树中间连一条边合并之之后，新树的直径端点一定从 <span class="math inline">\(\{a,b,c,d\}\)</span> 中产生。</p>
+<p>若新树的直径非原树的直径，则其一定过新加的边，根据性质 <span class="math inline">\(2\)</span> 发现端点一定分别在两棵树的端点。</p></li>
+<li><p>如果在一棵树的叶子节点上接一个叶子节点，则最多改变直径的一个端点。</p>
+<p>可以发现这是必然的，懒得证明了。</p></li>
+</ol>
+<h3 id="求法">求法</h3>
+<p>树的直径一般有两种求法，一种是 dp，一种是贪心。</p>
+<p>dp 的话，先钦定根节点，然后令 <span class="math inline">\(f_{u}\)</span> 为 <span class="math inline">\(u\)</span> 到 <span class="math inline">\(u\)</span> 子树内叶子的最大距离。然后在 dp 的过程中在子树的根节点合并答案。</p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode cpp"><code class="sourceCode cpp"><span id="cb1-1"><a aria-hidden="true" href="#cb1-1"></a><span class="dt">void</span> dfs(<span class="dt">int</span> u, <span class="dt">int</span> fa) {</span>
+<span id="cb1-2"><a aria-hidden="true" href="#cb1-2"></a>    <span class="cf">for</span> (<span class="dt">int</span> i = head[u]; i; i = e[i].nxt) {</span>
+<span id="cb1-3"><a aria-hidden="true" href="#cb1-3"></a>        <span class="dt">int</span> &amp;v = to[i];</span>
+<span id="cb1-4"><a aria-hidden="true" href="#cb1-4"></a>        <span class="cf">if</span> (v == fa) <span class="cf">continue</span>;</span>
+<span id="cb1-5"><a aria-hidden="true" href="#cb1-5"></a>        dfs(v, u);</span>
+<span id="cb1-6"><a aria-hidden="true" href="#cb1-6"></a>        chkmax(ans, f[u] + e[i].w + f[v]); <span class="co">// 合并答案</span></span>
+<span id="cb1-7"><a aria-hidden="true" href="#cb1-7"></a>        chkmax(f[u], f[v] + e[i].w); <span class="co">// 更新 dp 数组</span></span>
+<span id="cb1-8"><a aria-hidden="true" href="#cb1-8"></a>    }</span>
+<span id="cb1-9"><a aria-hidden="true" href="#cb1-9"></a>}</span></code></pre></div>
+<p><strong>dp 做法可以处理边权为负的情况</strong>。</p>
+<p>而贪心做法由于基于上面的性质 <span class="math inline">\(2\)</span>，所以无法处理边权为负的情况。</p>
+<p>具体地，随便找一个点 <span class="math inline">\(x\)</span> 开始，找到距离 <span class="math inline">\(x\)</span> 最远的点 <span class="math inline">\(u\)</span>，根据性质 <span class="math inline">\(2\)</span> 其一定为直径端点，然后再从 <span class="math inline">\(u\)</span> 开始找到距离 <span class="math inline">\(u\)</span> 最远的点 <span class="math inline">\(v\)</span>，根据直径的定义，<span class="math inline">\((u,v)\)</span> 即为一条直径。</p>
+<h3 id="应用">应用</h3>
+<p>咕。</p>
+<h2 id="lca">LCA</h2>
+<h3 id="定义">定义</h3>
+<p>LCA（Lowest Common Ancestor），指的是有根树上，若干个节点的最近公共祖先。</p>
+<h3 id="性质-1">性质</h3>
+<ol type="1">
+<li><span class="math inline">\(\operatorname{LCA}(u) = u\)</span>。</li>
+<li><span class="math inline">\(u\)</span> 是 <span class="math inline">\(v\)</span> 的祖先 <span class="math inline">\(\iff \operatorname{LCA}(u, v) = u\)</span>。</li>
+<li>前序遍历中，<span class="math inline">\(\operatorname{LCA}(S)\)</span> 出现在 <span class="math inline">\(S\)</span> 中所有元素之前，后序遍历中出现在所有元素之后。</li>
+<li>LCA 具有可并性质：<span class="math inline">\(\operatorname{LCA}(A\cup B) = \operatorname{LCA}(\operatorname{LCA}(A)\cup\operatorname{LCA}(B))\)</span>。</li>
+<li><span class="math inline">\(d(u,v) = h(u) + h(v) - 2h(\operatorname{LCA}(u,v))\)</span>。其中 <span class="math inline">\(d(u,v)\)</span> 表示树上 <span class="math inline">\(u\)</span> 和 <span class="math inline">\(v\)</span> 的距离，<span class="math inline">\(h(u)\)</span> 表示 <span class="math inline">\(u\)</span> 的深度（到根节点的距离）。</li>
+</ol>
+<p>上面的性质都比较显然，就不证明了。</p>
+<h3 id="求法-1">求法</h3>
+<p>最朴素的算法是，每次从 <span class="math inline">\(u\)</span> 和 <span class="math inline">\(v\)</span> 中挑一个深度最深的，往父亲跳，直到两指针深度一样时再一起往上跳。会发现他们总会在 LCA 处相遇。</p>
+<p>考虑优化上述过程，预处理出 <span class="math inline">\(f_{u,j}\)</span> 表示 <span class="math inline">\(u\)</span> 的 <span class="math inline">\(2^j\)</span> 级祖先。其可以很容易在 dfs 过程中处理。然后就考虑将最深的节点尽可能往大的跳，跳到深度一样后再一起往上跳，<strong>往上跳的条件是 <span class="math inline">\(2^j\)</span> 级祖先不相等</strong>，详见下面代码：</p>
+<div class="sourceCode" id="cb2"><pre class="sourceCode cpp"><code class="sourceCode cpp"><span id="cb2-1"><a aria-hidden="true" href="#cb2-1"></a><span class="dt">void</span> dfs(<span class="dt">int</span> u, <span class="dt">int</span> f) {</span>
+<span id="cb2-2"><a aria-hidden="true" href="#cb2-2"></a>    fa[u][<span class="dv">0</span>] = f, dep[u] = dep[f] + <span class="dv">1</span>;</span>
+<span id="cb2-3"><a aria-hidden="true" href="#cb2-3"></a>    FOR(i, <span class="dv">1</span>, <span class="dv">19</span>) fa[u][i] = fa[fa[u][i - <span class="dv">1</span>]][i - <span class="dv">1</span>];</span>
+<span id="cb2-4"><a aria-hidden="true" href="#cb2-4"></a>    <span class="cf">for</span> (<span class="dt">int</span> i = head[u]; i; i = nxt[i]) {</span>
+<span id="cb2-5"><a aria-hidden="true" href="#cb2-5"></a>        <span class="dt">int</span> &amp;v = to[i];</span>
+<span id="cb2-6"><a aria-hidden="true" href="#cb2-6"></a>        <span class="cf">if</span> (v != fa[u][<span class="dv">0</span>]) dfs(v, u);</span>
+<span id="cb2-7"><a aria-hidden="true" href="#cb2-7"></a>    }</span>
+<span id="cb2-8"><a aria-hidden="true" href="#cb2-8"></a>    <span class="cf">return</span>;</span>
+<span id="cb2-9"><a aria-hidden="true" href="#cb2-9"></a>}</span>
+<span id="cb2-10"><a aria-hidden="true" href="#cb2-10"></a></span>
+<span id="cb2-11"><a aria-hidden="true" href="#cb2-11"></a><span class="dt">int</span> LCA(<span class="dt">int</span> u, <span class="dt">int</span> v) {</span>
+<span id="cb2-12"><a aria-hidden="true" href="#cb2-12"></a>    <span class="cf">if</span> (dep[u] &lt; dep[v]) swap(u, v); <span class="co">// 令 u 为深度大的节点</span></span>
+<span id="cb2-13"><a aria-hidden="true" href="#cb2-13"></a>    DEC(i, <span class="dv">19</span>, <span class="dv">0</span>) {</span>
+<span id="cb2-14"><a aria-hidden="true" href="#cb2-14"></a>        <span class="cf">if</span> (dep[fa[u][i]] &gt;= dep[v]) u = fa[u][i]; <span class="co">// 尽可能上跳，跳到深度一样为止</span></span>
+<span id="cb2-15"><a aria-hidden="true" href="#cb2-15"></a>        <span class="cf">if</span> (u == v) <span class="cf">return</span> u; <span class="co">// 特判跳上去就在一起了的情况</span></span>
+<span id="cb2-16"><a aria-hidden="true" href="#cb2-16"></a>    }</span>
+<span id="cb2-17"><a aria-hidden="true" href="#cb2-17"></a>    DEC(i, <span class="dv">19</span>, <span class="dv">0</span>) {</span>
+<span id="cb2-18"><a aria-hidden="true" href="#cb2-18"></a>        <span class="cf">if</span> (fa[u][i] != fa[v][i])</span>
+<span id="cb2-19"><a aria-hidden="true" href="#cb2-19"></a>            u = fa[u][i], v = fa[v][i];</span>
+<span id="cb2-20"><a aria-hidden="true" href="#cb2-20"></a>    }</span>
+<span id="cb2-21"><a aria-hidden="true" href="#cb2-21"></a>    <span class="cf">return</span> fa[u][<span class="dv">0</span>]; <span class="co">// 因为刚好最后要跳到 u, v 为 LCA 的两个儿子的情况</span></span>
+<span id="cb2-22"><a aria-hidden="true" href="#cb2-22"></a>}</span></code></pre></div>
+<p>这种方法叫<strong>倍增</strong>法，是很常见的思想。其的优势在于<strong>可以支持对树的形态的调整</strong>，比如在某处加一个儿子之类的，因为加了之后就可以顺带 <span class="math inline">\(O(\log n)\)</span> 处理新节点的倍增数组。时间复杂度 <span class="math inline">\(O(n\log n)-O(\log n)\)</span>（前面指预处理复杂度，后面指单次询问复杂度）。</p>
+<hr/>
+<p>使用下面要讲的轻重链剖分也可以很愉快的求出 LCA，而且个人认为比倍增好写（除了码量略大）。</p>
+<p>其时间复杂度为 <span class="math inline">\(O(n\log n)-O(\log n)\)</span>，但<strong>常数吊打倍增</strong>。不支持对树的形态的改变。</p>
+<hr/>
+<p>对于一部分询问 LCA 次数极大且常数卡的紧的题目，可以使用下面的 <span class="math inline">\(O(n\log n)-O(1)\)</span> 算法。</p>
+<p>考虑建出原树的欧拉序列（每次访问和回溯都将编号记录下来，可以得到长度为 <span class="math inline">\(2n - 1\)</span> 的序列），令 <span class="math inline">\(\operatorname{pos}(u)\)</span> 为 <span class="math inline">\(u\)</span> 在欧拉序列中第一次出现的为止。然后发现 <span class="math inline">\(u\)</span> 和 <span class="math inline">\(v\)</span> 的 LCA 一定会夹在 <span class="math inline">\(\operatorname{pos}(u)\)</span> 和 <span class="math inline">\(\operatorname{pos}(v)\)</span> 中间。</p>
+<p>所以<strong>这个东西就被转化成了一个区间 RMQ 问题</strong>，使用 ST 表即可做到 <span class="math inline">\(O(n\log n)-O(1)\)</span>。</p>
+<div class="sourceCode" id="cb3"><pre class="sourceCode cpp"><code class="sourceCode cpp"><span id="cb3-1"><a aria-hidden="true" href="#cb3-1"></a><span class="at">const</span> <span class="dt">int</span> maxn = <span class="fl">1e6</span> + <span class="dv">5</span>;</span>
+<span id="cb3-2"><a aria-hidden="true" href="#cb3-2"></a><span class="dt">int</span> dfn[maxn], st[<span class="dv">21</span>][maxn], lg[maxn], dfntot, pos[maxn], dep[maxn];</span>
+<span id="cb3-3"><a aria-hidden="true" href="#cb3-3"></a><span class="dt">int</span> head[maxn], to[maxn], nxt[maxn], cnte;</span>
+<span id="cb3-4"><a aria-hidden="true" href="#cb3-4"></a><span class="dt">int</span> n, m, root;</span>
+<span id="cb3-5"><a aria-hidden="true" href="#cb3-5"></a></span>
+<span id="cb3-6"><a aria-hidden="true" href="#cb3-6"></a>il <span class="dt">void</span> add(<span class="dt">int</span> u, <span class="dt">int</span> v) {</span>
+<span id="cb3-7"><a aria-hidden="true" href="#cb3-7"></a>    to[++cnte] = v;</span>
+<span id="cb3-8"><a aria-hidden="true" href="#cb3-8"></a>    nxt[cnte] = head[u];</span>
+<span id="cb3-9"><a aria-hidden="true" href="#cb3-9"></a>    head[u] = cnte;</span>
+<span id="cb3-10"><a aria-hidden="true" href="#cb3-10"></a>    <span class="cf">return</span>;</span>
+<span id="cb3-11"><a aria-hidden="true" href="#cb3-11"></a>}</span>
+<span id="cb3-12"><a aria-hidden="true" href="#cb3-12"></a></span>
+<span id="cb3-13"><a aria-hidden="true" href="#cb3-13"></a><span class="dt">void</span> dfs(<span class="dt">int</span> u, <span class="dt">int</span> fa) {</span>
+<span id="cb3-14"><a aria-hidden="true" href="#cb3-14"></a>    st[<span class="dv">0</span>][++dfntot] = u;</span>
+<span id="cb3-15"><a aria-hidden="true" href="#cb3-15"></a>    pos[u] = dfntot;</span>
+<span id="cb3-16"><a aria-hidden="true" href="#cb3-16"></a>    dep[u] = dep[fa] + <span class="dv">1</span>;</span>
+<span id="cb3-17"><a aria-hidden="true" href="#cb3-17"></a>    <span class="cf">for</span> (<span class="dt">int</span> i = head[u]; i; i = nxt[i]) {</span>
+<span id="cb3-18"><a aria-hidden="true" href="#cb3-18"></a>        <span class="dt">int</span> v = to[i];</span>
+<span id="cb3-19"><a aria-hidden="true" href="#cb3-19"></a>        <span class="cf">if</span> (v == fa) <span class="cf">continue</span>;</span>
+<span id="cb3-20"><a aria-hidden="true" href="#cb3-20"></a>        dfs(v, u);</span>
+<span id="cb3-21"><a aria-hidden="true" href="#cb3-21"></a>        st[<span class="dv">0</span>][++dfntot] = u;</span>
+<span id="cb3-22"><a aria-hidden="true" href="#cb3-22"></a>    }</span>
+<span id="cb3-23"><a aria-hidden="true" href="#cb3-23"></a>    <span class="cf">return</span>;</span>
+<span id="cb3-24"><a aria-hidden="true" href="#cb3-24"></a>}</span>
+<span id="cb3-25"><a aria-hidden="true" href="#cb3-25"></a></span>
+<span id="cb3-26"><a aria-hidden="true" href="#cb3-26"></a><span class="dt">void</span> init() {</span>
+<span id="cb3-27"><a aria-hidden="true" href="#cb3-27"></a>    lg[<span class="dv">0</span>] = -<span class="dv">1</span>;</span>
+<span id="cb3-28"><a aria-hidden="true" href="#cb3-28"></a>    FOR(i, <span class="dv">1</span>, dfntot) lg[i] = lg[i &gt;&gt; <span class="dv">1</span>] + <span class="dv">1</span>;</span>
+<span id="cb3-29"><a aria-hidden="true" href="#cb3-29"></a>    FOR(j, <span class="dv">1</span>, lg[dfntot])</span>
+<span id="cb3-30"><a aria-hidden="true" href="#cb3-30"></a>        FOR(i, <span class="dv">1</span>, dfntot - (<span class="dv">1</span> &lt;&lt; j) + <span class="dv">1</span>)</span>
+<span id="cb3-31"><a aria-hidden="true" href="#cb3-31"></a>            st[j][i] = dep[st[j - <span class="dv">1</span>][i]] &lt; dep[st[j - <span class="dv">1</span>][i + (<span class="dv">1</span> &lt;&lt; (j - <span class="dv">1</span>))]] ? st[j - <span class="dv">1</span>][i] : st[j - <span class="dv">1</span>][i + (<span class="dv">1</span> &lt;&lt; (j - <span class="dv">1</span>))];</span>
+<span id="cb3-32"><a aria-hidden="true" href="#cb3-32"></a>    <span class="cf">return</span>;</span>
+<span id="cb3-33"><a aria-hidden="true" href="#cb3-33"></a>}</span>
+<span id="cb3-34"><a aria-hidden="true" href="#cb3-34"></a></span>
+<span id="cb3-35"><a aria-hidden="true" href="#cb3-35"></a><span class="dt">int</span> RMQ(<span class="dt">int</span> l, <span class="dt">int</span> r) {</span>
+<span id="cb3-36"><a aria-hidden="true" href="#cb3-36"></a>    <span class="dt">int</span> len = lg[r - l + <span class="dv">1</span>];</span>
+<span id="cb3-37"><a aria-hidden="true" href="#cb3-37"></a>    <span class="cf">return</span> dep[st[len][l]] &lt; dep[st[len][r - (<span class="dv">1</span> &lt;&lt; len) + <span class="dv">1</span>]] ? st[len][l] : st[len][r - (<span class="dv">1</span> &lt;&lt; len) + <span class="dv">1</span>];</span>
+<span id="cb3-38"><a aria-hidden="true" href="#cb3-38"></a>}</span>
+<span id="cb3-39"><a aria-hidden="true" href="#cb3-39"></a></span>
+<span id="cb3-40"><a aria-hidden="true" href="#cb3-40"></a><span class="dt">int</span> main() {</span>
+<span id="cb3-41"><a aria-hidden="true" href="#cb3-41"></a>    read(n, m, root);</span>
+<span id="cb3-42"><a aria-hidden="true" href="#cb3-42"></a>    FOR(i, <span class="dv">1</span>, n - <span class="dv">1</span>) {</span>
+<span id="cb3-43"><a aria-hidden="true" href="#cb3-43"></a>        <span class="dt">int</span> u, v; read(u, v);</span>
+<span id="cb3-44"><a aria-hidden="true" href="#cb3-44"></a>        add(u, v), add(v, u);</span>
+<span id="cb3-45"><a aria-hidden="true" href="#cb3-45"></a>    }</span>
+<span id="cb3-46"><a aria-hidden="true" href="#cb3-46"></a>    dfs(root, <span class="dv">0</span>);</span>
+<span id="cb3-47"><a aria-hidden="true" href="#cb3-47"></a>    init();</span>
+<span id="cb3-48"><a aria-hidden="true" href="#cb3-48"></a>    <span class="cf">while</span> (m--) {</span>
+<span id="cb3-49"><a aria-hidden="true" href="#cb3-49"></a>        <span class="dt">int</span> u, v; read(u, v);</span>
+<span id="cb3-50"><a aria-hidden="true" href="#cb3-50"></a>        print(RMQ(min(pos[u], pos[v]), max(pos[u], pos[v])));</span>
+<span id="cb3-51"><a aria-hidden="true" href="#cb3-51"></a>    }</span>
+<span id="cb3-52"><a aria-hidden="true" href="#cb3-52"></a>    <span class="cf">return</span> output(), <span class="dv">0</span>;</span>
+<span id="cb3-53"><a aria-hidden="true" href="#cb3-53"></a>}</span></code></pre></div>
+<h3 id="应用-1">应用</h3>
+<p>基本m</p>
+<h2 id="树的重心">树的重心</h2>
+<h2 id="轻重链剖分">轻重链剖分</h2>
+<h2 id="长链剖分">长链剖分</h2>
+<h2 id="dsu-on-tree树上启发式合并">dsu on tree（树上启发式合并）</h2>
+<p>注：通常可以使用线段树合并解决。</p>
+<h2 id="点分治">点分治</h2>
+<h3 id="简介">简介</h3>
+<p>用于处理<strong>无根树上的路径统计问题</strong>的<strong>离线</strong>算法。</p>
+<p>我们钦定一个根之后考虑对于一个子树 <span class="math inline">\(u\)</span>，子树 <span class="math inline">\(u\)</span> 内的所有路径<strong>要么经过 <span class="math inline">\(u\)</span></strong>，<strong>要么不经过 <span class="math inline">\(u\)</span></strong>（感觉我在说</p>
+<p>而且在处理完<strong>经过 <span class="math inline">\(u\)</span> 的路径</strong>之后，<span class="math inline">\(u\)</span> 的子树们是可以<strong>独立</strong>处理的，相当于我可以递归继续处理不经过 <span class="math inline">\(u\)</span> 的路径。</p>
+<p>这就是点分治的核心思想之一：“分治”。</p>
+<p>然而如果遇到链的话他就寄了。所以每次应该找子树的重心再递归下去。</p>
+<p>总结流程：</p>
+<ul>
+<li>找到当前树的重心，设为根节点</li>
+<li>处理所有经过根的路径</li>
+<li>删除根节点</li>
+<li>对于所有的子树，重复上述步骤</li>
+</ul>
+<p><strong>根据重心的性质发现递归层数在 <span class="math inline">\(O(\log n)\)</span> 级别</strong>，这个性质相当重要，是点分树正确性的基础。</p>
+<h3 id="写法">写法</h3>
+<p>点分治细节比较繁多，容易写挂（可能是我太菜了），下面以模板题 <a href="https://www.luogu.com.cn/problem/P3806">P3806 【模板】点分治1</a> 为例进行讲解。</p>
+<p>其需要询问的是树上距离为 <span class="math inline">\(k\)</span> 的节点是否存在，也就是问存不存在长度为 <span class="math inline">\(k\)</span> 的路径。</p>
+<p>首先，我们需要在一切开始之前找到树的重心，将其作为根来开始分治。而在分治完一个节点后我们也需要找到子树的重心，所以考虑写个简单树形 dp 求出重心：</p>
+<div class="sourceCode" id="cb4"><pre class="sourceCode cpp"><code class="sourceCode cpp"><span id="cb4-1"><a aria-hidden="true" href="#cb4-1"></a><span class="dt">void</span> getRt(<span class="dt">int</span> u, <span class="dt">int</span> fa) {</span>
+<span id="cb4-2"><a aria-hidden="true" href="#cb4-2"></a>    size[u] = <span class="dv">1</span>, maxp[u] = <span class="dv">0</span>;</span>
+<span id="cb4-3"><a aria-hidden="true" href="#cb4-3"></a>    <span class="cf">for</span> (<span class="dt">int</span> i = head[u]; i; i = e[i].nxt) {</span>
+<span id="cb4-4"><a aria-hidden="true" href="#cb4-4"></a>        <span class="dt">int</span> &amp;v = e[i].to;</span>
+<span id="cb4-5"><a aria-hidden="true" href="#cb4-5"></a>        <span class="cf">if</span> (v == fa || vis[v]) <span class="cf">continue</span>;</span>
+<span id="cb4-6"><a aria-hidden="true" href="#cb4-6"></a>        getRt(v, u);</span>
+<span id="cb4-7"><a aria-hidden="true" href="#cb4-7"></a>        size[u] += size[v];</span>
+<span id="cb4-8"><a aria-hidden="true" href="#cb4-8"></a>        chkmax(maxp[u], size[v]);</span>
+<span id="cb4-9"><a aria-hidden="true" href="#cb4-9"></a>    }</span>
+<span id="cb4-10"><a aria-hidden="true" href="#cb4-10"></a>    chkmax(maxp[u], tot - size[u]);</span>
+<span id="cb4-11"><a aria-hidden="true" href="#cb4-11"></a>    <span class="cf">if</span> (maxp[u] &lt; maxp[root]) root = u;</span>
+<span id="cb4-12"><a aria-hidden="true" href="#cb4-12"></a>    <span class="cf">return</span>;</span>
+<span id="cb4-13"><a aria-hidden="true" href="#cb4-13"></a>} <span class="co">// remember to set maxp[0] = n !!!!!!!!!!!!!</span></span></code></pre></div>
+<p>然后就是分治部分了。</p>
+<div class="sourceCode" id="cb5"><pre class="sourceCode cpp"><code class="sourceCode cpp"><span id="cb5-1"><a aria-hidden="true" href="#cb5-1"></a><span class="dt">void</span> divide(<span class="dt">int</span> u) {</span>
+<span id="cb5-2"><a aria-hidden="true" href="#cb5-2"></a>    vis[u] = buc[<span class="dv">0</span>] = <span class="dv">1</span>; <span class="co">// 删掉 u 点并初始化桶</span></span>
+<span id="cb5-3"><a aria-hidden="true" href="#cb5-3"></a>    calc(u); <span class="co">// 计算当前点的答案</span></span>
+<span id="cb5-4"><a aria-hidden="true" href="#cb5-4"></a>    <span class="cf">for</span> (<span class="dt">int</span> i = head[u]; i; i = e[i].nxt) {</span>
+<span id="cb5-5"><a aria-hidden="true" href="#cb5-5"></a>        <span class="dt">int</span> v = e[i].to;</span>
+<span id="cb5-6"><a aria-hidden="true" href="#cb5-6"></a>        <span class="cf">if</span> (vis[v]) <span class="cf">continue</span>;</span>
+<span id="cb5-7"><a aria-hidden="true" href="#cb5-7"></a>        maxp[<span class="dv">0</span>] = n, tot = size[v], root = <span class="dv">0</span>; <span class="co">// 千万不要忘记初始化</span></span>
+<span id="cb5-8"><a aria-hidden="true" href="#cb5-8"></a>        getRt(v, u); <span class="co">// 找到子树重心</span></span>
+<span id="cb5-9"><a aria-hidden="true" href="#cb5-9"></a>        getRt(root, <span class="dv">0</span>); <span class="co">// 获取子树中正确的 size</span></span>
+<span id="cb5-10"><a aria-hidden="true" href="#cb5-10"></a>        divide(root);</span>
+<span id="cb5-11"><a aria-hidden="true" href="#cb5-11"></a>    }</span>
+<span id="cb5-12"><a aria-hidden="true" href="#cb5-12"></a>    <span class="cf">return</span>;</span>
+<span id="cb5-13"><a aria-hidden="true" href="#cb5-13"></a>}</span></code></pre></div>
+<p>可能有人会问为什么这里调用了两次 <code>getRt</code>，这是因为调用完第一次后，所有的 size 是以 <span class="math inline">\(u\)</span> 为根的 size，而我们在下一层分治的时候需要的 size 应该是以 v 为根的 size 才对，但是如果不调用第二次也是对的，详见<a href="https://liu-cheng-ao.blog.uoj.ac/blog/2969">一种基于错误的寻找重心方法的点分治的复杂度分析</a>。</p>
+<div class="sourceCode" id="cb6"><pre class="sourceCode cpp"><code class="sourceCode cpp"><span id="cb6-1"><a aria-hidden="true" href="#cb6-1"></a><span class="dt">void</span> getDis(<span class="dt">int</span> u, <span class="dt">int</span> fa, <span class="dt">int</span> *now) {</span>
+<span id="cb6-2"><a aria-hidden="true" href="#cb6-2"></a>    <span class="cf">if</span> (dis[u] &gt; maxq) <span class="cf">return</span>;</span>
+<span id="cb6-3"><a aria-hidden="true" href="#cb6-3"></a>    now[++now[<span class="dv">0</span>]] = dis[u];</span>
+<span id="cb6-4"><a aria-hidden="true" href="#cb6-4"></a>    <span class="cf">for</span> (<span class="dt">int</span> i = head[u]; i; i = e[i].nxt) {</span>
+<span id="cb6-5"><a aria-hidden="true" href="#cb6-5"></a>        <span class="dt">int</span> &amp;v = e[i].to;</span>
+<span id="cb6-6"><a aria-hidden="true" href="#cb6-6"></a>        <span class="cf">if</span> (v == fa || vis[v]) <span class="cf">continue</span>;</span>
+<span id="cb6-7"><a aria-hidden="true" href="#cb6-7"></a>        dis[v] = dis[u] + e[i].w;</span>
+<span id="cb6-8"><a aria-hidden="true" href="#cb6-8"></a>        getDis(v, u, now);</span>
+<span id="cb6-9"><a aria-hidden="true" href="#cb6-9"></a>    }</span>
+<span id="cb6-10"><a aria-hidden="true" href="#cb6-10"></a>    <span class="cf">return</span>;</span>
+<span id="cb6-11"><a aria-hidden="true" href="#cb6-11"></a>}</span>
+<span id="cb6-12"><a aria-hidden="true" href="#cb6-12"></a></span>
+<span id="cb6-13"><a aria-hidden="true" href="#cb6-13"></a><span class="dt">void</span> calc(<span class="dt">int</span> u) {</span>
+<span id="cb6-14"><a aria-hidden="true" href="#cb6-14"></a>    <span class="at">static</span> <span class="dt">int</span> q[maxn], now[maxn], cnt; <span class="co">// q 维护加入了桶的元素, now 维护当前子树内的元素</span></span>
+<span id="cb6-15"><a aria-hidden="true" href="#cb6-15"></a>    cnt = <span class="dv">0</span>;</span>
+<span id="cb6-16"><a aria-hidden="true" href="#cb6-16"></a>    <span class="cf">for</span> (<span class="dt">int</span> i = head[u]; i; i = e[i].nxt) {</span>
+<span id="cb6-17"><a aria-hidden="true" href="#cb6-17"></a>        <span class="dt">int</span> v = e[i].to;</span>
+<span id="cb6-18"><a aria-hidden="true" href="#cb6-18"></a>        <span class="cf">if</span> (vis[v]) <span class="cf">continue</span>;</span>
+<span id="cb6-19"><a aria-hidden="true" href="#cb6-19"></a>        now[<span class="dv">0</span>] = <span class="dv">0</span>, dis[v] = e[i].w;</span>
+<span id="cb6-20"><a aria-hidden="true" href="#cb6-20"></a>        getDis(v, u, now);</span>
+<span id="cb6-21"><a aria-hidden="true" href="#cb6-21"></a>        FOR(j, <span class="dv">1</span>, now[<span class="dv">0</span>]) <span class="co">// 开始合并答案</span></span>
+<span id="cb6-22"><a aria-hidden="true" href="#cb6-22"></a>            FOR(k, <span class="dv">1</span>, m)</span>
+<span id="cb6-23"><a aria-hidden="true" href="#cb6-23"></a>                <span class="cf">if</span> (query[k] &gt;= now[j])</span>
+<span id="cb6-24"><a aria-hidden="true" href="#cb6-24"></a>                    ans[k] |= buc[query[k] - now[j]];</span>
+<span id="cb6-25"><a aria-hidden="true" href="#cb6-25"></a>        FOR(j, <span class="dv">1</span>, now[<span class="dv">0</span>])</span>
+<span id="cb6-26"><a aria-hidden="true" href="#cb6-26"></a>            buc[now[j]] = <span class="dv">1</span>, q[++cnt] = now[j]; <span class="co">// 加入桶</span></span>
+<span id="cb6-27"><a aria-hidden="true" href="#cb6-27"></a>    }</span>
+<span id="cb6-28"><a aria-hidden="true" href="#cb6-28"></a>    FOR(i, <span class="dv">1</span>, cnt) buc[q[i]] = <span class="dv">0</span>; <span class="co">// 清空桶</span></span>
+<span id="cb6-29"><a aria-hidden="true" href="#cb6-29"></a>    <span class="cf">return</span>;</span>
+<span id="cb6-30"><a aria-hidden="true" href="#cb6-30"></a>}</span></code></pre></div>
+<p>对于本题的统计答案方式比较简单，不进行过多展开。</p>
+<p>下面附上主函数：</p>
+<div class="sourceCode" id="cb7"><pre class="sourceCode cpp"><code class="sourceCode cpp"><span id="cb7-1"><a aria-hidden="true" href="#cb7-1"></a><span class="dt">int</span> main() {</span>
+<span id="cb7-2"><a aria-hidden="true" href="#cb7-2"></a>    read(n, m);</span>
+<span id="cb7-3"><a aria-hidden="true" href="#cb7-3"></a>    FOR(i, <span class="dv">2</span>, n) {</span>
+<span id="cb7-4"><a aria-hidden="true" href="#cb7-4"></a>        <span class="dt">int</span> u, v, w; read(u, v, w);</span>
+<span id="cb7-5"><a aria-hidden="true" href="#cb7-5"></a>        add(u, v, w), add(v, u, w);</span>
+<span id="cb7-6"><a aria-hidden="true" href="#cb7-6"></a>    }</span>
+<span id="cb7-7"><a aria-hidden="true" href="#cb7-7"></a>    FOR(i, <span class="dv">1</span>, m) read(query[i]);</span>
+<span id="cb7-8"><a aria-hidden="true" href="#cb7-8"></a>    maxq = *max_element(query + <span class="dv">1</span>, query + m + <span class="dv">1</span>);</span>
+<span id="cb7-9"><a aria-hidden="true" href="#cb7-9"></a></span>
+<span id="cb7-10"><a aria-hidden="true" href="#cb7-10"></a>    maxp[<span class="dv">0</span>] = n; <span class="co">// 不要忘记初始化</span></span>
+<span id="cb7-11"><a aria-hidden="true" href="#cb7-11"></a>    getRt(<span class="dv">1</span>, <span class="dv">0</span>);</span>
+<span id="cb7-12"><a aria-hidden="true" href="#cb7-12"></a>    getRt(root, <span class="dv">0</span>);</span>
+<span id="cb7-13"><a aria-hidden="true" href="#cb7-13"></a>    divide(root);</span>
+<span id="cb7-14"><a aria-hidden="true" href="#cb7-14"></a></span>
+<span id="cb7-15"><a aria-hidden="true" href="#cb7-15"></a>    FOR(i, <span class="dv">1</span>, m) print(ans[i] ? <span class="st">"AYE"</span> : <span class="st">"NAY"</span>);</span>
+<span id="cb7-16"><a aria-hidden="true" href="#cb7-16"></a>    <span class="cf">return</span> output(), <span class="dv">0</span>;</span>
+<span id="cb7-17"><a aria-hidden="true" href="#cb7-17"></a>}</span></code></pre></div>
+<p>点分治的基本框架大概就是这样。时间复杂是 <span class="math inline">\(O(n\log n)\)</span>：每层的 <code>calc</code> 函数为 <span class="math inline">\(O(n)\)</span>，一共 <span class="math inline">\(O(\log n)\)</span> 层。</p>
+<h3 id="应用-2">应用</h3>
+<p>一般来说，看到类似于<em>路径统计</em>类的问题，都可以往点分治上面想。</p>
+<p>当然 dsu on tree，长链剖分和线段树合并也许也能解决。</p>
+<blockquote>
+<p>例题 <span class="math inline">\(1\)</span>：<a href="https://www.luogu.com.cn/problem/P4178">P4178 Tree</a></p>
+<p>给定边带权树，问距离 <span class="math inline">\(\le k\)</span> 的点对数量。</p>
+</blockquote>
+<p>可以类似上题的处理方法，只不过将开桶换成树状数组来维护前缀和即可（注意到值域较小），复杂度 <span class="math inline">\(O(n\log^2n)\)</span>。</p>
+<ul>
+<li><a href="https://www.luogu.com.cn/problem/P6626">P6626 [省选联考 2020 B 卷] 消息传递</a> 比较板，问的是到一个点距离为 <span class="math inline">\(k\)</span> 的点的个数，离线下来然后直接上点分就可以了。</li>
+<li><a href="https://www.luogu.com.cn/problem/P4149">P4149 [IOI2011]Race</a> 问距离为 <span class="math inline">\(k\)</span> 的点对间最的边数，需要同时维护两个信息。</li>
+<li><a href="https://www.luogu.com.cn/problem/P2634">P2634 [国家集训队]聪聪可可</a> 相当于统计模 <span class="math inline">\(3\)</span> 意义下的路径数量。当然也可以树形 dp。</li>
+</ul>
+<h2 id="点分树">点分树</h2>
+<h3 id="简介-1">简介</h3>
+<p>一般来说点分治仅可以处理一部分不修改，离线，或单次询问的问题。</p>
+<p>注意到点分治劣的原因很大程度上是因为浪费时间在重复的计算重心和统计无用的答案上了。</p>
+<p>而若是我们要做的问题<strong>与树的结构无关</strong>，例如两点间距离，连通块，关键点等，则可以考虑对点分治每次找到的重心建出一棵树高为 <span class="math inline">\(O(\log n)\)</span> 的重构树，然后在这棵重构树上解决问题。</p>
+<p>这棵重构树就叫点分树。</p>
+<h3 id="模板题">模板题</h3>
+<blockquote>
+<p>模板题：<a href="https://www.luogu.com.cn/problem/P6329">P6329 【模板】点分树 | 震波</a></p>
+<p><span class="math inline">\(n\)</span> 个点的树，点带权，边权为 <span class="math inline">\(1\)</span>。在线处理 <span class="math inline">\(m\)</span> 次操作：单点修改，以及查询距离 <span class="math inline">\(x\)</span> 不超过 <span class="math inline">\(k\)</span> 的节点的点权和。<span class="math inline">\(n,m\le 10^5\)</span>，不需要开 <code>long long</code>。</p>
+</blockquote>
+<p>在开始之前了解一下点分树的基本性质:</p>
+<ul>
+<li><p>其树高为 <span class="math inline">\(O(\log n)\)</span>，这点在点分治的部分有说明。所以其能够<strong>支持一些看似复杂度很不正确的暴力</strong>，并且<strong>可以在每个节点存储子树中所有子节点的信息</strong>（证明：每个节点到根有 <span class="math inline">\(O(\log n)\)</span> 个祖先，所以总空间复杂度是 <span class="math inline">\(O(n\log n)\)</span> 的）。</p></li>
+<li><p>对于任意两点 <span class="math inline">\(u,v\)</span>，其在点分树上的 LCA 一定在路径 <span class="math inline">\(u\to v\)</span> 上。</p>
+<p>可以考虑点分治的过程，这里不展开。</p></li>
+</ul>
+<p>所以一般做题的时候，考虑<strong>暴力枚举 LCA + 容斥</strong>。</p>
+<p>在这道题里面，我们要求 <span class="math inline">\(\displaystyle\sum_{\operatorname{dis}(x,y)\le k}a_y\)</span>。考虑 <span class="math inline">\(O(\log n)\)</span> 枚举他们的 LCA <span class="math inline">\(z\)</span>，根据上面的推论有 <span class="math inline">\(\operatorname{dis}(x,y) = \operatorname{dis}(x,z) + \operatorname{dis}(z, y)\)</span>。所以考虑维护 <span class="math inline">\(f_1(i, j)\)</span>：点分树上 <span class="math inline">\(i\)</span> 子树内到 <span class="math inline">\(i\)</span> 的距离 <span class="math inline">\(\le j\)</span> 的点权之和。但是如果直接查询 <span class="math inline">\(f_1(z, k - \operatorname{dis}(x, z))\)</span> 的话会算重贡献，因为合法的 <span class="math inline">\(y\)</span> 和 <span class="math inline">\(x\)</span> 应该分居 <span class="math inline">\(z\)</span> 的不同子树内。</p>
+<p>那我们就从 <span class="math inline">\(x\)</span> 开始上跳。首先记录 <span class="math inline">\(f_1(x, k)\)</span>，然后假设枚举到的 LCA 是 <span class="math inline">\(z\)</span>，然后 <span class="math inline">\(x\)</span> 方向子树内 <span class="math inline">\(z\)</span> 的儿子为 <span class="math inline">\(u\)</span>，则我们想要的贡献就是<strong><span class="math inline">\(z\)</span> 子树内到 <span class="math inline">\(z\)</span> 的距离 <span class="math inline">\(\le k - \operatorname{dis}(x, z)\)</span> 的点权和减去 <span class="math inline">\(u\)</span> 子树内到 <span class="math inline">\(z\)</span> 的距离 <span class="math inline">\(\le k - \operatorname{dis}(x, z)\)</span> 的点权和</strong>。</p>
+<p>所以再记录一下 <span class="math inline">\(f_2(i,j)\)</span> 表示点分树上 <span class="math inline">\(i\)</span> 子树内到 <span class="math inline">\(\mathrm{fa}_i\)</span> 的距离 <span class="math inline">\(\le j\)</span> 的点权之和。</p>
+<p>用树状数组维护每个节点的 <span class="math inline">\(f_1\)</span> 和 <span class="math inline">\(f_2\)</span>，查询即查询前缀和，修改即单点修改，初始化可以视作 <span class="math inline">\(n\)</span> 次修改。</p>
+<p>总时间复杂度 <span class="math inline">\(O(n\log^2n)\)</span>，但是代码细节巨大多。</p>
+<ul>
+<li><strong>首先，在点分治中只进行一次 dfs 错误地求出 size 的问题在点分树里面会暴露出来，请务必获取正确的 size</strong>。</li>
+<li>然后在本题中，<span class="math inline">\(f_1(u)\)</span> 的下标范围应该为 <span class="math inline">\([0, \frac{\mathrm{size}_u}{2} + 1]\)</span>（根据重心性质），<span class="math inline">\(f_2(u)\)</span> 的下标范围则为 <span class="math inline">\([0, \mathrm{size}_u + 1]\)</span>，而且下标从 <span class="math inline">\(0\)</span> 开始的话需要注意平移树状数组。<code>vector</code> 也不能开小。</li>
+<li>另外注意若查询的下标大于树状数组的值域，记得与其大小取 <span class="math inline">\(\min\)</span>。</li>
+</ul>
+<div class="sourceCode" id="cb8"><pre class="sourceCode cpp"><code class="sourceCode cpp"><span id="cb8-1"><a aria-hidden="true" href="#cb8-1"></a><span class="at">const</span> <span class="dt">int</span> maxn = <span class="fl">2e5</span> + <span class="dv">5</span>;</span>
+<span id="cb8-2"><a aria-hidden="true" href="#cb8-2"></a><span class="dt">int</span> n, m, head[maxn], to[maxn &lt;&lt; <span class="dv">1</span>], nxt[maxn &lt;&lt; <span class="dv">1</span>], cnte;</span>
+<span id="cb8-3"><a aria-hidden="true" href="#cb8-3"></a><span class="dt">int</span> val[maxn], st[<span class="dv">19</span>][maxn &lt;&lt; <span class="dv">1</span>], dep[maxn], dfnCnt, lg[maxn &lt;&lt; <span class="dv">1</span>], pos[maxn];</span>
+<span id="cb8-4"><a aria-hidden="true" href="#cb8-4"></a></span>
+<span id="cb8-5"><a aria-hidden="true" href="#cb8-5"></a>il <span class="dt">void</span> add(<span class="dt">int</span> u, <span class="dt">int</span> v) {</span>
+<span id="cb8-6"><a aria-hidden="true" href="#cb8-6"></a>    to[++cnte] = v;</span>
+<span id="cb8-7"><a aria-hidden="true" href="#cb8-7"></a>    nxt[cnte] = head[u];</span>
+<span id="cb8-8"><a aria-hidden="true" href="#cb8-8"></a>    head[u] = cnte;</span>
+<span id="cb8-9"><a aria-hidden="true" href="#cb8-9"></a>    <span class="cf">return</span>;</span>
+<span id="cb8-10"><a aria-hidden="true" href="#cb8-10"></a>}</span>
+<span id="cb8-11"><a aria-hidden="true" href="#cb8-11"></a></span>
+<span id="cb8-12"><a aria-hidden="true" href="#cb8-12"></a><span class="dt">void</span> dfs0(<span class="dt">int</span> u, <span class="dt">int</span> pre) { <span class="co">// 预处理欧拉序</span></span>
+<span id="cb8-13"><a aria-hidden="true" href="#cb8-13"></a>    dep[u] = dep[pre] + <span class="dv">1</span>;</span>
+<span id="cb8-14"><a aria-hidden="true" href="#cb8-14"></a>    st[<span class="dv">0</span>][++dfnCnt] = u;</span>
+<span id="cb8-15"><a aria-hidden="true" href="#cb8-15"></a>    pos[u] = dfnCnt;</span>
+<span id="cb8-16"><a aria-hidden="true" href="#cb8-16"></a>    <span class="cf">for</span> (<span class="dt">int</span> i = head[u]; i; i = nxt[i]) {</span>
+<span id="cb8-17"><a aria-hidden="true" href="#cb8-17"></a>        <span class="dt">int</span> &amp;v = to[i];</span>
+<span id="cb8-18"><a aria-hidden="true" href="#cb8-18"></a>        <span class="cf">if</span> (v == pre) <span class="cf">continue</span>;</span>
+<span id="cb8-19"><a aria-hidden="true" href="#cb8-19"></a>        dfs0(v, u);</span>
+<span id="cb8-20"><a aria-hidden="true" href="#cb8-20"></a>        st[<span class="dv">0</span>][++dfnCnt] = u;</span>
+<span id="cb8-21"><a aria-hidden="true" href="#cb8-21"></a>    }</span>
+<span id="cb8-22"><a aria-hidden="true" href="#cb8-22"></a>    <span class="cf">return</span>;</span>
+<span id="cb8-23"><a aria-hidden="true" href="#cb8-23"></a>}</span>
+<span id="cb8-24"><a aria-hidden="true" href="#cb8-24"></a></span>
+<span id="cb8-25"><a aria-hidden="true" href="#cb8-25"></a><span class="dt">void</span> initST() { <span class="co">// ST 表</span></span>
+<span id="cb8-26"><a aria-hidden="true" href="#cb8-26"></a>    lg[<span class="dv">0</span>] = -<span class="dv">1</span>;</span>
+<span id="cb8-27"><a aria-hidden="true" href="#cb8-27"></a>    FOR(i, <span class="dv">1</span>, dfnCnt) lg[i] = lg[i &gt;&gt; <span class="dv">1</span>] + <span class="dv">1</span>;</span>
+<span id="cb8-28"><a aria-hidden="true" href="#cb8-28"></a>    FOR(j, <span class="dv">1</span>, lg[dfnCnt])</span>
+<span id="cb8-29"><a aria-hidden="true" href="#cb8-29"></a>        FOR(i, <span class="dv">1</span>, dfnCnt - (<span class="dv">1</span> &lt;&lt; j) + <span class="dv">1</span>)</span>
+<span id="cb8-30"><a aria-hidden="true" href="#cb8-30"></a>            st[j][i] = dep[st[j - <span class="dv">1</span>][i]] &lt; dep[st[j - <span class="dv">1</span>][i + (<span class="dv">1</span> &lt;&lt; (j - <span class="dv">1</span>))]] ? st[j - <span class="dv">1</span>][i] : st[j - <span class="dv">1</span>][i + (<span class="dv">1</span> &lt;&lt; (j - <span class="dv">1</span>))];</span>
+<span id="cb8-31"><a aria-hidden="true" href="#cb8-31"></a>    <span class="cf">return</span>;</span>
+<span id="cb8-32"><a aria-hidden="true" href="#cb8-32"></a>}</span>
+<span id="cb8-33"><a aria-hidden="true" href="#cb8-33"></a></span>
+<span id="cb8-34"><a aria-hidden="true" href="#cb8-34"></a><span class="dt">int</span> getDis(<span class="dt">int</span> u, <span class="dt">int</span> v) { <span class="co">// O(1) 查询两点间距离</span></span>
+<span id="cb8-35"><a aria-hidden="true" href="#cb8-35"></a>    <span class="dt">int</span> l = min(pos[u], pos[v]), r = max(pos[u], pos[v]);</span>
+<span id="cb8-36"><a aria-hidden="true" href="#cb8-36"></a>    <span class="dt">int</span> len = lg[r - l + <span class="dv">1</span>];</span>
+<span id="cb8-37"><a aria-hidden="true" href="#cb8-37"></a>    <span class="dt">int</span> lca = dep[st[len][l]] &lt; dep[st[len][r - (<span class="dv">1</span> &lt;&lt; len) + <span class="dv">1</span>]] ? st[len][l] : st[len][r - (<span class="dv">1</span> &lt;&lt; len) + <span class="dv">1</span>];</span>
+<span id="cb8-38"><a aria-hidden="true" href="#cb8-38"></a>    <span class="cf">return</span> dep[u] + dep[v] - <span class="dv">2</span> * dep[lca];</span>
+<span id="cb8-39"><a aria-hidden="true" href="#cb8-39"></a>}</span>
+<span id="cb8-40"><a aria-hidden="true" href="#cb8-40"></a></span>
+<span id="cb8-41"><a aria-hidden="true" href="#cb8-41"></a><span class="dt">int</span> root, maxp[maxn], size[maxn], tot, fa[maxn], vis[maxn];</span>
+<span id="cb8-42"><a aria-hidden="true" href="#cb8-42"></a></span>
+<span id="cb8-43"><a aria-hidden="true" href="#cb8-43"></a><span class="dt">void</span> getRt(<span class="dt">int</span> u, <span class="dt">int</span> pre) { <span class="co">// 找重心函数</span></span>
+<span id="cb8-44"><a aria-hidden="true" href="#cb8-44"></a>    size[u] = <span class="dv">1</span>, maxp[u] = <span class="dv">0</span>;</span>
+<span id="cb8-45"><a aria-hidden="true" href="#cb8-45"></a>    <span class="cf">for</span> (<span class="dt">int</span> i = head[u]; i; i = nxt[i]) {</span>
+<span id="cb8-46"><a aria-hidden="true" href="#cb8-46"></a>        <span class="dt">int</span> &amp;v = to[i];</span>
+<span id="cb8-47"><a aria-hidden="true" href="#cb8-47"></a>        <span class="cf">if</span> (v == pre || vis[v]) <span class="cf">continue</span>;</span>
+<span id="cb8-48"><a aria-hidden="true" href="#cb8-48"></a>        getRt(v, u);</span>
+<span id="cb8-49"><a aria-hidden="true" href="#cb8-49"></a>        size[u] += size[v];</span>
+<span id="cb8-50"><a aria-hidden="true" href="#cb8-50"></a>        chkmax(maxp[u], size[v]);</span>
+<span id="cb8-51"><a aria-hidden="true" href="#cb8-51"></a>    }</span>
+<span id="cb8-52"><a aria-hidden="true" href="#cb8-52"></a>    chkmax(maxp[u], tot - size[u]);</span>
+<span id="cb8-53"><a aria-hidden="true" href="#cb8-53"></a>    <span class="cf">if</span> (maxp[u] &lt; maxp[root]) root = u;</span>
+<span id="cb8-54"><a aria-hidden="true" href="#cb8-54"></a>    <span class="cf">return</span>;</span>
+<span id="cb8-55"><a aria-hidden="true" href="#cb8-55"></a>}</span>
+<span id="cb8-56"><a aria-hidden="true" href="#cb8-56"></a></span>
+<span id="cb8-57"><a aria-hidden="true" href="#cb8-57"></a>vector&lt;<span class="dt">int</span>&gt; t[<span class="dv">2</span>][maxn];</span>
+<span id="cb8-58"><a aria-hidden="true" href="#cb8-58"></a></span>
+<span id="cb8-59"><a aria-hidden="true" href="#cb8-59"></a><span class="pp">#define lowbit</span>(x)<span class="pp"> </span>(x<span class="pp"> </span>&amp;<span class="pp"> </span>-x)</span>
+<span id="cb8-60"><a aria-hidden="true" href="#cb8-60"></a></span>
+<span id="cb8-61"><a aria-hidden="true" href="#cb8-61"></a><span class="dt">void</span> update(vector&lt;<span class="dt">int</span>&gt; &amp;t, <span class="dt">int</span> x, <span class="dt">int</span> v) {</span>
+<span id="cb8-62"><a aria-hidden="true" href="#cb8-62"></a>    <span class="cf">for</span> (++x; x &lt; (<span class="dt">int</span>)t.size(); x += lowbit(x)) t[x] += v;</span>
+<span id="cb8-63"><a aria-hidden="true" href="#cb8-63"></a>    <span class="cf">return</span>;</span>
+<span id="cb8-64"><a aria-hidden="true" href="#cb8-64"></a>}</span>
+<span id="cb8-65"><a aria-hidden="true" href="#cb8-65"></a></span>
+<span id="cb8-66"><a aria-hidden="true" href="#cb8-66"></a><span class="dt">int</span> query(vector&lt;<span class="dt">int</span>&gt; &amp;t, <span class="dt">int</span> x) {</span>
+<span id="cb8-67"><a aria-hidden="true" href="#cb8-67"></a>    <span class="dt">int</span> ret = <span class="dv">0</span>;</span>
+<span id="cb8-68"><a aria-hidden="true" href="#cb8-68"></a>    <span class="cf">for</span> (x = min(x + <span class="dv">1</span>, (<span class="dt">int</span>)t.size() - <span class="dv">1</span>); x; x -= lowbit(x)) ret += t[x];</span>
+<span id="cb8-69"><a aria-hidden="true" href="#cb8-69"></a>    <span class="cf">return</span> ret;</span>
+<span id="cb8-70"><a aria-hidden="true" href="#cb8-70"></a>}</span>
+<span id="cb8-71"><a aria-hidden="true" href="#cb8-71"></a></span>
+<span id="cb8-72"><a aria-hidden="true" href="#cb8-72"></a><span class="dt">void</span> dfs(<span class="dt">int</span> u) {</span>
+<span id="cb8-73"><a aria-hidden="true" href="#cb8-73"></a>    vis[u] = <span class="dv">1</span>;</span>
+<span id="cb8-74"><a aria-hidden="true" href="#cb8-74"></a>    t[<span class="dv">0</span>][u].resize(size[u] / <span class="dv">2</span> + <span class="dv">2</span>);</span>
+<span id="cb8-75"><a aria-hidden="true" href="#cb8-75"></a>    t[<span class="dv">1</span>][u].resize(size[u] + <span class="dv">2</span>);</span>
+<span id="cb8-76"><a aria-hidden="true" href="#cb8-76"></a>    <span class="co">//树状数组大小要开g</span></span>
+<span id="cb8-77"><a aria-hidden="true" href="#cb8-77"></a>    <span class="cf">for</span> (<span class="dt">int</span> i = head[u]; i; i = nxt[i]) {</span>
+<span id="cb8-78"><a aria-hidden="true" href="#cb8-78"></a>        <span class="dt">int</span> &amp;v = to[i];</span>
+<span id="cb8-79"><a aria-hidden="true" href="#cb8-79"></a>        <span class="cf">if</span> (vis[v]) <span class="cf">continue</span>;</span>
+<span id="cb8-80"><a aria-hidden="true" href="#cb8-80"></a>        maxp[root = <span class="dv">0</span>] = n, tot = size[v];</span>
+<span id="cb8-81"><a aria-hidden="true" href="#cb8-81"></a>        getRt(v, <span class="dv">0</span>), getRt(root, <span class="dv">0</span>);</span>
+<span id="cb8-82"><a aria-hidden="true" href="#cb8-82"></a>        fa[root] = u;</span>
+<span id="cb8-83"><a aria-hidden="true" href="#cb8-83"></a>        dfs(root);</span>
+<span id="cb8-84"><a aria-hidden="true" href="#cb8-84"></a>    }</span>
+<span id="cb8-85"><a aria-hidden="true" href="#cb8-85"></a>}</span>
+<span id="cb8-86"><a aria-hidden="true" href="#cb8-86"></a></span>
+<span id="cb8-87"><a aria-hidden="true" href="#cb8-87"></a><span class="dt">void</span> modify(<span class="dt">int</span> x, <span class="dt">int</span> v) {</span>
+<span id="cb8-88"><a aria-hidden="true" href="#cb8-88"></a>    <span class="cf">for</span> (<span class="dt">int</span> u = x; u; u = fa[u]) update(t[<span class="dv">0</span>][u], getDis(x, u), v);</span>
+<span id="cb8-89"><a aria-hidden="true" href="#cb8-89"></a>    <span class="cf">for</span> (<span class="dt">int</span> u = x; fa[u]; u = fa[u]) update(t[<span class="dv">1</span>][u], getDis(fa[u], x), v);</span>
+<span id="cb8-90"><a aria-hidden="true" href="#cb8-90"></a>    <span class="cf">return</span>;</span>
+<span id="cb8-91"><a aria-hidden="true" href="#cb8-91"></a>}</span>
+<span id="cb8-92"><a aria-hidden="true" href="#cb8-92"></a></span>
+<span id="cb8-93"><a aria-hidden="true" href="#cb8-93"></a><span class="dt">int</span> main() {</span>
+<span id="cb8-94"><a aria-hidden="true" href="#cb8-94"></a>    read(n, m);</span>
+<span id="cb8-95"><a aria-hidden="true" href="#cb8-95"></a>    FOR(i, <span class="dv">1</span>, n) read(val[i]);</span>
+<span id="cb8-96"><a aria-hidden="true" href="#cb8-96"></a>    FOR(i, <span class="dv">2</span>, n) {</span>
+<span id="cb8-97"><a aria-hidden="true" href="#cb8-97"></a>        <span class="dt">int</span> u, v; read(u, v);</span>
+<span id="cb8-98"><a aria-hidden="true" href="#cb8-98"></a>        add(u, v), add(v, u);</span>
+<span id="cb8-99"><a aria-hidden="true" href="#cb8-99"></a>    }</span>
+<span id="cb8-100"><a aria-hidden="true" href="#cb8-100"></a>    dfs0(<span class="dv">1</span>, <span class="dv">0</span>);</span>
+<span id="cb8-101"><a aria-hidden="true" href="#cb8-101"></a>    initST();</span>
+<span id="cb8-102"><a aria-hidden="true" href="#cb8-102"></a>    maxp[root = <span class="dv">0</span>] = tot = n;</span>
+<span id="cb8-103"><a aria-hidden="true" href="#cb8-103"></a>    getRt(<span class="dv">1</span>, <span class="dv">0</span>), getRt(root, <span class="dv">0</span>);</span>
+<span id="cb8-104"><a aria-hidden="true" href="#cb8-104"></a>    dfs(root);</span>
+<span id="cb8-105"><a aria-hidden="true" href="#cb8-105"></a>    FOR(i, <span class="dv">1</span>, n) modify(i, val[i]);</span>
+<span id="cb8-106"><a aria-hidden="true" href="#cb8-106"></a>    <span class="dt">int</span> lastans = <span class="dv">0</span>;</span>
+<span id="cb8-107"><a aria-hidden="true" href="#cb8-107"></a>    <span class="cf">while</span> (m--) {</span>
+<span id="cb8-108"><a aria-hidden="true" href="#cb8-108"></a>        <span class="dt">int</span> op, x, y; read(op, x, y);</span>
+<span id="cb8-109"><a aria-hidden="true" href="#cb8-109"></a>        x ^= lastans, y ^= lastans;</span>
+<span id="cb8-110"><a aria-hidden="true" href="#cb8-110"></a>        <span class="cf">if</span> (!op) {</span>
+<span id="cb8-111"><a aria-hidden="true" href="#cb8-111"></a>            lastans = query(t[<span class="dv">0</span>][x], y);</span>
+<span id="cb8-112"><a aria-hidden="true" href="#cb8-112"></a>            <span class="cf">for</span> (<span class="dt">int</span> u = x; fa[u]; u = fa[u]) {</span>
+<span id="cb8-113"><a aria-hidden="true" href="#cb8-113"></a>                <span class="dt">int</span> dis = getDis(x, fa[u]);</span>
+<span id="cb8-114"><a aria-hidden="true" href="#cb8-114"></a>                <span class="cf">if</span> (y &gt;= dis) lastans += query(t[<span class="dv">0</span>][fa[u]], y - dis) - query(t[<span class="dv">1</span>][u], y - dis);</span>
+<span id="cb8-115"><a aria-hidden="true" href="#cb8-115"></a>            }</span>
+<span id="cb8-116"><a aria-hidden="true" href="#cb8-116"></a>            print(lastans);</span>
+<span id="cb8-117"><a aria-hidden="true" href="#cb8-117"></a>        } <span class="cf">else</span> modify(x, y - val[x]), val[x] = y;</span>
+<span id="cb8-118"><a aria-hidden="true" href="#cb8-118"></a>    }</span>
+<span id="cb8-119"><a aria-hidden="true" href="#cb8-119"></a>    <span class="cf">return</span> output(), <span class="dv">0</span>;</span>
+<span id="cb8-120"><a aria-hidden="true" href="#cb8-120"></a>}</span></code></pre></div>
+<h2 id="边分治">边分治</h2>
+<h2 id="全局平衡二叉树">全局平衡二叉树</h2>
+<h2 id="树哈希">树哈希</h2>
+<p>方法很多种，这里只考虑一种最稳健的方法： <span class="math display">\[
+f(u) = \sum_{v\in\mathrm{son}(u)}f(v)p_{\mathrm{size}(u)} + 1
+\]</span> <span class="math inline">\(p_i\)</span> 表示第 <span class="math inline">\(i\)</span> 个素数。这种方法需要特判整棵树的大小，因为存在 <span class="math inline">\(T_1\ne T_2\)</span> 使得哈希值相同的情况。</p>
+<blockquote>
+<p>例题 <span class="math inline">\(1\)</span>：<a href="https://www.luogu.com.cn/problem/P5043">P5043 【模板】树同构（[BJOI2015]树的同构）</a></p>
+<p>给定 <span class="math inline">\(m\)</span> 棵无根树，问与每棵树同构的树的最小编号。<span class="math inline">\(n,m\le 50\)</span>。</p>
+</blockquote>
+<p>这里需要考虑换根的问题。而我们不难得到 <span class="math display">\[
+g(v) = p_{n - \mathrm{size}(v)}(g(u) - f(v)p_{\mathrm{size}(v)}) + f(v)
+\]</span> 所以数据范围很小，直接查就可以了。</p>
+<h2 id="reference">Reference</h2>
+<ul>
+<li><a href="https://liu-cheng-ao.blog.uoj.ac/blog/2969">一种基于错误的寻找重心方法的点分治的复杂度分析 by LCA</a>。</li>
+</ul>
+</section>
+<footer class="article-footer">
+<section class="article-tags">
+<a href="/tags/OI/">OI</a>
+<a href="/tags/note/">笔记</a>
+</section>
+<section class="article-copyright">
+<svg class="icon icon-tabler icon-tabler-copyright" fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+<path d="M0 0h24v24H0z" stroke="none"></path>
+<circle cx="12" cy="12" r="9"></circle>
+<path d="M14.5 9a3.5 4 0 1 0 0 6"></path>
+</svg>
+<span>Licensed under CC BY-NC-SA 4.0</span>
+</section>
+</footer>
+<link crossorigin="anonymous" href="https://cdn.jsdelivr.net/npm/katex@0.13.13/dist/katex.min.css" integrity="sha384-RZU/ijkSsFbcmivfdRBQDtwuwVqK7GMOw6IMvKyeWL2K5UAlyp6WonmB8m7Jd0Hn" rel="stylesheet"/><script crossorigin="anonymous" defer="" integrity="sha384-pK1WpvzWVBQiP0/GjnvRxV4mOb0oxFuyRxJlk6vVw146n3egcN5C925NCP7a7BY8" src="https://cdn.jsdelivr.net/npm/katex@0.13.13/dist/katex.min.js">
+</script><script crossorigin="anonymous" defer="" integrity="sha384-vZTG03m+2yp6N6BNi5iM4rW4oIwk5DfcNdFfxkk9ZWpDriOkXX8voJBFrAO7MpVl" src="https://cdn.jsdelivr.net/npm/katex@0.13.13/dist/contrib/auto-render.min.js">
+</script><script>
+    window.addEventListener("DOMContentLoaded", () => {
+        renderMathInElement(document.querySelector(`.article-content`), {
+            delimiters: [
+                { left: "$$", right: "$$", display: true },
+                { left: "$", right: "$", display: false },
+                { left: "\\(", right: "\\)", display: false },
+                { left: "\\[", right: "\\]", display: true }
+            ]
+        });})
+</script>
+</article>
+<aside class="related-contents--wrapper">
+<h2 class="section-title">相关文章</h2>
+<div class="related-contents">
+<div class="flex article-list--tile">
+<article class="has-image">
+<a href="/note-gf/">
+<div class="article-image">
+<img data-hash="https://yangty-pic.oss-cn-beijing.aliyuncs.com/bg28.webp" data-key="" loading="lazy" src="https://yangty-pic.oss-cn-beijing.aliyuncs.com/bg28.webp"/>
+</div>
+<div class="article-details">
+<h2 class="article-title">生成函数胡扯</h2>
+</div>
+</a>
+</article>
+<article class="has-image">
+<a href="/note-set-power-series/">
+<div class="article-image">
+<img data-hash="https://yangty-pic.oss-cn-beijing.aliyuncs.com/bg39.webp" data-key="" loading="lazy" src="https://yangty-pic.oss-cn-beijing.aliyuncs.com/bg39.webp"/>
+</div>
+<div class="article-details">
+<h2 class="article-title">集合幂级数胡扯</h2>
+</div>
+</a>
+</article>
+<article class="has-image">
+<a href="/note-linear-basis/">
+<div class="article-image">
+<img data-hash="https://yangty-pic.oss-cn-beijing.aliyuncs.com/bg19.webp" data-key="" loading="lazy" src="https://yangty-pic.oss-cn-beijing.aliyuncs.com/bg19.webp"/>
+</div>
+<div class="article-details">
+<h2 class="article-title">线性基学习笔记</h2>
+</div>
+</a>
+</article>
+<article class="has-image">
+<a href="/note-wqs/">
+<div class="article-image">
+<img data-hash="https://yangty-pic.oss-cn-beijing.aliyuncs.com/bg28.webp" data-key="" loading="lazy" src="https://yangty-pic.oss-cn-beijing.aliyuncs.com/bg28.webp"/>
+</div>
+<div class="article-details">
+<h2 class="article-title">wqs 二分学习笔记</h2>
+</div>
+</a>
+</article>
+<article class="has-image">
+<a href="/note-builtin/">
+<div class="article-image">
+<img data-hash="https://yangty-pic.oss-cn-beijing.aliyuncs.com/bg9.webp" data-key="" loading="lazy" src="https://yangty-pic.oss-cn-beijing.aliyuncs.com/bg9.webp"/>
+</div>
+<div class="article-details">
+<h2 class="article-title">__builtin 系列函数总结</h2>
+</div>
+</a>
+</article>
+</div>
+</div>
+</aside>
+<footer class="site-footer">
+<section class="copyright">
+        © 
+        
+            2019 - 
+        
+        2024 清烛的博客
+    </section>
+<section class="powerby">
+        Built with <a href="https://gohugo.io/" rel="noopener" target="_blank">Hugo</a> <br/>
+        主题 <b><a data-version="3.11.0" href="https://github.com/CaiJimmy/hugo-theme-stack" rel="noopener" target="_blank">Stack</a></b> 由 <a href="https://jimmycai.com" rel="noopener" target="_blank">Jimmy</a> 设计
+    </section>
+</footer>
+<div aria-hidden="true" class="pswp" role="dialog" tabindex="-1">
+<div class="pswp__bg"></div>
+<div class="pswp__scroll-wrap">
+<div class="pswp__container">
+<div class="pswp__item"></div>
+<div class="pswp__item"></div>
+<div class="pswp__item"></div>
+</div>
+<div class="pswp__ui pswp__ui--hidden">
+<div class="pswp__top-bar">
+<div class="pswp__counter"></div>
+<button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+<button class="pswp__button pswp__button--share" title="Share"></button>
+<button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+<button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+<div class="pswp__preloader">
+<div class="pswp__preloader__icn">
+<div class="pswp__preloader__cut">
+<div class="pswp__preloader__donut"></div>
+</div>
+</div>
+</div>
+</div>
+<div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+<div class="pswp__share-tooltip"></div>
+</div>
+<button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+</button>
+<button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+</button>
+<div class="pswp__caption">
+<div class="pswp__caption__center"></div>
+</div>
+</div>
+</div>
+</div><script crossorigin="anonymous" defer="" integrity="sha256-ePwmChbbvXbsO02lbM3HoHbSHTHFAeChekF1xKJdleo=" src="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe.min.js">
+</script><script crossorigin="anonymous" defer="" integrity="sha256-UKkzOn/w1mBxRmLLGrSeyB4e1xbrp4xylgAWb3M42pU=" src="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe-ui-default.min.js">
+</script><link crossorigin="anonymous" href="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/default-skin/default-skin.css" integrity="sha256-c0uckgykQ9v5k+IqViZOZKc47Jn7KQil4/MP3ySA3F8=" rel="stylesheet"/><link crossorigin="anonymous" href="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe.css" integrity="sha256-SBLU4vv6CA6lHsZ1XyTdhyjJxCjPif/TRkjnsyGAGnE=" rel="stylesheet"/>
+</main>
+</div>
+<script crossorigin="anonymous" integrity="sha256-5NovOZc4iwiAWTYIFiIM7DxKUXKWvpVEuMEPLzcm5/g=" src="https://cdn.jsdelivr.net/npm/node-vibrant@3.1.5/dist/vibrant.min.js">
+</script><script defer="" src="/ts/main.js" type="text/javascript"></script>
+<script>
+    (function () {
+        const customFont = document.createElement('link');
+        customFont.href = "https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&display=swap";
+
+        customFont.type = "text/css";
+        customFont.rel = "stylesheet";
+
+        document.head.appendChild(customFont);
+    }());
+</script>
+</body>
+</html>

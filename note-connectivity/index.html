@@ -1,0 +1,704 @@
+<!DOCTYPE html>
+<html dir="ltr" lang="zh-CN">
+<head><meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1" name="viewport"/><meta content="前言 一直对这方面不是很理解，开个坑记录一下。
+基本概念 对于有向图：
+强连通：对于一张有向图，若每个点互相可达，则称为强连通。 强连通分量：极大的强连通子图。 对于无向图：
+点割集：若删掉该集合的点后图不连通，则称为点割集。大小为 \(1\) 的点割集就是割点。 点联通度：若 \(k + 1\le |V|\) 且不存在大小为 \(k - 1\) 的点割集，则称该图 \(k-\) 点联通。最大的 \(k\)，即最小点割集合的大小。 边割集/边联通度：类似。 点双连通：没有割点的连通图是点双连通的。 边双连通：没有桥的连通图是边双连通的。 点双连通分量：极大的点双连通子图（简称点双）。 边双连通分量：极大的边双连通子图（简称边双）。 强连通分量（SCC） 使用 tarjan 算法做到 \(O(n + m)\)。
+dfs 生成树 tarjan 算法是基于 dfs 的。考虑在原图上生成一棵 dfs 生成树。
+那么原图的边可以分为如下几类：
+树边：就是在 dfs 生成树的边，当一个点搜素找到一个没有访问的点时生成。 返祖边：指向祖先节点的边。 横叉边：搜索时遇到的访问过的但是不是自己祖先的点。 前向边：搜索时遇到子树节点时的边。 有如下引理：假设 \(u\) 是某个 SCC 在 dfs 生成树中第一个遇到的点，则 SCC 剩余的点肯定在子树内，\(u\) 称为 SCC 的根。证明可用反证法，不再展开。
+Tarjan 算法 构造 dfs 生成树的同时维护一个栈，表示访问过的还未加入 SCC 的点。
+对于每个节点维护 \(\operatorname{dfn}(u)\) 和 \(\operatorname{low}(u)\)。含义分别是：" name="description"/><title>图的连通性相关</title>
+<link href="https://oi.imyangty.com/note-connectivity/" rel="canonical"/>
+<link href="/scss/style.min.a5821f3d3ab84ce5a0ac21477e347a2e0ca00292e398d16c5e8e36ded6e35a23.css" rel="stylesheet"/><meta content="图的连通性相关" property="og:title"/>
+<meta content="前言 一直对这方面不是很理解，开个坑记录一下。
+基本概念 对于有向图：
+强连通：对于一张有向图，若每个点互相可达，则称为强连通。 强连通分量：极大的强连通子图。 对于无向图：
+点割集：若删掉该集合的点后图不连通，则称为点割集。大小为 \(1\) 的点割集就是割点。 点联通度：若 \(k + 1\le |V|\) 且不存在大小为 \(k - 1\) 的点割集，则称该图 \(k-\) 点联通。最大的 \(k\)，即最小点割集合的大小。 边割集/边联通度：类似。 点双连通：没有割点的连通图是点双连通的。 边双连通：没有桥的连通图是边双连通的。 点双连通分量：极大的点双连通子图（简称点双）。 边双连通分量：极大的边双连通子图（简称边双）。 强连通分量（SCC） 使用 tarjan 算法做到 \(O(n + m)\)。
+dfs 生成树 tarjan 算法是基于 dfs 的。考虑在原图上生成一棵 dfs 生成树。
+那么原图的边可以分为如下几类：
+树边：就是在 dfs 生成树的边，当一个点搜素找到一个没有访问的点时生成。 返祖边：指向祖先节点的边。 横叉边：搜索时遇到的访问过的但是不是自己祖先的点。 前向边：搜索时遇到子树节点时的边。 有如下引理：假设 \(u\) 是某个 SCC 在 dfs 生成树中第一个遇到的点，则 SCC 剩余的点肯定在子树内，\(u\) 称为 SCC 的根。证明可用反证法，不再展开。
+Tarjan 算法 构造 dfs 生成树的同时维护一个栈，表示访问过的还未加入 SCC 的点。
+对于每个节点维护 \(\operatorname{dfn}(u)\) 和 \(\operatorname{low}(u)\)。含义分别是：" property="og:description"/>
+<meta content="https://oi.imyangty.com/note-connectivity/" property="og:url"/>
+<meta content="清烛的博客" property="og:site_name"/>
+<meta content="article" property="og:type"/><meta content="Post" property="article:section"/><meta content="OI" property="article:tag"/><meta content="笔记" property="article:tag"/><meta content="缩点" property="article:tag"/><meta content="2021-09-01T23:32:13+08:00" property="article:published_time"/><meta content="2021-09-01T23:32:13+08:00" property="article:modified_time"/><meta content="https://yangty-pic.oss-cn-beijing.aliyuncs.com/bg11.webp" property="og:image"/>
+<meta content="图的连通性相关" name="twitter:title"/>
+<meta content="前言 一直对这方面不是很理解，开个坑记录一下。
+基本概念 对于有向图：
+强连通：对于一张有向图，若每个点互相可达，则称为强连通。 强连通分量：极大的强连通子图。 对于无向图：
+点割集：若删掉该集合的点后图不连通，则称为点割集。大小为 \(1\) 的点割集就是割点。 点联通度：若 \(k + 1\le |V|\) 且不存在大小为 \(k - 1\) 的点割集，则称该图 \(k-\) 点联通。最大的 \(k\)，即最小点割集合的大小。 边割集/边联通度：类似。 点双连通：没有割点的连通图是点双连通的。 边双连通：没有桥的连通图是边双连通的。 点双连通分量：极大的点双连通子图（简称点双）。 边双连通分量：极大的边双连通子图（简称边双）。 强连通分量（SCC） 使用 tarjan 算法做到 \(O(n + m)\)。
+dfs 生成树 tarjan 算法是基于 dfs 的。考虑在原图上生成一棵 dfs 生成树。
+那么原图的边可以分为如下几类：
+树边：就是在 dfs 生成树的边，当一个点搜素找到一个没有访问的点时生成。 返祖边：指向祖先节点的边。 横叉边：搜索时遇到的访问过的但是不是自己祖先的点。 前向边：搜索时遇到子树节点时的边。 有如下引理：假设 \(u\) 是某个 SCC 在 dfs 生成树中第一个遇到的点，则 SCC 剩余的点肯定在子树内，\(u\) 称为 SCC 的根。证明可用反证法，不再展开。
+Tarjan 算法 构造 dfs 生成树的同时维护一个栈，表示访问过的还未加入 SCC 的点。
+对于每个节点维护 \(\operatorname{dfn}(u)\) 和 \(\operatorname{low}(u)\)。含义分别是：" name="twitter:description"/><meta content="summary_large_image" name="twitter:card"/>
+<meta content="https://yangty-pic.oss-cn-beijing.aliyuncs.com/bg11.webp" name="twitter:image"/>
+<link href="https://q1.qlogo.cn/g?b=qq&amp;nk=375836877&amp;s=5" rel="shortcut icon"/>
+<link href="https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.5.1/build/styles/github-dark-dimmed.min.css" rel="stylesheet"/>
+<script src="https://cdn.jsdelivr.net/gh/highlightjs/cdn-release/build/highlight.min.js"></script>
+<script>hljs.highlightAll();</script>
+</head>
+<body class="article-page">
+<script>
+        (function() {
+            const colorSchemeKey = 'StackColorScheme';
+            if(!localStorage.getItem(colorSchemeKey)){
+                localStorage.setItem(colorSchemeKey, "auto");
+            }
+        })();
+    </script><script>
+    (function() {
+        const colorSchemeKey = 'StackColorScheme';
+        const colorSchemeItem = localStorage.getItem(colorSchemeKey);
+        const supportDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches === true;
+
+        if (colorSchemeItem == 'dark' || colorSchemeItem === 'auto' && supportDarkMode) {
+            
+
+            document.documentElement.dataset.scheme = 'dark';
+        } else {
+            document.documentElement.dataset.scheme = 'light';
+        }
+    })();
+</script>
+<div class="container main-container flex on-phone--column extended"><aside class="sidebar left-sidebar sticky">
+<button aria-label="切换菜单" class="hamburger hamburger--spin" id="toggle-menu" type="button">
+<span class="hamburger-box">
+<span class="hamburger-inner"></span>
+</span>
+</button>
+<header>
+<figure class="site-avatar">
+<a href="/">
+<img alt="Avatar" class="site-logo" height="300" loading="lazy" src="/img/avatar_huea3ce2119467b51fdd2a81393644a76d_51594_300x0_resize_q75_box.jpg" width="300"/>
+</a>
+<span class="emoji">😅</span>
+</figure>
+<div class="site-meta">
+<h1 class="site-name"><a href="/">清烛的博客</a></h1>
+<h2 class="site-description">烟火已谢，笙歌未停</h2>
+</div>
+</header><ol class="social-menu">
+<li>
+<a href="mailto:i@imyangty.com" target="_blank" title="email">
+<svg class="icon icon-tabler icon-tabler-mail" fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" viewbox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+<path d="M0 0h24v24H0z" fill="none" stroke="none"></path>
+<rect height="14" rx="2" width="18" x="3" y="5"></rect>
+<polyline points="3 7 12 13 21 7"></polyline>
+</svg>
+</a>
+</li>
+<li>
+<a href="https://github.com/Cgfyufsygsm" target="_blank" title="GitHub">
+<svg class="icon icon-tabler icon-tabler-brand-github" fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+<path d="M0 0h24v24H0z" fill="none" stroke="none"></path>
+<path d="M9 19c-4.3 1.4 -4.3 -2.5 -6 -3m12 5v-3.5c0 -1 .1 -1.4 -.5 -2c2.8 -.3 5.5 -1.4 5.5 -6a4.6 4.6 0 0 0 -1.3 -3.2a4.2 4.2 0 0 0 -.1 -3.2s-1.1 -.3 -3.5 1.3a12.3 12.3 0 0 0 -6.2 0c-2.4 -1.6 -3.5 -1.3 -3.5 -1.3a4.2 4.2 0 0 0 -.1 3.2a4.6 4.6 0 0 0 -1.3 3.2c0 4.6 2.7 5.7 5.5 6c-.6 .6 -.6 1.2 -.5 2v3.5"></path>
+</svg>
+</a>
+</li>
+<li>
+<a href="https://t.me/Cgfyufsygsm" target="_blank" title="Telegram">
+<svg class="icon icon-tabler icon-tabler-brand-telegram" fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" viewbox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+<path d="M0 0h24v24H0z" fill="none" stroke="none"></path>
+<path d="M15 10l-4 4l6 6l4 -16l-18 7l4 2l2 6l3 -4"></path>
+</svg>
+</a>
+</li>
+<li>
+<a href="https://twitter.com/Cgfyufsygsm" target="_blank" title="Twitter">
+<svg class="icon icon-tabler icon-tabler-brand-twitter" fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+<path d="M0 0h24v24H0z" fill="none" stroke="none"></path>
+<path d="M22 4.01c-1 .49 -1.98 .689 -3 .99c-1.121 -1.265 -2.783 -1.335 -4.38 -.737s-2.643 2.06 -2.62 3.737v1c-3.245 .083 -6.135 -1.395 -8 -4c0 0 -4.182 7.433 4 11c-1.872 1.247 -3.739 2.088 -6 2c3.308 1.803 6.913 2.423 10.034 1.517c3.58 -1.04 6.522 -3.723 7.651 -7.742a13.84 13.84 0 0 0 .497 -3.753c-.002 -.249 1.51 -2.772 1.818 -4.013z"></path>
+</svg>
+</a>
+</li>
+</ol><ol class="menu" id="main-menu">
+<li>
+<a href="/">
+<svg class="icon icon-tabler icon-tabler-home" fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+<path d="M0 0h24v24H0z" stroke="none"></path>
+<polyline points="5 12 3 12 12 3 21 12 19 12"></polyline>
+<path d="M5 12v7a2 2 0 0 0 2 2h10a2 2 0 0 0 2 -2v-7"></path>
+<path d="M9 21v-6a2 2 0 0 1 2 -2h2a2 2 0 0 1 2 2v6"></path>
+</svg>
+<span>主页</span>
+</a>
+</li>
+<li>
+<a href="/about/">
+<svg class="icon icon-tabler icon-tabler-user" fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+<path d="M0 0h24v24H0z" stroke="none"></path>
+<circle cx="12" cy="7" r="4"></circle>
+<path d="M6 21v-2a4 4 0 0 1 4 -4h4a4 4 0 0 1 4 4v2"></path>
+</svg>
+<span>关于</span>
+</a>
+</li>
+<li>
+<a href="/idx/">
+<svg class="icon icon-tabler icon-tabler-hash" fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+<path d="M0 0h24v24H0z" stroke="none"></path>
+<line x1="5" x2="19" y1="9" y2="9"></line>
+<line x1="5" x2="19" y1="15" y2="15"></line>
+<line x1="11" x2="7" y1="4" y2="20"></line>
+<line x1="17" x2="13" y1="4" y2="20"></line>
+</svg>
+<span>导航</span>
+</a>
+</li>
+<li>
+<a href="/archives/">
+<svg class="icon icon-tabler icon-tabler-archive" fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+<path d="M0 0h24v24H0z" stroke="none"></path>
+<rect height="4" rx="2" width="18" x="3" y="4"></rect>
+<path d="M5 8v10a2 2 0 0 0 2 2h10a2 2 0 0 0 2 -2v-10"></path>
+<line x1="10" x2="14" y1="12" y2="12"></line>
+</svg>
+<span>归档</span>
+</a>
+</li>
+<li>
+<a href="/search/">
+<svg class="icon icon-tabler icon-tabler-search" fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+<path d="M0 0h24v24H0z" stroke="none"></path>
+<circle cx="10" cy="10" r="7"></circle>
+<line x1="21" x2="15" y1="21" y2="15"></line>
+</svg>
+<span>搜索</span>
+</a>
+</li>
+<li>
+<a href="/friends/">
+<svg class="icon icon-tabler icon-tabler-link" fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+<path d="M0 0h24v24H0z" stroke="none"></path>
+<path d="M10 14a3.5 3.5 0 0 0 5 0l4 -4a3.5 3.5 0 0 0 -5 -5l-.5 .5"></path>
+<path d="M14 10a3.5 3.5 0 0 0 -5 0l-4 4a3.5 3.5 0 0 0 5 5l.5 -.5"></path>
+</svg>
+<span>友链</span>
+</a>
+</li>
+<li>
+<a href="https://blog.imyangty.com" target="_blank">
+<svg class="icon icon-tabler icon-tabler-home" fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+<path d="M0 0h24v24H0z" stroke="none"></path>
+<polyline points="5 12 3 12 12 3 21 12 19 12"></polyline>
+<path d="M5 12v7a2 2 0 0 0 2 2h10a2 2 0 0 0 2 -2v-7"></path>
+<path d="M9 21v-6a2 2 0 0 1 2 -2h2a2 2 0 0 1 2 2v6"></path>
+</svg>
+<span>主博客</span>
+</a>
+</li>
+<div class="menu-bottom-section">
+<li id="dark-mode-toggle">
+<svg class="icon icon-tabler icon-tabler-toggle-left" fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+<path d="M0 0h24v24H0z" stroke="none"></path>
+<circle cx="8" cy="12" r="2"></circle>
+<rect height="12" rx="6" width="20" x="2" y="6"></rect>
+</svg>
+<svg class="icon icon-tabler icon-tabler-toggle-right" fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+<path d="M0 0h24v24H0z" stroke="none"></path>
+<circle cx="16" cy="12" r="2"></circle>
+<rect height="12" rx="6" width="20" x="2" y="6"></rect>
+</svg>
+<span>暗色模式</span>
+</li>
+</div>
+</ol>
+</aside>
+<main class="main full-width">
+<article class="has-image main-article">
+<header class="article-header">
+<div class="article-image">
+<a href="/note-connectivity/">
+<img alt="Featured image of post 图的连通性相关" loading="lazy" src="https://yangty-pic.oss-cn-beijing.aliyuncs.com/bg11.webp"/>
+</a>
+</div>
+<div class="article-details">
+<header class="article-category">
+<a href="/categories/oi/">
+                OI
+            </a>
+<a href="/categories/note/">
+                笔记
+            </a>
+</header>
+<div class="article-title-wrapper">
+<h2 class="article-title">
+<a href="/note-connectivity/">图的连通性相关</a>
+</h2>
+</div>
+<footer class="article-time">
+<div>
+<svg class="icon icon-tabler icon-tabler-calendar-time" fill="none" height="56" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="56" xmlns="http://www.w3.org/2000/svg">
+<path d="M0 0h24v24H0z" stroke="none"></path>
+<path d="M11.795 21h-6.795a2 2 0 0 1 -2 -2v-12a2 2 0 0 1 2 -2h12a2 2 0 0 1 2 2v4"></path>
+<circle cx="18" cy="18" r="4"></circle>
+<path d="M15 3v4"></path>
+<path d="M7 3v4"></path>
+<path d="M3 11h16"></path>
+<path d="M18 16.496v1.504l1 1"></path>
+</svg>
+<time class="article-time--published">Sep 01, 2021</time>
+</div>
+<div>
+<svg class="icon icon-tabler icon-tabler-clock" fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+<path d="M0 0h24v24H0z" stroke="none"></path>
+<circle cx="12" cy="12" r="9"></circle>
+<polyline points="12 7 12 12 15 15"></polyline>
+</svg>
+<time class="article-time--reading">
+                    阅读时长: 5 分钟
+                </time>
+</div>
+</footer>
+</div>
+</header>
+<section class="article-content">
+<h2 id="前言">前言</h2>
+<p>一直对这方面不是很理解，开个坑记录一下。</p>
+<h2 id="基本概念">基本概念</h2>
+<p>对于有向图：</p>
+<ul>
+<li>强连通：对于一张有向图，若每个点互相可达，则称为强连通。</li>
+<li>强连通分量：极大的强连通子图。</li>
+</ul>
+<p>对于无向图：</p>
+<ul>
+<li>点割集：若删掉该集合的点后图不连通，则称为点割集。<strong>大小为 <span class="math inline">\(1\)</span> 的点割集就是割点</strong>。</li>
+<li>点联通度：若 <span class="math inline">\(k + 1\le |V|\)</span> 且不存在大小为 <span class="math inline">\(k - 1\)</span> 的点割集，则称该图 <span class="math inline">\(k-\)</span> 点联通。最大的 <span class="math inline">\(k\)</span>，即最小点割集合的大小。</li>
+<li>边割集/边联通度：类似。</li>
+<li>点双连通：没有割点的连通图是点双连通的。</li>
+<li>边双连通：没有桥的连通图是边双连通的。</li>
+<li>点双连通分量：极大的点双连通子图（简称点双）。</li>
+<li>边双连通分量：极大的边双连通子图（简称边双）。</li>
+</ul>
+<h2 id="强连通分量scc">强连通分量（SCC）</h2>
+<p>使用 tarjan 算法做到 <span class="math inline">\(O(n + m)\)</span>。</p>
+<h3 id="dfs-生成树">dfs 生成树</h3>
+<p>tarjan 算法是基于 dfs 的。考虑在原图上生成一棵 dfs 生成树。</p>
+<p>那么原图的边可以分为如下几类：</p>
+<ul>
+<li>树边：就是在 dfs 生成树的边，当一个点搜素找到一个没有访问的点时生成。</li>
+<li>返祖边：指向祖先节点的边。</li>
+<li>横叉边：搜索时遇到的<strong>访问过的但是不是自己祖先</strong>的点。</li>
+<li>前向边：搜索时遇到子树节点时的边。</li>
+</ul>
+<p>有如下引理：假设 <span class="math inline">\(u\)</span> 是某个 SCC 在 dfs 生成树中第一个遇到的点，则 SCC 剩余的点肯定在子树内，<span class="math inline">\(u\)</span> 称为 SCC 的根。证明可用反证法，不再展开。</p>
+<h3 id="tarjan-算法">Tarjan 算法</h3>
+<p>构造 dfs 生成树的同时维护一个栈，表示访问过的还未加入 SCC 的点。</p>
+<p>对于每个节点维护 <span class="math inline">\(\operatorname{dfn}(u)\)</span> 和 <span class="math inline">\(\operatorname{low}(u)\)</span>。含义分别是：</p>
+<ul>
+<li><span class="math inline">\(\operatorname{dfn}(u)\)</span> 时间戳。</li>
+<li><span class="math inline">\(\operatorname{low}(u)\)</span>：<span class="math inline">\(u\)</span> 或其子树内节点能回溯到的<strong>最早的还在栈中的节点的 <span class="math inline">\(\operatorname{dfn}\)</span></strong>。</li>
+</ul>
+<p>根据以下定义，有</p>
+<pre><code>low[u] = min {
+    dfn[u],
+    low[v], (u, v) 为树边，v 为 u 儿子
+    dfn[v], (u, v) 为指向栈中节点的非横叉边
+}</code></pre>
+<p>发现一个 SCC 中只存在一个 <span class="math inline">\(u\)</span> 使得 <span class="math inline">\(\operatorname{dfn}(u) = \operatorname{low}(u)\)</span>，回溯的过程中判定，栈中 <span class="math inline">\(u\)</span> 往后的节点构成 SCC。</p>
+<h3 id="实现">实现</h3>
+<div class="sourceCode" id="cb2"><pre class="sourceCode cpp"><code class="sourceCode cpp"><span id="cb2-1"><a aria-hidden="true" href="#cb2-1"></a><span class="dt">int</span> dfn[maxn], low[maxn], ins[maxn], stk[maxn], top;</span>
+<span id="cb2-2"><a aria-hidden="true" href="#cb2-2"></a><span class="dt">int</span> dfnClock, scc[maxn], sccCnt;</span>
+<span id="cb2-3"><a aria-hidden="true" href="#cb2-3"></a></span>
+<span id="cb2-4"><a aria-hidden="true" href="#cb2-4"></a><span class="dt">void</span> tarjan(<span class="dt">int</span> u) {</span>
+<span id="cb2-5"><a aria-hidden="true" href="#cb2-5"></a>    dfn[u] = low[u] = ++dfnClock;</span>
+<span id="cb2-6"><a aria-hidden="true" href="#cb2-6"></a>    stk[++top] = u, ins[u] = <span class="dv">1</span>;</span>
+<span id="cb2-7"><a aria-hidden="true" href="#cb2-7"></a>    GO(u, head) {</span>
+<span id="cb2-8"><a aria-hidden="true" href="#cb2-8"></a>        <span class="cf">if</span> (!e[i].w) <span class="cf">continue</span>;</span>
+<span id="cb2-9"><a aria-hidden="true" href="#cb2-9"></a>        <span class="cf">if</span> (!dfn[v])</span>
+<span id="cb2-10"><a aria-hidden="true" href="#cb2-10"></a>            tarjan(v), low[u] = min(low[u], low[v]);</span>
+<span id="cb2-11"><a aria-hidden="true" href="#cb2-11"></a>        <span class="cf">else</span> <span class="cf">if</span> (ins[v])</span>
+<span id="cb2-12"><a aria-hidden="true" href="#cb2-12"></a>            low[u] = min(low[u], dfn[v]);</span>
+<span id="cb2-13"><a aria-hidden="true" href="#cb2-13"></a>    }</span>
+<span id="cb2-14"><a aria-hidden="true" href="#cb2-14"></a>    <span class="cf">if</span> (low[u] == dfn[u]) {</span>
+<span id="cb2-15"><a aria-hidden="true" href="#cb2-15"></a>        ++sccCnt;</span>
+<span id="cb2-16"><a aria-hidden="true" href="#cb2-16"></a>        <span class="cf">while</span> (<span class="kw">true</span>) {</span>
+<span id="cb2-17"><a aria-hidden="true" href="#cb2-17"></a>            <span class="dt">int</span> now = stk[top--];</span>
+<span id="cb2-18"><a aria-hidden="true" href="#cb2-18"></a>            ins[now] = <span class="dv">0</span>;</span>
+<span id="cb2-19"><a aria-hidden="true" href="#cb2-19"></a>            scc[now] = sccCnt;</span>
+<span id="cb2-20"><a aria-hidden="true" href="#cb2-20"></a>            <span class="cf">if</span> (now == u) <span class="cf">break</span>;</span>
+<span id="cb2-21"><a aria-hidden="true" href="#cb2-21"></a>        }</span>
+<span id="cb2-22"><a aria-hidden="true" href="#cb2-22"></a>    }</span>
+<span id="cb2-23"><a aria-hidden="true" href="#cb2-23"></a>    <span class="cf">return</span>;</span>
+<span id="cb2-24"><a aria-hidden="true" href="#cb2-24"></a>}</span></code></pre></div>
+<h3 id="应用">应用</h3>
+<p>可以将一些互相可达的点缩在一起，一张图缩完后会变成一张 DAG，方便进行 dp。</p>
+<h2 id="双连通分量bcc">双连通分量（BCC）</h2>
+<p>对于无向图而言的。</p>
+<ul>
+<li>点双连通<strong>不具有</strong>传递性，即 <span class="math inline">\(A\)</span> 与 <span class="math inline">\(B\)</span> 点双连通、<span class="math inline">\(B\)</span> 与 <span class="math inline">\(C\)</span> 点双连通并不能推出 <span class="math inline">\(A\)</span> 与 <span class="math inline">\(C\)</span> 点双连通（考虑 <span class="math inline">\(B\)</span> 为割点的情况）</li>
+<li>相反地，边双连通<strong>具有</strong>传递性。</li>
+</ul>
+<h3 id="边双连通分量e-bcc">边双连通分量（e-BCC）</h3>
+<p><span class="math inline">\(\operatorname{dfn}\)</span> 和 <span class="math inline">\(\operatorname{low}\)</span> 的定义与上面的类似。</p>
+<p>则对于 dfs 树上的一条边 <span class="math inline">\((u, v)\)</span>，其会是割边当且仅当 <span class="math display">\[
+\operatorname{dfn}(u) &lt; \operatorname{low}(v)
+\]</span> 意义为，从子树 <span class="math inline">\(v\)</span> 出发， 在不经过 <span class="math inline">\((u, v)\)</span> 的前提下无法走到比 <span class="math inline">\(x\)</span> 更早访问的节点。这条边 <span class="math inline">\((u, v)\)</span> 显然就应该是桥。</p>
+<p>缩点也不说了，好缩的。割边会缩成若干个 e-BCC，<strong>最后的结果是一棵树/森林</strong>（因为不能有环），<strong>一个点仅会属于一个 e-BCC，桥不属于任何 e-BCC</strong>。</p>
+<div class="sourceCode" id="cb3"><pre class="sourceCode cpp"><code class="sourceCode cpp"><span id="cb3-1"><a aria-hidden="true" href="#cb3-1"></a><span class="dt">void</span> tarjan(<span class="dt">int</span> u, <span class="dt">int</span> last) {<span class="co">//last 为上一条边的编号，判父亲用</span></span>
+<span id="cb3-2"><a aria-hidden="true" href="#cb3-2"></a>    dfn[u] = low[u] = ++dfnClock;</span>
+<span id="cb3-3"><a aria-hidden="true" href="#cb3-3"></a>    <span class="cf">for</span> (<span class="dt">int</span> i = head[u]; i; i = nxt[i]) {</span>
+<span id="cb3-4"><a aria-hidden="true" href="#cb3-4"></a>        <span class="dt">int</span> v = to[i];</span>
+<span id="cb3-5"><a aria-hidden="true" href="#cb3-5"></a>        <span class="cf">if</span> (!dfn[v]) {</span>
+<span id="cb3-6"><a aria-hidden="true" href="#cb3-6"></a>            tarjan(v, i);</span>
+<span id="cb3-7"><a aria-hidden="true" href="#cb3-7"></a>            <span class="cf">if</span> (low[v] &gt; dfn[u])</span>
+<span id="cb3-8"><a aria-hidden="true" href="#cb3-8"></a>                bridge[i] = bridge[i ^ <span class="dv">1</span>] = <span class="dv">1</span>;<span class="co">//这里是标记桥</span></span>
+<span id="cb3-9"><a aria-hidden="true" href="#cb3-9"></a>            low[u] = min(low[u], low[v]);</span>
+<span id="cb3-10"><a aria-hidden="true" href="#cb3-10"></a>        }</span>
+<span id="cb3-11"><a aria-hidden="true" href="#cb3-11"></a>        <span class="cf">else</span> <span class="cf">if</span> (i != (last ^ <span class="dv">1</span>))<span class="co">//注意判一下是不是 dfs 树上的父亲</span></span>
+<span id="cb3-12"><a aria-hidden="true" href="#cb3-12"></a>            low[u] = min(low[u], dfn[v]);</span>
+<span id="cb3-13"><a aria-hidden="true" href="#cb3-13"></a>    }</span>
+<span id="cb3-14"><a aria-hidden="true" href="#cb3-14"></a>    <span class="cf">return</span>;</span>
+<span id="cb3-15"><a aria-hidden="true" href="#cb3-15"></a>}</span></code></pre></div>
+<p>经典题：问最多添加多少条边可以使得图边双连通。答案为缩完点之后的叶子个数除以二向上取整。构造的话考虑每次连两个叶子起来就可以形成一个环，环上的都会被消掉。</p>
+<h3 id="点双连通分量v-bcc">点双连通分量（v-BCC）</h3>
+<p>定义依旧类似。判断一个点 <span class="math inline">\(u\)</span> 是否为割点的方法：</p>
+<ul>
+<li>若 <span class="math inline">\(u\)</span> 为 dfs 树的根节点，则其只要有多于一个子树，其就是割点。（考虑去掉根之后两个子树不连通）</li>
+<li>否则，考虑 <span class="math inline">\(v\)</span> 为 <span class="math inline">\(u\)</span> 的子节点，则 <span class="math inline">\(u\)</span> 为割点当且仅当 <span class="math inline">\(\operatorname{dfn}(u)\le \operatorname{low}(v)\)</span>。即，<span class="math inline">\(v\)</span> 子树内的点只能最多回到 <span class="math inline">\(u\)</span>，不能再往上。</li>
+</ul>
+<p>求割点的代码：</p>
+<div class="sourceCode" id="cb4"><pre class="sourceCode cpp"><code class="sourceCode cpp"><span id="cb4-1"><a aria-hidden="true" href="#cb4-1"></a><span class="dt">void</span> tarjan(<span class="dt">int</span> u) {</span>
+<span id="cb4-2"><a aria-hidden="true" href="#cb4-2"></a>    dfn[u] = low[u] = ++cnt;</span>
+<span id="cb4-3"><a aria-hidden="true" href="#cb4-3"></a>    <span class="cf">for</span> (<span class="kw">auto</span> v : G[u]) {</span>
+<span id="cb4-4"><a aria-hidden="true" href="#cb4-4"></a>        <span class="cf">if</span> (!dfn[v]) {</span>
+<span id="cb4-5"><a aria-hidden="true" href="#cb4-5"></a>            tarjan(v);</span>
+<span id="cb4-6"><a aria-hidden="true" href="#cb4-6"></a>            low[u] = min(low[u], low[v]);</span>
+<span id="cb4-7"><a aria-hidden="true" href="#cb4-7"></a>            <span class="cf">if</span> (low[v] &gt;= dfn[u] &amp;&amp; u != root) {</span>
+<span id="cb4-8"><a aria-hidden="true" href="#cb4-8"></a>                ans += (!cut[u]);</span>
+<span id="cb4-9"><a aria-hidden="true" href="#cb4-9"></a>                cut[u] = <span class="dv">1</span>;</span>
+<span id="cb4-10"><a aria-hidden="true" href="#cb4-10"></a>            }</span>
+<span id="cb4-11"><a aria-hidden="true" href="#cb4-11"></a>            child += (u == root);</span>
+<span id="cb4-12"><a aria-hidden="true" href="#cb4-12"></a>        }</span>
+<span id="cb4-13"><a aria-hidden="true" href="#cb4-13"></a>        low[u] = min(low[u], dfn[v]);</span>
+<span id="cb4-14"><a aria-hidden="true" href="#cb4-14"></a>    }</span>
+<span id="cb4-15"><a aria-hidden="true" href="#cb4-15"></a>    <span class="cf">if</span> (u == root &amp;&amp; child &gt; <span class="dv">1</span>)</span>
+<span id="cb4-16"><a aria-hidden="true" href="#cb4-16"></a>        ans++, cut[u] = <span class="dv">1</span>;</span>
+<span id="cb4-17"><a aria-hidden="true" href="#cb4-17"></a>}</span></code></pre></div>
+<p>缩点甚么的直接去看后面圆方树吧。</p>
+<h2 id="sat">2-SAT</h2>
+<p>咕。</p>
+<h2 id="圆方树">圆方树</h2>
+<p>毒瘤数据结构。</p>
+<h3 id="引入">引入</h3>
+<p>直接讲广义圆方树吧。</p>
+<p>定义：<strong>任意一条边至多只出现在一条简单回路的无向连通图称为仙人掌</strong>。什么意思？就是一条边只能出现在至多一个环里面。这样的图长得就很像仙人掌，所以就叫做仙人掌。</p>
+<p>最初的狭义圆方树一般拿来处理仙人掌上的问题，但是广义圆方树还可以处理无向图上的问题。其可以将一些一般无向图上不好做的事情转化到树上，然后就可以使用树剖/LCT/点分之类的方法去维护。</p>
+<p>我们定义不存在割点的图为点双连通图。在圆方树上，每个点双连通分量（以后简称点双）对应一个方点，原来的每个点对应圆方树上一个圆点。就像这样（图源 WC 课件）：</p>
+<p><img src="https://yangty-pic.oss-cn-beijing.aliyuncs.com/blockforest.png"/></p>
+<p>下面是圆方树的一些性质：</p>
+<ul>
+<li>设点双有 <span class="math inline">\(c\)</span> 个，则圆方树有 <span class="math inline">\(n + c\)</span> 个点。所以<strong>要开二倍空间</strong>。</li>
+<li>一个条边连接了一个方点和一个圆点。</li>
+<li>若原图不连通，则会形成若干圆方森林。</li>
+<li>原图中不是割点的点都是叶子，一个割点会连接若干个方点。</li>
+</ul>
+<h3 id="构建">构建</h3>
+<p>这里的构建用的 tarjan 算法和一般的求 v-BCC 的不太一样。</p>
+<ul>
+<li><span class="math inline">\(\operatorname{dfn}(u)\)</span>：<span class="math inline">\(u\)</span> 的 dfs 序，和普通 tarjan 相同。</li>
+<li><span class="math inline">\(\operatorname{low}(u)\)</span>：<span class="math inline">\(u\)</span> 的子树中的某个节点通过<strong>至多一次返祖边</strong>或<strong>向父亲的树边</strong>能访问到的点的最小 dfs 序。</li>
+</ul>
+<p>像下面这张图（图源小粉兔的<a href="https://www.cnblogs.com/PinkRabbit/p/Introduction-to-Block-Forest.html">博客</a>）：</p>
+<p><img src="https://yangty-pic.oss-cn-beijing.aliyuncs.com/blockforest2.png"/></p>
+<p>注意 <span class="math inline">\(9\)</span> 的 <span class="math inline">\(\mathrm{low}\)</span> 是 <span class="math inline">\(7\)</span>，因为规定了向父亲的树边也可以。</p>
+<p>对于 <span class="math inline">\((u, v)\)</span>，发现如果 <span class="math inline">\(\operatorname{low}(v) = \operatorname{dfn}(u)\)</span>，则说明 <span class="math inline">\(v\)</span> 子树内的点构成一个点双，将栈内除了 <span class="math inline">\(u\)</span> 的点退栈，顺便与新建的方点连边。当然 <span class="math inline">\(u\)</span> 也要与方点连边，但是不退栈。</p>
+<p>下面放一个构建圆方树的代码。</p>
+<div class="sourceCode" id="cb5"><pre class="sourceCode cpp"><code class="sourceCode cpp"><span id="cb5-1"><a aria-hidden="true" href="#cb5-1"></a><span class="dt">void</span> tarjan(<span class="dt">int</span> u) {</span>
+<span id="cb5-2"><a aria-hidden="true" href="#cb5-2"></a>    dfn[u] = low[u] = ++dfnClock;</span>
+<span id="cb5-3"><a aria-hidden="true" href="#cb5-3"></a>    stk[++top] = u;</span>
+<span id="cb5-4"><a aria-hidden="true" href="#cb5-4"></a>    <span class="cf">for</span> (<span class="dt">int</span> i = head0[u]; i; i = e0[i].nxt) {</span>
+<span id="cb5-5"><a aria-hidden="true" href="#cb5-5"></a>        <span class="dt">int</span> &amp;v = e0[i].to;</span>
+<span id="cb5-6"><a aria-hidden="true" href="#cb5-6"></a>        <span class="cf">if</span> (!dfn[v]) {=</span>
+<span id="cb5-7"><a aria-hidden="true" href="#cb5-7"></a>            tarjan(v, u);</span>
+<span id="cb5-8"><a aria-hidden="true" href="#cb5-8"></a>            low[u] = min(low[u], low[v]);</span>
+<span id="cb5-9"><a aria-hidden="true" href="#cb5-9"></a>            <span class="cf">if</span> (low[v] == dfn[u]) {</span>
+<span id="cb5-10"><a aria-hidden="true" href="#cb5-10"></a>                ++fang;</span>
+<span id="cb5-11"><a aria-hidden="true" href="#cb5-11"></a>                <span class="cf">while</span> (<span class="kw">true</span>) {</span>
+<span id="cb5-12"><a aria-hidden="true" href="#cb5-12"></a>                    <span class="dt">int</span> x = stk[top--];</span>
+<span id="cb5-13"><a aria-hidden="true" href="#cb5-13"></a>                    add(fang, x), add(x, fang);</span>
+<span id="cb5-14"><a aria-hidden="true" href="#cb5-14"></a>                    <span class="cf">if</span> (x == v) <span class="cf">break</span>;</span>
+<span id="cb5-15"><a aria-hidden="true" href="#cb5-15"></a>                }</span>
+<span id="cb5-16"><a aria-hidden="true" href="#cb5-16"></a>                add(fang, u), add(u, fang);</span>
+<span id="cb5-17"><a aria-hidden="true" href="#cb5-17"></a>            }</span>
+<span id="cb5-18"><a aria-hidden="true" href="#cb5-18"></a>        } <span class="cf">else</span> low[u] = min(low[u], dfn[v]);</span>
+<span id="cb5-19"><a aria-hidden="true" href="#cb5-19"></a>    }</span>
+<span id="cb5-20"><a aria-hidden="true" href="#cb5-20"></a>    <span class="cf">return</span>;</span>
+<span id="cb5-21"><a aria-hidden="true" href="#cb5-21"></a>}</span></code></pre></div>
+<h3 id="应用-1">应用</h3>
+<h4 id="p5236-模板静态仙人掌">P5236 【模板】静态仙人掌</h4>
+<p><a href="https://www.luogu.com.cn/problem/P5236">传送门</a>。大意：给定一棵仙人掌，多次询问两点间最短路。</p>
+<p>多次询问最短路不是很好搞，但是仙人掌一条边最多在一个环上的性质启迪我们可以把环缩起来处理。这样子我们就可以求树上最短路了。</p>
+<p>如何建立？我们考虑建出圆方树，然后给每条边定权值，这样子就可以在树上求最短路了，求 LCA 即可，可是，怎么给圆方树的边定权？</p>
+<p>我们令一个环上 dfn 最小的点为这个环的根，则这个环的方点到这些环上的圆点的边权即为该点到根的最短路。对于只有两个节点的情况，类似。但是我们需要求出环长，由于仙人掌的特性，一个点双只有一条返祖边，所以我们把栈顶的点找到就可以算了。</p>
+<p>然后算最短路的时候，如果两点的 LCA 是圆点，就直接无脑算就行了，但是如果是方点则需要特判一下， 看这两个点在环上的最短路是多少。</p>
+<p>具体细节看代码：</p>
+<div class="sourceCode" id="cb6"><pre class="sourceCode cpp"><code class="sourceCode cpp"><span id="cb6-1"><a aria-hidden="true" href="#cb6-1"></a><span class="at">const</span> <span class="dt">int</span> maxn = <span class="fl">2e4</span> + <span class="dv">5</span>, maxm = <span class="fl">4e4</span> + <span class="dv">5</span>;</span>
+<span id="cb6-2"><a aria-hidden="true" href="#cb6-2"></a></span>
+<span id="cb6-3"><a aria-hidden="true" href="#cb6-3"></a><span class="kw">struct</span> edge {</span>
+<span id="cb6-4"><a aria-hidden="true" href="#cb6-4"></a>    <span class="dt">int</span> to, nxt, w;</span>
+<span id="cb6-5"><a aria-hidden="true" href="#cb6-5"></a>} e0[maxm], e[maxn &lt;&lt; <span class="dv">1</span>];</span>
+<span id="cb6-6"><a aria-hidden="true" href="#cb6-6"></a></span>
+<span id="cb6-7"><a aria-hidden="true" href="#cb6-7"></a><span class="dt">int</span> head0[maxn], head[maxn], cnte0, cnte;</span>
+<span id="cb6-8"><a aria-hidden="true" href="#cb6-8"></a><span class="dt">int</span> n, m, fang, q;</span>
+<span id="cb6-9"><a aria-hidden="true" href="#cb6-9"></a></span>
+<span id="cb6-10"><a aria-hidden="true" href="#cb6-10"></a><span class="dt">void</span> add0(<span class="dt">int</span> u, <span class="dt">int</span> v, <span class="dt">int</span> w) {</span>
+<span id="cb6-11"><a aria-hidden="true" href="#cb6-11"></a>    e0[++cnte0].to = v;</span>
+<span id="cb6-12"><a aria-hidden="true" href="#cb6-12"></a>    e0[cnte0].w = w;</span>
+<span id="cb6-13"><a aria-hidden="true" href="#cb6-13"></a>    e0[cnte0].nxt = head0[u];</span>
+<span id="cb6-14"><a aria-hidden="true" href="#cb6-14"></a>    head0[u] = cnte0;</span>
+<span id="cb6-15"><a aria-hidden="true" href="#cb6-15"></a>    <span class="cf">return</span>;</span>
+<span id="cb6-16"><a aria-hidden="true" href="#cb6-16"></a>}</span>
+<span id="cb6-17"><a aria-hidden="true" href="#cb6-17"></a></span>
+<span id="cb6-18"><a aria-hidden="true" href="#cb6-18"></a><span class="dt">void</span> add(<span class="dt">int</span> u, <span class="dt">int</span> v, <span class="dt">int</span> w) {</span>
+<span id="cb6-19"><a aria-hidden="true" href="#cb6-19"></a>    e[++cnte].to = v;</span>
+<span id="cb6-20"><a aria-hidden="true" href="#cb6-20"></a>    e[cnte].w = w;</span>
+<span id="cb6-21"><a aria-hidden="true" href="#cb6-21"></a>    e[cnte].nxt = head[u];</span>
+<span id="cb6-22"><a aria-hidden="true" href="#cb6-22"></a>    head[u] = cnte;</span>
+<span id="cb6-23"><a aria-hidden="true" href="#cb6-23"></a>    <span class="cf">return</span>;</span>
+<span id="cb6-24"><a aria-hidden="true" href="#cb6-24"></a>}</span>
+<span id="cb6-25"><a aria-hidden="true" href="#cb6-25"></a></span>
+<span id="cb6-26"><a aria-hidden="true" href="#cb6-26"></a><span class="dt">int</span> dfn[maxn], low[maxn], dfnClock, stk[maxn], top;</span>
+<span id="cb6-27"><a aria-hidden="true" href="#cb6-27"></a><span class="dt">int</span> dis0[maxn], val[maxn], r[maxn];</span>
+<span id="cb6-28"><a aria-hidden="true" href="#cb6-28"></a></span>
+<span id="cb6-29"><a aria-hidden="true" href="#cb6-29"></a><span class="dt">void</span> tarjan(<span class="dt">int</span> u, <span class="dt">int</span> fa) {</span>
+<span id="cb6-30"><a aria-hidden="true" href="#cb6-30"></a>    dfn[u] = low[u] = ++dfnClock;</span>
+<span id="cb6-31"><a aria-hidden="true" href="#cb6-31"></a>    stk[++top] = u;</span>
+<span id="cb6-32"><a aria-hidden="true" href="#cb6-32"></a>    <span class="cf">for</span> (<span class="dt">int</span> i = head0[u]; i; i = e0[i].nxt) {</span>
+<span id="cb6-33"><a aria-hidden="true" href="#cb6-33"></a>        <span class="dt">int</span> &amp;v = e0[i].to;</span>
+<span id="cb6-34"><a aria-hidden="true" href="#cb6-34"></a>        <span class="cf">if</span> (!dfn[v]) {</span>
+<span id="cb6-35"><a aria-hidden="true" href="#cb6-35"></a>            val[v] = e0[i].w;</span>
+<span id="cb6-36"><a aria-hidden="true" href="#cb6-36"></a>            dis0[v] = dis0[u] + e0[i].w;</span>
+<span id="cb6-37"><a aria-hidden="true" href="#cb6-37"></a>            tarjan(v, u);</span>
+<span id="cb6-38"><a aria-hidden="true" href="#cb6-38"></a>            low[u] = min(low[u], low[v]);</span>
+<span id="cb6-39"><a aria-hidden="true" href="#cb6-39"></a>            <span class="cf">if</span> (low[v] == dfn[u]) {</span>
+<span id="cb6-40"><a aria-hidden="true" href="#cb6-40"></a>                ++fang;</span>
+<span id="cb6-41"><a aria-hidden="true" href="#cb6-41"></a>                r[fang] = val[stk[top]] + dis0[stk[top]] - dis0[u];</span>
+<span id="cb6-42"><a aria-hidden="true" href="#cb6-42"></a>                <span class="cf">while</span> (<span class="kw">true</span>) {</span>
+<span id="cb6-43"><a aria-hidden="true" href="#cb6-43"></a>                    <span class="dt">int</span> x = stk[top--], tmp = dis0[x] - dis0[u];</span>
+<span id="cb6-44"><a aria-hidden="true" href="#cb6-44"></a>                    tmp = min(tmp, r[fang] - tmp);</span>
+<span id="cb6-45"><a aria-hidden="true" href="#cb6-45"></a>                    add(fang, x, tmp), add(x, fang, tmp);</span>
+<span id="cb6-46"><a aria-hidden="true" href="#cb6-46"></a>                    <span class="cf">if</span> (x == v) <span class="cf">break</span>;</span>
+<span id="cb6-47"><a aria-hidden="true" href="#cb6-47"></a>                }</span>
+<span id="cb6-48"><a aria-hidden="true" href="#cb6-48"></a>                add(fang, u, <span class="dv">0</span>), add(u, fang, <span class="dv">0</span>);</span>
+<span id="cb6-49"><a aria-hidden="true" href="#cb6-49"></a>            }</span>
+<span id="cb6-50"><a aria-hidden="true" href="#cb6-50"></a>        } <span class="cf">else</span> {</span>
+<span id="cb6-51"><a aria-hidden="true" href="#cb6-51"></a>            low[u] = min(low[u], dfn[v]);</span>
+<span id="cb6-52"><a aria-hidden="true" href="#cb6-52"></a>            <span class="cf">if</span> (v != fa &amp;&amp; dfn[v] &lt; dfn[u]) val[u] = e0[i].w;</span>
+<span id="cb6-53"><a aria-hidden="true" href="#cb6-53"></a>        }</span>
+<span id="cb6-54"><a aria-hidden="true" href="#cb6-54"></a>    }</span>
+<span id="cb6-55"><a aria-hidden="true" href="#cb6-55"></a>    <span class="cf">return</span>;</span>
+<span id="cb6-56"><a aria-hidden="true" href="#cb6-56"></a>}</span>
+<span id="cb6-57"><a aria-hidden="true" href="#cb6-57"></a></span>
+<span id="cb6-58"><a aria-hidden="true" href="#cb6-58"></a><span class="dt">int</span> dis[maxn], fa[maxn][<span class="dv">20</span>], dep[maxn];</span>
+<span id="cb6-59"><a aria-hidden="true" href="#cb6-59"></a></span>
+<span id="cb6-60"><a aria-hidden="true" href="#cb6-60"></a><span class="dt">void</span> dfs(<span class="dt">int</span> u, <span class="dt">int</span> pre) {</span>
+<span id="cb6-61"><a aria-hidden="true" href="#cb6-61"></a>    fa[u][<span class="dv">0</span>] = pre;</span>
+<span id="cb6-62"><a aria-hidden="true" href="#cb6-62"></a>    <span class="cf">for</span> (<span class="dt">int</span> i = <span class="dv">1</span>; fa[fa[u][i - <span class="dv">1</span>]][i - <span class="dv">1</span>]; ++i) fa[u][i] = fa[fa[u][i - <span class="dv">1</span>]][i - <span class="dv">1</span>];</span>
+<span id="cb6-63"><a aria-hidden="true" href="#cb6-63"></a>    </span>
+<span id="cb6-64"><a aria-hidden="true" href="#cb6-64"></a>    <span class="cf">for</span> (<span class="dt">int</span> i = head[u]; i; i = e[i].nxt) {</span>
+<span id="cb6-65"><a aria-hidden="true" href="#cb6-65"></a>        <span class="dt">int</span> &amp;v = e[i].to;</span>
+<span id="cb6-66"><a aria-hidden="true" href="#cb6-66"></a>        <span class="cf">if</span> (v == pre) <span class="cf">continue</span>;</span>
+<span id="cb6-67"><a aria-hidden="true" href="#cb6-67"></a>        dis[v] = dis[u] + e[i].w;</span>
+<span id="cb6-68"><a aria-hidden="true" href="#cb6-68"></a>        dep[v] = dep[u] + <span class="dv">1</span>;</span>
+<span id="cb6-69"><a aria-hidden="true" href="#cb6-69"></a>        dfs(v, u);</span>
+<span id="cb6-70"><a aria-hidden="true" href="#cb6-70"></a>    }</span>
+<span id="cb6-71"><a aria-hidden="true" href="#cb6-71"></a>    <span class="cf">return</span>;</span>
+<span id="cb6-72"><a aria-hidden="true" href="#cb6-72"></a>}</span>
+<span id="cb6-73"><a aria-hidden="true" href="#cb6-73"></a></span>
+<span id="cb6-74"><a aria-hidden="true" href="#cb6-74"></a><span class="kw">using</span> pii = <span class="bu">std::</span>pair&lt;<span class="dt">int</span>, <span class="dt">int</span>&gt;;</span>
+<span id="cb6-75"><a aria-hidden="true" href="#cb6-75"></a></span>
+<span id="cb6-76"><a aria-hidden="true" href="#cb6-76"></a>pii LCA(<span class="dt">int</span> u, <span class="dt">int</span> v) {</span>
+<span id="cb6-77"><a aria-hidden="true" href="#cb6-77"></a>    <span class="cf">if</span> (dep[u] &lt; dep[v]) <span class="bu">std::</span>swap(u, v);</span>
+<span id="cb6-78"><a aria-hidden="true" href="#cb6-78"></a>    <span class="cf">for</span> (<span class="dt">int</span> delta = dep[u] - dep[v], i = <span class="dv">0</span>; delta; delta &gt;&gt;= <span class="dv">1</span>, ++i)</span>
+<span id="cb6-79"><a aria-hidden="true" href="#cb6-79"></a>        <span class="cf">if</span> (delta &amp; <span class="dv">1</span>) u = fa[u][i];</span>
+<span id="cb6-80"><a aria-hidden="true" href="#cb6-80"></a>    <span class="cf">if</span> (u == v) <span class="cf">return</span> pii(u, -<span class="dv">1</span>);</span>
+<span id="cb6-81"><a aria-hidden="true" href="#cb6-81"></a>    DEC(i, <span class="dv">15</span>, <span class="dv">0</span>)</span>
+<span id="cb6-82"><a aria-hidden="true" href="#cb6-82"></a>        <span class="cf">if</span> (fa[u][i] != fa[v][i]) u = fa[u][i], v = fa[v][i];</span>
+<span id="cb6-83"><a aria-hidden="true" href="#cb6-83"></a>    <span class="cf">if</span> (fa[u][<span class="dv">0</span>] &lt;= n) <span class="cf">return</span> pii(fa[u][<span class="dv">0</span>], -<span class="dv">1</span>);</span>
+<span id="cb6-84"><a aria-hidden="true" href="#cb6-84"></a>    <span class="cf">else</span> <span class="cf">return</span> pii(u, v);</span>
+<span id="cb6-85"><a aria-hidden="true" href="#cb6-85"></a>}</span>
+<span id="cb6-86"><a aria-hidden="true" href="#cb6-86"></a></span>
+<span id="cb6-87"><a aria-hidden="true" href="#cb6-87"></a><span class="dt">int</span> main() {</span>
+<span id="cb6-88"><a aria-hidden="true" href="#cb6-88"></a>    read(n), read(m), read(q);</span>
+<span id="cb6-89"><a aria-hidden="true" href="#cb6-89"></a>    FOR(i, <span class="dv">1</span>, m) {</span>
+<span id="cb6-90"><a aria-hidden="true" href="#cb6-90"></a>        <span class="dt">int</span> u, v, w;</span>
+<span id="cb6-91"><a aria-hidden="true" href="#cb6-91"></a>        read(u), read(v), read(w);</span>
+<span id="cb6-92"><a aria-hidden="true" href="#cb6-92"></a>        add0(u, v, w), add0(v, u, w);</span>
+<span id="cb6-93"><a aria-hidden="true" href="#cb6-93"></a>    }</span>
+<span id="cb6-94"><a aria-hidden="true" href="#cb6-94"></a>    fang = n, tarjan(<span class="dv">1</span>, <span class="dv">0</span>);</span>
+<span id="cb6-95"><a aria-hidden="true" href="#cb6-95"></a>    dfs(<span class="dv">1</span>, <span class="dv">0</span>);</span>
+<span id="cb6-96"><a aria-hidden="true" href="#cb6-96"></a>    <span class="cf">while</span> (q--) {</span>
+<span id="cb6-97"><a aria-hidden="true" href="#cb6-97"></a>        <span class="dt">int</span> u, v; read(u), read(v);</span>
+<span id="cb6-98"><a aria-hidden="true" href="#cb6-98"></a>        <span class="kw">auto</span> p = LCA(u, v);</span>
+<span id="cb6-99"><a aria-hidden="true" href="#cb6-99"></a>        <span class="cf">if</span> (~p.second)  {</span>
+<span id="cb6-100"><a aria-hidden="true" href="#cb6-100"></a>            <span class="dt">int</span> tmp = myabs(dis0[p.first] - dis0[p.second]);</span>
+<span id="cb6-101"><a aria-hidden="true" href="#cb6-101"></a>            tmp = min(tmp, r[fa[p.first][<span class="dv">0</span>]] - tmp);</span>
+<span id="cb6-102"><a aria-hidden="true" href="#cb6-102"></a>            print(dis[u] + dis[v] - dis[p.first] - dis[p.second] + tmp, <span class="ch">'</span><span class="sc">\n</span><span class="ch">'</span>);</span>
+<span id="cb6-103"><a aria-hidden="true" href="#cb6-103"></a>        } <span class="cf">else</span> print(dis[u] + dis[v] - <span class="dv">2</span> * dis[p.first], <span class="ch">'</span><span class="sc">\n</span><span class="ch">'</span>);</span>
+<span id="cb6-104"><a aria-hidden="true" href="#cb6-104"></a>    }</span>
+<span id="cb6-105"><a aria-hidden="true" href="#cb6-105"></a>    <span class="cf">return</span> output(), <span class="dv">0</span>;</span>
+<span id="cb6-106"><a aria-hidden="true" href="#cb6-106"></a>}</span></code></pre></div>
+<h4 id="p5058-zjoi2004嗅探器">P5058 [ZJOI2004]嗅探器</h4>
+<p><a href="https://www.luogu.com.cn/problem/P5058">传送门</a>。建出圆方树，找两个点中间的圆点即可，其一定是割点。</p>
+<h4 id="p4320-道路相遇">P4320 道路相遇</h4>
+<p><a href="https://www.luogu.com.cn/problem/P4320">传送门</a>。这个相当于就是求圆方树两点间圆点的个数，树剖维护一下就可以了。</p>
+</section>
+<footer class="article-footer">
+<section class="article-tags">
+<a href="/tags/OI/">OI</a>
+<a href="/tags/note/">笔记</a>
+<a href="/tags/shrink/">缩点</a>
+</section>
+<section class="article-copyright">
+<svg class="icon icon-tabler icon-tabler-copyright" fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+<path d="M0 0h24v24H0z" stroke="none"></path>
+<circle cx="12" cy="12" r="9"></circle>
+<path d="M14.5 9a3.5 4 0 1 0 0 6"></path>
+</svg>
+<span>Licensed under CC BY-NC-SA 4.0</span>
+</section>
+</footer>
+<link crossorigin="anonymous" href="https://cdn.jsdelivr.net/npm/katex@0.13.13/dist/katex.min.css" integrity="sha384-RZU/ijkSsFbcmivfdRBQDtwuwVqK7GMOw6IMvKyeWL2K5UAlyp6WonmB8m7Jd0Hn" rel="stylesheet"/><script crossorigin="anonymous" defer="" integrity="sha384-pK1WpvzWVBQiP0/GjnvRxV4mOb0oxFuyRxJlk6vVw146n3egcN5C925NCP7a7BY8" src="https://cdn.jsdelivr.net/npm/katex@0.13.13/dist/katex.min.js">
+</script><script crossorigin="anonymous" defer="" integrity="sha384-vZTG03m+2yp6N6BNi5iM4rW4oIwk5DfcNdFfxkk9ZWpDriOkXX8voJBFrAO7MpVl" src="https://cdn.jsdelivr.net/npm/katex@0.13.13/dist/contrib/auto-render.min.js">
+</script><script>
+    window.addEventListener("DOMContentLoaded", () => {
+        renderMathInElement(document.querySelector(`.article-content`), {
+            delimiters: [
+                { left: "$$", right: "$$", display: true },
+                { left: "$", right: "$", display: false },
+                { left: "\\(", right: "\\)", display: false },
+                { left: "\\[", right: "\\]", display: true }
+            ]
+        });})
+</script>
+</article>
+<aside class="related-contents--wrapper">
+<h2 class="section-title">相关文章</h2>
+<div class="related-contents">
+<div class="flex article-list--tile">
+<article class="has-image">
+<a href="/note-gf/">
+<div class="article-image">
+<img data-hash="https://yangty-pic.oss-cn-beijing.aliyuncs.com/bg28.webp" data-key="" loading="lazy" src="https://yangty-pic.oss-cn-beijing.aliyuncs.com/bg28.webp"/>
+</div>
+<div class="article-details">
+<h2 class="article-title">生成函数胡扯</h2>
+</div>
+</a>
+</article>
+<article class="has-image">
+<a href="/note-set-power-series/">
+<div class="article-image">
+<img data-hash="https://yangty-pic.oss-cn-beijing.aliyuncs.com/bg39.webp" data-key="" loading="lazy" src="https://yangty-pic.oss-cn-beijing.aliyuncs.com/bg39.webp"/>
+</div>
+<div class="article-details">
+<h2 class="article-title">集合幂级数胡扯</h2>
+</div>
+</a>
+</article>
+<article class="has-image">
+<a href="/note-linear-basis/">
+<div class="article-image">
+<img data-hash="https://yangty-pic.oss-cn-beijing.aliyuncs.com/bg19.webp" data-key="" loading="lazy" src="https://yangty-pic.oss-cn-beijing.aliyuncs.com/bg19.webp"/>
+</div>
+<div class="article-details">
+<h2 class="article-title">线性基学习笔记</h2>
+</div>
+</a>
+</article>
+<article class="has-image">
+<a href="/note-wqs/">
+<div class="article-image">
+<img data-hash="https://yangty-pic.oss-cn-beijing.aliyuncs.com/bg28.webp" data-key="" loading="lazy" src="https://yangty-pic.oss-cn-beijing.aliyuncs.com/bg28.webp"/>
+</div>
+<div class="article-details">
+<h2 class="article-title">wqs 二分学习笔记</h2>
+</div>
+</a>
+</article>
+<article class="has-image">
+<a href="/note-builtin/">
+<div class="article-image">
+<img data-hash="https://yangty-pic.oss-cn-beijing.aliyuncs.com/bg9.webp" data-key="" loading="lazy" src="https://yangty-pic.oss-cn-beijing.aliyuncs.com/bg9.webp"/>
+</div>
+<div class="article-details">
+<h2 class="article-title">__builtin 系列函数总结</h2>
+</div>
+</a>
+</article>
+</div>
+</div>
+</aside>
+<footer class="site-footer">
+<section class="copyright">
+        © 
+        
+            2019 - 
+        
+        2024 清烛的博客
+    </section>
+<section class="powerby">
+        Built with <a href="https://gohugo.io/" rel="noopener" target="_blank">Hugo</a> <br/>
+        主题 <b><a data-version="3.11.0" href="https://github.com/CaiJimmy/hugo-theme-stack" rel="noopener" target="_blank">Stack</a></b> 由 <a href="https://jimmycai.com" rel="noopener" target="_blank">Jimmy</a> 设计
+    </section>
+</footer>
+<div aria-hidden="true" class="pswp" role="dialog" tabindex="-1">
+<div class="pswp__bg"></div>
+<div class="pswp__scroll-wrap">
+<div class="pswp__container">
+<div class="pswp__item"></div>
+<div class="pswp__item"></div>
+<div class="pswp__item"></div>
+</div>
+<div class="pswp__ui pswp__ui--hidden">
+<div class="pswp__top-bar">
+<div class="pswp__counter"></div>
+<button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+<button class="pswp__button pswp__button--share" title="Share"></button>
+<button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+<button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+<div class="pswp__preloader">
+<div class="pswp__preloader__icn">
+<div class="pswp__preloader__cut">
+<div class="pswp__preloader__donut"></div>
+</div>
+</div>
+</div>
+</div>
+<div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+<div class="pswp__share-tooltip"></div>
+</div>
+<button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+</button>
+<button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+</button>
+<div class="pswp__caption">
+<div class="pswp__caption__center"></div>
+</div>
+</div>
+</div>
+</div><script crossorigin="anonymous" defer="" integrity="sha256-ePwmChbbvXbsO02lbM3HoHbSHTHFAeChekF1xKJdleo=" src="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe.min.js">
+</script><script crossorigin="anonymous" defer="" integrity="sha256-UKkzOn/w1mBxRmLLGrSeyB4e1xbrp4xylgAWb3M42pU=" src="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe-ui-default.min.js">
+</script><link crossorigin="anonymous" href="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/default-skin/default-skin.css" integrity="sha256-c0uckgykQ9v5k+IqViZOZKc47Jn7KQil4/MP3ySA3F8=" rel="stylesheet"/><link crossorigin="anonymous" href="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe.css" integrity="sha256-SBLU4vv6CA6lHsZ1XyTdhyjJxCjPif/TRkjnsyGAGnE=" rel="stylesheet"/>
+</main>
+</div>
+<script crossorigin="anonymous" integrity="sha256-5NovOZc4iwiAWTYIFiIM7DxKUXKWvpVEuMEPLzcm5/g=" src="https://cdn.jsdelivr.net/npm/node-vibrant@3.1.5/dist/vibrant.min.js">
+</script><script defer="" src="/ts/main.js" type="text/javascript"></script>
+<script>
+    (function () {
+        const customFont = document.createElement('link');
+        customFont.href = "https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&display=swap";
+
+        customFont.type = "text/css";
+        customFont.rel = "stylesheet";
+
+        document.head.appendChild(customFont);
+    }());
+</script>
+</body>
+</html>

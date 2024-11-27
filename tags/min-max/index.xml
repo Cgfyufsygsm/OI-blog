@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+    <channel>
+        <title>min-max容斥 on 清烛的博客</title>
+        <link>https://oi.imyangty.com/tags/min-max/</link>
+        <description>Recent content in min-max容斥 on 清烛的博客</description>
+        <generator>Hugo -- gohugo.io</generator>
+        <language>zh-CN</language>
+        <lastBuildDate>Wed, 06 Oct 2021 10:58:12 +0800</lastBuildDate><atom:link href="https://oi.imyangty.com/tags/min-max/index.xml" rel="self" type="application/rss+xml" /><item>
+        <title>P3175 [HAOI2015]按位或</title>
+        <link>https://oi.imyangty.com/sol-luogu-p3175/</link>
+        <pubDate>Wed, 06 Oct 2021 10:58:12 +0800</pubDate>
+        
+        <guid>https://oi.imyangty.com/sol-luogu-p3175/</guid>
+        <description>&lt;img src="https://yangty-pic.oss-cn-beijing.aliyuncs.com/bg51.webp" alt="Featured image of post P3175 [HAOI2015]按位或" /&gt;&lt;h2 id=&#34;description&#34;&gt;Description&lt;/h2&gt;
+&lt;p&gt;一开始有数字 &lt;span class=&#34;math inline&#34;&gt;\(0\)&lt;/span&gt;，每秒随机选一个 &lt;span class=&#34;math inline&#34;&gt;\([0, 2^n - 1]\)&lt;/span&gt; 的数字然后按位或上去，选择 &lt;span class=&#34;math inline&#34;&gt;\(i\)&lt;/span&gt; 的概率为 &lt;span class=&#34;math inline&#34;&gt;\(p_i\)&lt;/span&gt;，问期望多少秒后变成 &lt;span class=&#34;math inline&#34;&gt;\(2^n - 1\)&lt;/span&gt;。&lt;/p&gt;
+&lt;h2 id=&#34;solution&#34;&gt;Solution&lt;/h2&gt;
+&lt;p&gt;拆开每一位。设 &lt;span class=&#34;math inline&#34;&gt;\(x_k\)&lt;/span&gt; 为第 &lt;span class=&#34;math inline&#34;&gt;\(k\)&lt;/span&gt; 位变为 &lt;span class=&#34;math inline&#34;&gt;\(1\)&lt;/span&gt; 的时间，则我们要求的就是 &lt;span class=&#34;math inline&#34;&gt;\(E(\max(X))\)&lt;/span&gt;。这个东西似乎不太好求，我们考虑 min-max 容斥一下，变为求每个 &lt;span class=&#34;math inline&#34;&gt;\(S\subseteq X\)&lt;/span&gt; 的 &lt;span class=&#34;math inline&#34;&gt;\(E(\min(S))\)&lt;/span&gt;。&lt;/p&gt;
+&lt;p&gt;令 &lt;span class=&#34;math inline&#34;&gt;\(p(T)\)&lt;/span&gt; 为选中 &lt;span class=&#34;math inline&#34;&gt;\(T\)&lt;/span&gt; 子集的概率。现在我们要求 &lt;span class=&#34;math inline&#34;&gt;\(E(\min(S))\)&lt;/span&gt;，相当于就是 &lt;span class=&#34;math inline&#34;&gt;\(S\)&lt;/span&gt; 中至少出现一位的期望步数。有 &lt;span class=&#34;math display&#34;&gt;\[
+E(\min(S)) = 1 + \sum_{T\cap S = \varnothing} p(T)E(\min(S))
+\]&lt;/span&gt; 意义就是如果没选到与 &lt;span class=&#34;math inline&#34;&gt;\(S\)&lt;/span&gt; 有交的集合，那么就还需要付出 &lt;span class=&#34;math inline&#34;&gt;\(E(\min(S))\)&lt;/span&gt; 的代价。所以 &lt;span class=&#34;math display&#34;&gt;\[
+E(\min(S)) = \frac{1}{1 - \sum_{T\cap S = \varnothing}p(T)}
+\]&lt;/span&gt; 现在需要求出所有 &lt;span class=&#34;math inline&#34;&gt;\(T\)&lt;/span&gt; 的 &lt;span class=&#34;math inline&#34;&gt;\(p(T)\)&lt;/span&gt;，FWT-OR 碾过去做个子集求和即可。&lt;/p&gt;
+&lt;h2 id=&#34;implementation&#34;&gt;Implementation&lt;/h2&gt;
+&lt;p&gt;意外的好写。&lt;/p&gt;
+&lt;div class=&#34;sourceCode&#34; id=&#34;cb1&#34;&gt;&lt;pre class=&#34;sourceCode cpp&#34;&gt;&lt;code class=&#34;sourceCode cpp&#34;&gt;&lt;span id=&#34;cb1-1&#34;&gt;&lt;a href=&#34;#cb1-1&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;&lt;span class=&#34;pp&#34;&gt;#include &lt;/span&gt;&lt;span class=&#34;im&#34;&gt;&amp;lt;cstdio&amp;gt;&lt;/span&gt;&lt;/span&gt;
+&lt;span id=&#34;cb1-2&#34;&gt;&lt;a href=&#34;#cb1-2&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;&lt;span class=&#34;pp&#34;&gt;#define FOR&lt;/span&gt;(i,&lt;span class=&#34;pp&#34;&gt; &lt;/span&gt;a,&lt;span class=&#34;pp&#34;&gt; &lt;/span&gt;b)&lt;span class=&#34;pp&#34;&gt; &lt;/span&gt;&lt;span class=&#34;cf&#34;&gt;for&lt;/span&gt;&lt;span class=&#34;pp&#34;&gt; &lt;/span&gt;(&lt;span class=&#34;dt&#34;&gt;int&lt;/span&gt;&lt;span class=&#34;pp&#34;&gt; &lt;/span&gt;i&lt;span class=&#34;pp&#34;&gt; &lt;/span&gt;=&lt;span class=&#34;pp&#34;&gt; &lt;/span&gt;(a);&lt;span class=&#34;pp&#34;&gt; &lt;/span&gt;i&lt;span class=&#34;pp&#34;&gt; &lt;/span&gt;&amp;lt;=&lt;span class=&#34;pp&#34;&gt; &lt;/span&gt;(b);&lt;span class=&#34;pp&#34;&gt; &lt;/span&gt;++i)&lt;/span&gt;
+&lt;span id=&#34;cb1-3&#34;&gt;&lt;a href=&#34;#cb1-3&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;&lt;/span&gt;
+&lt;span id=&#34;cb1-4&#34;&gt;&lt;a href=&#34;#cb1-4&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;&lt;span class=&#34;at&#34;&gt;const&lt;/span&gt; &lt;span class=&#34;dt&#34;&gt;int&lt;/span&gt; maxn = &lt;span class=&#34;dv&#34;&gt;1&lt;/span&gt; &amp;lt;&amp;lt; &lt;span class=&#34;dv&#34;&gt;20&lt;/span&gt;;&lt;/span&gt;
+&lt;span id=&#34;cb1-5&#34;&gt;&lt;a href=&#34;#cb1-5&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;&lt;span class=&#34;kw&#34;&gt;using&lt;/span&gt; db = &lt;span class=&#34;dt&#34;&gt;double&lt;/span&gt;;&lt;/span&gt;
+&lt;span id=&#34;cb1-6&#34;&gt;&lt;a href=&#34;#cb1-6&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;db p[maxn];&lt;/span&gt;
+&lt;span id=&#34;cb1-7&#34;&gt;&lt;a href=&#34;#cb1-7&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;&lt;span class=&#34;dt&#34;&gt;int&lt;/span&gt; n, cnt[maxn];&lt;/span&gt;
+&lt;span id=&#34;cb1-8&#34;&gt;&lt;a href=&#34;#cb1-8&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;&lt;/span&gt;
+&lt;span id=&#34;cb1-9&#34;&gt;&lt;a href=&#34;#cb1-9&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;&lt;span class=&#34;dt&#34;&gt;int&lt;/span&gt; main() {&lt;/span&gt;
+&lt;span id=&#34;cb1-10&#34;&gt;&lt;a href=&#34;#cb1-10&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;    scanf(&lt;span class=&#34;st&#34;&gt;&amp;quot;&lt;/span&gt;&lt;span class=&#34;sc&#34;&gt;%d&lt;/span&gt;&lt;span class=&#34;st&#34;&gt;&amp;quot;&lt;/span&gt;, &amp;amp;n); n = (&lt;span class=&#34;dv&#34;&gt;1&lt;/span&gt; &amp;lt;&amp;lt; n);&lt;/span&gt;
+&lt;span id=&#34;cb1-11&#34;&gt;&lt;a href=&#34;#cb1-11&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;    FOR(i, &lt;span class=&#34;dv&#34;&gt;0&lt;/span&gt;, n - &lt;span class=&#34;dv&#34;&gt;1&lt;/span&gt;) scanf(&lt;span class=&#34;st&#34;&gt;&amp;quot;&lt;/span&gt;&lt;span class=&#34;sc&#34;&gt;%lf&lt;/span&gt;&lt;span class=&#34;st&#34;&gt;&amp;quot;&lt;/span&gt;, p + i);&lt;/span&gt;
+&lt;span id=&#34;cb1-12&#34;&gt;&lt;a href=&#34;#cb1-12&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;    &lt;span class=&#34;cf&#34;&gt;for&lt;/span&gt; (&lt;span class=&#34;dt&#34;&gt;int&lt;/span&gt; o = &lt;span class=&#34;dv&#34;&gt;2&lt;/span&gt;, k = &lt;span class=&#34;dv&#34;&gt;1&lt;/span&gt;; o &amp;lt;= n; o &amp;lt;&amp;lt;= &lt;span class=&#34;dv&#34;&gt;1&lt;/span&gt;, k &amp;lt;&amp;lt;= &lt;span class=&#34;dv&#34;&gt;1&lt;/span&gt;)&lt;/span&gt;
+&lt;span id=&#34;cb1-13&#34;&gt;&lt;a href=&#34;#cb1-13&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;        &lt;span class=&#34;cf&#34;&gt;for&lt;/span&gt; (&lt;span class=&#34;dt&#34;&gt;int&lt;/span&gt; i = &lt;span class=&#34;dv&#34;&gt;0&lt;/span&gt;; i &amp;lt; n; i += o)&lt;/span&gt;
+&lt;span id=&#34;cb1-14&#34;&gt;&lt;a href=&#34;#cb1-14&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;            &lt;span class=&#34;cf&#34;&gt;for&lt;/span&gt; (&lt;span class=&#34;dt&#34;&gt;int&lt;/span&gt; j = &lt;span class=&#34;dv&#34;&gt;0&lt;/span&gt;; j &amp;lt; k; ++j)&lt;/span&gt;
+&lt;span id=&#34;cb1-15&#34;&gt;&lt;a href=&#34;#cb1-15&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;                p[i + j + k] += p[i + j];&lt;/span&gt;
+&lt;span id=&#34;cb1-16&#34;&gt;&lt;a href=&#34;#cb1-16&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;    db ans = &lt;span class=&#34;dv&#34;&gt;0&lt;/span&gt;;&lt;/span&gt;
+&lt;span id=&#34;cb1-17&#34;&gt;&lt;a href=&#34;#cb1-17&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;    FOR(i, &lt;span class=&#34;dv&#34;&gt;1&lt;/span&gt;, n - &lt;span class=&#34;dv&#34;&gt;1&lt;/span&gt;) {&lt;/span&gt;
+&lt;span id=&#34;cb1-18&#34;&gt;&lt;a href=&#34;#cb1-18&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;        cnt[i] = cnt[i &amp;gt;&amp;gt; &lt;span class=&#34;dv&#34;&gt;1&lt;/span&gt;] + (i &amp;amp; &lt;span class=&#34;dv&#34;&gt;1&lt;/span&gt;);&lt;/span&gt;
+&lt;span id=&#34;cb1-19&#34;&gt;&lt;a href=&#34;#cb1-19&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;        db tmp = &lt;span class=&#34;dv&#34;&gt;1&lt;/span&gt; - p[i ^ (n - &lt;span class=&#34;dv&#34;&gt;1&lt;/span&gt;)];&lt;/span&gt;
+&lt;span id=&#34;cb1-20&#34;&gt;&lt;a href=&#34;#cb1-20&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;        &lt;span class=&#34;cf&#34;&gt;if&lt;/span&gt; (tmp &amp;lt; &lt;span class=&#34;fl&#34;&gt;1e-8&lt;/span&gt;) &lt;span class=&#34;cf&#34;&gt;return&lt;/span&gt; puts(&lt;span class=&#34;st&#34;&gt;&amp;quot;INF&amp;quot;&lt;/span&gt;), &lt;span class=&#34;dv&#34;&gt;0&lt;/span&gt;;&lt;/span&gt;
+&lt;span id=&#34;cb1-21&#34;&gt;&lt;a href=&#34;#cb1-21&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;        ans += ((cnt[i] &amp;amp; &lt;span class=&#34;dv&#34;&gt;1&lt;/span&gt;) ? &lt;span class=&#34;dv&#34;&gt;1&lt;/span&gt; : -&lt;span class=&#34;dv&#34;&gt;1&lt;/span&gt;) * &lt;span class=&#34;fl&#34;&gt;1.0&lt;/span&gt; / tmp;&lt;/span&gt;
+&lt;span id=&#34;cb1-22&#34;&gt;&lt;a href=&#34;#cb1-22&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;    }&lt;/span&gt;
+&lt;span id=&#34;cb1-23&#34;&gt;&lt;a href=&#34;#cb1-23&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;    printf(&lt;span class=&#34;st&#34;&gt;&amp;quot;&lt;/span&gt;&lt;span class=&#34;sc&#34;&gt;%lf\n&lt;/span&gt;&lt;span class=&#34;st&#34;&gt;&amp;quot;&lt;/span&gt;, ans);&lt;/span&gt;
+&lt;span id=&#34;cb1-24&#34;&gt;&lt;a href=&#34;#cb1-24&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;    &lt;span class=&#34;cf&#34;&gt;return&lt;/span&gt; &lt;span class=&#34;dv&#34;&gt;0&lt;/span&gt;;&lt;/span&gt;
+&lt;span id=&#34;cb1-25&#34;&gt;&lt;a href=&#34;#cb1-25&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;}&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+</description>
+        </item>
+        
+    </channel>
+</rss>

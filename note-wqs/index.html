@@ -1,0 +1,599 @@
+<!DOCTYPE html>
+<html dir="ltr" lang="zh-CN">
+<head><meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1" name="viewport"/><meta content="前言 wqs 二分，又称带权二分，DP 凸优化，是一种求解带凸性且钦定选择个数的问题的二分方法，由王钦石大佬于 2012 年于其集训队论文中提出。
+若遇到一类形如“钦定选择物品个数，而不钦定的话很好做，并且感性理解答案关于物品个数有凸性”的问题，则可以考虑使用 wqs 二分进行求解。
+算法流程 考虑一道经典例题：
+典例：\(n\) 个数，要求分成 \(m\) 段，求每段平方之和的最小值。\(m\le n\le 10^5\)。
+发现可以设计一个很裸的 dp：\(f_{i,j}\) 表示 \([1, i]\) 划分成 \(j\) 段的答案。直接做是 \(O(n^2m)\) 的，套上斜率优化还是 \(O(nm)\) 的，没有办法丢掉 \(m\)。但是如果不要求分成 \(m\) 段的话会发现直接斜率优化可以 \(O(n)\)。即，钦定不好做，不钦定很好做。
+复杂度/维数和选的个数有关的可以考虑其凸性。
+而注意到 打表知 猜测 \(f_{n, i}\) 是关于 \(i\) 的凸函数，故考虑 wqs 二分把这一维丢掉。
+具体地，感性理解一下，发现我们若是去掉钦定段数的限制，则 dp 一定会尽可能让他分成 \(n\) 段。
+那么我们考虑给每一段加上附加权值 \(c\)，这样 dp 算法就能从“分的段数多权值小”和“分的段数少权值小”中间进行取舍，找到一个“平衡点”。继续感性理解一下发现 \(c\) 越大分段越少，\(c\) 越小分段越多。
+那么通过二分这个权值，我们就能让分的段数恰好 \(\le m\)，这样的解减去加上的附加权值就是最优解。
+上面是感性理解，下面我们来理性思考一下。上面的说明有两个问题：
+有可能我们无法通过“改变权值”来使得分段数恰好 \(= k\)，即函数可能“不连续”。 没有说明这样的解一定是最优解。 那么首先建立 \(f_{n, i}\) 关于 \(i\) 的函数 \(y = f(x)\)，打表发现其下凸。具有凸性才能二分权值，原因下面会说明。" name="description"/><title>wqs 二分学习笔记</title>
+<link href="https://oi.imyangty.com/note-wqs/" rel="canonical"/>
+<link href="/scss/style.min.a5821f3d3ab84ce5a0ac21477e347a2e0ca00292e398d16c5e8e36ded6e35a23.css" rel="stylesheet"/><meta content="wqs 二分学习笔记" property="og:title"/>
+<meta content="前言 wqs 二分，又称带权二分，DP 凸优化，是一种求解带凸性且钦定选择个数的问题的二分方法，由王钦石大佬于 2012 年于其集训队论文中提出。
+若遇到一类形如“钦定选择物品个数，而不钦定的话很好做，并且感性理解答案关于物品个数有凸性”的问题，则可以考虑使用 wqs 二分进行求解。
+算法流程 考虑一道经典例题：
+典例：\(n\) 个数，要求分成 \(m\) 段，求每段平方之和的最小值。\(m\le n\le 10^5\)。
+发现可以设计一个很裸的 dp：\(f_{i,j}\) 表示 \([1, i]\) 划分成 \(j\) 段的答案。直接做是 \(O(n^2m)\) 的，套上斜率优化还是 \(O(nm)\) 的，没有办法丢掉 \(m\)。但是如果不要求分成 \(m\) 段的话会发现直接斜率优化可以 \(O(n)\)。即，钦定不好做，不钦定很好做。
+复杂度/维数和选的个数有关的可以考虑其凸性。
+而注意到 打表知 猜测 \(f_{n, i}\) 是关于 \(i\) 的凸函数，故考虑 wqs 二分把这一维丢掉。
+具体地，感性理解一下，发现我们若是去掉钦定段数的限制，则 dp 一定会尽可能让他分成 \(n\) 段。
+那么我们考虑给每一段加上附加权值 \(c\)，这样 dp 算法就能从“分的段数多权值小”和“分的段数少权值小”中间进行取舍，找到一个“平衡点”。继续感性理解一下发现 \(c\) 越大分段越少，\(c\) 越小分段越多。
+那么通过二分这个权值，我们就能让分的段数恰好 \(\le m\)，这样的解减去加上的附加权值就是最优解。
+上面是感性理解，下面我们来理性思考一下。上面的说明有两个问题：
+有可能我们无法通过“改变权值”来使得分段数恰好 \(= k\)，即函数可能“不连续”。 没有说明这样的解一定是最优解。 那么首先建立 \(f_{n, i}\) 关于 \(i\) 的函数 \(y = f(x)\)，打表发现其下凸。具有凸性才能二分权值，原因下面会说明。" property="og:description"/>
+<meta content="https://oi.imyangty.com/note-wqs/" property="og:url"/>
+<meta content="清烛的博客" property="og:site_name"/>
+<meta content="article" property="og:type"/><meta content="Post" property="article:section"/><meta content="OI" property="article:tag"/><meta content="wqs二分" property="article:tag"/><meta content="笔记" property="article:tag"/><meta content="2022-03-28T15:27:49+08:00" property="article:published_time"/><meta content="2022-03-28T15:27:49+08:00" property="article:modified_time"/><meta content="https://yangty-pic.oss-cn-beijing.aliyuncs.com/bg28.webp" property="og:image"/>
+<meta content="wqs 二分学习笔记" name="twitter:title"/>
+<meta content="前言 wqs 二分，又称带权二分，DP 凸优化，是一种求解带凸性且钦定选择个数的问题的二分方法，由王钦石大佬于 2012 年于其集训队论文中提出。
+若遇到一类形如“钦定选择物品个数，而不钦定的话很好做，并且感性理解答案关于物品个数有凸性”的问题，则可以考虑使用 wqs 二分进行求解。
+算法流程 考虑一道经典例题：
+典例：\(n\) 个数，要求分成 \(m\) 段，求每段平方之和的最小值。\(m\le n\le 10^5\)。
+发现可以设计一个很裸的 dp：\(f_{i,j}\) 表示 \([1, i]\) 划分成 \(j\) 段的答案。直接做是 \(O(n^2m)\) 的，套上斜率优化还是 \(O(nm)\) 的，没有办法丢掉 \(m\)。但是如果不要求分成 \(m\) 段的话会发现直接斜率优化可以 \(O(n)\)。即，钦定不好做，不钦定很好做。
+复杂度/维数和选的个数有关的可以考虑其凸性。
+而注意到 打表知 猜测 \(f_{n, i}\) 是关于 \(i\) 的凸函数，故考虑 wqs 二分把这一维丢掉。
+具体地，感性理解一下，发现我们若是去掉钦定段数的限制，则 dp 一定会尽可能让他分成 \(n\) 段。
+那么我们考虑给每一段加上附加权值 \(c\)，这样 dp 算法就能从“分的段数多权值小”和“分的段数少权值小”中间进行取舍，找到一个“平衡点”。继续感性理解一下发现 \(c\) 越大分段越少，\(c\) 越小分段越多。
+那么通过二分这个权值，我们就能让分的段数恰好 \(\le m\)，这样的解减去加上的附加权值就是最优解。
+上面是感性理解，下面我们来理性思考一下。上面的说明有两个问题：
+有可能我们无法通过“改变权值”来使得分段数恰好 \(= k\)，即函数可能“不连续”。 没有说明这样的解一定是最优解。 那么首先建立 \(f_{n, i}\) 关于 \(i\) 的函数 \(y = f(x)\)，打表发现其下凸。具有凸性才能二分权值，原因下面会说明。" name="twitter:description"/><meta content="summary_large_image" name="twitter:card"/>
+<meta content="https://yangty-pic.oss-cn-beijing.aliyuncs.com/bg28.webp" name="twitter:image"/>
+<link href="https://q1.qlogo.cn/g?b=qq&amp;nk=375836877&amp;s=5" rel="shortcut icon"/>
+<link href="https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.5.1/build/styles/github-dark-dimmed.min.css" rel="stylesheet"/>
+<script src="https://cdn.jsdelivr.net/gh/highlightjs/cdn-release/build/highlight.min.js"></script>
+<script>hljs.highlightAll();</script>
+</head>
+<body class="article-page">
+<script>
+        (function() {
+            const colorSchemeKey = 'StackColorScheme';
+            if(!localStorage.getItem(colorSchemeKey)){
+                localStorage.setItem(colorSchemeKey, "auto");
+            }
+        })();
+    </script><script>
+    (function() {
+        const colorSchemeKey = 'StackColorScheme';
+        const colorSchemeItem = localStorage.getItem(colorSchemeKey);
+        const supportDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches === true;
+
+        if (colorSchemeItem == 'dark' || colorSchemeItem === 'auto' && supportDarkMode) {
+            
+
+            document.documentElement.dataset.scheme = 'dark';
+        } else {
+            document.documentElement.dataset.scheme = 'light';
+        }
+    })();
+</script>
+<div class="container main-container flex on-phone--column extended"><aside class="sidebar left-sidebar sticky">
+<button aria-label="切换菜单" class="hamburger hamburger--spin" id="toggle-menu" type="button">
+<span class="hamburger-box">
+<span class="hamburger-inner"></span>
+</span>
+</button>
+<header>
+<figure class="site-avatar">
+<a href="/">
+<img alt="Avatar" class="site-logo" height="300" loading="lazy" src="/img/avatar_huea3ce2119467b51fdd2a81393644a76d_51594_300x0_resize_q75_box.jpg" width="300"/>
+</a>
+<span class="emoji">😅</span>
+</figure>
+<div class="site-meta">
+<h1 class="site-name"><a href="/">清烛的博客</a></h1>
+<h2 class="site-description">烟火已谢，笙歌未停</h2>
+</div>
+</header><ol class="social-menu">
+<li>
+<a href="mailto:i@imyangty.com" target="_blank" title="email">
+<svg class="icon icon-tabler icon-tabler-mail" fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" viewbox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+<path d="M0 0h24v24H0z" fill="none" stroke="none"></path>
+<rect height="14" rx="2" width="18" x="3" y="5"></rect>
+<polyline points="3 7 12 13 21 7"></polyline>
+</svg>
+</a>
+</li>
+<li>
+<a href="https://github.com/Cgfyufsygsm" target="_blank" title="GitHub">
+<svg class="icon icon-tabler icon-tabler-brand-github" fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+<path d="M0 0h24v24H0z" fill="none" stroke="none"></path>
+<path d="M9 19c-4.3 1.4 -4.3 -2.5 -6 -3m12 5v-3.5c0 -1 .1 -1.4 -.5 -2c2.8 -.3 5.5 -1.4 5.5 -6a4.6 4.6 0 0 0 -1.3 -3.2a4.2 4.2 0 0 0 -.1 -3.2s-1.1 -.3 -3.5 1.3a12.3 12.3 0 0 0 -6.2 0c-2.4 -1.6 -3.5 -1.3 -3.5 -1.3a4.2 4.2 0 0 0 -.1 3.2a4.6 4.6 0 0 0 -1.3 3.2c0 4.6 2.7 5.7 5.5 6c-.6 .6 -.6 1.2 -.5 2v3.5"></path>
+</svg>
+</a>
+</li>
+<li>
+<a href="https://t.me/Cgfyufsygsm" target="_blank" title="Telegram">
+<svg class="icon icon-tabler icon-tabler-brand-telegram" fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" viewbox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+<path d="M0 0h24v24H0z" fill="none" stroke="none"></path>
+<path d="M15 10l-4 4l6 6l4 -16l-18 7l4 2l2 6l3 -4"></path>
+</svg>
+</a>
+</li>
+<li>
+<a href="https://twitter.com/Cgfyufsygsm" target="_blank" title="Twitter">
+<svg class="icon icon-tabler icon-tabler-brand-twitter" fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+<path d="M0 0h24v24H0z" fill="none" stroke="none"></path>
+<path d="M22 4.01c-1 .49 -1.98 .689 -3 .99c-1.121 -1.265 -2.783 -1.335 -4.38 -.737s-2.643 2.06 -2.62 3.737v1c-3.245 .083 -6.135 -1.395 -8 -4c0 0 -4.182 7.433 4 11c-1.872 1.247 -3.739 2.088 -6 2c3.308 1.803 6.913 2.423 10.034 1.517c3.58 -1.04 6.522 -3.723 7.651 -7.742a13.84 13.84 0 0 0 .497 -3.753c-.002 -.249 1.51 -2.772 1.818 -4.013z"></path>
+</svg>
+</a>
+</li>
+</ol><ol class="menu" id="main-menu">
+<li>
+<a href="/">
+<svg class="icon icon-tabler icon-tabler-home" fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+<path d="M0 0h24v24H0z" stroke="none"></path>
+<polyline points="5 12 3 12 12 3 21 12 19 12"></polyline>
+<path d="M5 12v7a2 2 0 0 0 2 2h10a2 2 0 0 0 2 -2v-7"></path>
+<path d="M9 21v-6a2 2 0 0 1 2 -2h2a2 2 0 0 1 2 2v6"></path>
+</svg>
+<span>主页</span>
+</a>
+</li>
+<li>
+<a href="/about/">
+<svg class="icon icon-tabler icon-tabler-user" fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+<path d="M0 0h24v24H0z" stroke="none"></path>
+<circle cx="12" cy="7" r="4"></circle>
+<path d="M6 21v-2a4 4 0 0 1 4 -4h4a4 4 0 0 1 4 4v2"></path>
+</svg>
+<span>关于</span>
+</a>
+</li>
+<li>
+<a href="/idx/">
+<svg class="icon icon-tabler icon-tabler-hash" fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+<path d="M0 0h24v24H0z" stroke="none"></path>
+<line x1="5" x2="19" y1="9" y2="9"></line>
+<line x1="5" x2="19" y1="15" y2="15"></line>
+<line x1="11" x2="7" y1="4" y2="20"></line>
+<line x1="17" x2="13" y1="4" y2="20"></line>
+</svg>
+<span>导航</span>
+</a>
+</li>
+<li>
+<a href="/archives/">
+<svg class="icon icon-tabler icon-tabler-archive" fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+<path d="M0 0h24v24H0z" stroke="none"></path>
+<rect height="4" rx="2" width="18" x="3" y="4"></rect>
+<path d="M5 8v10a2 2 0 0 0 2 2h10a2 2 0 0 0 2 -2v-10"></path>
+<line x1="10" x2="14" y1="12" y2="12"></line>
+</svg>
+<span>归档</span>
+</a>
+</li>
+<li>
+<a href="/search/">
+<svg class="icon icon-tabler icon-tabler-search" fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+<path d="M0 0h24v24H0z" stroke="none"></path>
+<circle cx="10" cy="10" r="7"></circle>
+<line x1="21" x2="15" y1="21" y2="15"></line>
+</svg>
+<span>搜索</span>
+</a>
+</li>
+<li>
+<a href="/friends/">
+<svg class="icon icon-tabler icon-tabler-link" fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+<path d="M0 0h24v24H0z" stroke="none"></path>
+<path d="M10 14a3.5 3.5 0 0 0 5 0l4 -4a3.5 3.5 0 0 0 -5 -5l-.5 .5"></path>
+<path d="M14 10a3.5 3.5 0 0 0 -5 0l-4 4a3.5 3.5 0 0 0 5 5l.5 -.5"></path>
+</svg>
+<span>友链</span>
+</a>
+</li>
+<li>
+<a href="https://blog.imyangty.com" target="_blank">
+<svg class="icon icon-tabler icon-tabler-home" fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+<path d="M0 0h24v24H0z" stroke="none"></path>
+<polyline points="5 12 3 12 12 3 21 12 19 12"></polyline>
+<path d="M5 12v7a2 2 0 0 0 2 2h10a2 2 0 0 0 2 -2v-7"></path>
+<path d="M9 21v-6a2 2 0 0 1 2 -2h2a2 2 0 0 1 2 2v6"></path>
+</svg>
+<span>主博客</span>
+</a>
+</li>
+<div class="menu-bottom-section">
+<li id="dark-mode-toggle">
+<svg class="icon icon-tabler icon-tabler-toggle-left" fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+<path d="M0 0h24v24H0z" stroke="none"></path>
+<circle cx="8" cy="12" r="2"></circle>
+<rect height="12" rx="6" width="20" x="2" y="6"></rect>
+</svg>
+<svg class="icon icon-tabler icon-tabler-toggle-right" fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+<path d="M0 0h24v24H0z" stroke="none"></path>
+<circle cx="16" cy="12" r="2"></circle>
+<rect height="12" rx="6" width="20" x="2" y="6"></rect>
+</svg>
+<span>暗色模式</span>
+</li>
+</div>
+</ol>
+</aside>
+<main class="main full-width">
+<article class="has-image main-article">
+<header class="article-header">
+<div class="article-image">
+<a href="/note-wqs/">
+<img alt="Featured image of post wqs 二分学习笔记" loading="lazy" src="https://yangty-pic.oss-cn-beijing.aliyuncs.com/bg28.webp"/>
+</a>
+</div>
+<div class="article-details">
+<header class="article-category">
+<a href="/categories/oi/">
+                OI
+            </a>
+<a href="/categories/note/">
+                笔记
+            </a>
+</header>
+<div class="article-title-wrapper">
+<h2 class="article-title">
+<a href="/note-wqs/">wqs 二分学习笔记</a>
+</h2>
+</div>
+<footer class="article-time">
+<div>
+<svg class="icon icon-tabler icon-tabler-calendar-time" fill="none" height="56" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="56" xmlns="http://www.w3.org/2000/svg">
+<path d="M0 0h24v24H0z" stroke="none"></path>
+<path d="M11.795 21h-6.795a2 2 0 0 1 -2 -2v-12a2 2 0 0 1 2 -2h12a2 2 0 0 1 2 2v4"></path>
+<circle cx="18" cy="18" r="4"></circle>
+<path d="M15 3v4"></path>
+<path d="M7 3v4"></path>
+<path d="M3 11h16"></path>
+<path d="M18 16.496v1.504l1 1"></path>
+</svg>
+<time class="article-time--published">Mar 28, 2022</time>
+</div>
+<div>
+<svg class="icon icon-tabler icon-tabler-clock" fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+<path d="M0 0h24v24H0z" stroke="none"></path>
+<circle cx="12" cy="12" r="9"></circle>
+<polyline points="12 7 12 12 15 15"></polyline>
+</svg>
+<time class="article-time--reading">
+                    阅读时长: 5 分钟
+                </time>
+</div>
+</footer>
+</div>
+</header>
+<section class="article-content">
+<h2 id="前言">前言</h2>
+<p>wqs 二分，又称带权二分，DP 凸优化，是一种求解带凸性且钦定选择个数的问题的二分方法，由王钦石大佬于 2012 年于其集训队论文中提出。</p>
+<p>若遇到一类形如“钦定选择物品个数，而不钦定的话很好做，并且<del>感性理解</del>答案关于物品个数有凸性”的问题，则可以考虑使用 wqs 二分进行求解。</p>
+<h2 id="算法流程">算法流程</h2>
+<p>考虑一道经典例题：</p>
+<blockquote>
+<p>典例：<span class="math inline">\(n\)</span> 个数，要求分成 <span class="math inline">\(m\)</span> 段，求每段平方之和的最小值。<span class="math inline">\(m\le n\le 10^5\)</span>。</p>
+</blockquote>
+<p>发现可以设计一个很裸的 dp：<span class="math inline">\(f_{i,j}\)</span> 表示 <span class="math inline">\([1, i]\)</span> 划分成 <span class="math inline">\(j\)</span> 段的答案。直接做是 <span class="math inline">\(O(n^2m)\)</span> 的，套上斜率优化还是 <span class="math inline">\(O(nm)\)</span> 的，没有办法丢掉 <span class="math inline">\(m\)</span>。但是如果不要求分成 <span class="math inline">\(m\)</span> 段的话会发现直接斜率优化可以 <span class="math inline">\(O(n)\)</span>。即，<strong>钦定不好做，不钦定很好做</strong>。</p>
+<blockquote>
+<p>复杂度/维数和选的个数有关的可以考虑其凸性。</p>
+</blockquote>
+<p>而<del>注意到</del> <del>打表知</del> <del>猜测</del> <span class="math inline">\(f_{n, i}\)</span> 是关于 <span class="math inline">\(i\)</span> 的凸函数，故考虑 wqs 二分把这一维丢掉。</p>
+<p>具体地，<em>感性理解</em>一下，发现我们若是去掉钦定段数的限制，则 dp 一定会尽可能让他分成 <span class="math inline">\(n\)</span> 段。</p>
+<p>那么我们考虑<strong>给每一段加上附加权值 <span class="math inline">\(c\)</span></strong>，这样 dp 算法就能从“分的段数多权值小”和“分的段数少权值小”中间进行取舍，<strong>找到一个“平衡点”</strong>。继续感性理解一下发现 <span class="math inline">\(c\)</span> 越大分段越少，<span class="math inline">\(c\)</span> 越小分段越多。</p>
+<p>那么通过<strong>二分这个权值</strong>，我们就能让分的段数恰好 <span class="math inline">\(\le m\)</span>，这样的解减去加上的附加权值就是最优解。</p>
+<hr/>
+<p>上面是感性理解，下面我们来理性思考一下。上面的说明有两个问题：</p>
+<ul>
+<li>有可能我们无法通过“改变权值”来使得分段数恰好 <span class="math inline">\(= k\)</span>，即函数可能“不连续”。</li>
+<li>没有说明这样的解一定是最优解。</li>
+</ul>
+<p>那么首先建立 <span class="math inline">\(f_{n, i}\)</span> 关于 <span class="math inline">\(i\)</span> 的函数 <span class="math inline">\(y = f(x)\)</span>，<strong>打表</strong>发现其下凸。<em>具有凸性才能二分权值</em>，原因下面会说明。</p>
+<p>然后加上附加权值之后变为 <span class="math inline">\(y = f(x) + cx\)</span>，根据简单的导数知识发现其仍然下凸，然后我们带上附加权后求的 dp 最值对应的分段数（<em>注意 dp 是需要同时求出这个分段数的</em>）即为 <span class="math inline">\(f(x) + cs\)</span> 的最小值点的横坐标，<strong>并且同时为 <span class="math inline">\(y = cx + b\)</span> 与 <span class="math inline">\(y = f(x)\)</span> 的切点横坐标</strong>。</p>
+<p>可以参考这个 geogebra 实例辅助理解（先点击一下“代数区”按钮以收起）其中 <span class="math inline">\(c\)</span> 滑杆控制附加权值 <span class="math inline">\(c\)</span>，<span class="math inline">\(b'\)</span> 滑杆控制 <span class="math inline">\(y = cx + b\)</span> 以观察其相切。</p>
+<iframe allowfullscreen="" frameborder="0" height="500" src="https://www.geogebra.org/calculator/quy745sm?embed" style="border: 1px solid #e4e4e4;border-radius: 4px;" width="780">
+</iframe>
+<p>那么我们来解决上面两个问题：</p>
+<ul>
+<li>事实证明，若 <span class="math inline">\(y = f(x)\)</span> 存在三点共线的情况而且中间的点为我们要钦定的段数，那么根据相切的性质，那个点<strong>永远取不到</strong>，不过我们若是能找到两边的点那也能根据两边的点推出中间的答案。<strong>关于三点共线的特殊情况后文还会进一步说明。</strong></li>
+<li>由于函数具有凸性，所以<strong>斜率单调</strong>，我们二分的这个附加权值 <span class="math inline">\(c\)</span> 实际上就是斜率。那么找到的点减去附加权必然就能对应到原来的函数上面去了。</li>
+</ul>
+<h2 id="其他细节">其他细节</h2>
+<p>一般来说，dp 值是整数，所以 <span class="math inline">\(\displaystyle c = \frac{f(i + 1) - f(i)}{i + 1 - i}\)</span> 也是整数，因此不需要实数二分，但若是 dp 值为小数，则需要进行小数二分。</p>
+<p>并且，有一部分费用流问题可以使用 wqs 二分求解：</p>
+<blockquote>
+<p>多次增广的费用流模型中，费用一定是关于流量的凸函数。</p>
+<p>因为增广肯定是沿着最短路增广，后面增广的费用肯定会更大。</p>
+</blockquote>
+<p>说白了就是“限制卡的越来越死”，这种类型的问题都可以考虑 wqs 二分。</p>
+<hr/>
+<p>三点共线的情况较为不好处理，<strong>在保证解最优的情况下使得选择物品的数量最多/最少会很大程度上影响三点共线的判断</strong>我们不妨考虑如下情况，假设最后要求的物品个数对应的为 <span class="math inline">\(C\)</span> 点。</p>
+<p><img src="https://yangty-pic.oss-cn-beijing.aliyuncs.com/wqs_3pin1line.png"/></p>
+<ul>
+<li><p>若 dp 在值最优的情况下求出的是物品数量 <span class="math inline">\(p\)</span> 的<em>最大值</em>，则相当于我们最后二分斜率到 <span class="math inline">\(k_2\)</span> 的时候碰到的是 <span class="math inline">\(D\)</span> 点。</p>
+<p>则若是二分到 <span class="math inline">\(k_1\)</span>，截到了 <span class="math inline">\(B\)</span>，发现 <span class="math inline">\(x_B &lt; x_C\)</span>，故 <span class="math inline">\(k_1\)</span> <strong>一定不会</strong>是我们要的斜率。</p>
+<p>若是二分到 <span class="math inline">\(k_2\)</span>，截到了 <span class="math inline">\(C\)</span>，发现 <span class="math inline">\(x_C &lt; x_D\)</span>，<span class="math inline">\(k_2\)</span> <strong>可能是</strong>我们要的斜率。</p></li>
+<li><p>对于 dp 出来的是 <span class="math inline">\(p\)</span> 的最小值的情况，<span class="math inline">\(x &gt; x_C\)</span> 则<strong>一定不是</strong>要的斜率，<span class="math inline">\(x &lt; x_C\)</span> <strong>可能是</strong>我们要的斜率。</p></li>
+<li><p>实战的时候，如果想避免 不等号 带不带等号的问题，<strong>可以在找到解的时候直接退出</strong>，剩下的情况按照上面<strong>画图处理</strong>，具体问题具体分析，详见下文代码部分。</p></li>
+</ul>
+<p>另外，<strong>整数二分中，写左闭右开的形式可以有效避免 <span class="math inline">\(l\)</span> 要不要加一，<span class="math inline">\(r\)</span> 要不要减一的问题</strong>。</p>
+<p>而且注意不要搞形如 <code>chkmax(ans, ...)</code> 的代码，在还没二分到底前之前的都可能不是答案，要覆盖掉。</p>
+<h2 id="应用">应用</h2>
+<blockquote>
+<p>例题 <span class="math inline">\(1\)</span>：<a href="https://www.luogu.com.cn/problem/P2619">P2619 [国家集训队]Tree I</a></p>
+<p>给你一个无向带权连通图，每条边是黑色或白色。让你求一棵最小权的恰好有 <span class="math inline">\(k\)</span> 条白色边的生成树，保证有解。<span class="math inline">\(n\le 5\times 10^4\)</span>，<span class="math inline">\(m\le 10^5\)</span>，边权 <span class="math inline">\(\in[-100, 100]\)</span>。</p>
+</blockquote>
+<p>wqs 论文里面的例题，虽然和 dp 没有什么关系。</p>
+<p>注意到这种问题是典型的<strong>钦定个数不好解</strong>，但<strong>不钦定个数非常好解</strong>（直接 Kruskal）的问题，所以可以思考其凸性。</p>
+<p>分黑白考虑，先假设生成树全由黑边构成（没边连的强行连 <span class="math inline">\(+\infty\)</span> 的黑边），然后每次加白边都是加入最小白边，去掉能去掉的最大黑边，可以感受到<strong>限制在慢慢卡死</strong>，所以最小生成树权值关于选的白边个数的函数是凸的，可以使用 wqs 二分。</p>
+<p>由于斜率在 <span class="math inline">\([-100, 100]\)</span> 中间，所以在这个区间内二分附加权值 <span class="math inline">\(c\)</span>，分开存储黑白边然后类似归并地使用 Kruskal，在这里，<span class="math inline">\(c\)</span> 越大则选的白边会越少。我的写法是优先选白边，那么二分的时候就需要注意，<span class="math inline">\(p &gt; k\)</span> 的时候<strong>可能是答案</strong>，<span class="math inline">\(p&lt;k\)</span> 的时候<strong>绝对不会</strong>是答案。</p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode cpp"><code class="sourceCode cpp"><span id="cb1-1"><a aria-hidden="true" href="#cb1-1"></a><span class="kw">using</span> fastIO::is;</span>
+<span id="cb1-2"><a aria-hidden="true" href="#cb1-2"></a><span class="kw">using</span> fastIO::os;</span>
+<span id="cb1-3"><a aria-hidden="true" href="#cb1-3"></a></span>
+<span id="cb1-4"><a aria-hidden="true" href="#cb1-4"></a><span class="at">const</span> <span class="dt">int</span> maxn = <span class="fl">5e4</span> + <span class="dv">5</span>, maxm = <span class="fl">1e5</span> + <span class="dv">5</span>;</span>
+<span id="cb1-5"><a aria-hidden="true" href="#cb1-5"></a><span class="kw">struct</span> Edge {</span>
+<span id="cb1-6"><a aria-hidden="true" href="#cb1-6"></a>    <span class="dt">int</span> u, v, w, c;</span>
+<span id="cb1-7"><a aria-hidden="true" href="#cb1-7"></a>    il <span class="dt">bool</span> <span class="kw">operator</span>&lt;(<span class="at">const</span> Edge &amp;rhs) <span class="at">const</span> {<span class="cf">return</span> w &lt; rhs.w;}</span>
+<span id="cb1-8"><a aria-hidden="true" href="#cb1-8"></a>} e[maxm];</span>
+<span id="cb1-9"><a aria-hidden="true" href="#cb1-9"></a><span class="dt">int</span> n, m, need, cntw = <span class="dv">1</span>, fa[maxn];</span>
+<span id="cb1-10"><a aria-hidden="true" href="#cb1-10"></a></span>
+<span id="cb1-11"><a aria-hidden="true" href="#cb1-11"></a><span class="dt">int</span> find(<span class="dt">int</span> u) {<span class="cf">return</span> fa[u] == u ? u : fa[u] = find(fa[u]);}</span>
+<span id="cb1-12"><a aria-hidden="true" href="#cb1-12"></a></span>
+<span id="cb1-13"><a aria-hidden="true" href="#cb1-13"></a><span class="dt">bool</span> add(<span class="dt">int</span> i) {</span>
+<span id="cb1-14"><a aria-hidden="true" href="#cb1-14"></a>    <span class="dt">int</span> u = find(e[i].u), v = find(e[i].v);</span>
+<span id="cb1-15"><a aria-hidden="true" href="#cb1-15"></a>    <span class="cf">if</span> (u == v) <span class="cf">return</span> <span class="kw">false</span>;</span>
+<span id="cb1-16"><a aria-hidden="true" href="#cb1-16"></a>    <span class="cf">else</span> <span class="cf">return</span> fa[u] = v, <span class="kw">true</span>;</span>
+<span id="cb1-17"><a aria-hidden="true" href="#cb1-17"></a>}</span>
+<span id="cb1-18"><a aria-hidden="true" href="#cb1-18"></a></span>
+<span id="cb1-19"><a aria-hidden="true" href="#cb1-19"></a><span class="dt">int</span> main() {</span>
+<span id="cb1-20"><a aria-hidden="true" href="#cb1-20"></a>    is &gt;&gt; n &gt;&gt; m &gt;&gt; need;</span>
+<span id="cb1-21"><a aria-hidden="true" href="#cb1-21"></a>    FOR(i, <span class="dv">1</span>, m) {</span>
+<span id="cb1-22"><a aria-hidden="true" href="#cb1-22"></a>        is &gt;&gt; e[i].u &gt;&gt; e[i].v &gt;&gt; e[i].w &gt;&gt; e[i].c;</span>
+<span id="cb1-23"><a aria-hidden="true" href="#cb1-23"></a>        ++e[i].u, ++e[i].v; <span class="co">// 注意原题点从 0 开始标号</span></span>
+<span id="cb1-24"><a aria-hidden="true" href="#cb1-24"></a>        <span class="cf">if</span> (!e[i].c) swap(e[cntw++], e[i]); <span class="co">// 将白点集中在数组前部</span></span>
+<span id="cb1-25"><a aria-hidden="true" href="#cb1-25"></a>    }</span>
+<span id="cb1-26"><a aria-hidden="true" href="#cb1-26"></a>    sort(e + <span class="dv">1</span>, e + cntw), sort(e + cntw, e + m + <span class="dv">1</span>);</span>
+<span id="cb1-27"><a aria-hidden="true" href="#cb1-27"></a>    <span class="dt">int</span> l = -<span class="dv">100</span>, r = <span class="dv">101</span>, ans = <span class="dv">0</span>;</span>
+<span id="cb1-28"><a aria-hidden="true" href="#cb1-28"></a>    <span class="cf">while</span> (l + <span class="dv">1</span> &lt; r) {</span>
+<span id="cb1-29"><a aria-hidden="true" href="#cb1-29"></a>        <span class="dt">int</span> mid = (l + r) &gt;&gt; <span class="dv">1</span>;</span>
+<span id="cb1-30"><a aria-hidden="true" href="#cb1-30"></a>        FOR(i, <span class="dv">1</span>, n) fa[i] = i;</span>
+<span id="cb1-31"><a aria-hidden="true" href="#cb1-31"></a>        <span class="dt">int</span> chosen = <span class="dv">0</span>, val = <span class="dv">0</span>;</span>
+<span id="cb1-32"><a aria-hidden="true" href="#cb1-32"></a>        <span class="dt">int</span> i = <span class="dv">1</span>, j = cntw;</span>
+<span id="cb1-33"><a aria-hidden="true" href="#cb1-33"></a>        <span class="cf">while</span> (i &lt; cntw &amp;&amp; j &lt;= m) {</span>
+<span id="cb1-34"><a aria-hidden="true" href="#cb1-34"></a>            <span class="cf">if</span> (e[i].w + mid &lt;= e[j].w) { <span class="co">// 同权优先选白点，相当于保证最优解同时物品数最大</span></span>
+<span id="cb1-35"><a aria-hidden="true" href="#cb1-35"></a>                <span class="cf">if</span> (add(i)) val += e[i].w + mid, ++chosen;</span>
+<span id="cb1-36"><a aria-hidden="true" href="#cb1-36"></a>                ++i;</span>
+<span id="cb1-37"><a aria-hidden="true" href="#cb1-37"></a>            } <span class="cf">else</span> val += e[j].w * add(j), ++j;</span>
+<span id="cb1-38"><a aria-hidden="true" href="#cb1-38"></a>        }</span>
+<span id="cb1-39"><a aria-hidden="true" href="#cb1-39"></a>        <span class="cf">for</span> (; i &lt; cntw; ++i) <span class="cf">if</span> (add(i)) val += (e[i].w + mid), ++chosen;</span>
+<span id="cb1-40"><a aria-hidden="true" href="#cb1-40"></a>        <span class="cf">for</span> (; j &lt;= m; ++j) val += add(j) * e[j].w;</span>
+<span id="cb1-41"><a aria-hidden="true" href="#cb1-41"></a>        <span class="cf">if</span> (chosen &gt;= need) ans = val - mid * need, l = mid; <span class="co">// 可能搜到解</span></span>
+<span id="cb1-42"><a aria-hidden="true" href="#cb1-42"></a>        <span class="cf">else</span> r = mid; <span class="co">// 不可能是解</span></span>
+<span id="cb1-43"><a aria-hidden="true" href="#cb1-43"></a>    }</span>
+<span id="cb1-44"><a aria-hidden="true" href="#cb1-44"></a>    os &lt;&lt; ans &lt;&lt; <span class="ch">'</span><span class="sc">\n</span><span class="ch">'</span>;</span>
+<span id="cb1-45"><a aria-hidden="true" href="#cb1-45"></a>    <span class="cf">return</span> <span class="dv">0</span>;</span>
+<span id="cb1-46"><a aria-hidden="true" href="#cb1-46"></a>}</span></code></pre></div>
+<blockquote>
+<p>例题 <span class="math inline">\(2\)</span>：<a href="https://www.luogu.com.cn/problem/CF739E">CF739E Gosha is hunting</a></p>
+<p>要抓 <span class="math inline">\(n\)</span> 只宝可梦，有 <span class="math inline">\(a\)</span> 个 Poke Ball 和 <span class="math inline">\(b\)</span> 个 Ultra Ball。Poke Ball 抓到第 <span class="math inline">\(i\)</span> 只宝可梦的概率为 <span class="math inline">\(p_i\)</span>，Ultra Ball 抓到第 <span class="math inline">\(j\)</span> 只宝可梦的概率为 <span class="math inline">\(q_i\)</span>，不能重复用一种球抓一个宝可梦，但是可以用两种球抓一个宝可梦（都抓到算一个）。求最优策略下期望抓到的宝可梦个数。<span class="math inline">\(a,b\le n\le 2000\)</span>。</p>
+</blockquote>
+<p>费用流可以解本题，但不在本文讨论范围内。</p>
+<p>考虑一个 <span class="math inline">\(O(n^3)\)</span> 的 naive dp：<span class="math inline">\(f_{i,j,k}\)</span> 表示前 <span class="math inline">\(i\)</span> 个宝可梦，用 <span class="math inline">\(j\)</span> 个 Poke Ball 和 <span class="math inline">\(k\)</span> 个 Ultra Ball，期望抓到的宝可梦个数。则有转移： <span class="math display">\[
+\begin{cases}
+f_{i,j,k} \leftarrow \max\{f_{i,j,k}, f_{i - 1, j - 1, k} + p_i\}\\
+f_{i,j,k} \leftarrow \max\{f_{i,j,k}, f_{i - 1, j, k - 1} + q_i\}\\
+f_{i,j,k} \leftarrow \max\{f_{i,j,k}, f_{i - 1, j - 1, k - 1} + p_i + q_i - p_iq_i\}
+\end{cases}
+\]</span> 考虑优化。第一，发现最优策略一定会用完所有的球，即我们现在钦定要用 <span class="math inline">\(a\)</span> 个 Poke Ball 和 <span class="math inline">\(b\)</span> 个 Ultra Ball。</p>
+<p>第二，发现若不考虑 <span class="math inline">\(b\)</span> 的限制，我们的 dp 就是比较简单的二维 dp 了，所以思考是不是可以用 wqs 二分干掉这一维。</p>
+<p>第三，考虑 <span class="math inline">\(f_{n, a, j}\)</span> 关于 <span class="math inline">\(j\)</span> 的函数 <span class="math inline">\(f(x)\)</span>，发现（打表，猜测）其为凸函数（事实上感性理解一下，多加一个 Ultra Ball 能带来的期望增加值肯定越少），所以可以 wqs 二分，直接上就行了。</p>
+<p>注意本题为实数二分，时间复杂度为 <span class="math inline">\(O(n^2\log\epsilon^{-1})\)</span>。注：对两维都进行 wqs 二分的 <span class="math inline">\(O(n\log^2\epsilon^{-1})\)</span> 做法<a href="https://www.luogu.com.cn/discuss/422583">疑似被证伪</a>，故此处不展开。</p>
+<p>这里再提一下实现细节，由于我们多加一个 Ultra Ball，至多期望新抓到 <span class="math inline">\(1\)</span> 个宝可梦，所以在 <span class="math inline">\([0, 1]\)</span> 间二分斜率，而且需要注意的是这个函数是上凸的，切不可生搬硬套，需要现场分析。</p>
+<blockquote>
+<p>Trick：可以将 dp 值和选的物品个数打包成一个类，详见代码。</p>
+<p><del>只是这样似乎是会贡献大常数（笑）</del></p>
+</blockquote>
+<div class="sourceCode" id="cb2"><pre class="sourceCode cpp"><code class="sourceCode cpp"><span id="cb2-1"><a aria-hidden="true" href="#cb2-1"></a><span class="kw">using</span> db = <span class="dt">double</span>;</span>
+<span id="cb2-2"><a aria-hidden="true" href="#cb2-2"></a><span class="at">const</span> <span class="dt">int</span> maxn = <span class="dv">2005</span>;</span>
+<span id="cb2-3"><a aria-hidden="true" href="#cb2-3"></a><span class="dt">int</span> n, a, b;</span>
+<span id="cb2-4"><a aria-hidden="true" href="#cb2-4"></a>db p[maxn], q[maxn];</span>
+<span id="cb2-5"><a aria-hidden="true" href="#cb2-5"></a></span>
+<span id="cb2-6"><a aria-hidden="true" href="#cb2-6"></a><span class="kw">struct</span> DP {</span>
+<span id="cb2-7"><a aria-hidden="true" href="#cb2-7"></a>    db dp;</span>
+<span id="cb2-8"><a aria-hidden="true" href="#cb2-8"></a>    <span class="dt">int</span> cnt;</span>
+<span id="cb2-9"><a aria-hidden="true" href="#cb2-9"></a>    DP(db _dp = <span class="dv">0</span>, <span class="dt">int</span> _cnt = <span class="dv">0</span>) : dp(_dp), cnt(_cnt) {}</span>
+<span id="cb2-10"><a aria-hidden="true" href="#cb2-10"></a>    il <span class="dt">bool</span> <span class="kw">operator</span>&gt;(<span class="at">const</span> DP &amp;rhs) <span class="at">const</span> {</span>
+<span id="cb2-11"><a aria-hidden="true" href="#cb2-11"></a>        <span class="cf">return</span> (myabs(dp - rhs.dp) &lt; <span class="fl">1e-7</span>) ? (cnt &lt; rhs.cnt) : (dp &gt; rhs.dp);</span>
+<span id="cb2-12"><a aria-hidden="true" href="#cb2-12"></a>    }</span>
+<span id="cb2-13"><a aria-hidden="true" href="#cb2-13"></a>    il DP <span class="kw">operator</span>+(<span class="at">const</span> DP &amp;rhs) <span class="at">const</span> {</span>
+<span id="cb2-14"><a aria-hidden="true" href="#cb2-14"></a>        <span class="cf">return</span> DP(dp + rhs.dp, cnt + rhs.cnt);</span>
+<span id="cb2-15"><a aria-hidden="true" href="#cb2-15"></a>    }</span>
+<span id="cb2-16"><a aria-hidden="true" href="#cb2-16"></a>} f[maxn][maxn];</span>
+<span id="cb2-17"><a aria-hidden="true" href="#cb2-17"></a></span>
+<span id="cb2-18"><a aria-hidden="true" href="#cb2-18"></a><span class="dt">int</span> main() {</span>
+<span id="cb2-19"><a aria-hidden="true" href="#cb2-19"></a>    ios::sync_with_stdio(<span class="kw">false</span>);</span>
+<span id="cb2-20"><a aria-hidden="true" href="#cb2-20"></a>    cin &gt;&gt; n &gt;&gt; a &gt;&gt; b;</span>
+<span id="cb2-21"><a aria-hidden="true" href="#cb2-21"></a>    FOR(i, <span class="dv">1</span>, n) cin &gt;&gt; p[i];</span>
+<span id="cb2-22"><a aria-hidden="true" href="#cb2-22"></a>    FOR(i, <span class="dv">1</span>, n) cin &gt;&gt; q[i];</span>
+<span id="cb2-23"><a aria-hidden="true" href="#cb2-23"></a>    db l = <span class="dv">0</span>, r = <span class="dv">1</span>, ans = <span class="dv">0</span>;</span>
+<span id="cb2-24"><a aria-hidden="true" href="#cb2-24"></a>    <span class="cf">for</span> (<span class="dt">int</span> kase = <span class="dv">1</span>; kase &lt;= <span class="dv">30</span>; ++kase) {</span>
+<span id="cb2-25"><a aria-hidden="true" href="#cb2-25"></a>        db mid = (l + r) / <span class="dv">2</span>;</span>
+<span id="cb2-26"><a aria-hidden="true" href="#cb2-26"></a>        memset(f, <span class="dv">0</span>, <span class="kw">sizeof</span> f);</span>
+<span id="cb2-27"><a aria-hidden="true" href="#cb2-27"></a>        FOR(i, <span class="dv">1</span>, n) FOR(j, <span class="dv">0</span>, a) {</span>
+<span id="cb2-28"><a aria-hidden="true" href="#cb2-28"></a>            chkmax(f[i][j], f[i - <span class="dv">1</span>][j] + DP(<span class="dv">0</span>, <span class="dv">0</span>));</span>
+<span id="cb2-29"><a aria-hidden="true" href="#cb2-29"></a>            chkmax(f[i][j], f[i - <span class="dv">1</span>][j] + DP(q[i] - mid, <span class="dv">1</span>));</span>
+<span id="cb2-30"><a aria-hidden="true" href="#cb2-30"></a>            <span class="cf">if</span> (j) {</span>
+<span id="cb2-31"><a aria-hidden="true" href="#cb2-31"></a>                chkmax(f[i][j], f[i - <span class="dv">1</span>][j - <span class="dv">1</span>] + DP(p[i], <span class="dv">0</span>));</span>
+<span id="cb2-32"><a aria-hidden="true" href="#cb2-32"></a>                chkmax(f[i][j], f[i - <span class="dv">1</span>][j - <span class="dv">1</span>] + DP(p[i] + q[i] - p[i] * q[i] - mid, <span class="dv">1</span>));</span>
+<span id="cb2-33"><a aria-hidden="true" href="#cb2-33"></a>            }</span>
+<span id="cb2-34"><a aria-hidden="true" href="#cb2-34"></a>        }</span>
+<span id="cb2-35"><a aria-hidden="true" href="#cb2-35"></a>        DP mx;</span>
+<span id="cb2-36"><a aria-hidden="true" href="#cb2-36"></a>        FOR(j, <span class="dv">0</span>, a) chkmax(mx, f[n][j]);</span>
+<span id="cb2-37"><a aria-hidden="true" href="#cb2-37"></a>        <span class="cf">if</span> (mx.cnt &lt;= b) ans = mx.dp + mid * b, r = mid;</span>
+<span id="cb2-38"><a aria-hidden="true" href="#cb2-38"></a>        <span class="cf">else</span> l = mid;</span>
+<span id="cb2-39"><a aria-hidden="true" href="#cb2-39"></a>    }</span>
+<span id="cb2-40"><a aria-hidden="true" href="#cb2-40"></a>    cout &lt;&lt; ans &lt;&lt; endl;</span>
+<span id="cb2-41"><a aria-hidden="true" href="#cb2-41"></a>    <span class="cf">return</span> <span class="dv">0</span>;</span>
+<span id="cb2-42"><a aria-hidden="true" href="#cb2-42"></a>}</span></code></pre></div>
+<h2 id="reference">Reference</h2>
+<ul>
+<li><a href="https://www.cnblogs.com/alex-wei/p/DP_Involution.html">DP 优化方法大杂烩 I. by Alex Wei</a></li>
+<li><a href="https://www.luogu.com.cn/blog/daniu/wqs-er-fen">wqs二分 学习笔记 by 小跳蛙</a></li>
+<li><a href="https://www.cnblogs.com/ET2006/p/jcddx-and-wqs-binary-search.html">决策单调性&amp;wqs二分 by tzc_wk</a></li>
+<li><a href="https://www.mina.moe/archives/6349">【算法】带权二分 by boshi</a></li>
+</ul>
+<p>感谢以上文章的作者以及伟大的 Asd_Okuu，没有您们我永远学不懂 wqs 二分/kk。</p>
+</section>
+<footer class="article-footer">
+<section class="article-tags">
+<a href="/tags/OI/">OI</a>
+<a href="/tags/wqs-binary-search/">wqs二分</a>
+<a href="/tags/note/">笔记</a>
+</section>
+<section class="article-copyright">
+<svg class="icon icon-tabler icon-tabler-copyright" fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+<path d="M0 0h24v24H0z" stroke="none"></path>
+<circle cx="12" cy="12" r="9"></circle>
+<path d="M14.5 9a3.5 4 0 1 0 0 6"></path>
+</svg>
+<span>Licensed under CC BY-NC-SA 4.0</span>
+</section>
+</footer>
+<link crossorigin="anonymous" href="https://cdn.jsdelivr.net/npm/katex@0.13.13/dist/katex.min.css" integrity="sha384-RZU/ijkSsFbcmivfdRBQDtwuwVqK7GMOw6IMvKyeWL2K5UAlyp6WonmB8m7Jd0Hn" rel="stylesheet"/><script crossorigin="anonymous" defer="" integrity="sha384-pK1WpvzWVBQiP0/GjnvRxV4mOb0oxFuyRxJlk6vVw146n3egcN5C925NCP7a7BY8" src="https://cdn.jsdelivr.net/npm/katex@0.13.13/dist/katex.min.js">
+</script><script crossorigin="anonymous" defer="" integrity="sha384-vZTG03m+2yp6N6BNi5iM4rW4oIwk5DfcNdFfxkk9ZWpDriOkXX8voJBFrAO7MpVl" src="https://cdn.jsdelivr.net/npm/katex@0.13.13/dist/contrib/auto-render.min.js">
+</script><script>
+    window.addEventListener("DOMContentLoaded", () => {
+        renderMathInElement(document.querySelector(`.article-content`), {
+            delimiters: [
+                { left: "$$", right: "$$", display: true },
+                { left: "$", right: "$", display: false },
+                { left: "\\(", right: "\\)", display: false },
+                { left: "\\[", right: "\\]", display: true }
+            ]
+        });})
+</script>
+</article>
+<aside class="related-contents--wrapper">
+<h2 class="section-title">相关文章</h2>
+<div class="related-contents">
+<div class="flex article-list--tile">
+<article class="has-image">
+<a href="/note-gf/">
+<div class="article-image">
+<img data-hash="https://yangty-pic.oss-cn-beijing.aliyuncs.com/bg28.webp" data-key="" loading="lazy" src="https://yangty-pic.oss-cn-beijing.aliyuncs.com/bg28.webp"/>
+</div>
+<div class="article-details">
+<h2 class="article-title">生成函数胡扯</h2>
+</div>
+</a>
+</article>
+<article class="has-image">
+<a href="/note-set-power-series/">
+<div class="article-image">
+<img data-hash="https://yangty-pic.oss-cn-beijing.aliyuncs.com/bg39.webp" data-key="" loading="lazy" src="https://yangty-pic.oss-cn-beijing.aliyuncs.com/bg39.webp"/>
+</div>
+<div class="article-details">
+<h2 class="article-title">集合幂级数胡扯</h2>
+</div>
+</a>
+</article>
+<article class="has-image">
+<a href="/note-linear-basis/">
+<div class="article-image">
+<img data-hash="https://yangty-pic.oss-cn-beijing.aliyuncs.com/bg19.webp" data-key="" loading="lazy" src="https://yangty-pic.oss-cn-beijing.aliyuncs.com/bg19.webp"/>
+</div>
+<div class="article-details">
+<h2 class="article-title">线性基学习笔记</h2>
+</div>
+</a>
+</article>
+<article class="has-image">
+<a href="/note-builtin/">
+<div class="article-image">
+<img data-hash="https://yangty-pic.oss-cn-beijing.aliyuncs.com/bg9.webp" data-key="" loading="lazy" src="https://yangty-pic.oss-cn-beijing.aliyuncs.com/bg9.webp"/>
+</div>
+<div class="article-details">
+<h2 class="article-title">__builtin 系列函数总结</h2>
+</div>
+</a>
+</article>
+<article class="has-image">
+<a href="/note-iotest/">
+<div class="article-image">
+<img data-hash="https://yangty-pic.oss-cn-beijing.aliyuncs.com/bg16.webp" data-key="" loading="lazy" src="https://yangty-pic.oss-cn-beijing.aliyuncs.com/bg16.webp"/>
+</div>
+<div class="article-details">
+<h2 class="article-title">几种 IO 方式效率的实验</h2>
+</div>
+</a>
+</article>
+</div>
+</div>
+</aside>
+<footer class="site-footer">
+<section class="copyright">
+        © 
+        
+            2019 - 
+        
+        2024 清烛的博客
+    </section>
+<section class="powerby">
+        Built with <a href="https://gohugo.io/" rel="noopener" target="_blank">Hugo</a> <br/>
+        主题 <b><a data-version="3.11.0" href="https://github.com/CaiJimmy/hugo-theme-stack" rel="noopener" target="_blank">Stack</a></b> 由 <a href="https://jimmycai.com" rel="noopener" target="_blank">Jimmy</a> 设计
+    </section>
+</footer>
+<div aria-hidden="true" class="pswp" role="dialog" tabindex="-1">
+<div class="pswp__bg"></div>
+<div class="pswp__scroll-wrap">
+<div class="pswp__container">
+<div class="pswp__item"></div>
+<div class="pswp__item"></div>
+<div class="pswp__item"></div>
+</div>
+<div class="pswp__ui pswp__ui--hidden">
+<div class="pswp__top-bar">
+<div class="pswp__counter"></div>
+<button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+<button class="pswp__button pswp__button--share" title="Share"></button>
+<button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+<button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+<div class="pswp__preloader">
+<div class="pswp__preloader__icn">
+<div class="pswp__preloader__cut">
+<div class="pswp__preloader__donut"></div>
+</div>
+</div>
+</div>
+</div>
+<div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+<div class="pswp__share-tooltip"></div>
+</div>
+<button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+</button>
+<button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+</button>
+<div class="pswp__caption">
+<div class="pswp__caption__center"></div>
+</div>
+</div>
+</div>
+</div><script crossorigin="anonymous" defer="" integrity="sha256-ePwmChbbvXbsO02lbM3HoHbSHTHFAeChekF1xKJdleo=" src="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe.min.js">
+</script><script crossorigin="anonymous" defer="" integrity="sha256-UKkzOn/w1mBxRmLLGrSeyB4e1xbrp4xylgAWb3M42pU=" src="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe-ui-default.min.js">
+</script><link crossorigin="anonymous" href="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/default-skin/default-skin.css" integrity="sha256-c0uckgykQ9v5k+IqViZOZKc47Jn7KQil4/MP3ySA3F8=" rel="stylesheet"/><link crossorigin="anonymous" href="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe.css" integrity="sha256-SBLU4vv6CA6lHsZ1XyTdhyjJxCjPif/TRkjnsyGAGnE=" rel="stylesheet"/>
+</main>
+</div>
+<script crossorigin="anonymous" integrity="sha256-5NovOZc4iwiAWTYIFiIM7DxKUXKWvpVEuMEPLzcm5/g=" src="https://cdn.jsdelivr.net/npm/node-vibrant@3.1.5/dist/vibrant.min.js">
+</script><script defer="" src="/ts/main.js" type="text/javascript"></script>
+<script>
+    (function () {
+        const customFont = document.createElement('link');
+        customFont.href = "https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&display=swap";
+
+        customFont.type = "text/css";
+        customFont.rel = "stylesheet";
+
+        document.head.appendChild(customFont);
+    }());
+</script>
+</body>
+</html>

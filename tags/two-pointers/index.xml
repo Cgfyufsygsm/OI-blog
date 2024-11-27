@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+    <channel>
+        <title>双指针 on 清烛的博客</title>
+        <link>https://oi.imyangty.com/tags/two-pointers/</link>
+        <description>Recent content in 双指针 on 清烛的博客</description>
+        <generator>Hugo -- gohugo.io</generator>
+        <language>zh-CN</language>
+        <lastBuildDate>Thu, 17 Mar 2022 09:52:22 +0800</lastBuildDate><atom:link href="https://oi.imyangty.com/tags/two-pointers/index.xml" rel="self" type="application/rss+xml" /><item>
+        <title>AGC007E - Shik and Travel</title>
+        <link>https://oi.imyangty.com/sol-agc007e/</link>
+        <pubDate>Thu, 17 Mar 2022 09:52:22 +0800</pubDate>
+        
+        <guid>https://oi.imyangty.com/sol-agc007e/</guid>
+        <description>&lt;img src="https://yangty-pic.oss-cn-beijing.aliyuncs.com/bg38.webp" alt="Featured image of post AGC007E - Shik and Travel" /&gt;&lt;h2 id=&#34;description&#34;&gt;Description&lt;/h2&gt;
+&lt;p&gt;给定一棵二叉树，每个非叶子节点一定有两个儿子，点数 &lt;span class=&#34;math inline&#34;&gt;\(n\le 2^{17}\)&lt;/span&gt;。从根 &lt;span class=&#34;math inline&#34;&gt;\(1\)&lt;/span&gt; 开始，欧拉序遍历这棵树。走过边会消耗边长的体力。到达叶子节点的时候体力回满，一开始从根下来的过程和最后回根的过程不消耗体力。问最小的体力。&lt;/p&gt;
+&lt;h2 id=&#34;solution&#34;&gt;Solution&lt;/h2&gt;
+&lt;p&gt;&lt;span class=&#34;math inline&#34;&gt;\(O(n^3)\)&lt;/span&gt; 的 dp 平凡，注意到问题实际上说的是求一个树的遍历序，使得所有遍历序中相邻的叶子之间的距离的&lt;strong&gt;最大值最小&lt;/strong&gt;。所以&lt;em&gt;二分答案&lt;/em&gt;。&lt;/p&gt;
+&lt;p&gt;继承 dp 的想法，考虑一个子树内 &lt;span class=&#34;math inline&#34;&gt;\(u\)&lt;/span&gt; 合法的进点/出点点对集合 &lt;span class=&#34;math inline&#34;&gt;\(S_u\)&lt;/span&gt;，令其到 &lt;span class=&#34;math inline&#34;&gt;\(u\)&lt;/span&gt; 的距离对为 &lt;span class=&#34;math inline&#34;&gt;\((a, b)\)&lt;/span&gt;。那么叶子节点显然只有 &lt;span class=&#34;math inline&#34;&gt;\((0, 0)\)&lt;/span&gt;。对于非叶子节点，设其到左儿子的距离为 &lt;span class=&#34;math inline&#34;&gt;\(x\)&lt;/span&gt;，到右儿子的距离为 &lt;span class=&#34;math inline&#34;&gt;\(y\)&lt;/span&gt;，则左儿子的 &lt;span class=&#34;math inline&#34;&gt;\((a,b)\)&lt;/span&gt; 能和右儿子的 &lt;span class=&#34;math inline&#34;&gt;\((c,d)\)&lt;/span&gt; 合并当且仅当 &lt;span class=&#34;math inline&#34;&gt;\(b + x + y + c \le mid\)&lt;/span&gt;，合并可以得到 &lt;span class=&#34;math inline&#34;&gt;\((a + x, d + y)\)&lt;/span&gt;。&lt;/p&gt;
+&lt;p&gt;然后注意到对于子树 &lt;span class=&#34;math inline&#34;&gt;\(u\)&lt;/span&gt;，若 &lt;span class=&#34;math inline&#34;&gt;\((a_1,b_1)\)&lt;/span&gt; 和 &lt;span class=&#34;math inline&#34;&gt;\((a_2, b_2)\)&lt;/span&gt; 满足 &lt;span class=&#34;math inline&#34;&gt;\(a_1\le a_2\land b_1\le b_2\)&lt;/span&gt;，则 &lt;span class=&#34;math inline&#34;&gt;\((a_2, b_2)\)&lt;/span&gt; 是没有用的，可以丢掉。所以 &lt;span class=&#34;math inline&#34;&gt;\(S_u\)&lt;/span&gt; 就变成了关于 &lt;span class=&#34;math inline&#34;&gt;\(a_i\)&lt;/span&gt; 递增，&lt;span class=&#34;math inline&#34;&gt;\(b_i\)&lt;/span&gt; 递减的序列。&lt;/p&gt;
+&lt;p&gt;然后就可以用双指针合并两个儿子的答案。下面给出时间复杂度的证明。&lt;/p&gt;
+&lt;p&gt;因为对于 &lt;span class=&#34;math inline&#34;&gt;\(S_u\)&lt;/span&gt; 而言，其不同取值一定不会超过其轻子树内的叶子节点个数的 &lt;span class=&#34;math inline&#34;&gt;\(2\)&lt;/span&gt; 倍（考虑合并的过程），一个叶子节点均摊合并 &lt;span class=&#34;math inline&#34;&gt;\(O(\log n)\)&lt;/span&gt; 次，所以 &lt;span class=&#34;math inline&#34;&gt;\(O(n\log n\log{An})\)&lt;/span&gt; 解决了。&lt;/p&gt;
+&lt;h2 id=&#34;implementation&#34;&gt;Implementation&lt;/h2&gt;
+&lt;p&gt;合并的过程实现起来还是略为复杂。&lt;del&gt;但是我没想到二分答案也是纯傻逼了&lt;/del&gt;。&lt;/p&gt;
+&lt;div class=&#34;sourceCode&#34; id=&#34;cb1&#34;&gt;&lt;pre class=&#34;sourceCode cpp&#34;&gt;&lt;code class=&#34;sourceCode cpp&#34;&gt;&lt;span id=&#34;cb1-1&#34;&gt;&lt;a href=&#34;#cb1-1&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;&lt;span class=&#34;kw&#34;&gt;using&lt;/span&gt; ll = &lt;span class=&#34;dt&#34;&gt;long&lt;/span&gt; &lt;span class=&#34;dt&#34;&gt;long&lt;/span&gt;;&lt;/span&gt;
+&lt;span id=&#34;cb1-2&#34;&gt;&lt;a href=&#34;#cb1-2&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;&lt;span class=&#34;at&#34;&gt;const&lt;/span&gt; &lt;span class=&#34;dt&#34;&gt;int&lt;/span&gt; maxn = (&lt;span class=&#34;dv&#34;&gt;1&lt;/span&gt; &amp;lt;&amp;lt; &lt;span class=&#34;dv&#34;&gt;17&lt;/span&gt;) | &lt;span class=&#34;dv&#34;&gt;500&lt;/span&gt;;&lt;/span&gt;
+&lt;span id=&#34;cb1-3&#34;&gt;&lt;a href=&#34;#cb1-3&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;&lt;span class=&#34;dt&#34;&gt;int&lt;/span&gt; fa[maxn], ch[maxn][&lt;span class=&#34;dv&#34;&gt;2&lt;/span&gt;], len[maxn][&lt;span class=&#34;dv&#34;&gt;2&lt;/span&gt;], n;&lt;/span&gt;
+&lt;span id=&#34;cb1-4&#34;&gt;&lt;a href=&#34;#cb1-4&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;&lt;/span&gt;
+&lt;span id=&#34;cb1-5&#34;&gt;&lt;a href=&#34;#cb1-5&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;&lt;span class=&#34;kw&#34;&gt;using&lt;/span&gt; pll = pair&amp;lt;ll, ll&amp;gt;;&lt;/span&gt;
+&lt;span id=&#34;cb1-6&#34;&gt;&lt;a href=&#34;#cb1-6&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;vector&amp;lt;pll&amp;gt; S[maxn], Sl[maxn], Sr[maxn];&lt;/span&gt;
+&lt;span id=&#34;cb1-7&#34;&gt;&lt;a href=&#34;#cb1-7&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;&lt;/span&gt;
+&lt;span id=&#34;cb1-8&#34;&gt;&lt;a href=&#34;#cb1-8&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;&lt;span class=&#34;pp&#34;&gt;#define fi &lt;/span&gt;first&lt;/span&gt;
+&lt;span id=&#34;cb1-9&#34;&gt;&lt;a href=&#34;#cb1-9&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;&lt;span class=&#34;pp&#34;&gt;#define se &lt;/span&gt;second&lt;/span&gt;
+&lt;span id=&#34;cb1-10&#34;&gt;&lt;a href=&#34;#cb1-10&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;&lt;/span&gt;
+&lt;span id=&#34;cb1-11&#34;&gt;&lt;a href=&#34;#cb1-11&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;&lt;span class=&#34;dt&#34;&gt;bool&lt;/span&gt; check(ll mid) {&lt;/span&gt;
+&lt;span id=&#34;cb1-12&#34;&gt;&lt;a href=&#34;#cb1-12&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;    DEC(u, n, &lt;span class=&#34;dv&#34;&gt;1&lt;/span&gt;) {&lt;/span&gt;
+&lt;span id=&#34;cb1-13&#34;&gt;&lt;a href=&#34;#cb1-13&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;        S[u].clear(), Sl[u].clear(), Sr[u].clear();&lt;/span&gt;
+&lt;span id=&#34;cb1-14&#34;&gt;&lt;a href=&#34;#cb1-14&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;        &lt;span class=&#34;cf&#34;&gt;if&lt;/span&gt; (!ch[u][&lt;span class=&#34;dv&#34;&gt;0&lt;/span&gt;]) {&lt;/span&gt;
+&lt;span id=&#34;cb1-15&#34;&gt;&lt;a href=&#34;#cb1-15&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;            S[u].emplace_back(pll(&lt;span class=&#34;dv&#34;&gt;0&lt;/span&gt;&lt;span class=&#34;bu&#34;&gt;ll&lt;/span&gt;, &lt;span class=&#34;dv&#34;&gt;0&lt;/span&gt;&lt;span class=&#34;bu&#34;&gt;ll&lt;/span&gt;));&lt;/span&gt;
+&lt;span id=&#34;cb1-16&#34;&gt;&lt;a href=&#34;#cb1-16&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;            &lt;span class=&#34;cf&#34;&gt;continue&lt;/span&gt;;&lt;/span&gt;
+&lt;span id=&#34;cb1-17&#34;&gt;&lt;a href=&#34;#cb1-17&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;        }&lt;/span&gt;
+&lt;span id=&#34;cb1-18&#34;&gt;&lt;a href=&#34;#cb1-18&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;        ll w = mid - len[u][&lt;span class=&#34;dv&#34;&gt;0&lt;/span&gt;] - len[u][&lt;span class=&#34;dv&#34;&gt;1&lt;/span&gt;];&lt;/span&gt;
+&lt;span id=&#34;cb1-19&#34;&gt;&lt;a href=&#34;#cb1-19&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;        vector&amp;lt;pll&amp;gt; &amp;amp;L = S[ch[u][&lt;span class=&#34;dv&#34;&gt;0&lt;/span&gt;]], &amp;amp;R = S[ch[u][&lt;span class=&#34;dv&#34;&gt;1&lt;/span&gt;]], &amp;amp;lres = Sl[u], &amp;amp;rres = Sr[u], &amp;amp;res = S[u];&lt;/span&gt;
+&lt;span id=&#34;cb1-20&#34;&gt;&lt;a href=&#34;#cb1-20&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;        &lt;span class=&#34;cf&#34;&gt;if&lt;/span&gt; (L.empty() || R.empty()) &lt;span class=&#34;cf&#34;&gt;return&lt;/span&gt; &lt;span class=&#34;kw&#34;&gt;false&lt;/span&gt;;&lt;/span&gt;
+&lt;span id=&#34;cb1-21&#34;&gt;&lt;a href=&#34;#cb1-21&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;        &lt;/span&gt;
+&lt;span id=&#34;cb1-22&#34;&gt;&lt;a href=&#34;#cb1-22&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;        &lt;span class=&#34;cf&#34;&gt;for&lt;/span&gt; (&lt;span class=&#34;kw&#34;&gt;auto&lt;/span&gt; itL = L.begin(), itR = R.begin(); itL != L.end(); ++itL) {&lt;/span&gt;
+&lt;span id=&#34;cb1-23&#34;&gt;&lt;a href=&#34;#cb1-23&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;            &lt;span class=&#34;cf&#34;&gt;while&lt;/span&gt; (next(itR) != R.end() &amp;amp;&amp;amp; next(itR)-&amp;gt;fi + itL-&amp;gt;se &amp;lt;= w) ++itR;&lt;/span&gt;
+&lt;span id=&#34;cb1-24&#34;&gt;&lt;a href=&#34;#cb1-24&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;            &lt;span class=&#34;cf&#34;&gt;if&lt;/span&gt; (itR-&amp;gt;fi + itL-&amp;gt;se &amp;gt; w) &lt;span class=&#34;cf&#34;&gt;continue&lt;/span&gt;;&lt;/span&gt;
+&lt;span id=&#34;cb1-25&#34;&gt;&lt;a href=&#34;#cb1-25&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;            lres.emplace_back(pll(itL-&amp;gt;fi + len[u][&lt;span class=&#34;dv&#34;&gt;0&lt;/span&gt;], itR-&amp;gt;se + len[u][&lt;span class=&#34;dv&#34;&gt;1&lt;/span&gt;]));&lt;/span&gt;
+&lt;span id=&#34;cb1-26&#34;&gt;&lt;a href=&#34;#cb1-26&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;        }&lt;/span&gt;
+&lt;span id=&#34;cb1-27&#34;&gt;&lt;a href=&#34;#cb1-27&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;        &lt;span class=&#34;cf&#34;&gt;for&lt;/span&gt; (&lt;span class=&#34;kw&#34;&gt;auto&lt;/span&gt; itL = L.begin(), itR = R.begin(); itR != R.end(); ++itR) {&lt;/span&gt;
+&lt;span id=&#34;cb1-28&#34;&gt;&lt;a href=&#34;#cb1-28&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;            &lt;span class=&#34;cf&#34;&gt;while&lt;/span&gt; (next(itL) != L.end() &amp;amp;&amp;amp; next(itL)-&amp;gt;fi + itR-&amp;gt;se &amp;lt;= w) ++itL;&lt;/span&gt;
+&lt;span id=&#34;cb1-29&#34;&gt;&lt;a href=&#34;#cb1-29&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;            &lt;span class=&#34;cf&#34;&gt;if&lt;/span&gt; (itL-&amp;gt;fi + itR-&amp;gt;se &amp;gt; w) &lt;span class=&#34;cf&#34;&gt;continue&lt;/span&gt;;&lt;/span&gt;
+&lt;span id=&#34;cb1-30&#34;&gt;&lt;a href=&#34;#cb1-30&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;            rres.emplace_back(pll(itR-&amp;gt;fi + len[u][&lt;span class=&#34;dv&#34;&gt;1&lt;/span&gt;], itL-&amp;gt;se + len[u][&lt;span class=&#34;dv&#34;&gt;0&lt;/span&gt;]));&lt;/span&gt;
+&lt;span id=&#34;cb1-31&#34;&gt;&lt;a href=&#34;#cb1-31&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;        }&lt;/span&gt;
+&lt;span id=&#34;cb1-32&#34;&gt;&lt;a href=&#34;#cb1-32&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;        &lt;span class=&#34;cf&#34;&gt;for&lt;/span&gt; (&lt;span class=&#34;kw&#34;&gt;auto&lt;/span&gt; itL = lres.begin(), itR = rres.begin(); itL != lres.end() || itR != rres.end();) {&lt;/span&gt;
+&lt;span id=&#34;cb1-33&#34;&gt;&lt;a href=&#34;#cb1-33&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;            &lt;span class=&#34;cf&#34;&gt;if&lt;/span&gt; (itR == rres.end() || (itL != lres.end() &amp;amp;&amp;amp; itL-&amp;gt;fi &amp;lt;= itR-&amp;gt;fi)) {&lt;/span&gt;
+&lt;span id=&#34;cb1-34&#34;&gt;&lt;a href=&#34;#cb1-34&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;                &lt;span class=&#34;cf&#34;&gt;while&lt;/span&gt; (!res.empty() &amp;amp;&amp;amp; res.back().fi == itL-&amp;gt;fi &amp;amp;&amp;amp; res.back().se &amp;gt;= itL-&amp;gt;se) res.pop_back();&lt;/span&gt;
+&lt;span id=&#34;cb1-35&#34;&gt;&lt;a href=&#34;#cb1-35&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;                &lt;span class=&#34;cf&#34;&gt;if&lt;/span&gt; (res.empty() || res.back().se &amp;gt; itL-&amp;gt;se) res.emplace_back(*itL);&lt;/span&gt;
+&lt;span id=&#34;cb1-36&#34;&gt;&lt;a href=&#34;#cb1-36&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;                ++itL;&lt;/span&gt;
+&lt;span id=&#34;cb1-37&#34;&gt;&lt;a href=&#34;#cb1-37&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;            } &lt;span class=&#34;cf&#34;&gt;else&lt;/span&gt; {&lt;/span&gt;
+&lt;span id=&#34;cb1-38&#34;&gt;&lt;a href=&#34;#cb1-38&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;                &lt;span class=&#34;cf&#34;&gt;while&lt;/span&gt; (!res.empty() &amp;amp;&amp;amp; res.back().fi == itR-&amp;gt;fi &amp;amp;&amp;amp; res.back().se &amp;gt;= itR-&amp;gt;se) res.pop_back();&lt;/span&gt;
+&lt;span id=&#34;cb1-39&#34;&gt;&lt;a href=&#34;#cb1-39&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;                &lt;span class=&#34;cf&#34;&gt;if&lt;/span&gt; (res.empty() || res.back().se &amp;gt; itR-&amp;gt;se) res.emplace_back(*itR);&lt;/span&gt;
+&lt;span id=&#34;cb1-40&#34;&gt;&lt;a href=&#34;#cb1-40&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;                ++itR;&lt;/span&gt;
+&lt;span id=&#34;cb1-41&#34;&gt;&lt;a href=&#34;#cb1-41&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;            }&lt;/span&gt;
+&lt;span id=&#34;cb1-42&#34;&gt;&lt;a href=&#34;#cb1-42&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;        }&lt;/span&gt;
+&lt;span id=&#34;cb1-43&#34;&gt;&lt;a href=&#34;#cb1-43&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;    }&lt;/span&gt;
+&lt;span id=&#34;cb1-44&#34;&gt;&lt;a href=&#34;#cb1-44&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;    &lt;span class=&#34;cf&#34;&gt;return&lt;/span&gt; !S[&lt;span class=&#34;dv&#34;&gt;1&lt;/span&gt;].empty();&lt;/span&gt;
+&lt;span id=&#34;cb1-45&#34;&gt;&lt;a href=&#34;#cb1-45&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;}&lt;/span&gt;
+&lt;span id=&#34;cb1-46&#34;&gt;&lt;a href=&#34;#cb1-46&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;&lt;/span&gt;
+&lt;span id=&#34;cb1-47&#34;&gt;&lt;a href=&#34;#cb1-47&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;&lt;span class=&#34;dt&#34;&gt;int&lt;/span&gt; main() {&lt;/span&gt;
+&lt;span id=&#34;cb1-48&#34;&gt;&lt;a href=&#34;#cb1-48&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;    read(n);&lt;/span&gt;
+&lt;span id=&#34;cb1-49&#34;&gt;&lt;a href=&#34;#cb1-49&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;    &lt;span class=&#34;cf&#34;&gt;if&lt;/span&gt; (n == &lt;span class=&#34;dv&#34;&gt;1&lt;/span&gt;) {&lt;/span&gt;
+&lt;span id=&#34;cb1-50&#34;&gt;&lt;a href=&#34;#cb1-50&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;        print(&lt;span class=&#34;dv&#34;&gt;0&lt;/span&gt;);&lt;/span&gt;
+&lt;span id=&#34;cb1-51&#34;&gt;&lt;a href=&#34;#cb1-51&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;        &lt;span class=&#34;cf&#34;&gt;return&lt;/span&gt; output(), &lt;span class=&#34;dv&#34;&gt;0&lt;/span&gt;;&lt;/span&gt;
+&lt;span id=&#34;cb1-52&#34;&gt;&lt;a href=&#34;#cb1-52&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;    }&lt;/span&gt;
+&lt;span id=&#34;cb1-53&#34;&gt;&lt;a href=&#34;#cb1-53&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;    FOR(i, &lt;span class=&#34;dv&#34;&gt;2&lt;/span&gt;, n) {&lt;/span&gt;
+&lt;span id=&#34;cb1-54&#34;&gt;&lt;a href=&#34;#cb1-54&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;        &lt;span class=&#34;dt&#34;&gt;int&lt;/span&gt; p, l; read(p, l);&lt;/span&gt;
+&lt;span id=&#34;cb1-55&#34;&gt;&lt;a href=&#34;#cb1-55&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;        &lt;span class=&#34;cf&#34;&gt;if&lt;/span&gt; (ch[p][&lt;span class=&#34;dv&#34;&gt;0&lt;/span&gt;]) ch[p][&lt;span class=&#34;dv&#34;&gt;1&lt;/span&gt;] = i, len[p][&lt;span class=&#34;dv&#34;&gt;1&lt;/span&gt;] = l;&lt;/span&gt;
+&lt;span id=&#34;cb1-56&#34;&gt;&lt;a href=&#34;#cb1-56&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;        &lt;span class=&#34;cf&#34;&gt;else&lt;/span&gt; ch[p][&lt;span class=&#34;dv&#34;&gt;0&lt;/span&gt;] = i, len[p][&lt;span class=&#34;dv&#34;&gt;0&lt;/span&gt;] = l;&lt;/span&gt;
+&lt;span id=&#34;cb1-57&#34;&gt;&lt;a href=&#34;#cb1-57&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;        fa[i] = p;&lt;/span&gt;
+&lt;span id=&#34;cb1-58&#34;&gt;&lt;a href=&#34;#cb1-58&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;    }&lt;/span&gt;
+&lt;span id=&#34;cb1-59&#34;&gt;&lt;a href=&#34;#cb1-59&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;    ll l = &lt;span class=&#34;dv&#34;&gt;0&lt;/span&gt;, r = (&lt;span class=&#34;dv&#34;&gt;1&lt;/span&gt;&lt;span class=&#34;bu&#34;&gt;ll&lt;/span&gt; &amp;lt;&amp;lt; &lt;span class=&#34;dv&#34;&gt;17&lt;/span&gt;) * &lt;span class=&#34;dv&#34;&gt;2&lt;/span&gt; * n + &lt;span class=&#34;dv&#34;&gt;1&lt;/span&gt;, ans = r;&lt;/span&gt;
+&lt;span id=&#34;cb1-60&#34;&gt;&lt;a href=&#34;#cb1-60&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;    &lt;span class=&#34;cf&#34;&gt;while&lt;/span&gt; (l &amp;lt; r) {&lt;/span&gt;
+&lt;span id=&#34;cb1-61&#34;&gt;&lt;a href=&#34;#cb1-61&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;        ll mid = (l + r &amp;gt;&amp;gt; &lt;span class=&#34;dv&#34;&gt;1&lt;/span&gt;);&lt;/span&gt;
+&lt;span id=&#34;cb1-62&#34;&gt;&lt;a href=&#34;#cb1-62&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;        &lt;span class=&#34;cf&#34;&gt;if&lt;/span&gt; (check(mid)) ans = mid, r = mid;&lt;/span&gt;
+&lt;span id=&#34;cb1-63&#34;&gt;&lt;a href=&#34;#cb1-63&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;        &lt;span class=&#34;cf&#34;&gt;else&lt;/span&gt; l = mid + &lt;span class=&#34;dv&#34;&gt;1&lt;/span&gt;;&lt;/span&gt;
+&lt;span id=&#34;cb1-64&#34;&gt;&lt;a href=&#34;#cb1-64&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;    }&lt;/span&gt;
+&lt;span id=&#34;cb1-65&#34;&gt;&lt;a href=&#34;#cb1-65&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;    print(ans);&lt;/span&gt;
+&lt;span id=&#34;cb1-66&#34;&gt;&lt;a href=&#34;#cb1-66&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;    &lt;span class=&#34;cf&#34;&gt;return&lt;/span&gt; output(), &lt;span class=&#34;dv&#34;&gt;0&lt;/span&gt;;&lt;/span&gt;
+&lt;span id=&#34;cb1-67&#34;&gt;&lt;a href=&#34;#cb1-67&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;}&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+</description>
+        </item>
+        
+    </channel>
+</rss>

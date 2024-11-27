@@ -1,0 +1,392 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+    <channel>
+        <title>集合幂级数 on 清烛的博客</title>
+        <link>https://oi.imyangty.com/tags/%E9%9B%86%E5%90%88%E5%B9%82%E7%BA%A7%E6%95%B0/</link>
+        <description>Recent content in 集合幂级数 on 清烛的博客</description>
+        <generator>Hugo -- gohugo.io</generator>
+        <language>zh-CN</language>
+        <lastBuildDate>Wed, 22 Jun 2022 20:20:14 +0800</lastBuildDate><atom:link href="https://oi.imyangty.com/tags/%E9%9B%86%E5%90%88%E5%B9%82%E7%BA%A7%E6%95%B0/index.xml" rel="self" type="application/rss+xml" /><item>
+        <title>集合幂级数胡扯</title>
+        <link>https://oi.imyangty.com/note-set-power-series/</link>
+        <pubDate>Wed, 22 Jun 2022 20:20:14 +0800</pubDate>
+        
+        <guid>https://oi.imyangty.com/note-set-power-series/</guid>
+        <description>&lt;img src="https://yangty-pic.oss-cn-beijing.aliyuncs.com/bg39.webp" alt="Featured image of post 集合幂级数胡扯" /&gt;&lt;h2 id=&#34;前言&#34;&gt;前言&lt;/h2&gt;
+&lt;p&gt;好难啊。NOI 前随缘来胡扯点东西。&lt;/p&gt;
+&lt;p&gt;由于是写给自己看的所以可能写的很暴躁简略，如果看不懂可以去 Ref 部分看一下大佬们的博客（&lt;/p&gt;
+&lt;h2 id=&#34;定义&#34;&gt;定义&lt;/h2&gt;
+&lt;p&gt;一种定义在集合上的形式幂级数。&lt;/p&gt;
+&lt;p&gt;为了方便，定义记号&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;span class=&#34;math inline&#34;&gt;\(2^U\)&lt;/span&gt; 表示 &lt;span class=&#34;math inline&#34;&gt;\(U\)&lt;/span&gt; 的幂集，即 &lt;span class=&#34;math inline&#34;&gt;\(U\)&lt;/span&gt; 的所有子集构成的集合。&lt;/li&gt;
+&lt;li&gt;定义 &lt;span class=&#34;math inline&#34;&gt;\(U\)&lt;/span&gt; 为全集 &lt;span class=&#34;math inline&#34;&gt;\(\{1,2,\cdots, n\}\)&lt;/span&gt;，其中 &lt;span class=&#34;math inline&#34;&gt;\(n=|U|\)&lt;/span&gt;，注意到我们这里只是为了区分集合的 &lt;span class=&#34;math inline&#34;&gt;\(n\)&lt;/span&gt; 个元素。&lt;/li&gt;
+&lt;li&gt;下文若无特殊说明，都有 &lt;span class=&#34;math inline&#34;&gt;\(S\in 2^{U}\)&lt;/span&gt;。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;域 &lt;span class=&#34;math inline&#34;&gt;\(F\)&lt;/span&gt; 上的集合幂级数为映射 &lt;span class=&#34;math inline&#34;&gt;\(f:2^U\to F\)&lt;/span&gt;，其中对于每个 &lt;span class=&#34;math inline&#34;&gt;\(S\subseteq U\)&lt;/span&gt;，&lt;span class=&#34;math inline&#34;&gt;\(f\)&lt;/span&gt; 都有对应取值 &lt;span class=&#34;math inline&#34;&gt;\(f_S\in F\)&lt;/span&gt;。即我们相当于把全集的幂集到 &lt;span class=&#34;math inline&#34;&gt;\(F\)&lt;/span&gt; 建立了一个映射。&lt;/p&gt;
+&lt;p&gt;类比形式幂级数，我们在每个 &lt;span class=&#34;math inline&#34;&gt;\(f_S\)&lt;/span&gt; 后面添加占位符 &lt;span class=&#34;math inline&#34;&gt;\(x^S\)&lt;/span&gt;，即 &lt;span class=&#34;math inline&#34;&gt;\(cx^S\)&lt;/span&gt; 表示 &lt;span class=&#34;math inline&#34;&gt;\(f\)&lt;/span&gt; 会将 &lt;span class=&#34;math inline&#34;&gt;\(S\)&lt;/span&gt; 映射到 &lt;span class=&#34;math inline&#34;&gt;\(c\)&lt;/span&gt;。因此，我们一般如是表示： &lt;span class=&#34;math display&#34;&gt;\[
+F(x) = \sum_{S\subseteq U} f_Sx^S
+\]&lt;/span&gt;&lt;/p&gt;
+&lt;h2 id=&#34;加法乘法&#34;&gt;加法/乘法&lt;/h2&gt;
+&lt;p&gt;形式幂级数的加减法（对应系数相加减）和乘法（加法卷积，FFT/NTT）大家都已熟知，而集合幂级数同样可以定义加减法和乘法。&lt;/p&gt;
+&lt;p&gt;加减法与形式幂级数类似，都为对应系数相加减，&lt;strong&gt;两幂级数对应的全集需要相同&lt;/strong&gt;。&lt;/p&gt;
+&lt;p&gt;而乘法的定义就略微复杂。我们希望乘法有关于加法的分配律，此时就需要定义一下指数的运算 &lt;span class=&#34;math inline&#34;&gt;\(\oplus\)&lt;/span&gt;，要求&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;交换律：&lt;span class=&#34;math inline&#34;&gt;\(S\oplus T = T\oplus S\)&lt;/span&gt;；&lt;/li&gt;
+&lt;li&gt;结合律：&lt;span class=&#34;math inline&#34;&gt;\((A\oplus B)\oplus C = A\oplus (B\oplus C)\)&lt;/span&gt;；&lt;/li&gt;
+&lt;li&gt;单位元：&lt;span class=&#34;math inline&#34;&gt;\(A\oplus \varnothing = A\)&lt;/span&gt;。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;则 &lt;span class=&#34;math display&#34;&gt;\[
+H(x) = F(x)G(x) = \sum_{S\in 2^U}\sum_{T\in 2^U}(f_Sg_T)x^{S\oplus T}
+\]&lt;/span&gt; 而常见的运算符包括交，并和对称差，下文将逐个阐述。&lt;/p&gt;
+&lt;h2 id=&#34;集合并卷积&#34;&gt;集合并卷积&lt;/h2&gt;
+&lt;h3 id=&#34;定义-1&#34;&gt;定义&lt;/h3&gt;
+&lt;p&gt;&lt;span class=&#34;math display&#34;&gt;\[
+h_S = \sum_{L\in 2^U}\sum_{R\in 2^U}[L\cup R = S]f_Lg_R
+\]&lt;/span&gt;&lt;/p&gt;
+&lt;p&gt;从位运算的角度来讲，这就是按位或卷积： &lt;span class=&#34;math display&#34;&gt;\[
+h_i = \sum_{j\mid k = i}f_jg_k
+\]&lt;/span&gt; 暴力求解 &lt;span class=&#34;math inline&#34;&gt;\(O(4^n)\)&lt;/span&gt;，劣。&lt;/p&gt;
+&lt;h3 id=&#34;莫比乌斯变换&#34;&gt;莫比乌斯变换&lt;/h3&gt;
+&lt;p&gt;我们可以使用将 &lt;span class=&#34;math inline&#34;&gt;\(F(x)\)&lt;/span&gt; 和 &lt;span class=&#34;math inline&#34;&gt;\(G(x)\)&lt;/span&gt; 分别进行莫比乌斯变换后求解。具体地我们定义集合幂级数 &lt;span class=&#34;math inline&#34;&gt;\(F(x)\)&lt;/span&gt; 的莫比乌斯变换 &lt;span class=&#34;math inline&#34;&gt;\(\hat{F}(x)\)&lt;/span&gt; 满足 &lt;span class=&#34;math display&#34;&gt;\[
+\hat f_S = \sum_{T\subseteq S}f_T
+\]&lt;/span&gt; 然后将 &lt;span class=&#34;math inline&#34;&gt;\(\hat F(x)\)&lt;/span&gt; 和 &lt;span class=&#34;math inline&#34;&gt;\(\hat G(x)\)&lt;/span&gt; 按位相乘即可，考虑证明： &lt;span class=&#34;math display&#34;&gt;\[
+\begin{aligned}
+\hat h_S &amp;amp;= \hat f_S\hat g_S\\
+&amp;amp;= \sum_{L\subseteq S}f_L\sum_{R\subseteq S} g_R\\
+&amp;amp;= \sum_{L\subseteq S}\sum_{R\subseteq S}f_Lg_R\\
+&amp;amp;= \sum_{L\subseteq S}\sum_{R\subseteq S}[(L\cup R)\subseteq S] f_Lg_R
+\end{aligned}
+\]&lt;/span&gt; 最后需要把 &lt;span class=&#34;math inline&#34;&gt;\(\hat H(x)\)&lt;/span&gt; 变换回 &lt;span class=&#34;math inline&#34;&gt;\(H(x)\)&lt;/span&gt;，关于 FMT 是如何完成的见下文。&lt;/p&gt;
+&lt;p&gt;这个过程和 FFT 啥的很像，都是将其点值化然后直接将对应点值相乘，再逆变换回去。&lt;/p&gt;
+&lt;h3 id=&#34;高维前缀和&#34;&gt;高维前缀和&lt;/h3&gt;
+&lt;p&gt;发现如果我们用二进制数的思想理解集合，则莫比乌斯变换就相当于一个高维前缀和，其中每个二进制位都是一维。&lt;/p&gt;
+&lt;p&gt;具体地，枚举二进制位，然后对于下标 &lt;span class=&#34;math inline&#34;&gt;\(i\)&lt;/span&gt; 进行加减操作之类的。&lt;/p&gt;
+&lt;div class=&#34;sourceCode&#34; id=&#34;cb1&#34;&gt;&lt;pre class=&#34;sourceCode cpp&#34;&gt;&lt;code class=&#34;sourceCode cpp&#34;&gt;&lt;span id=&#34;cb1-1&#34;&gt;&lt;a href=&#34;#cb1-1&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;&lt;span class=&#34;dt&#34;&gt;void&lt;/span&gt; FMT(&lt;span class=&#34;dt&#34;&gt;int&lt;/span&gt; f[], &lt;span class=&#34;dt&#34;&gt;int&lt;/span&gt; c) {&lt;/span&gt;
+&lt;span id=&#34;cb1-2&#34;&gt;&lt;a href=&#34;#cb1-2&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;    &lt;span class=&#34;cf&#34;&gt;for&lt;/span&gt; (&lt;span class=&#34;dt&#34;&gt;int&lt;/span&gt; i = &lt;span class=&#34;dv&#34;&gt;1&lt;/span&gt;; i &amp;lt; (&lt;span class=&#34;dv&#34;&gt;1&lt;/span&gt; &amp;lt;&amp;lt; n); i &amp;lt;&amp;lt;= &lt;span class=&#34;dv&#34;&gt;1&lt;/span&gt;)&lt;/span&gt;
+&lt;span id=&#34;cb1-3&#34;&gt;&lt;a href=&#34;#cb1-3&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;        &lt;span class=&#34;cf&#34;&gt;for&lt;/span&gt; (&lt;span class=&#34;dt&#34;&gt;int&lt;/span&gt; j = &lt;span class=&#34;dv&#34;&gt;0&lt;/span&gt;; j &amp;lt; (&lt;span class=&#34;dv&#34;&gt;1&lt;/span&gt; &amp;lt;&amp;lt; n); ++j)&lt;/span&gt;
+&lt;span id=&#34;cb1-4&#34;&gt;&lt;a href=&#34;#cb1-4&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;            &lt;span class=&#34;cf&#34;&gt;if&lt;/span&gt; (i &amp;amp; j) f[j] += c * f[j ^ i];&lt;/span&gt;
+&lt;span id=&#34;cb1-5&#34;&gt;&lt;a href=&#34;#cb1-5&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;    &lt;span class=&#34;cf&#34;&gt;return&lt;/span&gt;; &lt;span class=&#34;co&#34;&gt;// 此处没有考虑取模之类的问题，只是示意代码。&lt;/span&gt;&lt;/span&gt;
+&lt;span id=&#34;cb1-6&#34;&gt;&lt;a href=&#34;#cb1-6&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;}&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;传进去的 &lt;span class=&#34;math inline&#34;&gt;\(c = 1\)&lt;/span&gt; 表示是莫比乌斯变换，&lt;span class=&#34;math inline&#34;&gt;\(-1\)&lt;/span&gt; 表示其逆变换。&lt;/p&gt;
+&lt;p&gt;枚举二进制位这一个过程相当于就是在枚举做高维前缀和的维度。&lt;/p&gt;
+&lt;h3 id=&#34;fmt-的性质&#34;&gt;FMT 的性质&lt;/h3&gt;
+&lt;ul&gt;
+&lt;li&gt;FMT 是线性变换，下文讲 FWT_OR 的时候详细说明。&lt;/li&gt;
+&lt;li&gt;&lt;span class=&#34;math inline&#34;&gt;\(\prod F_i(x) = \operatorname{IFMT}(\prod\operatorname{FMT}(F_i(x))\)&lt;/span&gt;。其中左边的 $$ 是&lt;strong&gt;集合并卷积&lt;/strong&gt;，右边的是&lt;strong&gt;对应点值相乘&lt;/strong&gt;。所以求若干集合幂级数的并卷积的时候可以直接先 FMT 好然后一波带走，不需要像形式幂级数那样 DFT，两个乘起来之后就得 IDFT。因为两个长 &lt;span class=&#34;math inline&#34;&gt;\(n\)&lt;/span&gt; 的多项式卷起来后长 &lt;span class=&#34;math inline&#34;&gt;\(2n\)&lt;/span&gt;，而两个定义在相同全集上的集合幂级数乘起来后还是定义在同一全集上。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id=&#34;集合对称差卷积&#34;&gt;集合对称差卷积&lt;/h2&gt;
+&lt;h3 id=&#34;定义-2&#34;&gt;定义&lt;/h3&gt;
+&lt;p&gt;定义两个集合 &lt;span class=&#34;math inline&#34;&gt;\(A\)&lt;/span&gt; 和 &lt;span class=&#34;math inline&#34;&gt;\(B\)&lt;/span&gt; 的&lt;strong&gt;对称差&lt;/strong&gt;为 &lt;span class=&#34;math inline&#34;&gt;\(A\Delta B = \complement_{A\cup B}(A\cap B)\)&lt;/span&gt;，相当于&lt;strong&gt;异或运算&lt;/strong&gt;。 &lt;span class=&#34;math display&#34;&gt;\[
+h_S = \sum_{L\in 2^U}\sum_{R\in 2^U}[L\Delta R = S]f_Lg_R
+\]&lt;/span&gt; 从位运算卷积的角度理解其就是异或卷积。 &lt;span class=&#34;math display&#34;&gt;\[
+h_k = \sum_{i\oplus j = k}f_ig_j
+\]&lt;/span&gt; 其中 &lt;span class=&#34;math inline&#34;&gt;\(\oplus\)&lt;/span&gt; 为异或运算。&lt;/p&gt;
+&lt;h3 id=&#34;快速沃尔什变换fwt&#34;&gt;快速沃尔什变换/FWT&lt;/h3&gt;
+&lt;p&gt;将 &lt;span class=&#34;math inline&#34;&gt;\(F(x)\)&lt;/span&gt; 和 &lt;span class=&#34;math inline&#34;&gt;\(G(x)\)&lt;/span&gt; 分别进行沃尔什变换之后对应位置相乘，再沃尔什逆变换回去即可。&lt;/p&gt;
+&lt;p&gt;下文具体阐述，有点抽象。&lt;/p&gt;
+&lt;h2 id=&#34;fwt&#34;&gt;FWT&lt;/h2&gt;
+&lt;h3 id=&#34;构造&#34;&gt;构造&lt;/h3&gt;
+&lt;p&gt;设 &lt;span class=&#34;math inline&#34;&gt;\(\operatorname{FWT}(A)\)&lt;/span&gt; 为幂级数 &lt;span class=&#34;math inline&#34;&gt;\(A\)&lt;/span&gt; 变换之后得到的幂级数。令 &lt;span class=&#34;math inline&#34;&gt;\(C = A * B\)&lt;/span&gt; 为 &lt;span class=&#34;math inline&#34;&gt;\(A\)&lt;/span&gt; 与 &lt;span class=&#34;math inline&#34;&gt;\(B\)&lt;/span&gt; 位运算卷积后的结果。则需要满足： &lt;span class=&#34;math display&#34;&gt;\[
+A*B = C\iff \operatorname{FWT}(A)\cdot\operatorname{FWT}(B) = \operatorname{FWT}(C)
+\]&lt;/span&gt; FFT 是一个线性变换，相当于乘上一个范德蒙矩阵。考虑对 FWT 构造一个类似的转移矩阵。&lt;/p&gt;
+&lt;p&gt;设 &lt;span class=&#34;math inline&#34;&gt;\(c(i, j)\)&lt;/span&gt; 为变换系数，即 &lt;span class=&#34;math inline&#34;&gt;\(A_j\)&lt;/span&gt; 对 &lt;span class=&#34;math inline&#34;&gt;\(\operatorname{FWT}(A)_i\)&lt;/span&gt; 产生的贡献，则 &lt;span class=&#34;math display&#34;&gt;\[
+\operatorname{FWT}(A)_i = \sum_{j = 0}^{n - 1}c(i, j)A_j
+\]&lt;/span&gt; 根据 &lt;span class=&#34;math inline&#34;&gt;\(\operatorname{FWT}(A)_i\cdot\operatorname{FWT}(B)_i=\operatorname{FWT}(C)_i\)&lt;/span&gt;，发现 &lt;span class=&#34;math display&#34;&gt;\[
+\begin{aligned}
+\left(\sum_{j = 0}^{n - 1}c(i, j)A_j\right)\left(\sum_{j = 0}^{n - 1}c(i, j)B_j\right) &amp;amp;= \sum_{j = 0}^{n - 1}c(i, j)C_j\\
+\sum_{j = 0}^{n - 1}\sum_{k = 0}^{n - 1}c(i,j)c(i, k)A_jB_k &amp;amp;= \sum_{j = 0}^{n -1}c(i, j)C_j
+\end{aligned}
+\]&lt;/span&gt; 而 &lt;span class=&#34;math inline&#34;&gt;\(A*B = C\)&lt;/span&gt;， &lt;span class=&#34;math display&#34;&gt;\[
+\begin{aligned}
+\sum_{j = 0}^{n - 1}c(i, j)C_j &amp;amp;= \sum_{j = 0}^{n - 1}c(i,j)\sum_{t_1\oplus t_2 = j}A_{t_1}B_{t_2}\\
+\sum_{j = 0}^{n - 1}\sum_{k = 0}^{n - 1}c(i,j)c(i, k)A_jB_k &amp;amp;= \sum_{j = 0}^{n - 1}c(i,j)\sum_{t_1\oplus t_2 = j}A_{t_1}B_{t_2}\\
+&amp;amp;= \sum_{j = 0}^{n - 1}\sum_{t_1\oplus t_2 = j}A_{t_1}B_{t_2}c(i, j)\\
+&amp;amp;= \sum_{t_1 = 0}^{n - 1}\sum_{t_2 = 0}^{n - 1}A_{t_1}B_{t_2}c(i, t_1\oplus t_2)
+\end{aligned}
+\]&lt;/span&gt; 对比以下左右两边，发现 &lt;span class=&#34;math display&#34;&gt;\[
+c(i, j)c(i, k) = c(i, j\oplus k)
+\]&lt;/span&gt; 同时，位运算是具有按位独立性的，所以知道了所有的 &lt;span class=&#34;math inline&#34;&gt;\(c(x, y)\)&lt;/span&gt;（&lt;span class=&#34;math inline&#34;&gt;\(x, y\in \{0, 1\}\)&lt;/span&gt;）之后就可以求出所有的 &lt;span class=&#34;math inline&#34;&gt;\(c(i, j)\)&lt;/span&gt;，具体地，把 &lt;span class=&#34;math inline&#34;&gt;\(i\)&lt;/span&gt; 和 &lt;span class=&#34;math inline&#34;&gt;\(j\)&lt;/span&gt; 的第 &lt;span class=&#34;math inline&#34;&gt;\(k\)&lt;/span&gt; 位称为 &lt;span class=&#34;math inline&#34;&gt;\(i_k\)&lt;/span&gt; 和 &lt;span class=&#34;math inline&#34;&gt;\(j_k\)&lt;/span&gt;，则 &lt;span class=&#34;math inline&#34;&gt;\(c(i, j) = \prod c(i_k, j_k)\)&lt;/span&gt;，证明显然。&lt;/p&gt;
+&lt;p&gt;现在考虑 &lt;span class=&#34;math inline&#34;&gt;\(\operatorname{FWT}(A)_i\)&lt;/span&gt; 的计算。前面说过，其等于 &lt;span class=&#34;math display&#34;&gt;\[
+\sum_{j = 0}^{n - 1}c(i, j)A_j
+\]&lt;/span&gt; 然后计算就是 &lt;span class=&#34;math inline&#34;&gt;\(O(n^2)\)&lt;/span&gt; 的，貌似没什么卵用。&lt;/p&gt;
+&lt;p&gt;接下来假定 &lt;span class=&#34;math inline&#34;&gt;\(n = 2^m\)&lt;/span&gt;，然后按位折半： &lt;span class=&#34;math display&#34;&gt;\[
+\begin{aligned}
+\operatorname{FWT}(A)_i &amp;amp;= \sum_{j = 0}^{n - 1}c(i, j)A_j\\
+&amp;amp;= \sum_{j = 0}^{n / 2 - 1}c(i, j)A_j + \sum_{j = n/2}^{n - 1}c(i, j)A_j\\
+&amp;amp;= c(i_0, 0)\sum_{j = 0}^{n / 2 - 1}c(i&amp;#39;, j&amp;#39;)A_j + c(i_0, 1)\sum_{j = n / 2}^{n - 1}c(i&amp;#39;, j&amp;#39;)A_j\\
+\end{aligned}
+\]&lt;/span&gt; 然后就会惊奇的发现：问题的规模得到了减半。设 &lt;span class=&#34;math inline&#34;&gt;\(A\)&lt;/span&gt; 的前一半为 &lt;span class=&#34;math inline&#34;&gt;\(A_0\)&lt;/span&gt;，后一半为 &lt;span class=&#34;math inline&#34;&gt;\(A_1\)&lt;/span&gt;，则 &lt;span class=&#34;math display&#34;&gt;\[
+\begin{aligned}
+\operatorname{FWT}(A)_i &amp;amp;=c(0, 0)\operatorname{FWT}(A_0)_i + c(0, 1)\operatorname{FWT}(A_1)_i&amp;amp;i_0 = 0, i\in[0, n / 2)\\
+\operatorname{FWT}(A)_{i + n/2}&amp;amp;= c(1, 0)\operatorname{FWT}(A_0)_i + c(1, 1)\operatorname{FWT}(A_1)_i&amp;amp;i_0 = 1, i\in[0, n / 2)
+\end{aligned}
+\]&lt;/span&gt; 分析一下时间复杂度：&lt;span class=&#34;math inline&#34;&gt;\(T(n) = T(n / 2) + O(n) = O(n\log n)\)&lt;/span&gt;。逆变换也就是 &lt;span class=&#34;math inline&#34;&gt;\(c\)&lt;/span&gt; 矩阵的逆，具体下文。&lt;/p&gt;
+&lt;h3 id=&#34;具体卷积&#34;&gt;具体卷积&lt;/h3&gt;
+&lt;p&gt;对于不同的位运算 &lt;span class=&#34;math inline&#34;&gt;\(\oplus\)&lt;/span&gt;，构造相应的 &lt;span class=&#34;math inline&#34;&gt;\(c\)&lt;/span&gt; 矩阵。将 &lt;span class=&#34;math display&#34;&gt;\[
+\begin{bmatrix}
+c(0, 0)&amp;amp;c(0, 1)\\
+c(1, 0)&amp;amp;c(1, 1)
+\end{bmatrix}
+\]&lt;/span&gt; 称为位矩阵。&lt;/p&gt;
+&lt;h4 id=&#34;or-卷积&#34;&gt;OR 卷积&lt;/h4&gt;
+&lt;p&gt;&lt;span class=&#34;math inline&#34;&gt;\(c(i, j)c(i, k) = c(i, j\lor k)\)&lt;/span&gt;。&lt;/p&gt;
+&lt;p&gt;&lt;span class=&#34;math inline&#34;&gt;\(c(i, j)c(i, j) = c(i, j)\)&lt;/span&gt;，故 &lt;span class=&#34;math inline&#34;&gt;\(c(i, j)\in\{0, 1\}\)&lt;/span&gt;。 &lt;span class=&#34;math display&#34;&gt;\[
+\begin{cases}
+c(1, 0)c(1, 1) = c(1, 1)\\
+c(0, 1)c(0, 0) = c(0, 1)
+\end{cases}
+\]&lt;/span&gt; 合法的矩阵有 &lt;span class=&#34;math inline&#34;&gt;\(\begin{bmatrix}1 &amp;amp; 1 \\ 1 &amp;amp; 0\end{bmatrix}\)&lt;/span&gt; 和 &lt;span class=&#34;math inline&#34;&gt;\(\begin{bmatrix}1 &amp;amp; 0\\1 &amp;amp; 1\end{bmatrix}\)&lt;/span&gt;。&lt;/p&gt;
+&lt;p&gt;第二个的意义为 &lt;span class=&#34;math inline&#34;&gt;\(c(i, j) = [i\land j = j]\)&lt;/span&gt;，&lt;span class=&#34;math inline&#34;&gt;\(\operatorname{FWT}(A)_i = \displaystyle\sum_{j = 0}^{n - 1}c(i, j) A_j = \sum_{j\in i}A_j\)&lt;/span&gt;。相当于就是子集求和，并且其逆阵的形式很对称，所以使用第二个矩阵。 &lt;span class=&#34;math display&#34;&gt;\[
+\begin{aligned}
+\operatorname{FWT}(A)_i &amp;amp;=\operatorname{FWT}(A_0)_i &amp;amp;i_0 = 0, i\in[0, n / 2)\\
+\operatorname{FWT}(A)_{i + n/2}&amp;amp;= \operatorname{FWT}(A_0)_i + \operatorname{FWT}(A_1)_i&amp;amp;i_0 = 1, i\in[0, n / 2)
+\end{aligned}
+\]&lt;/span&gt;&lt;/p&gt;
+&lt;div class=&#34;sourceCode&#34; id=&#34;cb2&#34;&gt;&lt;pre class=&#34;sourceCode cpp&#34;&gt;&lt;code class=&#34;sourceCode cpp&#34;&gt;&lt;span id=&#34;cb2-1&#34;&gt;&lt;a href=&#34;#cb2-1&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;&lt;span class=&#34;dt&#34;&gt;void&lt;/span&gt; OR(modint *f) {&lt;/span&gt;
+&lt;span id=&#34;cb2-2&#34;&gt;&lt;a href=&#34;#cb2-2&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;    &lt;span class=&#34;cf&#34;&gt;for&lt;/span&gt; (&lt;span class=&#34;dt&#34;&gt;int&lt;/span&gt; o = &lt;span class=&#34;dv&#34;&gt;2&lt;/span&gt;, k = &lt;span class=&#34;dv&#34;&gt;1&lt;/span&gt;; o &amp;lt;= n; o &amp;lt;&amp;lt;= &lt;span class=&#34;dv&#34;&gt;1&lt;/span&gt;, k &amp;lt;&amp;lt;= &lt;span class=&#34;dv&#34;&gt;1&lt;/span&gt;)&lt;/span&gt;
+&lt;span id=&#34;cb2-3&#34;&gt;&lt;a href=&#34;#cb2-3&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;        &lt;span class=&#34;cf&#34;&gt;for&lt;/span&gt; (&lt;span class=&#34;dt&#34;&gt;int&lt;/span&gt; i = &lt;span class=&#34;dv&#34;&gt;0&lt;/span&gt;; i &amp;lt; n; i += o)&lt;/span&gt;
+&lt;span id=&#34;cb2-4&#34;&gt;&lt;a href=&#34;#cb2-4&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;            &lt;span class=&#34;cf&#34;&gt;for&lt;/span&gt; (&lt;span class=&#34;dt&#34;&gt;int&lt;/span&gt; j = &lt;span class=&#34;dv&#34;&gt;0&lt;/span&gt;; j &amp;lt; k; ++j)&lt;/span&gt;
+&lt;span id=&#34;cb2-5&#34;&gt;&lt;a href=&#34;#cb2-5&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;                f[i + j + k] += f[i + j];&lt;/span&gt;
+&lt;span id=&#34;cb2-6&#34;&gt;&lt;a href=&#34;#cb2-6&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;    &lt;span class=&#34;cf&#34;&gt;return&lt;/span&gt;;&lt;/span&gt;
+&lt;span id=&#34;cb2-7&#34;&gt;&lt;a href=&#34;#cb2-7&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;}&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;&lt;span class=&#34;math display&#34;&gt;\[
+\begin{bmatrix}
+1 &amp;amp; 0\\
+1 &amp;amp; 1
+\end{bmatrix}^{-1} = 
+\begin{bmatrix}
+1 &amp;amp; 0\\
+-1 &amp;amp; 1
+\end{bmatrix}
+\]&lt;/span&gt;&lt;/p&gt;
+&lt;p&gt;&lt;span class=&#34;math display&#34;&gt;\[
+\begin{aligned}
+\operatorname{IFWT}(A)_i &amp;amp;=\operatorname{IFWT}(A_0)_i &amp;amp;i_0 = 0, i\in[0, n / 2)\\
+\operatorname{IFWT}(A)_{i + n/2}&amp;amp;= \operatorname{IFWT}(A_0)_i - \operatorname{IFWT}(A_1)_i&amp;amp;i_0 = 1, i\in[0, n / 2)
+\end{aligned}
+\]&lt;/span&gt;&lt;/p&gt;
+&lt;p&gt;所以就可以写出如下的代码：&lt;/p&gt;
+&lt;div class=&#34;sourceCode&#34; id=&#34;cb3&#34;&gt;&lt;pre class=&#34;sourceCode cpp&#34;&gt;&lt;code class=&#34;sourceCode cpp&#34;&gt;&lt;span id=&#34;cb3-1&#34;&gt;&lt;a href=&#34;#cb3-1&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;&lt;span class=&#34;dt&#34;&gt;void&lt;/span&gt; OR(modint *f, modint x = &lt;span class=&#34;dv&#34;&gt;1&lt;/span&gt;) {&lt;/span&gt;
+&lt;span id=&#34;cb3-2&#34;&gt;&lt;a href=&#34;#cb3-2&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;    &lt;span class=&#34;cf&#34;&gt;for&lt;/span&gt; (&lt;span class=&#34;dt&#34;&gt;int&lt;/span&gt; o = &lt;span class=&#34;dv&#34;&gt;2&lt;/span&gt;, k = &lt;span class=&#34;dv&#34;&gt;1&lt;/span&gt;; o &amp;lt;= n; o &amp;lt;&amp;lt;= &lt;span class=&#34;dv&#34;&gt;1&lt;/span&gt;, k &amp;lt;&amp;lt;= &lt;span class=&#34;dv&#34;&gt;1&lt;/span&gt;)&lt;/span&gt;
+&lt;span id=&#34;cb3-3&#34;&gt;&lt;a href=&#34;#cb3-3&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;        &lt;span class=&#34;cf&#34;&gt;for&lt;/span&gt; (&lt;span class=&#34;dt&#34;&gt;int&lt;/span&gt; i = &lt;span class=&#34;dv&#34;&gt;0&lt;/span&gt;; i &amp;lt; n; i += o)&lt;/span&gt;
+&lt;span id=&#34;cb3-4&#34;&gt;&lt;a href=&#34;#cb3-4&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;            &lt;span class=&#34;cf&#34;&gt;for&lt;/span&gt; (&lt;span class=&#34;dt&#34;&gt;int&lt;/span&gt; j = &lt;span class=&#34;dv&#34;&gt;0&lt;/span&gt;; j &amp;lt; k; ++j)&lt;/span&gt;
+&lt;span id=&#34;cb3-5&#34;&gt;&lt;a href=&#34;#cb3-5&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;                f[i + j + k] += f[i + j] * x;&lt;/span&gt;
+&lt;span id=&#34;cb3-6&#34;&gt;&lt;a href=&#34;#cb3-6&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;    &lt;span class=&#34;cf&#34;&gt;return&lt;/span&gt;;&lt;/span&gt;
+&lt;span id=&#34;cb3-7&#34;&gt;&lt;a href=&#34;#cb3-7&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;}&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;h4 id=&#34;and-卷积&#34;&gt;AND 卷积&lt;/h4&gt;
+&lt;p&gt;&lt;span class=&#34;math inline&#34;&gt;\(c(i, j)c(j, k) = c(i,j\land k)\)&lt;/span&gt;，类似地，&lt;span class=&#34;math inline&#34;&gt;\(c(i,j)\in\{0,1\}\)&lt;/span&gt;。 &lt;span class=&#34;math display&#34;&gt;\[
+\begin{cases}
+c(0, 0)c(0, 1) = c(0, 0)\\
+c(1, 0)c(1, 1) = c(1, 0)\\
+\end{cases}
+\]&lt;/span&gt; 合法的矩阵有 &lt;span class=&#34;math inline&#34;&gt;\(\begin{bmatrix}1 &amp;amp; 1\\ 0 &amp;amp; 1\end{bmatrix}\)&lt;/span&gt; 和 &lt;span class=&#34;math inline&#34;&gt;\(\begin{bmatrix}0 &amp;amp; 1\\1 &amp;amp; 1\end{bmatrix}\)&lt;/span&gt;。第一种的意义为 &lt;span class=&#34;math inline&#34;&gt;\(c(i, j) = [i\land j = i]\)&lt;/span&gt;，&lt;span class=&#34;math inline&#34;&gt;\(\operatorname{FWT}(A)_i = \displaystyle\sum_{j=0}^{n - 1}c(i,j)A_j = \sum_{i\in j}A_j\)&lt;/span&gt;，相当于超集求和，且求逆完的形式比较对偶，所以使用第一种： &lt;span class=&#34;math display&#34;&gt;\[
+\begin{aligned}
+\operatorname{FWT}(A)_i &amp;amp;=\operatorname{FWT}(A_0)_i + \operatorname{FWT}(A_1)_i &amp;amp;i_0 = 0, i\in[0, n / 2)\\
+\operatorname{FWT}(A)_{i + n/2}&amp;amp;=\operatorname{FWT}(A_1)_i  &amp;amp;i_0 = 1, i\in[0, n / 2)
+\end{aligned}
+\]&lt;/span&gt;&lt;/p&gt;
+&lt;p&gt;&lt;span class=&#34;math display&#34;&gt;\[
+\begin{bmatrix}
+1 &amp;amp; 1\\0 &amp;amp; 1
+\end{bmatrix}^{-1} = \begin{bmatrix}
+1 &amp;amp; -1\\
+0 &amp;amp; 1
+\end{bmatrix}
+\]&lt;/span&gt;&lt;/p&gt;
+&lt;p&gt;&lt;span class=&#34;math display&#34;&gt;\[
+\begin{aligned}
+\operatorname{IFWT}(A)_i &amp;amp;=\operatorname{IFWT}(A_0)_i - \operatorname{IFWT}(A_1)_i &amp;amp;i_0 = 0, i\in[0, n / 2)\\
+\operatorname{IFWT}(A)_{i + n/2}&amp;amp;=\operatorname{IFWT}(A_1)_i  &amp;amp;i_0 = 1, i\in[0, n / 2)
+\end{aligned}
+\]&lt;/span&gt;&lt;/p&gt;
+&lt;div class=&#34;sourceCode&#34; id=&#34;cb4&#34;&gt;&lt;pre class=&#34;sourceCode cpp&#34;&gt;&lt;code class=&#34;sourceCode cpp&#34;&gt;&lt;span id=&#34;cb4-1&#34;&gt;&lt;a href=&#34;#cb4-1&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;&lt;span class=&#34;dt&#34;&gt;void&lt;/span&gt; AND(modint *f, modint x = &lt;span class=&#34;dv&#34;&gt;1&lt;/span&gt;) {&lt;/span&gt;
+&lt;span id=&#34;cb4-2&#34;&gt;&lt;a href=&#34;#cb4-2&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;    &lt;span class=&#34;cf&#34;&gt;for&lt;/span&gt; (&lt;span class=&#34;dt&#34;&gt;int&lt;/span&gt; o = &lt;span class=&#34;dv&#34;&gt;2&lt;/span&gt;, k = &lt;span class=&#34;dv&#34;&gt;1&lt;/span&gt;; o &amp;lt;= n; o &amp;lt;&amp;lt;= &lt;span class=&#34;dv&#34;&gt;1&lt;/span&gt;, k &amp;lt;&amp;lt;= &lt;span class=&#34;dv&#34;&gt;1&lt;/span&gt;)&lt;/span&gt;
+&lt;span id=&#34;cb4-3&#34;&gt;&lt;a href=&#34;#cb4-3&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;        &lt;span class=&#34;cf&#34;&gt;for&lt;/span&gt; (&lt;span class=&#34;dt&#34;&gt;int&lt;/span&gt; i = &lt;span class=&#34;dv&#34;&gt;0&lt;/span&gt;; i &amp;lt; n; i += o)&lt;/span&gt;
+&lt;span id=&#34;cb4-4&#34;&gt;&lt;a href=&#34;#cb4-4&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;            &lt;span class=&#34;cf&#34;&gt;for&lt;/span&gt; (&lt;span class=&#34;dt&#34;&gt;int&lt;/span&gt; j = &lt;span class=&#34;dv&#34;&gt;0&lt;/span&gt;; j &amp;lt; k; ++j)&lt;/span&gt;
+&lt;span id=&#34;cb4-5&#34;&gt;&lt;a href=&#34;#cb4-5&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;                f[i + j] += f[i + j + k] * x;&lt;/span&gt;
+&lt;span id=&#34;cb4-6&#34;&gt;&lt;a href=&#34;#cb4-6&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;    &lt;span class=&#34;cf&#34;&gt;return&lt;/span&gt;;&lt;/span&gt;
+&lt;span id=&#34;cb4-7&#34;&gt;&lt;a href=&#34;#cb4-7&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;}&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;h4 id=&#34;xor-卷积&#34;&gt;XOR 卷积&lt;/h4&gt;
+&lt;p&gt;&lt;span class=&#34;math inline&#34;&gt;\(c(i, j)c(i, k) = c(i, j\operatorname{xor} k)\)&lt;/span&gt;。&lt;/p&gt;
+&lt;p&gt;合法的有 &lt;span class=&#34;math inline&#34;&gt;\(\begin{bmatrix}1 &amp;amp; 1\\ 1 &amp;amp; -1\end{bmatrix}\)&lt;/span&gt; 和 &lt;span class=&#34;math inline&#34;&gt;\(\begin{bmatrix}1 &amp;amp; 1 \\ -1 &amp;amp; 1\end{bmatrix}\)&lt;/span&gt;。第二种求完逆形式不太好，选用第一种。 &lt;span class=&#34;math display&#34;&gt;\[
+\begin{aligned}
+\operatorname{FWT}(A)_i &amp;amp;=\operatorname{FWT}(A_0)_i + \operatorname{FWT}(A_1)_i&amp;amp;i_0 = 0, i\in[0, n / 2)\\
+\operatorname{FWT}(A)_{i + n/2}&amp;amp;= \operatorname{FWT}(A_0)_i -\operatorname{FWT}(A_1)_i&amp;amp;i_0 = 1, i\in[0, n / 2)
+\end{aligned}
+\]&lt;/span&gt;&lt;/p&gt;
+&lt;p&gt;&lt;span class=&#34;math display&#34;&gt;\[
+\begin{bmatrix}
+1 &amp;amp; 1 \\ 1 &amp;amp; -1
+\end{bmatrix}^{-1} =
+\begin{bmatrix}
+1/ 2 &amp;amp; 1/  2\\
+1/2 &amp;amp; -1/2
+\end{bmatrix}
+\]&lt;/span&gt;&lt;/p&gt;
+&lt;p&gt;&lt;span class=&#34;math display&#34;&gt;\[
+\begin{aligned}
+\operatorname{IFWT}(A)_i &amp;amp;=\frac 1 2\operatorname{IFWT}(A_0)_i + \frac 1 2\operatorname{IFWT}(A_1)_i&amp;amp;i_0 = 0, i\in[0, n / 2)\\
+\operatorname{IFWT}(A)_{i + n/2}&amp;amp;= \frac 1 2\operatorname{IFWT}(A_0)_i -\frac 1 2\operatorname{IFWT}(A_1)_i&amp;amp;i_0 = 1, i\in[0, n / 2)
+\end{aligned}
+\]&lt;/span&gt;&lt;/p&gt;
+&lt;div class=&#34;sourceCode&#34; id=&#34;cb5&#34;&gt;&lt;pre class=&#34;sourceCode cpp&#34;&gt;&lt;code class=&#34;sourceCode cpp&#34;&gt;&lt;span id=&#34;cb5-1&#34;&gt;&lt;a href=&#34;#cb5-1&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;&lt;span class=&#34;dt&#34;&gt;void&lt;/span&gt; XOR(modint *f, modint x = &lt;span class=&#34;dv&#34;&gt;1&lt;/span&gt;) {&lt;/span&gt;
+&lt;span id=&#34;cb5-2&#34;&gt;&lt;a href=&#34;#cb5-2&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;    &lt;span class=&#34;cf&#34;&gt;for&lt;/span&gt; (&lt;span class=&#34;dt&#34;&gt;int&lt;/span&gt; o = &lt;span class=&#34;dv&#34;&gt;2&lt;/span&gt;, k = &lt;span class=&#34;dv&#34;&gt;1&lt;/span&gt;; o &amp;lt;= n; o &amp;lt;&amp;lt;= &lt;span class=&#34;dv&#34;&gt;1&lt;/span&gt;, k &amp;lt;&amp;lt;= &lt;span class=&#34;dv&#34;&gt;1&lt;/span&gt;)&lt;/span&gt;
+&lt;span id=&#34;cb5-3&#34;&gt;&lt;a href=&#34;#cb5-3&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;        &lt;span class=&#34;cf&#34;&gt;for&lt;/span&gt; (&lt;span class=&#34;dt&#34;&gt;int&lt;/span&gt; i = &lt;span class=&#34;dv&#34;&gt;0&lt;/span&gt;; i &amp;lt; n; i += o)&lt;/span&gt;
+&lt;span id=&#34;cb5-4&#34;&gt;&lt;a href=&#34;#cb5-4&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;            &lt;span class=&#34;cf&#34;&gt;for&lt;/span&gt; (&lt;span class=&#34;dt&#34;&gt;int&lt;/span&gt; j = &lt;span class=&#34;dv&#34;&gt;0&lt;/span&gt;; j &amp;lt; k; ++j) {&lt;/span&gt;
+&lt;span id=&#34;cb5-5&#34;&gt;&lt;a href=&#34;#cb5-5&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;                f[i + j] += f[i + j + k];&lt;/span&gt;
+&lt;span id=&#34;cb5-6&#34;&gt;&lt;a href=&#34;#cb5-6&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;                f[i + j + k] = f[i + j] - f[i + j + k] - f[i + j + k];&lt;/span&gt;
+&lt;span id=&#34;cb5-7&#34;&gt;&lt;a href=&#34;#cb5-7&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;                f[i + j] *= x, f[i + j + k] *= x;&lt;/span&gt;
+&lt;span id=&#34;cb5-8&#34;&gt;&lt;a href=&#34;#cb5-8&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;            }&lt;/span&gt;
+&lt;span id=&#34;cb5-9&#34;&gt;&lt;a href=&#34;#cb5-9&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;    &lt;span class=&#34;cf&#34;&gt;return&lt;/span&gt;;&lt;/span&gt;
+&lt;span id=&#34;cb5-10&#34;&gt;&lt;a href=&#34;#cb5-10&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;}&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;h4 id=&#34;代码实现&#34;&gt;代码实现&lt;/h4&gt;
+&lt;p&gt;&lt;a href=&#34;https://www.luogu.com.cn/problem/P4717&#34;&gt;洛谷 P4717&lt;/a&gt; 的代码实现。&lt;/p&gt;
+&lt;div class=&#34;sourceCode&#34; id=&#34;cb6&#34;&gt;&lt;pre class=&#34;sourceCode cpp&#34;&gt;&lt;code class=&#34;sourceCode cpp&#34;&gt;&lt;span id=&#34;cb6-1&#34;&gt;&lt;a href=&#34;#cb6-1&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;&lt;span class=&#34;at&#34;&gt;const&lt;/span&gt; &lt;span class=&#34;dt&#34;&gt;int&lt;/span&gt; maxn = &lt;span class=&#34;dv&#34;&gt;1&lt;/span&gt; &amp;lt;&amp;lt; &lt;span class=&#34;dv&#34;&gt;19&lt;/span&gt;;&lt;/span&gt;
+&lt;span id=&#34;cb6-2&#34;&gt;&lt;a href=&#34;#cb6-2&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;&lt;/span&gt;
+&lt;span id=&#34;cb6-3&#34;&gt;&lt;a href=&#34;#cb6-3&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;&lt;span class=&#34;dt&#34;&gt;int&lt;/span&gt; n;&lt;/span&gt;
+&lt;span id=&#34;cb6-4&#34;&gt;&lt;a href=&#34;#cb6-4&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;modint A[maxn], B[maxn], a[maxn], b[maxn];&lt;/span&gt;
+&lt;span id=&#34;cb6-5&#34;&gt;&lt;a href=&#34;#cb6-5&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;&lt;/span&gt;
+&lt;span id=&#34;cb6-6&#34;&gt;&lt;a href=&#34;#cb6-6&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;&lt;span class=&#34;dt&#34;&gt;void&lt;/span&gt; OR(modint *f, modint x = &lt;span class=&#34;dv&#34;&gt;1&lt;/span&gt;) {&lt;/span&gt;
+&lt;span id=&#34;cb6-7&#34;&gt;&lt;a href=&#34;#cb6-7&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;    &lt;span class=&#34;cf&#34;&gt;for&lt;/span&gt; (&lt;span class=&#34;dt&#34;&gt;int&lt;/span&gt; o = &lt;span class=&#34;dv&#34;&gt;2&lt;/span&gt;, k = &lt;span class=&#34;dv&#34;&gt;1&lt;/span&gt;; o &amp;lt;= n; o &amp;lt;&amp;lt;= &lt;span class=&#34;dv&#34;&gt;1&lt;/span&gt;, k &amp;lt;&amp;lt;= &lt;span class=&#34;dv&#34;&gt;1&lt;/span&gt;)&lt;/span&gt;
+&lt;span id=&#34;cb6-8&#34;&gt;&lt;a href=&#34;#cb6-8&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;        &lt;span class=&#34;cf&#34;&gt;for&lt;/span&gt; (&lt;span class=&#34;dt&#34;&gt;int&lt;/span&gt; i = &lt;span class=&#34;dv&#34;&gt;0&lt;/span&gt;; i &amp;lt; n; i += o)&lt;/span&gt;
+&lt;span id=&#34;cb6-9&#34;&gt;&lt;a href=&#34;#cb6-9&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;            &lt;span class=&#34;cf&#34;&gt;for&lt;/span&gt; (&lt;span class=&#34;dt&#34;&gt;int&lt;/span&gt; j = &lt;span class=&#34;dv&#34;&gt;0&lt;/span&gt;; j &amp;lt; k; ++j)&lt;/span&gt;
+&lt;span id=&#34;cb6-10&#34;&gt;&lt;a href=&#34;#cb6-10&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;                f[i + j + k] += f[i + j] * x;&lt;/span&gt;
+&lt;span id=&#34;cb6-11&#34;&gt;&lt;a href=&#34;#cb6-11&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;    &lt;span class=&#34;cf&#34;&gt;return&lt;/span&gt;;&lt;/span&gt;
+&lt;span id=&#34;cb6-12&#34;&gt;&lt;a href=&#34;#cb6-12&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;}&lt;/span&gt;
+&lt;span id=&#34;cb6-13&#34;&gt;&lt;a href=&#34;#cb6-13&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;&lt;/span&gt;
+&lt;span id=&#34;cb6-14&#34;&gt;&lt;a href=&#34;#cb6-14&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;&lt;span class=&#34;dt&#34;&gt;void&lt;/span&gt; AND(modint *f, modint x = &lt;span class=&#34;dv&#34;&gt;1&lt;/span&gt;) {&lt;/span&gt;
+&lt;span id=&#34;cb6-15&#34;&gt;&lt;a href=&#34;#cb6-15&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;    &lt;span class=&#34;cf&#34;&gt;for&lt;/span&gt; (&lt;span class=&#34;dt&#34;&gt;int&lt;/span&gt; o = &lt;span class=&#34;dv&#34;&gt;2&lt;/span&gt;, k = &lt;span class=&#34;dv&#34;&gt;1&lt;/span&gt;; o &amp;lt;= n; o &amp;lt;&amp;lt;= &lt;span class=&#34;dv&#34;&gt;1&lt;/span&gt;, k &amp;lt;&amp;lt;= &lt;span class=&#34;dv&#34;&gt;1&lt;/span&gt;)&lt;/span&gt;
+&lt;span id=&#34;cb6-16&#34;&gt;&lt;a href=&#34;#cb6-16&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;        &lt;span class=&#34;cf&#34;&gt;for&lt;/span&gt; (&lt;span class=&#34;dt&#34;&gt;int&lt;/span&gt; i = &lt;span class=&#34;dv&#34;&gt;0&lt;/span&gt;; i &amp;lt; n; i += o)&lt;/span&gt;
+&lt;span id=&#34;cb6-17&#34;&gt;&lt;a href=&#34;#cb6-17&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;            &lt;span class=&#34;cf&#34;&gt;for&lt;/span&gt; (&lt;span class=&#34;dt&#34;&gt;int&lt;/span&gt; j = &lt;span class=&#34;dv&#34;&gt;0&lt;/span&gt;; j &amp;lt; k; ++j)&lt;/span&gt;
+&lt;span id=&#34;cb6-18&#34;&gt;&lt;a href=&#34;#cb6-18&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;                f[i + j] += f[i + j + k] * x;&lt;/span&gt;
+&lt;span id=&#34;cb6-19&#34;&gt;&lt;a href=&#34;#cb6-19&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;    &lt;span class=&#34;cf&#34;&gt;return&lt;/span&gt;;&lt;/span&gt;
+&lt;span id=&#34;cb6-20&#34;&gt;&lt;a href=&#34;#cb6-20&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;}&lt;/span&gt;
+&lt;span id=&#34;cb6-21&#34;&gt;&lt;a href=&#34;#cb6-21&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;&lt;/span&gt;
+&lt;span id=&#34;cb6-22&#34;&gt;&lt;a href=&#34;#cb6-22&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;&lt;span class=&#34;dt&#34;&gt;void&lt;/span&gt; XOR(modint *f, modint x = &lt;span class=&#34;dv&#34;&gt;1&lt;/span&gt;) {&lt;/span&gt;
+&lt;span id=&#34;cb6-23&#34;&gt;&lt;a href=&#34;#cb6-23&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;    &lt;span class=&#34;cf&#34;&gt;for&lt;/span&gt; (&lt;span class=&#34;dt&#34;&gt;int&lt;/span&gt; o = &lt;span class=&#34;dv&#34;&gt;2&lt;/span&gt;, k = &lt;span class=&#34;dv&#34;&gt;1&lt;/span&gt;; o &amp;lt;= n; o &amp;lt;&amp;lt;= &lt;span class=&#34;dv&#34;&gt;1&lt;/span&gt;, k &amp;lt;&amp;lt;= &lt;span class=&#34;dv&#34;&gt;1&lt;/span&gt;)&lt;/span&gt;
+&lt;span id=&#34;cb6-24&#34;&gt;&lt;a href=&#34;#cb6-24&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;        &lt;span class=&#34;cf&#34;&gt;for&lt;/span&gt; (&lt;span class=&#34;dt&#34;&gt;int&lt;/span&gt; i = &lt;span class=&#34;dv&#34;&gt;0&lt;/span&gt;; i &amp;lt; n; i += o)&lt;/span&gt;
+&lt;span id=&#34;cb6-25&#34;&gt;&lt;a href=&#34;#cb6-25&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;            &lt;span class=&#34;cf&#34;&gt;for&lt;/span&gt; (&lt;span class=&#34;dt&#34;&gt;int&lt;/span&gt; j = &lt;span class=&#34;dv&#34;&gt;0&lt;/span&gt;; j &amp;lt; k; ++j) {&lt;/span&gt;
+&lt;span id=&#34;cb6-26&#34;&gt;&lt;a href=&#34;#cb6-26&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;                f[i + j] += f[i + j + k];&lt;/span&gt;
+&lt;span id=&#34;cb6-27&#34;&gt;&lt;a href=&#34;#cb6-27&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;                f[i + j + k] = f[i + j] - f[i + j + k] - f[i + j + k];&lt;/span&gt;
+&lt;span id=&#34;cb6-28&#34;&gt;&lt;a href=&#34;#cb6-28&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;                f[i + j] *= x, f[i + j + k] *= x;&lt;/span&gt;
+&lt;span id=&#34;cb6-29&#34;&gt;&lt;a href=&#34;#cb6-29&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;            }&lt;/span&gt;
+&lt;span id=&#34;cb6-30&#34;&gt;&lt;a href=&#34;#cb6-30&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;    &lt;span class=&#34;cf&#34;&gt;return&lt;/span&gt;;&lt;/span&gt;
+&lt;span id=&#34;cb6-31&#34;&gt;&lt;a href=&#34;#cb6-31&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;}&lt;/span&gt;
+&lt;span id=&#34;cb6-32&#34;&gt;&lt;a href=&#34;#cb6-32&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;&lt;/span&gt;
+&lt;span id=&#34;cb6-33&#34;&gt;&lt;a href=&#34;#cb6-33&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;&lt;span class=&#34;dt&#34;&gt;void&lt;/span&gt; mul(modint *f, modint *g) {&lt;/span&gt;
+&lt;span id=&#34;cb6-34&#34;&gt;&lt;a href=&#34;#cb6-34&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;    FOR(i, &lt;span class=&#34;dv&#34;&gt;0&lt;/span&gt;, n) f[i] *= g[i];&lt;/span&gt;
+&lt;span id=&#34;cb6-35&#34;&gt;&lt;a href=&#34;#cb6-35&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;    &lt;span class=&#34;cf&#34;&gt;return&lt;/span&gt;;&lt;/span&gt;
+&lt;span id=&#34;cb6-36&#34;&gt;&lt;a href=&#34;#cb6-36&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;}&lt;/span&gt;
+&lt;span id=&#34;cb6-37&#34;&gt;&lt;a href=&#34;#cb6-37&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;&lt;/span&gt;
+&lt;span id=&#34;cb6-38&#34;&gt;&lt;a href=&#34;#cb6-38&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;&lt;span class=&#34;dt&#34;&gt;int&lt;/span&gt; main() {&lt;/span&gt;
+&lt;span id=&#34;cb6-39&#34;&gt;&lt;a href=&#34;#cb6-39&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;    read(n);&lt;/span&gt;
+&lt;span id=&#34;cb6-40&#34;&gt;&lt;a href=&#34;#cb6-40&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;    n = &lt;span class=&#34;dv&#34;&gt;1&lt;/span&gt; &amp;lt;&amp;lt; n;&lt;/span&gt;
+&lt;span id=&#34;cb6-41&#34;&gt;&lt;a href=&#34;#cb6-41&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;    FOR(i, &lt;span class=&#34;dv&#34;&gt;0&lt;/span&gt;, n - &lt;span class=&#34;dv&#34;&gt;1&lt;/span&gt;) read(A[i]);&lt;/span&gt;
+&lt;span id=&#34;cb6-42&#34;&gt;&lt;a href=&#34;#cb6-42&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;    FOR(i, &lt;span class=&#34;dv&#34;&gt;0&lt;/span&gt;, n - &lt;span class=&#34;dv&#34;&gt;1&lt;/span&gt;) read(B[i]);&lt;/span&gt;
+&lt;span id=&#34;cb6-43&#34;&gt;&lt;a href=&#34;#cb6-43&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;    &lt;/span&gt;
+&lt;span id=&#34;cb6-44&#34;&gt;&lt;a href=&#34;#cb6-44&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;    cpy(A, a), cpy(B, b), OR(a, &lt;span class=&#34;dv&#34;&gt;1&lt;/span&gt;), OR(b, &lt;span class=&#34;dv&#34;&gt;1&lt;/span&gt;), mul(a, b), OR(a, MOD - &lt;span class=&#34;dv&#34;&gt;1&lt;/span&gt;);&lt;/span&gt;
+&lt;span id=&#34;cb6-45&#34;&gt;&lt;a href=&#34;#cb6-45&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;    FOR(i, &lt;span class=&#34;dv&#34;&gt;0&lt;/span&gt;, n - &lt;span class=&#34;dv&#34;&gt;1&lt;/span&gt;) print(a[i]), putchar(&lt;span class=&#34;ch&#34;&gt;&amp;#39; &amp;#39;&lt;/span&gt;); putchar(&lt;span class=&#34;ch&#34;&gt;&amp;#39;&lt;/span&gt;&lt;span class=&#34;sc&#34;&gt;\n&lt;/span&gt;&lt;span class=&#34;ch&#34;&gt;&amp;#39;&lt;/span&gt;);&lt;/span&gt;
+&lt;span id=&#34;cb6-46&#34;&gt;&lt;a href=&#34;#cb6-46&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;&lt;/span&gt;
+&lt;span id=&#34;cb6-47&#34;&gt;&lt;a href=&#34;#cb6-47&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;    cpy(A, a), cpy(B, b), AND(a, &lt;span class=&#34;dv&#34;&gt;1&lt;/span&gt;), AND(b, &lt;span class=&#34;dv&#34;&gt;1&lt;/span&gt;), mul(a, b), AND(a, MOD - &lt;span class=&#34;dv&#34;&gt;1&lt;/span&gt;);&lt;/span&gt;
+&lt;span id=&#34;cb6-48&#34;&gt;&lt;a href=&#34;#cb6-48&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;    FOR(i, &lt;span class=&#34;dv&#34;&gt;0&lt;/span&gt;, n - &lt;span class=&#34;dv&#34;&gt;1&lt;/span&gt;) print(a[i]), putchar(&lt;span class=&#34;ch&#34;&gt;&amp;#39; &amp;#39;&lt;/span&gt;); putchar(&lt;span class=&#34;ch&#34;&gt;&amp;#39;&lt;/span&gt;&lt;span class=&#34;sc&#34;&gt;\n&lt;/span&gt;&lt;span class=&#34;ch&#34;&gt;&amp;#39;&lt;/span&gt;);&lt;/span&gt;
+&lt;span id=&#34;cb6-49&#34;&gt;&lt;a href=&#34;#cb6-49&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;&lt;/span&gt;
+&lt;span id=&#34;cb6-50&#34;&gt;&lt;a href=&#34;#cb6-50&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;    cpy(A, a), cpy(B, b), XOR(a, &lt;span class=&#34;dv&#34;&gt;1&lt;/span&gt;), XOR(b, &lt;span class=&#34;dv&#34;&gt;1&lt;/span&gt;), mul(a, b), XOR(a, (MOD + &lt;span class=&#34;dv&#34;&gt;1&lt;/span&gt;) / &lt;span class=&#34;dv&#34;&gt;2&lt;/span&gt;);&lt;/span&gt;
+&lt;span id=&#34;cb6-51&#34;&gt;&lt;a href=&#34;#cb6-51&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;    FOR(i, &lt;span class=&#34;dv&#34;&gt;0&lt;/span&gt;, n - &lt;span class=&#34;dv&#34;&gt;1&lt;/span&gt;) print(a[i]), putchar(&lt;span class=&#34;ch&#34;&gt;&amp;#39; &amp;#39;&lt;/span&gt;); putchar(&lt;span class=&#34;ch&#34;&gt;&amp;#39;&lt;/span&gt;&lt;span class=&#34;sc&#34;&gt;\n&lt;/span&gt;&lt;span class=&#34;ch&#34;&gt;&amp;#39;&lt;/span&gt;);&lt;/span&gt;
+&lt;span id=&#34;cb6-52&#34;&gt;&lt;a href=&#34;#cb6-52&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;&lt;/span&gt;
+&lt;span id=&#34;cb6-53&#34;&gt;&lt;a href=&#34;#cb6-53&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;    &lt;span class=&#34;cf&#34;&gt;return&lt;/span&gt; output(), &lt;span class=&#34;dv&#34;&gt;0&lt;/span&gt;;&lt;/span&gt;
+&lt;span id=&#34;cb6-54&#34;&gt;&lt;a href=&#34;#cb6-54&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;}&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;h3 id=&#34;总结&#34;&gt;总结&lt;/h3&gt;
+&lt;p&gt;整体的思路：&lt;/p&gt;
+&lt;ol type=&#34;1&#34;&gt;
+&lt;li&gt;&lt;p&gt;回顾 FFT，现在要求构造一种线性变换满足 &lt;span class=&#34;math inline&#34;&gt;\(\operatorname{FWT}(A)\cdot\operatorname{FWT}(B) = \operatorname{FWT}(C)\iff A*B = C\)&lt;/span&gt;。&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;考虑构造系数矩阵 &lt;span class=&#34;math inline&#34;&gt;\(c(i, j)\)&lt;/span&gt; 满足 &lt;span class=&#34;math inline&#34;&gt;\(\operatorname{FWT}(A)_i = \sum c(i, j)A_j\)&lt;/span&gt;。&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;发现 &lt;span class=&#34;math inline&#34;&gt;\(c(i, j)c(i, k) = c(i, j\oplus k)\)&lt;/span&gt;。&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;发现所有的 &lt;span class=&#34;math inline&#34;&gt;\(c(i, j)\)&lt;/span&gt; 可以由 &lt;span class=&#34;math inline&#34;&gt;\(c(x, y)(x,y\in\{0, 1\})\)&lt;/span&gt; 得到。&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;将 &lt;span class=&#34;math inline&#34;&gt;\(\operatorname{FWT}(A)_i\)&lt;/span&gt; 的式子折半拆开，发现变为两个子问题。 &lt;span class=&#34;math display&#34;&gt;\[
+\begin{aligned}
+\operatorname{FWT}(A)_i &amp;amp;=c(0, 0)\operatorname{FWT}(A_0)_i + c(0, 1)\operatorname{FWT}(A_1)_i&amp;amp;i_0 = 0, i\in[0, n / 2)\\
+\operatorname{FWT}(A)_{i + n/2}&amp;amp;= c(1, 0)\operatorname{FWT}(A_0)_i + c(1, 1)\operatorname{FWT}(A_1)_i&amp;amp;i_0 = 1, i\in[0, n / 2)
+\end{aligned}
+\]&lt;/span&gt;&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;对于具体的位运算，构造出 &lt;span class=&#34;math inline&#34;&gt;\(\begin{bmatrix}c(0, 0)&amp;amp; c(0, 1)\\ c(1, 0) &amp;amp; c(1, 1) \end{bmatrix}\)&lt;/span&gt; 及其逆阵，尽量使得两种形式统一。&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;敲出迭代版代码。&lt;/p&gt;&lt;/li&gt;
+&lt;/ol&gt;
+&lt;h3 id=&#34;性质&#34;&gt;性质&lt;/h3&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;p&gt;由于 (i)FWT 的本质是使用一个矩阵来进行变换，所以其具有&lt;strong&gt;线性性&lt;/strong&gt;，即。 &lt;span class=&#34;math display&#34;&gt;\[
+\operatorname{FWT}(A) + \operatorname{FWT}(B) = \operatorname{FWT}(A + B)\\
+\operatorname{FWT}(cA) = c\operatorname{FWT}(A)
+\]&lt;/span&gt;&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;发现 FMT 和 FWT_OR 是等价的，这也解释了上文为啥 FMT 具有线性性。&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;FWT_OR 等价于子集求和（高维前缀和），FWT_AND 等价于超集求和（高维后缀和）。&lt;/p&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id=&#34;子集卷积&#34;&gt;子集卷积&lt;/h2&gt;
+&lt;h2 id=&#34;应用&#34;&gt;应用&lt;/h2&gt;
+&lt;p&gt;会综合 SOSdp 的应用。&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;例题 &lt;span class=&#34;math inline&#34;&gt;\(1\)&lt;/span&gt;：&lt;a href=&#34;https://atcoder.jp/contests/abc212/tasks/abc212_h&#34;&gt;ABC212H - Nim Counting&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;给定 &lt;span class=&#34;math inline&#34;&gt;\(n\)&lt;/span&gt;，&lt;span class=&#34;math inline&#34;&gt;\(k\)&lt;/span&gt; 和 &lt;span class=&#34;math inline&#34;&gt;\((A_1, \cdots, A_k)\)&lt;/span&gt;。可以如下安排石子：每堆石子数量必须是 &lt;span class=&#34;math inline&#34;&gt;\(A_i\)&lt;/span&gt; 之一，且石子堆数量小等于 &lt;span class=&#34;math inline&#34;&gt;\(n\)&lt;/span&gt;。问安排石子使得先手 Nim 必胜的方案数。&lt;/p&gt;
+&lt;p&gt;&lt;span class=&#34;math inline&#34;&gt;\(1\le n\le 2\times 10^5\)&lt;/span&gt;，&lt;span class=&#34;math inline&#34;&gt;\(1\le k, A_i\le 2^{17}\)&lt;/span&gt;，&lt;span class=&#34;math inline&#34;&gt;\(A_i\)&lt;/span&gt; 两两不同。&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;不难发现问题转化为求 &lt;span class=&#34;math inline&#34;&gt;\(\bigoplus_{i = 1}^m B_i\not=0\)&lt;/span&gt; 的 &lt;span class=&#34;math inline&#34;&gt;\(B_i\)&lt;/span&gt; 的方案数，其中 &lt;span class=&#34;math inline&#34;&gt;\(m\)&lt;/span&gt; 为石子个数。&lt;/p&gt;
+&lt;p&gt;先考虑固定 &lt;span class=&#34;math inline&#34;&gt;\(m\)&lt;/span&gt;。则构造序列 &lt;span class=&#34;math inline&#34;&gt;\(C\)&lt;/span&gt; 使得 &lt;span class=&#34;math inline&#34;&gt;\(C_i = [\exist j, A_j = i]\)&lt;/span&gt;，定义卷积 &lt;span class=&#34;math inline&#34;&gt;\(*\)&lt;/span&gt; 为异或卷积，则 &lt;span class=&#34;math inline&#34;&gt;\(C * C * \cdots * C\)&lt;/span&gt;（&lt;span class=&#34;math inline&#34;&gt;\(m\)&lt;/span&gt; 个 &lt;span class=&#34;math inline&#34;&gt;\(C\)&lt;/span&gt;）的第 &lt;span class=&#34;math inline&#34;&gt;\(i\)&lt;/span&gt; 项系数即为异或和为 &lt;span class=&#34;math inline&#34;&gt;\(i\)&lt;/span&gt; 的方案数。这个过程是可以 FWT 做的，具体地，给 &lt;span class=&#34;math inline&#34;&gt;\(\operatorname{FWT}(C)_i\)&lt;/span&gt; 的每一项做一下快速幂再 IFWT 回去，把除了第 &lt;span class=&#34;math inline&#34;&gt;\(0\)&lt;/span&gt; 项之外的求个和，就得到了石子堆数为 &lt;span class=&#34;math inline&#34;&gt;\(m\)&lt;/span&gt; 的答案。&lt;/p&gt;
+&lt;p&gt;然后，不固定 &lt;span class=&#34;math inline&#34;&gt;\(m\)&lt;/span&gt; 怎么做呢？因为 FWT 是线性变换，而我们需要求的是 &lt;span class=&#34;math inline&#34;&gt;\(\operatorname{IFWT}(\operatorname{FWT}(C)_i + \operatorname{FWT}(C)_i^2 + \operatorname{FWT}(C)_i^3 + \cdots \operatorname{FWT}(C)_i^n)\)&lt;/span&gt;，所以定义 &lt;span class=&#34;math inline&#34;&gt;\(C&amp;#39;_i = \operatorname{FWT}(C)_i\)&lt;/span&gt;，然后求出 &lt;span class=&#34;math inline&#34;&gt;\(D_i = C_i&amp;#39; + C_i&amp;#39;^2 + \cdots + C_i&amp;#39;^n\)&lt;/span&gt; 再求 &lt;span class=&#34;math inline&#34;&gt;\(\operatorname{IFWT}(D)\)&lt;/span&gt; 把除了第 &lt;span class=&#34;math inline&#34;&gt;\(0\)&lt;/span&gt; 项外的系数累加即可。&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;例题 &lt;span class=&#34;math inline&#34;&gt;\(2\)&lt;/span&gt;：&lt;a href=&#34;https://codeforces.com/problemset/problem/449/D&#34;&gt;CF449D Jzzhu and Numbers&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;给定多重集 &lt;span class=&#34;math inline&#34;&gt;\(S\)&lt;/span&gt;，问从 &lt;span class=&#34;math inline&#34;&gt;\(S\)&lt;/span&gt; 中选子集使得子集内的数按位与结果为 &lt;span class=&#34;math inline&#34;&gt;\(0\)&lt;/span&gt; 的方案数对 &lt;span class=&#34;math inline&#34;&gt;\(10^9 + 7\)&lt;/span&gt; 取模的结果。&lt;span class=&#34;math inline&#34;&gt;\(n\le 10^6\)&lt;/span&gt;，&lt;span class=&#34;math inline&#34;&gt;\(0\le a_i\le 10^6\)&lt;/span&gt;。&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;不妨考虑二进制下数位的集合，令全集为 &lt;span class=&#34;math inline&#34;&gt;\(U\)&lt;/span&gt;，则可以对每个数 &lt;span class=&#34;math inline&#34;&gt;\(a_i\)&lt;/span&gt; 定义其集合幂级数 &lt;span class=&#34;math inline&#34;&gt;\(F_i(x) = x^{U} + x^{S_i}\)&lt;/span&gt;，然后 &lt;span class=&#34;math inline&#34;&gt;\([x^{\varnothing}]\prod F_i(x)\)&lt;/span&gt; 即为答案，其中 &lt;span class=&#34;math inline&#34;&gt;\(\prod\)&lt;/span&gt; 表示所有 &lt;span class=&#34;math inline&#34;&gt;\(F_i(x)\)&lt;/span&gt; 的&lt;strong&gt;集合与卷积&lt;/strong&gt;。&lt;/p&gt;
+&lt;p&gt;朴素的 FWT_AND 可以做到 &lt;span class=&#34;math inline&#34;&gt;\(O(na\log a)\)&lt;/span&gt;，跑不过去。&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;但是每个 &lt;span class=&#34;math inline&#34;&gt;\(F_i(x)\)&lt;/span&gt; 只有 &lt;span class=&#34;math inline&#34;&gt;\(2\)&lt;/span&gt; 项不为 &lt;span class=&#34;math inline&#34;&gt;\(0\)&lt;/span&gt;。&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;所以 &lt;span class=&#34;math inline&#34;&gt;\(\operatorname{FWT}(F(x))_i = c(i, U) + c(i, a_i)\)&lt;/span&gt;，故其只能为 &lt;span class=&#34;math inline&#34;&gt;\(1\)&lt;/span&gt; 或 &lt;span class=&#34;math inline&#34;&gt;\(2\)&lt;/span&gt;。&lt;/p&gt;
+&lt;p&gt;现在需要求的就是对于每个 &lt;span class=&#34;math inline&#34;&gt;\(k\in[0, U]\)&lt;/span&gt;，求 &lt;span class=&#34;math inline&#34;&gt;\(\displaystyle\prod_{i = 0}^{n}(1 + c(k, a_i))\)&lt;/span&gt;。所以只要有 &lt;span class=&#34;math inline&#34;&gt;\(a_i\)&lt;/span&gt; 贡献的到的子集 &lt;span class=&#34;math inline&#34;&gt;\(k\)&lt;/span&gt;，其产生的贡献就是 &lt;span class=&#34;math inline&#34;&gt;\(2\)&lt;/span&gt;，知道了有多少个 &lt;span class=&#34;math inline&#34;&gt;\(a_i\)&lt;/span&gt; 能贡献到这个 &lt;span class=&#34;math inline&#34;&gt;\(k\)&lt;/span&gt; 之后一个快速幂就可以了。这个东西其实就是超集求和，可以使用 FWT_AND。具体地，设出一个序列 &lt;span class=&#34;math inline&#34;&gt;\(C\)&lt;/span&gt;，&lt;span class=&#34;math inline&#34;&gt;\(C_i\)&lt;/span&gt; 表示有多少个 &lt;span class=&#34;math inline&#34;&gt;\(a_k = i\)&lt;/span&gt;，然后对 &lt;span class=&#34;math inline&#34;&gt;\(C\)&lt;/span&gt; 做 FWT_AND 的结果为 &lt;span class=&#34;math inline&#34;&gt;\(C&amp;#39;\)&lt;/span&gt;，&lt;span class=&#34;math inline&#34;&gt;\(C&amp;#39;_k\)&lt;/span&gt; 就是能贡献到 &lt;span class=&#34;math inline&#34;&gt;\(k\)&lt;/span&gt; 的 &lt;span class=&#34;math inline&#34;&gt;\(a_i\)&lt;/span&gt; 的数量，再 &lt;span class=&#34;math inline&#34;&gt;\(C&amp;#39;_k = 2^{C&amp;#39;_k}\)&lt;/span&gt;，求出 &lt;span class=&#34;math inline&#34;&gt;\(\operatorname{IFWT}(C&amp;#39;)\)&lt;/span&gt; 取出 &lt;span class=&#34;math inline&#34;&gt;\(\operatorname{IFWT}(C&amp;#39;)_0\)&lt;/span&gt; 就是答案。&lt;/p&gt;
+&lt;p&gt;注意一下全 &lt;span class=&#34;math inline&#34;&gt;\(0\)&lt;/span&gt; 的情况，若把 &lt;span class=&#34;math inline&#34;&gt;\(lim\)&lt;/span&gt; 设为 &lt;span class=&#34;math inline&#34;&gt;\(1\)&lt;/span&gt; 则会多算一个空集，要特判。&lt;/p&gt;
+&lt;div class=&#34;sourceCode&#34; id=&#34;cb7&#34;&gt;&lt;pre class=&#34;sourceCode cpp&#34;&gt;&lt;code class=&#34;sourceCode cpp&#34;&gt;&lt;span id=&#34;cb7-1&#34;&gt;&lt;a href=&#34;#cb7-1&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;&lt;span class=&#34;at&#34;&gt;const&lt;/span&gt; &lt;span class=&#34;dt&#34;&gt;int&lt;/span&gt; maxn = &lt;span class=&#34;fl&#34;&gt;2e6&lt;/span&gt; + &lt;span class=&#34;dv&#34;&gt;5&lt;/span&gt;;&lt;/span&gt;
+&lt;span id=&#34;cb7-2&#34;&gt;&lt;a href=&#34;#cb7-2&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;modint f[maxn], pow[maxn];&lt;/span&gt;
+&lt;span id=&#34;cb7-3&#34;&gt;&lt;a href=&#34;#cb7-3&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;&lt;span class=&#34;dt&#34;&gt;int&lt;/span&gt; n;&lt;/span&gt;
+&lt;span id=&#34;cb7-4&#34;&gt;&lt;a href=&#34;#cb7-4&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;&lt;/span&gt;
+&lt;span id=&#34;cb7-5&#34;&gt;&lt;a href=&#34;#cb7-5&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;&lt;span class=&#34;dt&#34;&gt;void&lt;/span&gt; AND(modint *f, &lt;span class=&#34;dt&#34;&gt;int&lt;/span&gt; lim, modint x = &lt;span class=&#34;dv&#34;&gt;1&lt;/span&gt;) {&lt;/span&gt;
+&lt;span id=&#34;cb7-6&#34;&gt;&lt;a href=&#34;#cb7-6&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;    &lt;span class=&#34;cf&#34;&gt;for&lt;/span&gt; (&lt;span class=&#34;dt&#34;&gt;int&lt;/span&gt; o = &lt;span class=&#34;dv&#34;&gt;2&lt;/span&gt;, k = &lt;span class=&#34;dv&#34;&gt;1&lt;/span&gt;; o &amp;lt;= lim; o &amp;lt;&amp;lt;= &lt;span class=&#34;dv&#34;&gt;1&lt;/span&gt;, k &amp;lt;&amp;lt;= &lt;span class=&#34;dv&#34;&gt;1&lt;/span&gt;)&lt;/span&gt;
+&lt;span id=&#34;cb7-7&#34;&gt;&lt;a href=&#34;#cb7-7&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;        &lt;span class=&#34;cf&#34;&gt;for&lt;/span&gt; (&lt;span class=&#34;dt&#34;&gt;int&lt;/span&gt; i = &lt;span class=&#34;dv&#34;&gt;0&lt;/span&gt;; i &amp;lt; lim; i += o)&lt;/span&gt;
+&lt;span id=&#34;cb7-8&#34;&gt;&lt;a href=&#34;#cb7-8&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;            &lt;span class=&#34;cf&#34;&gt;for&lt;/span&gt; (&lt;span class=&#34;dt&#34;&gt;int&lt;/span&gt; j = &lt;span class=&#34;dv&#34;&gt;0&lt;/span&gt;; j &amp;lt; k; ++j)&lt;/span&gt;
+&lt;span id=&#34;cb7-9&#34;&gt;&lt;a href=&#34;#cb7-9&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;                f[i + j] += f[i + j + k] * x;&lt;/span&gt;
+&lt;span id=&#34;cb7-10&#34;&gt;&lt;a href=&#34;#cb7-10&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;    &lt;span class=&#34;cf&#34;&gt;return&lt;/span&gt;;&lt;/span&gt;
+&lt;span id=&#34;cb7-11&#34;&gt;&lt;a href=&#34;#cb7-11&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;}&lt;/span&gt;
+&lt;span id=&#34;cb7-12&#34;&gt;&lt;a href=&#34;#cb7-12&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;&lt;/span&gt;
+&lt;span id=&#34;cb7-13&#34;&gt;&lt;a href=&#34;#cb7-13&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;&lt;span class=&#34;dt&#34;&gt;int&lt;/span&gt; main() {&lt;/span&gt;
+&lt;span id=&#34;cb7-14&#34;&gt;&lt;a href=&#34;#cb7-14&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;    read(n);&lt;/span&gt;
+&lt;span id=&#34;cb7-15&#34;&gt;&lt;a href=&#34;#cb7-15&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;    FOR(i, &lt;span class=&#34;dv&#34;&gt;1&lt;/span&gt;, n) {&lt;/span&gt;
+&lt;span id=&#34;cb7-16&#34;&gt;&lt;a href=&#34;#cb7-16&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;        &lt;span class=&#34;dt&#34;&gt;int&lt;/span&gt; tmp; read(tmp);&lt;/span&gt;
+&lt;span id=&#34;cb7-17&#34;&gt;&lt;a href=&#34;#cb7-17&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;        ++f[tmp];&lt;/span&gt;
+&lt;span id=&#34;cb7-18&#34;&gt;&lt;a href=&#34;#cb7-18&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;    }&lt;/span&gt;
+&lt;span id=&#34;cb7-19&#34;&gt;&lt;a href=&#34;#cb7-19&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;    pow[&lt;span class=&#34;dv&#34;&gt;0&lt;/span&gt;] = &lt;span class=&#34;dv&#34;&gt;1&lt;/span&gt;;&lt;/span&gt;
+&lt;span id=&#34;cb7-20&#34;&gt;&lt;a href=&#34;#cb7-20&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;    FOR(i, &lt;span class=&#34;dv&#34;&gt;1&lt;/span&gt;, n) pow[i] = &lt;span class=&#34;dv&#34;&gt;2&lt;/span&gt; * pow[i - &lt;span class=&#34;dv&#34;&gt;1&lt;/span&gt;];&lt;/span&gt;
+&lt;span id=&#34;cb7-21&#34;&gt;&lt;a href=&#34;#cb7-21&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;    &lt;span class=&#34;dt&#34;&gt;int&lt;/span&gt; lim = &lt;span class=&#34;dv&#34;&gt;1&lt;/span&gt; &amp;lt;&amp;lt; &lt;span class=&#34;dv&#34;&gt;20&lt;/span&gt;;&lt;/span&gt;
+&lt;span id=&#34;cb7-22&#34;&gt;&lt;a href=&#34;#cb7-22&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;    AND(f, lim, &lt;span class=&#34;dv&#34;&gt;1&lt;/span&gt;);&lt;/span&gt;
+&lt;span id=&#34;cb7-23&#34;&gt;&lt;a href=&#34;#cb7-23&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;    FOR(i, &lt;span class=&#34;dv&#34;&gt;0&lt;/span&gt;, lim - &lt;span class=&#34;dv&#34;&gt;1&lt;/span&gt;) f[i] = pow[f[i].val];&lt;/span&gt;
+&lt;span id=&#34;cb7-24&#34;&gt;&lt;a href=&#34;#cb7-24&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;    AND(f, lim, mod - &lt;span class=&#34;dv&#34;&gt;1&lt;/span&gt;);&lt;/span&gt;
+&lt;span id=&#34;cb7-25&#34;&gt;&lt;a href=&#34;#cb7-25&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;    print(f[&lt;span class=&#34;dv&#34;&gt;0&lt;/span&gt;]);&lt;/span&gt;
+&lt;span id=&#34;cb7-26&#34;&gt;&lt;a href=&#34;#cb7-26&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;    &lt;span class=&#34;cf&#34;&gt;return&lt;/span&gt; output(), &lt;span class=&#34;dv&#34;&gt;0&lt;/span&gt;;&lt;/span&gt;
+&lt;span id=&#34;cb7-27&#34;&gt;&lt;a href=&#34;#cb7-27&#34; aria-hidden=&#34;true&#34;&gt;&lt;/a&gt;}&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;blockquote&gt;
+&lt;p&gt;例题 &lt;span class=&#34;math inline&#34;&gt;\(3\)&lt;/span&gt;：&lt;a href=&#34;https://www.luogu.com.cn/problem/P8292&#34;&gt;P8292 [省选联考 2022] 卡牌&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;给定 &lt;span class=&#34;math inline&#34;&gt;\(n\)&lt;/span&gt; 个整数 &lt;span class=&#34;math inline&#34;&gt;\(s_i\)&lt;/span&gt;，&lt;span class=&#34;math inline&#34;&gt;\(m\)&lt;/span&gt; 次询问。每次询问给出 &lt;span class=&#34;math inline&#34;&gt;\(c_i\)&lt;/span&gt; 个质数，问有多少种选法使得 &lt;span class=&#34;math inline&#34;&gt;\(\prod s_i\)&lt;/span&gt; 被这每个质数整除，答案模 &lt;span class=&#34;math inline&#34;&gt;\(998244353\)&lt;/span&gt;。&lt;span class=&#34;math inline&#34;&gt;\(1\le n\le 10^6\)&lt;/span&gt;，&lt;span class=&#34;math inline&#34;&gt;\(1\le s_i\le 2000\)&lt;/span&gt;，&lt;span class=&#34;math inline&#34;&gt;\(1\le m\le 1500\)&lt;/span&gt;，&lt;span class=&#34;math inline&#34;&gt;\(1\le \sum c_i\le 18000\)&lt;/span&gt;，&lt;span class=&#34;math inline&#34;&gt;\(2\le p_{i,j}\le 2000\)&lt;/span&gt;。&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;首先转化一下题意，给定 &lt;span class=&#34;math inline&#34;&gt;\(n\)&lt;/span&gt; 个质因子集合 &lt;span class=&#34;math inline&#34;&gt;\(S_i\)&lt;/span&gt;，有 &lt;span class=&#34;math inline&#34;&gt;\(m\)&lt;/span&gt; 次询问，每次询问给定一个质因子集合 &lt;span class=&#34;math inline&#34;&gt;\(T\)&lt;/span&gt;，问有多少种从这 &lt;span class=&#34;math inline&#34;&gt;\(n\)&lt;/span&gt; 个集合中选若干集合出来使得他们的并可以包含 &lt;span class=&#34;math inline&#34;&gt;\(T\)&lt;/span&gt; 的方案数。&lt;/p&gt;
+&lt;p&gt;然后发现对于 &lt;span class=&#34;math inline&#34;&gt;\(s_i\le 30\)&lt;/span&gt; 的部分分可以随便状压 dp，然后状态非常的像或卷积啥的，然后发现他就是一车集合幂级数的或卷积，具体地令 &lt;span class=&#34;math inline&#34;&gt;\(s_i\)&lt;/span&gt; 中 有 &lt;span class=&#34;math inline&#34;&gt;\(c_x\)&lt;/span&gt; 个 &lt;span class=&#34;math inline&#34;&gt;\(x\)&lt;/span&gt;，则 &lt;span class=&#34;math inline&#34;&gt;\(F_x(z) = z^{\varnothing} + (2^{c_x} - 1)z^{S_x}\)&lt;/span&gt;（加上个 &lt;span class=&#34;math inline&#34;&gt;\(z^{\varnothing}\)&lt;/span&gt; 是可以表示不选）。&lt;/p&gt;
+&lt;p&gt;那么对于 &lt;span class=&#34;math inline&#34;&gt;\(s_i\le 2000\)&lt;/span&gt;，回忆起有一道题叫做寿司晚宴，所以令 &lt;span class=&#34;math inline&#34;&gt;\(&amp;gt; \sqrt{2000}\)&lt;/span&gt; 的质数为大质数，而我们会注意到 &lt;span class=&#34;math inline&#34;&gt;\(\le \sqrt{2000}\)&lt;/span&gt; 的质数只有 $14 $ 个（下文令其集合为 &lt;span class=&#34;math inline&#34;&gt;\(P\)&lt;/span&gt;），非常的可以状压，并且大质数只会出现一次。这就是说，对于大质数 &lt;span class=&#34;math inline&#34;&gt;\(x,y\in T\)&lt;/span&gt;，我们是可以分开考虑的，反正&lt;strong&gt;不存在一个 &lt;span class=&#34;math inline&#34;&gt;\(S_i\)&lt;/span&gt; 能同时包含 &lt;span class=&#34;math inline&#34;&gt;\(x,y\)&lt;/span&gt;&lt;/strong&gt;。&lt;/p&gt;
+&lt;p&gt;那先不考虑大质数，考虑 &lt;span class=&#34;math inline&#34;&gt;\(\in P\)&lt;/span&gt; 的所有质数的话，对所有的 &lt;span class=&#34;math inline&#34;&gt;\(x\)&lt;/span&gt; 预处理出 &lt;span class=&#34;math inline&#34;&gt;\(\operatorname{FWT}(F_x(z))\)&lt;/span&gt;，具体地我们发现原来的幂级数只有两项系数不为 &lt;span class=&#34;math inline&#34;&gt;\(0\)&lt;/span&gt;，所以包含了 &lt;span class=&#34;math inline&#34;&gt;\(S_x\)&lt;/span&gt; 的项的系数都为 &lt;span class=&#34;math inline&#34;&gt;\(2^{c_x}\)&lt;/span&gt;，否则为 &lt;span class=&#34;math inline&#34;&gt;\(1\)&lt;/span&gt;，&lt;strong&gt;都是 &lt;span class=&#34;math inline&#34;&gt;\(2\)&lt;/span&gt; 的次幂&lt;/strong&gt;，所以可以只存次幂，预处理啥的很方便。&lt;/p&gt;
+&lt;p&gt;然后在每次询问的时候，考虑到 &lt;span class=&#34;math inline&#34;&gt;\(2^{|P|}\sum c_i\)&lt;/span&gt; 的复杂度可以接受，对每一个 &lt;span class=&#34;math inline&#34;&gt;\(\in T\)&lt;/span&gt; 但 &lt;span class=&#34;math inline&#34;&gt;\(\notin P\)&lt;/span&gt; 的质数 &lt;span class=&#34;math inline&#34;&gt;\(p\)&lt;/span&gt; 进行处理（&lt;span class=&#34;math inline&#34;&gt;\(\notin T,P\)&lt;/span&gt; 的质数不需要管）。不难注意到我们要去掉没有出现 &lt;span class=&#34;math inline&#34;&gt;\(p\)&lt;/span&gt; 的所有方案，那么对应地，我们得先除以满足 &lt;span class=&#34;math inline&#34;&gt;\(p\mid k\)&lt;/span&gt; 的所有 &lt;span class=&#34;math inline&#34;&gt;\(F_k(z)\)&lt;/span&gt;，然后再乘上 &lt;span class=&#34;math inline&#34;&gt;\(\displaystyle \prod_{p\mid k}F_k(z) - z^{\varnothing}\)&lt;/span&gt;（去掉不选的方案），最后的答案就是 &lt;span class=&#34;math inline&#34;&gt;\(\displaystyle\sum_{S\subseteq(T\cap P)}[x^S]M(z)\)&lt;/span&gt;，其中 &lt;span class=&#34;math inline&#34;&gt;\(M(z)\)&lt;/span&gt; 是最后得到的集合幂级数。&lt;/p&gt;
+&lt;p&gt;所以时间复杂度是 &lt;span class=&#34;math inline&#34;&gt;\(O((s_i + \sum c_i + m|P|)2^{|P|})\)&lt;/span&gt;，具体实现的时候，除法就考虑在 FWT 过后的点值 &lt;span class=&#34;math inline&#34;&gt;\(2\)&lt;/span&gt; 的次幂指数相减（都是 &lt;span class=&#34;math inline&#34;&gt;\(2\)&lt;/span&gt; 的次幂，逆元必然存在），注意提前预处理好所有的 &lt;span class=&#34;math inline&#34;&gt;\(F_x(z)\)&lt;/span&gt; 和 &lt;span class=&#34;math inline&#34;&gt;\(G_{p}(z) = \displaystyle\prod_{p\mid k} F_k(z)\)&lt;/span&gt;。&lt;/p&gt;
+&lt;p&gt;有一个细节就是大质数是只出现一种，不是一个，所以 &lt;span class=&#34;math inline&#34;&gt;\(43\)&lt;/span&gt; 可以是大质数（&lt;span class=&#34;math inline&#34;&gt;\(43\times 47&amp;gt;2000\)&lt;/span&gt;），但是要特判 &lt;span class=&#34;math inline&#34;&gt;\(43^2&amp;lt;2000\)&lt;/span&gt;。&lt;/p&gt;
+&lt;h2 id=&#34;references&#34;&gt;References&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;https://www.luogu.com.cn/blog/command-block/wei-yun-suan-juan-ji-yu-ji-kuo-zhan&#34;&gt;位运算卷积(FWT) &amp;amp; 集合幂级数 by cmdblock&lt;/a&gt; yyc，yyds！&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://www.cnblogs.com/alex-wei/p/set_power_series.html&#34;&gt;集合幂级数相关 by Alex Wei&lt;/a&gt; 很细致的讲解！&lt;/li&gt;
+&lt;/ul&gt;
+</description>
+        </item>
+        
+    </channel>
+</rss>

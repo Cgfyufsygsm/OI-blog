@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+    <channel>
+        <title>Categories on 清烛的博客</title>
+        <link>https://oi.imyangty.com/categories/</link>
+        <description>Recent content in Categories on 清烛的博客</description>
+        <generator>Hugo -- gohugo.io</generator>
+        <language>zh-CN</language>
+        <lastBuildDate>Mon, 22 Aug 2022 10:32:46 +0800</lastBuildDate><atom:link href="https://oi.imyangty.com/categories/index.xml" rel="self" type="application/rss+xml" /><item>
+        <title>OI</title>
+        <link>https://oi.imyangty.com/categories/oi/</link>
+        <pubDate>Mon, 22 Aug 2022 10:32:46 +0800</pubDate>
+        
+        <guid>https://oi.imyangty.com/categories/oi/</guid>
+        <description>&lt;img src="https://yangty-pic.oss-cn-beijing.aliyuncs.com/bg4.webp" alt="Featured image of post OI" /&gt;
+</description>
+        </item>
+        <item>
+        <title>解题报告</title>
+        <link>https://oi.imyangty.com/categories/sol/</link>
+        <pubDate>Mon, 22 Aug 2022 10:32:46 +0800</pubDate>
+        
+        <guid>https://oi.imyangty.com/categories/sol/</guid>
+        <description>&lt;img src="https://yangty-pic.oss-cn-beijing.aliyuncs.com/bg20.webp" alt="Featured image of post 解题报告" /&gt;
+</description>
+        </item>
+        <item>
+        <title>游记</title>
+        <link>https://oi.imyangty.com/categories/travels/</link>
+        <pubDate>Sat, 20 Aug 2022 21:38:16 +0800</pubDate>
+        
+        <guid>https://oi.imyangty.com/categories/travels/</guid>
+        <description>&lt;img src="https://yangty-pic.oss-cn-beijing.aliyuncs.com/bg25.webp" alt="Featured image of post 游记" /&gt;
+</description>
+        </item>
+        <item>
+        <title>总结</title>
+        <link>https://oi.imyangty.com/categories/summary/</link>
+        <pubDate>Wed, 10 Aug 2022 14:31:39 +0800</pubDate>
+        
+        <guid>https://oi.imyangty.com/categories/summary/</guid>
+        <description>&lt;img src="https://yangty-pic.oss-cn-beijing.aliyuncs.com/bg8.webp" alt="Featured image of post 总结" /&gt;
+</description>
+        </item>
+        <item>
+        <title>笔记</title>
+        <link>https://oi.imyangty.com/categories/note/</link>
+        <pubDate>Wed, 29 Jun 2022 17:20:09 +0800</pubDate>
+        
+        <guid>https://oi.imyangty.com/categories/note/</guid>
+        <description>&lt;img src="https://yangty-pic.oss-cn-beijing.aliyuncs.com/bg24.webp" alt="Featured image of post 笔记" /&gt;
+</description>
+        </item>
+        <item>
+        <title>站务</title>
+        <link>https://oi.imyangty.com/categories/site-issue/</link>
+        <pubDate>Sat, 28 May 2022 00:00:00 +0800</pubDate>
+        
+        <guid>https://oi.imyangty.com/categories/site-issue/</guid>
+        <description>&lt;img src="https://yangty-pic.oss-cn-beijing.aliyuncs.com/bg6.webp" alt="Featured image of post 站务" /&gt;
+</description>
+        </item>
+        <item>
+        <title>置顶</title>
+        <link>https://oi.imyangty.com/categories/pinned/</link>
+        <pubDate>Sat, 28 May 2022 00:00:00 +0800</pubDate>
+        
+        <guid>https://oi.imyangty.com/categories/pinned/</guid>
+        <description>&lt;img src="https://yangty-pic.oss-cn-beijing.aliyuncs.com/bg68.webp" alt="Featured image of post 置顶" /&gt;
+</description>
+        </item>
+        <item>
+        <title>题解</title>
+        <link>https://oi.imyangty.com/categories/tutorial/</link>
+        <pubDate>Thu, 21 Apr 2022 21:16:50 +0800</pubDate>
+        
+        <guid>https://oi.imyangty.com/categories/tutorial/</guid>
+        <description>&lt;img src="https://yangty-pic.oss-cn-beijing.aliyuncs.com/bg17.webp" alt="Featured image of post 题解" /&gt;
+</description>
+        </item>
+        <item>
+        <title>life</title>
+        <link>https://oi.imyangty.com/categories/life/</link>
+        <pubDate>Fri, 10 Jul 2020 23:15:50 +0800</pubDate>
+        
+        <guid>https://oi.imyangty.com/categories/life/</guid>
+        <description></description>
+        </item>
+        
+    </channel>
+</rss>

@@ -1,0 +1,302 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+    <channel>
+        <title>站务 on 清烛的博客</title>
+        <link>https://oi.imyangty.com/tags/site-issue/</link>
+        <description>Recent content in 站务 on 清烛的博客</description>
+        <generator>Hugo -- gohugo.io</generator>
+        <language>zh-CN</language>
+        <lastBuildDate>Sat, 28 May 2022 00:00:00 +0800</lastBuildDate><atom:link href="https://oi.imyangty.com/tags/site-issue/index.xml" rel="self" type="application/rss+xml" /><item>
+        <title>导航</title>
+        <link>https://oi.imyangty.com/idx/</link>
+        <pubDate>Sat, 28 May 2022 00:00:00 +0800</pubDate>
+        
+        <guid>https://oi.imyangty.com/idx/</guid>
+        <description>&lt;img src="https://yangty-pic.oss-cn-beijing.aliyuncs.com/bg6.webp" alt="Featured image of post 导航" /&gt;&lt;h2 id=&#34;update-on-20241127&#34;&gt;Update on 2024/11/27&lt;/h2&gt;
+&lt;p&gt;将本旧博客翻出来并部署到 oi.imyangty.com 上。所有内容大概率均不会进行更新。&lt;/p&gt;
+&lt;p&gt;本博客基于 hugo 构建，部署平台为 Github Pages。&lt;/p&gt;
+&lt;h2 id=&#34;前言&#34;&gt;前言&lt;/h2&gt;
+&lt;p&gt;你好，陌生人，这里是菜鸡 OIer 清烛。详细资料可以看&lt;a href=&#34;https://oi.imyangty.com/about&#34;&gt;关于页面&lt;/a&gt;。&lt;/p&gt;
+&lt;p&gt;该页面将列出一些比较值得看的文章（雾）。可能会出现写作时间跨度过大以至码风不一样的情况，&lt;del&gt;但不影响阅读&lt;/del&gt;。&lt;/p&gt;
+&lt;h2 id=&#34;学习笔记&#34;&gt;学习笔记&lt;/h2&gt;
+&lt;p&gt;如果发现有什么错误，欢迎在 QQ 上爆 D 我&lt;img src=&#34;https://啧.tk/kk&#34; /&gt;。&lt;/p&gt;
+&lt;h2 id=&#34;一些碎碎念&#34;&gt;一些碎碎念&lt;/h2&gt;
+&lt;p&gt;都是游记之类的吧，写的挺不好的（语文很差）。&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;https://oi.imyangty.com/travels-zhongkao/&#34;&gt;中考&lt;/a&gt; 唯一稍微成功上岸的考试吧。&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://oi.imyangty.com/travels-csps2020/&#34;&gt;CSP-S2020&lt;/a&gt; 第一次提高组的 CSP，失败。&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://oi.imyangty.com/travels-noip2020/&#34;&gt;NOIP2020&lt;/a&gt; 第一次 NOIP，十分失败。&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://oi.imyangty.com/travels-wc2021/&#34;&gt;WC2021&lt;/a&gt; 第一次 WC，线上的，仍是失败，&lt;del&gt;但是居然有 Cu&lt;/del&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://oi.imyangty.com/travels-gzoi2021/&#34;&gt;GZOI2021&lt;/a&gt; 第一次省选，失败，去世。&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://oi.imyangty.com/travels-csps2021/&#34;&gt;CSP-S2021&lt;/a&gt; 取消了（笑）。&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://oi.imyangty.com/travels-noip2021&#34;&gt;NOIP2021&lt;/a&gt; 还是很失败的 NOIP（笑）。&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://oi.imyangty.com/travels-gzoi2022/&#34;&gt;GZOI2022&lt;/a&gt; 进队了，但开心不起来。&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;&#34;&gt;NOI2022&lt;/a&gt; 坑。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id=&#34;省选-noi-复习笔记&#34;&gt;2022 省选 / NOI 复习笔记&lt;/h3&gt;
+&lt;p&gt;持续更新中，&lt;del&gt;如果没进省队这部分就烂尾&lt;/del&gt;好吧要把它填完。&lt;/p&gt;
+&lt;p&gt;可以随时催我更新 &lt;img src=&#34;https://啧.tk/fn&#34; /&gt;。&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;数据结构
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;https://oi.imyangty.com/summary-ds0&#34;&gt;数据结构复习 0 （基础数据结构）&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://oi.imyangty.com/summary-ds1&#34;&gt;数据结构复习 1 （简单树形数据结构）&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://oi.imyangty.com/summary-ds2&#34;&gt;数据结构复习 2 （高维问题）&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://oi.imyangty.com/summary-ds3&#34;&gt;数据结构复习 3 （树上信息维护）&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://oi.imyangty.com/summary-ds4&#34;&gt;数据结构复习 4 （根号数据结构）&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;li&gt;数学
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;https://oi.imyangty.com/summary-combinatorics&#34;&gt;组合数学复习笔记&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://oi.imyangty.com/summary-number-theory&#34;&gt;数论复习笔记&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://oi.imyangty.com/summary-linear-algebra&#34;&gt;线性代数复习笔记&lt;/a&gt; 没写&lt;/li&gt;
+&lt;li&gt;计算几何 没学&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;li&gt;字符串
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;https://oi.imyangty.com/summary-string1/&#34;&gt;字符串复习 1（字符串基础算法）&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://oi.imyangty.com/summary-string2/&#34;&gt;字符串复习 2（简单自动机相关）&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://oi.imyangty.com/summary-string3/&#34;&gt;字符串复习 3（后缀系列）&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;li&gt;动态规划 没写&lt;/li&gt;
+&lt;li&gt;图论与网络流
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;https://oi.imyangty.com/summary-graph1&#34;&gt;图论复习 1（图论基础知识）&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://oi.imyangty.com/summary-graph2&#34;&gt;图论复习 2（高级图论）&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://oi.imyangty.com/summary-graph3/&#34;&gt;图论复习 3（二分图与网络流）&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://oi.imyangty.com/summary-graph4/&#34;&gt;图论复习 4（图论与线性代数）&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id=&#34;数据结构&#34;&gt;数据结构&lt;/h3&gt;
+&lt;p&gt;我的数据结构学的可烂了/kk。&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;新学算法笔记：
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;https://oi.imyangty.com/note-bst/&#34;&gt;平衡树笔记&lt;/a&gt;：写了三种主流平衡树的写法以及详细实现。&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;note-lichao/&#34;&gt;李超树&lt;/a&gt;：基本更新完毕。&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://oi.imyangty.com/note-lct/&#34;&gt;Link-Cut Tree&lt;/a&gt;：LCT，实现已更新完，目前施工应用中。&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id=&#34;dp&#34;&gt;DP&lt;/h3&gt;
+&lt;p&gt;根本不会 dp，下面的看看就行。&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;https://oi.imyangty.com/note-slope-dp/&#34;&gt;斜率优化&lt;/a&gt;：基本完结。&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://oi.imyangty.com/note-ddp/&#34;&gt;动态 dp&lt;/a&gt;：动态 dp 的入门教程。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id=&#34;数学&#34;&gt;数学&lt;/h3&gt;
+&lt;p&gt;数学推导能力=0。&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;大型总结类文章：
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;https://oi.imyangty.com/summary-combinatorics/&#34;&gt;组合数学&lt;/a&gt;：正在更新。&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://oi.imyangty.com/summary-linear-algebra/&#34;&gt;线性代数&lt;/a&gt;：填。&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://oi.imyangty.com/summary-number-theory/&#34;&gt;简单数论&lt;/a&gt;：正在更新。&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://oi.imyangty.com/note-poly/&#34;&gt;多项式合集&lt;/a&gt;：多项式全家桶，目前基本施工完毕。&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;li&gt;新学算法笔记：
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;https://oi.imyangty.com/note-lucas/&#34;&gt;Lucas 定理学习笔记&lt;/a&gt;：已投稿洛谷日报，Lucas 定理相关。&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://oi.imyangty.com/note-akin-euclidean-algo/&#34;&gt;类欧几里得算法&lt;/a&gt;：类欧，基本施工完毕。&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://oi.imyangty.com/note-group/&#34;&gt;群计数相关&lt;/a&gt;：基本完结。&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://oi.imyangty.com/note-power-series/&#34;&gt;集合幂级数相关&lt;/a&gt;：现在只有 FWT。&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://oi.imyangty.com/note-gf&#34;&gt;生成函数胡扯&lt;/a&gt;：胡扯。&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id=&#34;图论&#34;&gt;图论&lt;/h3&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;https://oi.imyangty.com/note-bi-graph-and-networkflow/&#34;&gt;二分图/网络流&lt;/a&gt;：意识流。&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://oi.imyangty.com/note-connectivity/&#34;&gt;连通性相关&lt;/a&gt;：圆方树没补完。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id=&#34;杂项&#34;&gt;杂项&lt;/h3&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;https://oi.imyangty.com/note-stl/&#34;&gt;STL&lt;/a&gt;：咕咕咕。&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://oi.imyangty.com/note-geometry/&#34;&gt;计算几何&lt;/a&gt;：新坑。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id=&#34;套题题解&#34;&gt;套题题解&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;https://oi.imyangty.com/summary-codeforces/&#34;&gt;Codeforces 比赛日记&lt;/a&gt;：比赛/VP 记录。&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://oi.imyangty.com/summary-atcoder&#34;&gt;AtCoder 比赛日记&lt;/a&gt;：比赛/VP 记录。&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://oi.imyangty.com/sol-cspj2019/&#34;&gt;CSP-J 2019&lt;/a&gt;：CSP-J 2019 题解。&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://oi.imyangty.com/sol-csps2019/&#34;&gt;CSP-S 2019&lt;/a&gt;：CSP-S 2019 题解。&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://oi.imyangty.com/sol-cspj2020/&#34;&gt;CSP-J 2020&lt;/a&gt;：CSP-J 2020 题解。&lt;/li&gt;
+&lt;li&gt;施工中 &lt;a href=&#34;https://oi.imyangty.com/sol-csps2020/&#34;&gt;CSP-S 2020&lt;/a&gt;：CSP-S 2020 题解。&lt;/li&gt;
+&lt;li&gt;施工中 &lt;a href=&#34;https://oi.imyangty.com/sol-noip2020/&#34;&gt;NOIP2020&lt;/a&gt;：NOIP2020 题解。&lt;/li&gt;
+&lt;li&gt;施工中 &lt;a href=&#34;https://oi.imyangty.com/sol-lhsx2020/&#34;&gt;联合省选 2020&lt;/a&gt;：省选 2020 题解。&lt;/li&gt;
+&lt;li&gt;施工中 &lt;a href=&#34;https://oi.imyangty.com/sol-lhsx2021/&#34;&gt;联合省选 2021&lt;/a&gt;：省选 2021 题解。&lt;/li&gt;
+&lt;li&gt;施工中 &lt;a href=&#34;https://oi.imyangty.com/sol-csps2021/&#34;&gt;CSP-S 2021&lt;/a&gt;：CSP-S 2021 题解。&lt;/li&gt;
+&lt;li&gt;施工中 &lt;a href=&#34;https://oi.imyangty.com/sol-noip2021/&#34;&gt;NOIP2021&lt;/a&gt;：NOIP2021 题解。&lt;/li&gt;
+&lt;li&gt;施工中 &lt;a href=&#34;https://oi.imyangty.com/sol-lhsx2022/&#34;&gt;联合省选 2022&lt;/a&gt;：省选 2022 题解。&lt;/li&gt;
+&lt;li&gt;施工中 &lt;a href=&#34;https://oi.imyangty.com/sol-past-noip/&#34;&gt;历年 NOIP 真题选做&lt;/a&gt;：补题。&lt;/li&gt;
+&lt;li&gt;施工中 &lt;a href=&#34;https://oi.imyangty.com/sol-noiol/&#34;&gt;NOI Online 选做&lt;/a&gt;：补题。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id=&#34;大佬们的博文&#34;&gt;大佬们的博文&lt;/h2&gt;
+&lt;h3 id=&#34;分治二分倍增等基础算法&#34;&gt;分治/二分/倍增等基础算法&lt;/h3&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;https://www.luogu.com.cn/blog/daniu/wqs-er-fen&#34;&gt;wqs 二分 洛谷日报 by 小跳蛙&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://www.cnblogs.com/mlystdcall/p/6219421.html&#34;&gt;cdq 分治 by __stdcall&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id=&#34;dp-1&#34;&gt;DP&lt;/h3&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;https://loj.ac/d/3144&#34;&gt;&lt;span class=&#34;math inline&#34;&gt;\(O(NW)\)&lt;/span&gt; 的树形背包 by Planet6174&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://www.cnblogs.com/Xing-Ling/p/11210179.html&#34;&gt;斜率优化 by 辰星凌&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://www.luogu.com.cn/blog/s-r-f/oi-bi-ji-shuo-wei-dp-ge-ji-dui-shuo-wei-dp-di-yi-dian-li-xie&#34;&gt;[OI笔记]数位DP合集 &amp;amp; 对数位DP的一点理解 by s_r_f&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id=&#34;树上问题&#34;&gt;树上问题&lt;/h3&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;https://loj.ac/d/1698&#34;&gt;dfs 序 by Planet6174&lt;/a&gt; LOJ 4 道 dfs 序系列的题解&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://www.cnblogs.com/ET2006/p/clpf.html&#34;&gt;长链剖分小记 by tzc_wk&lt;/a&gt; 长链剖分的应用&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://www.luogu.com.cn/blog/command-block/shu-fen-zhi-xiao-ji&#34;&gt;树分治小记 by command_block&lt;/a&gt; 点/边/链分治 + 全局平衡二叉树&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://liu-cheng-ao.blog.uoj.ac/blog/2969&#34;&gt;一种基于错误的寻找重心方法的点分治的复杂度分析&lt;/a&gt; 一个点分治&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://www.luogu.com.cn/blog/SSerxhs/qian-tan-xu-shu&#34;&gt;浅谈虚树 by SSerxhs&lt;/a&gt; 虚树的概念和应用&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id=&#34;字符串&#34;&gt;字符串&lt;/h3&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;https://www.luogu.com.cn/discuss/show/322224&#34;&gt;关于广义 SAM 的讨论&lt;/a&gt; 一种易错写法&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://www.cnblogs.com/zjp-shadow/p/9218214.html&#34;&gt;SAM 学习笔记&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://www.luogu.com.cn/blog/Kesdiael3/hou-zhui-zi-dong-ji-yang-xie&#34;&gt;史上最通俗的后缀自动机详解 by KesdiaelKen&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id=&#34;数学-1&#34;&gt;数学&lt;/h3&gt;
+&lt;h4 id=&#34;线性代数&#34;&gt;线性代数&lt;/h4&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;https://loj.ac/d/2458&#34;&gt;矩阵树定理的证明 on LOJ&lt;/a&gt; 非常简短易懂的证明&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://oi.men.ci/linear-basis-notes/&#34;&gt;线性基学习笔记 by Menci&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h4 id=&#34;多项式&#34;&gt;多项式&lt;/h4&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;https://www.luogu.com.cn/blog/command-block/fft-xue-xi-bi-ji&#34;&gt;FFT 学习笔记 by command_block&lt;/a&gt; FFT 入门推荐&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://www.cnblogs.com/ET2006/p/fftnttdxsschs.html&#34;&gt;FFT/NTT复习笔记&amp;amp;多项式&amp;amp;生成函数学习笔记Ⅰ by tzc_wk&lt;/a&gt; 有较详细的例题及题解&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h4 id=&#34;博弈论&#34;&gt;博弈论&lt;/h4&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;https://blog.csdn.net/A_Comme_Amour/article/details/79347291&#34;&gt;Nim 游戏与 SG 函数&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id=&#34;一些小-trick&#34;&gt;一些小 trick&lt;/h3&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;https://blog.csdn.net/qq_35811706/article/details/83001781&#34;&gt;【小技巧】O(1)快速乘&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id=&#34;推荐题单&#34;&gt;推荐题单&lt;/h2&gt;
+&lt;h3 id=&#34;数据结构-1&#34;&gt;数据结构&lt;/h3&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;https://www.luogu.com.cn/training/1124&#34;&gt;Limit の线段树题单&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://www.luogu.com.cn/training/3858&#34;&gt;线段树合并：从入门到精通&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://www.luogu.com.cn/training/2914&#34;&gt;【算法】莫队&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://www.luogu.com.cn/training/1654&#34;&gt;树链剖分练习题&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://www.luogu.com.cn/training/5035&#34;&gt;Marser的整体二分题单&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id=&#34;字符串-1&#34;&gt;字符串&lt;/h3&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;https://www.luogu.com.cn/training/53971&#34;&gt;字符串从提高到省选#1&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://www.luogu.com.cn/training/60465&#34;&gt;AC自动机&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://www.luogu.com.cn/training/3202&#34;&gt;【字符串】后缀系列&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id=&#34;图论-1&#34;&gt;图论&lt;/h3&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;https://www.luogu.com.cn/training/6686&#34;&gt;「二分图」の 学习题单&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://www.luogu.com.cn/training/79728&#34;&gt;『二分图』从入门到入土&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id=&#34;数学-2&#34;&gt;数学&lt;/h3&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;https://www.luogu.com.cn/training/1055&#34;&gt;莫比乌斯反演（函数）练习题单&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://www.luogu.com.cn/training/7403&#34;&gt;基础矩阵加速&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://www.luogu.com.cn/training/5539&#34;&gt;同余方程-从入门到入土&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://www.luogu.com.cn/training/48747&#34;&gt;【线性代数】线性代数基础题&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+</description>
+        </item>
+        <item>
+        <title>博客迁移公告</title>
+        <link>https://oi.imyangty.com/switch-to-hugo/</link>
+        <pubDate>Wed, 13 Apr 2022 23:03:34 +0800</pubDate>
+        
+        <guid>https://oi.imyangty.com/switch-to-hugo/</guid>
+        <description>&lt;img src="https://yangty-pic.oss-cn-beijing.aliyuncs.com/bg3.webp" alt="Featured image of post 博客迁移公告" /&gt;&lt;p&gt;告别慢的要死的 hexo。&lt;/p&gt;
+&lt;p&gt;旧站点地址：&lt;a href=&#34;https://old.blog.imyangty.com/&#34;&gt;here&lt;/a&gt;。&lt;/p&gt;
+</description>
+        </item>
+        <item>
+        <title>博客搬迁公告</title>
+        <link>https://oi.imyangty.com/new-blog-post/</link>
+        <pubDate>Sun, 09 May 2021 20:57:32 +0800</pubDate>
+        
+        <guid>https://oi.imyangty.com/new-blog-post/</guid>
+        <description>&lt;img src="https://yangty-pic.oss-cn-beijing.aliyuncs.com/bg5.webp" alt="Featured image of post 博客搬迁公告" /&gt;&lt;p&gt;所有算法竞赛相关文章已经全部搬迁至此。&lt;/p&gt;
+&lt;p&gt;原博客 &lt;a href=&#34;https://imyangty.com&#34;&gt;imyangty.com&lt;/a&gt; 中会记录一些生活残片和杂想。&lt;/p&gt;
+&lt;p&gt;此公告。&lt;/p&gt;
+</description>
+        </item>
+        <item>
+        <title>testblog</title>
+        <link>https://oi.imyangty.com/testblog/</link>
+        <pubDate>Sun, 09 May 2021 13:35:19 +0800</pubDate>
+        
+        <guid>https://oi.imyangty.com/testblog/</guid>
+        <description>&lt;img src="https://yangty-pic.oss-cn-beijing.aliyuncs.com/bg20.webp" alt="Featured image of post testblog" /&gt;&lt;h2 id=&#34;testing&#34;&gt;testing&lt;/h2&gt;
+&lt;p&gt;This is a test article.&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;无序列表测试&lt;/li&gt;
+&lt;li&gt;测试&lt;/li&gt;
+&lt;li&gt;测试&lt;/li&gt;
+&lt;/ul&gt;
+&lt;ol type=&#34;1&#34;&gt;
+&lt;li&gt;有序列表测试&lt;/li&gt;
+&lt;li&gt;测试&lt;/li&gt;
+&lt;li&gt;测试&lt;/li&gt;
+&lt;/ol&gt;
+&lt;blockquote&gt;
+&lt;p&gt;引言测试&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;行内 latex 测试：我们考虑一个公式 &lt;span class=&#34;math inline&#34;&gt;\(E = mc^2\)&lt;/span&gt;。&lt;/p&gt;
+&lt;p&gt;行间公式测试 &lt;span class=&#34;math display&#34;&gt;\[
+x = \frac{-b\pm\sqrt\Delta}{2a}
+\]&lt;/span&gt;&lt;/p&gt;
+&lt;h2 id=&#34;剩余测试&#34;&gt;剩余测试&lt;/h2&gt;
+&lt;p&gt;环境测试&lt;/p&gt;
+&lt;p&gt;&lt;span class=&#34;math display&#34;&gt;\[
+\boldsymbol{A} = 
+\begin{pmatrix}
+1 &amp;amp; 2 &amp;amp; 3\newline
+4 &amp;amp; 5 &amp;amp; 6
+\end{pmatrix}
+\]&lt;/span&gt;&lt;/p&gt;
+&lt;p&gt;CRT：&lt;/p&gt;
+&lt;p&gt;&lt;span class=&#34;math display&#34;&gt;\[
+\begin{cases}
+x\equiv 3\pmod{p_1}\\
+x\equiv 5\pmod{p_2}\\
+\cdots\\
+x\equiv y\pmod{p_n}
+\end{cases}
+\]&lt;/span&gt;&lt;/p&gt;
+&lt;p&gt;aligned： &lt;span class=&#34;math display&#34;&gt;\[
+\begin{aligned}
+H_j(x) &amp;amp;= \prod_{k=1}^jG_k(x)\\
+\ln H_j(x) &amp;amp;= \sum_{k=1}^j\ln G_k(x)\\
+&amp;amp;= -\sum_{k=1}^j\ln(1 - x^k)\\
+&amp;amp;= \sum_{k=1}^j\sum_{i=1}^{+\infty}\frac{x^{ki}}{i}
+\end{aligned}
+\]&lt;/span&gt;&lt;/p&gt;
+&lt;h2 id=&#34;文章目录测试&#34;&gt;文章目录测试&lt;/h2&gt;
+&lt;p&gt;下面进行文章目录的测试&lt;/p&gt;
+&lt;h3 id=&#34;三级标题1&#34;&gt;三级标题1&lt;/h3&gt;
+&lt;p&gt;此处为内容。&lt;/p&gt;
+&lt;p&gt;内容。&lt;/p&gt;
+&lt;h3 id=&#34;三级标题2&#34;&gt;三级标题2&lt;/h3&gt;
+&lt;p&gt;此处为内容&lt;/p&gt;
+&lt;h4 id=&#34;四级标题1&#34;&gt;四级标题1&lt;/h4&gt;
+&lt;p&gt;四级标题测试&lt;/p&gt;
+&lt;h4 id=&#34;四级标题2&#34;&gt;四级标题2&lt;/h4&gt;
+&lt;h3 id=&#34;三级标题3&#34;&gt;三级标题3&lt;/h3&gt;
+&lt;h2 id=&#34;volantis-特性测试&#34;&gt;Volantis 特性测试&lt;/h2&gt;
+&lt;p&gt;带 {% del 删除线 %} 的文本&lt;/p&gt;
+&lt;h4 id=&#34;经典用法&#34;&gt;经典用法&lt;/h4&gt;
+&lt;p&gt;{% note, 可以在配置文件中设置默认样式，为简单的一句话提供最的简便写法。 %} {% note quote, note quote 适合引用一段话 %} {% note info, note info 默认主题色，适合中性的信息 %} {% note warning, note warning 默认黄色，适合警告性的信息 %} {% note danger, note error/danger 默认红色，适合危险性的信息 %} {% note success, note done/success 默认绿色，适合正确操作的信息 %}&lt;/p&gt;
+&lt;h4 id=&#34;更多图标&#34;&gt;更多图标&lt;/h4&gt;
+&lt;p&gt;这些都是默认样式，可以手动加上颜色：&lt;/p&gt;
+&lt;p&gt;{% note radiation, note radiation 默认样式 %} {% note radiation yellow, note radiation yellow 可以加上颜色 %} {% note bug red, note bug red 说明还存在的一些故障 %} {% note link green, note link green 可以放置一些链接 %} {% note paperclip blue, note paperclip blue 放置一些附件链接 %} {% note todo, note todo 待办事项 %} {% note guide clear, note guide clear 可以加上一段向导 %} {% note download, note download 可以放置下载链接 %} {% note message gray, note message gray 一段消息 %} {% note up, note up 可以说明如何进行更新 %} {% note undo light, note undo light 可以说明如何撤销或者回退 %}&lt;/p&gt;
+&lt;h2 id=&#34;html-嵌入&#34;&gt;HTML 嵌入&lt;/h2&gt;
+&lt;p&gt;&amp;lt;iframe src=“/assets/intro_to_dp.html” width=“780”, height=“500”&amp;gt;&lt;/iframe&gt;&lt;/p&gt;
+</description>
+        </item>
+        
+    </channel>
+</rss>

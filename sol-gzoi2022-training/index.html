@@ -1,0 +1,829 @@
+<!DOCTYPE html>
+<html dir="ltr" lang="zh-CN">
+<head><meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1" name="viewport"/><meta content="前言 感谢 GZCF 提供的本次集训机会。
+只是 51nod 作为平台并没有很好的做好“省选训练赛”这个比赛赛制，以及多次题面出锅也没有负责人回应。
+OI 赛制硬是被弄成了 IOI 赛制 + ACM 题面😅。
+简要科技总结 R1D1
+A 双指针合并 B set 维护连续段。
+R1D2
+B 使用 bitset 优化暴力 dp。
+R1D3
+A 考虑二分答案 B 点分树 C Kummer 定理 + 数位 dp。
+R1D4
+A wqs 二分 B 平面图与对偶图的转化 C 循环矩阵 + DFT。
+R2D1
+A AGC-style dp C 经典棋盘容斥。
+R2D2
+A 倍增跳杨辉三角
+R1D1 (FJSDFZ) (Done) A 林间漫步 AGC007E。大无语
+题意：给定一棵二叉树，每个非叶子节点一定有两个儿子，点数 \(n\le 2^{17}\)。猴子从根 \(1\) 开始，欧拉序遍历这棵树。走过边会消耗边长的体力。到达叶子节点的时候体力回满，一开始从根下来的过程和最后回根的过程不消耗体力。问最小的体力。
+\(O(n^3)\) 的 dp 平凡，注意到问题实际上说的是求一个树的遍历序，使得所有遍历序中相邻的叶子之间的距离的最大值最小。所以二分答案。" name="description"/><title>贵州省选集训 2022 题解</title>
+<link href="https://oi.imyangty.com/sol-gzoi2022-training/" rel="canonical"/>
+<link href="/scss/style.min.a5821f3d3ab84ce5a0ac21477e347a2e0ca00292e398d16c5e8e36ded6e35a23.css" rel="stylesheet"/><meta content="贵州省选集训 2022 题解" property="og:title"/>
+<meta content="前言 感谢 GZCF 提供的本次集训机会。
+只是 51nod 作为平台并没有很好的做好“省选训练赛”这个比赛赛制，以及多次题面出锅也没有负责人回应。
+OI 赛制硬是被弄成了 IOI 赛制 + ACM 题面😅。
+简要科技总结 R1D1
+A 双指针合并 B set 维护连续段。
+R1D2
+B 使用 bitset 优化暴力 dp。
+R1D3
+A 考虑二分答案 B 点分树 C Kummer 定理 + 数位 dp。
+R1D4
+A wqs 二分 B 平面图与对偶图的转化 C 循环矩阵 + DFT。
+R2D1
+A AGC-style dp C 经典棋盘容斥。
+R2D2
+A 倍增跳杨辉三角
+R1D1 (FJSDFZ) (Done) A 林间漫步 AGC007E。大无语
+题意：给定一棵二叉树，每个非叶子节点一定有两个儿子，点数 \(n\le 2^{17}\)。猴子从根 \(1\) 开始，欧拉序遍历这棵树。走过边会消耗边长的体力。到达叶子节点的时候体力回满，一开始从根下来的过程和最后回根的过程不消耗体力。问最小的体力。
+\(O(n^3)\) 的 dp 平凡，注意到问题实际上说的是求一个树的遍历序，使得所有遍历序中相邻的叶子之间的距离的最大值最小。所以二分答案。" property="og:description"/>
+<meta content="https://oi.imyangty.com/sol-gzoi2022-training/" property="og:url"/>
+<meta content="清烛的博客" property="og:site_name"/>
+<meta content="article" property="og:type"/><meta content="Post" property="article:section"/><meta content="OI" property="article:tag"/><meta content="题解" property="article:tag"/><meta content="贪心" property="article:tag"/><meta content="线段树" property="article:tag"/><meta content="动态规划" property="article:tag"/><meta content="期望" property="article:tag"/><meta content="点分治" property="article:tag"/><meta content="Lucas定理" property="article:tag"/><meta content="矩阵树定理" property="article:tag"/><meta content="向量" property="article:tag"/><meta content="行列式" property="article:tag"/><meta content="倍增" property="article:tag"/><meta content="容斥原理" property="article:tag"/><meta content="2022-03-24T15:31:08+08:00" property="article:published_time"/><meta content="2022-03-24T15:31:08+08:00" property="article:modified_time"/><meta content="https://yangty-pic.oss-cn-beijing.aliyuncs.com/bg17.webp" property="og:image"/>
+<meta content="贵州省选集训 2022 题解" name="twitter:title"/>
+<meta content="前言 感谢 GZCF 提供的本次集训机会。
+只是 51nod 作为平台并没有很好的做好“省选训练赛”这个比赛赛制，以及多次题面出锅也没有负责人回应。
+OI 赛制硬是被弄成了 IOI 赛制 + ACM 题面😅。
+简要科技总结 R1D1
+A 双指针合并 B set 维护连续段。
+R1D2
+B 使用 bitset 优化暴力 dp。
+R1D3
+A 考虑二分答案 B 点分树 C Kummer 定理 + 数位 dp。
+R1D4
+A wqs 二分 B 平面图与对偶图的转化 C 循环矩阵 + DFT。
+R2D1
+A AGC-style dp C 经典棋盘容斥。
+R2D2
+A 倍增跳杨辉三角
+R1D1 (FJSDFZ) (Done) A 林间漫步 AGC007E。大无语
+题意：给定一棵二叉树，每个非叶子节点一定有两个儿子，点数 \(n\le 2^{17}\)。猴子从根 \(1\) 开始，欧拉序遍历这棵树。走过边会消耗边长的体力。到达叶子节点的时候体力回满，一开始从根下来的过程和最后回根的过程不消耗体力。问最小的体力。
+\(O(n^3)\) 的 dp 平凡，注意到问题实际上说的是求一个树的遍历序，使得所有遍历序中相邻的叶子之间的距离的最大值最小。所以二分答案。" name="twitter:description"/><meta content="summary_large_image" name="twitter:card"/>
+<meta content="https://yangty-pic.oss-cn-beijing.aliyuncs.com/bg17.webp" name="twitter:image"/>
+<link href="https://q1.qlogo.cn/g?b=qq&amp;nk=375836877&amp;s=5" rel="shortcut icon"/>
+<link href="https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.5.1/build/styles/github-dark-dimmed.min.css" rel="stylesheet"/>
+<script src="https://cdn.jsdelivr.net/gh/highlightjs/cdn-release/build/highlight.min.js"></script>
+<script>hljs.highlightAll();</script>
+</head>
+<body class="article-page">
+<script>
+        (function() {
+            const colorSchemeKey = 'StackColorScheme';
+            if(!localStorage.getItem(colorSchemeKey)){
+                localStorage.setItem(colorSchemeKey, "auto");
+            }
+        })();
+    </script><script>
+    (function() {
+        const colorSchemeKey = 'StackColorScheme';
+        const colorSchemeItem = localStorage.getItem(colorSchemeKey);
+        const supportDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches === true;
+
+        if (colorSchemeItem == 'dark' || colorSchemeItem === 'auto' && supportDarkMode) {
+            
+
+            document.documentElement.dataset.scheme = 'dark';
+        } else {
+            document.documentElement.dataset.scheme = 'light';
+        }
+    })();
+</script>
+<div class="container main-container flex on-phone--column extended"><aside class="sidebar left-sidebar sticky">
+<button aria-label="切换菜单" class="hamburger hamburger--spin" id="toggle-menu" type="button">
+<span class="hamburger-box">
+<span class="hamburger-inner"></span>
+</span>
+</button>
+<header>
+<figure class="site-avatar">
+<a href="/">
+<img alt="Avatar" class="site-logo" height="300" loading="lazy" src="/img/avatar_huea3ce2119467b51fdd2a81393644a76d_51594_300x0_resize_q75_box.jpg" width="300"/>
+</a>
+<span class="emoji">😅</span>
+</figure>
+<div class="site-meta">
+<h1 class="site-name"><a href="/">清烛的博客</a></h1>
+<h2 class="site-description">烟火已谢，笙歌未停</h2>
+</div>
+</header><ol class="social-menu">
+<li>
+<a href="mailto:i@imyangty.com" target="_blank" title="email">
+<svg class="icon icon-tabler icon-tabler-mail" fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" viewbox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+<path d="M0 0h24v24H0z" fill="none" stroke="none"></path>
+<rect height="14" rx="2" width="18" x="3" y="5"></rect>
+<polyline points="3 7 12 13 21 7"></polyline>
+</svg>
+</a>
+</li>
+<li>
+<a href="https://github.com/Cgfyufsygsm" target="_blank" title="GitHub">
+<svg class="icon icon-tabler icon-tabler-brand-github" fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+<path d="M0 0h24v24H0z" fill="none" stroke="none"></path>
+<path d="M9 19c-4.3 1.4 -4.3 -2.5 -6 -3m12 5v-3.5c0 -1 .1 -1.4 -.5 -2c2.8 -.3 5.5 -1.4 5.5 -6a4.6 4.6 0 0 0 -1.3 -3.2a4.2 4.2 0 0 0 -.1 -3.2s-1.1 -.3 -3.5 1.3a12.3 12.3 0 0 0 -6.2 0c-2.4 -1.6 -3.5 -1.3 -3.5 -1.3a4.2 4.2 0 0 0 -.1 3.2a4.6 4.6 0 0 0 -1.3 3.2c0 4.6 2.7 5.7 5.5 6c-.6 .6 -.6 1.2 -.5 2v3.5"></path>
+</svg>
+</a>
+</li>
+<li>
+<a href="https://t.me/Cgfyufsygsm" target="_blank" title="Telegram">
+<svg class="icon icon-tabler icon-tabler-brand-telegram" fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" viewbox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+<path d="M0 0h24v24H0z" fill="none" stroke="none"></path>
+<path d="M15 10l-4 4l6 6l4 -16l-18 7l4 2l2 6l3 -4"></path>
+</svg>
+</a>
+</li>
+<li>
+<a href="https://twitter.com/Cgfyufsygsm" target="_blank" title="Twitter">
+<svg class="icon icon-tabler icon-tabler-brand-twitter" fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+<path d="M0 0h24v24H0z" fill="none" stroke="none"></path>
+<path d="M22 4.01c-1 .49 -1.98 .689 -3 .99c-1.121 -1.265 -2.783 -1.335 -4.38 -.737s-2.643 2.06 -2.62 3.737v1c-3.245 .083 -6.135 -1.395 -8 -4c0 0 -4.182 7.433 4 11c-1.872 1.247 -3.739 2.088 -6 2c3.308 1.803 6.913 2.423 10.034 1.517c3.58 -1.04 6.522 -3.723 7.651 -7.742a13.84 13.84 0 0 0 .497 -3.753c-.002 -.249 1.51 -2.772 1.818 -4.013z"></path>
+</svg>
+</a>
+</li>
+</ol><ol class="menu" id="main-menu">
+<li>
+<a href="/">
+<svg class="icon icon-tabler icon-tabler-home" fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+<path d="M0 0h24v24H0z" stroke="none"></path>
+<polyline points="5 12 3 12 12 3 21 12 19 12"></polyline>
+<path d="M5 12v7a2 2 0 0 0 2 2h10a2 2 0 0 0 2 -2v-7"></path>
+<path d="M9 21v-6a2 2 0 0 1 2 -2h2a2 2 0 0 1 2 2v6"></path>
+</svg>
+<span>主页</span>
+</a>
+</li>
+<li>
+<a href="/about/">
+<svg class="icon icon-tabler icon-tabler-user" fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+<path d="M0 0h24v24H0z" stroke="none"></path>
+<circle cx="12" cy="7" r="4"></circle>
+<path d="M6 21v-2a4 4 0 0 1 4 -4h4a4 4 0 0 1 4 4v2"></path>
+</svg>
+<span>关于</span>
+</a>
+</li>
+<li>
+<a href="/idx/">
+<svg class="icon icon-tabler icon-tabler-hash" fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+<path d="M0 0h24v24H0z" stroke="none"></path>
+<line x1="5" x2="19" y1="9" y2="9"></line>
+<line x1="5" x2="19" y1="15" y2="15"></line>
+<line x1="11" x2="7" y1="4" y2="20"></line>
+<line x1="17" x2="13" y1="4" y2="20"></line>
+</svg>
+<span>导航</span>
+</a>
+</li>
+<li>
+<a href="/archives/">
+<svg class="icon icon-tabler icon-tabler-archive" fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+<path d="M0 0h24v24H0z" stroke="none"></path>
+<rect height="4" rx="2" width="18" x="3" y="4"></rect>
+<path d="M5 8v10a2 2 0 0 0 2 2h10a2 2 0 0 0 2 -2v-10"></path>
+<line x1="10" x2="14" y1="12" y2="12"></line>
+</svg>
+<span>归档</span>
+</a>
+</li>
+<li>
+<a href="/search/">
+<svg class="icon icon-tabler icon-tabler-search" fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+<path d="M0 0h24v24H0z" stroke="none"></path>
+<circle cx="10" cy="10" r="7"></circle>
+<line x1="21" x2="15" y1="21" y2="15"></line>
+</svg>
+<span>搜索</span>
+</a>
+</li>
+<li>
+<a href="/friends/">
+<svg class="icon icon-tabler icon-tabler-link" fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+<path d="M0 0h24v24H0z" stroke="none"></path>
+<path d="M10 14a3.5 3.5 0 0 0 5 0l4 -4a3.5 3.5 0 0 0 -5 -5l-.5 .5"></path>
+<path d="M14 10a3.5 3.5 0 0 0 -5 0l-4 4a3.5 3.5 0 0 0 5 5l.5 -.5"></path>
+</svg>
+<span>友链</span>
+</a>
+</li>
+<li>
+<a href="https://blog.imyangty.com" target="_blank">
+<svg class="icon icon-tabler icon-tabler-home" fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+<path d="M0 0h24v24H0z" stroke="none"></path>
+<polyline points="5 12 3 12 12 3 21 12 19 12"></polyline>
+<path d="M5 12v7a2 2 0 0 0 2 2h10a2 2 0 0 0 2 -2v-7"></path>
+<path d="M9 21v-6a2 2 0 0 1 2 -2h2a2 2 0 0 1 2 2v6"></path>
+</svg>
+<span>主博客</span>
+</a>
+</li>
+<div class="menu-bottom-section">
+<li id="dark-mode-toggle">
+<svg class="icon icon-tabler icon-tabler-toggle-left" fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+<path d="M0 0h24v24H0z" stroke="none"></path>
+<circle cx="8" cy="12" r="2"></circle>
+<rect height="12" rx="6" width="20" x="2" y="6"></rect>
+</svg>
+<svg class="icon icon-tabler icon-tabler-toggle-right" fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+<path d="M0 0h24v24H0z" stroke="none"></path>
+<circle cx="16" cy="12" r="2"></circle>
+<rect height="12" rx="6" width="20" x="2" y="6"></rect>
+</svg>
+<span>暗色模式</span>
+</li>
+</div>
+</ol>
+</aside>
+<main class="main full-width">
+<article class="has-image main-article">
+<header class="article-header">
+<div class="article-image">
+<a href="/sol-gzoi2022-training/">
+<img alt="Featured image of post 贵州省选集训 2022 题解" loading="lazy" src="https://yangty-pic.oss-cn-beijing.aliyuncs.com/bg17.webp"/>
+</a>
+</div>
+<div class="article-details">
+<header class="article-category">
+<a href="/categories/oi/">
+                OI
+            </a>
+<a href="/categories/tutorial/">
+                题解
+            </a>
+</header>
+<div class="article-title-wrapper">
+<h2 class="article-title">
+<a href="/sol-gzoi2022-training/">贵州省选集训 2022 题解</a>
+</h2>
+</div>
+<footer class="article-time">
+<div>
+<svg class="icon icon-tabler icon-tabler-calendar-time" fill="none" height="56" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="56" xmlns="http://www.w3.org/2000/svg">
+<path d="M0 0h24v24H0z" stroke="none"></path>
+<path d="M11.795 21h-6.795a2 2 0 0 1 -2 -2v-12a2 2 0 0 1 2 -2h12a2 2 0 0 1 2 2v4"></path>
+<circle cx="18" cy="18" r="4"></circle>
+<path d="M15 3v4"></path>
+<path d="M7 3v4"></path>
+<path d="M3 11h16"></path>
+<path d="M18 16.496v1.504l1 1"></path>
+</svg>
+<time class="article-time--published">Mar 24, 2022</time>
+</div>
+<div>
+<svg class="icon icon-tabler icon-tabler-clock" fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+<path d="M0 0h24v24H0z" stroke="none"></path>
+<circle cx="12" cy="12" r="9"></circle>
+<polyline points="12 7 12 12 15 15"></polyline>
+</svg>
+<time class="article-time--reading">
+                    阅读时长: 9 分钟
+                </time>
+</div>
+</footer>
+</div>
+</header>
+<section class="article-content">
+<h2 id="前言">前言</h2>
+<p>感谢 GZCF 提供的本次集训机会。</p>
+<p>只是 51nod 作为平台并没有很好的做好“省选训练赛”这个比赛赛制，以及多次题面出锅也没有负责人回应。</p>
+<p>OI 赛制硬是被弄成了 IOI 赛制 + ACM 题面😅。</p>
+<h2 id="简要科技总结">简要科技总结</h2>
+<ul>
+<li><p>R1D1</p>
+<p>A 双指针合并 B <code>set</code> 维护连续段。</p></li>
+<li><p>R1D2</p>
+<p>B 使用 <code>bitset</code> 优化暴力 dp。</p></li>
+<li><p>R1D3</p>
+<p>A <strong>考虑二分答案</strong> B 点分树 C Kummer 定理 + 数位 dp。</p></li>
+<li><p>R1D4</p>
+<p>A wqs 二分 B 平面图与对偶图的转化 C 循环矩阵 + DFT。</p></li>
+<li><p>R2D1</p>
+<p>A AGC-style dp C 经典棋盘容斥。</p></li>
+<li><p>R2D2</p>
+<p>A 倍增跳杨辉三角</p></li>
+</ul>
+<h2 id="r1d1-fjsdfz-done">R1D1 (FJSDFZ) (Done)</h2>
+<h3 id="a-林间漫步"><a href="http://www.51nod.com/Contest/Problem.html#contestProblemId=4289">A 林间漫步</a></h3>
+<p>AGC007E。大无语</p>
+<p>题意：给定一棵二叉树，每个非叶子节点一定有两个儿子，点数 <span class="math inline">\(n\le 2^{17}\)</span>。猴子从根 <span class="math inline">\(1\)</span> 开始，欧拉序遍历这棵树。走过边会消耗边长的体力。到达叶子节点的时候体力回满，一开始从根下来的过程和最后回根的过程不消耗体力。问最小的体力。</p>
+<p><span class="math inline">\(O(n^3)\)</span> 的 dp 平凡，注意到问题实际上说的是求一个树的遍历序，使得所有遍历序中相邻的叶子之间的距离的<strong>最大值最小</strong>。所以<em>二分答案</em>。</p>
+<p>继承 dp 的想法，考虑一个子树内 <span class="math inline">\(u\)</span> 合法的进点/出点点对集合 <span class="math inline">\(S_u\)</span>，令其到 <span class="math inline">\(u\)</span> 的距离对为 <span class="math inline">\((a, b)\)</span>。那么叶子节点显然只有 <span class="math inline">\((0, 0)\)</span>。对于非叶子节点，设其到左儿子的距离为 <span class="math inline">\(x\)</span>，到右儿子的距离为 <span class="math inline">\(y\)</span>，则左儿子的 <span class="math inline">\((a,b)\)</span> 能和右儿子的 <span class="math inline">\((c,d)\)</span> 合并当且仅当 <span class="math inline">\(b + x + y + c \le mid\)</span>，合并可以得到 <span class="math inline">\((a + x, d + y)\)</span>。</p>
+<p>然后注意到对于子树 <span class="math inline">\(u\)</span>，若 <span class="math inline">\((a_1,b_1)\)</span> 和 <span class="math inline">\((a_2, b_2)\)</span> 满足 <span class="math inline">\(a_1\le a_2\land b_1\le b_2\)</span>，则 <span class="math inline">\((a_2, b_2)\)</span> 是没有用的，可以丢掉。所以 <span class="math inline">\(S_u\)</span> 就变成了关于 <span class="math inline">\(a_i\)</span> 递增，<span class="math inline">\(b_i\)</span> 递减的序列。</p>
+<p>然后就可以用双指针合并两个儿子的答案。下面给出时间复杂度的证明。</p>
+<p>因为对于 <span class="math inline">\(S_u\)</span> 而言，其不同取值一定不会超过其轻子树内的叶子节点个数的 <span class="math inline">\(2\)</span> 倍（考虑合并的过程），一个叶子节点均摊合并 <span class="math inline">\(O(\log n)\)</span> 次，所以 <span class="math inline">\(O(n\log n\log{An})\)</span> 解决了。</p>
+<h3 id="b-序列划分"><a href="http://www.51nod.com/Contest/Problem.html#contestProblemId=4290">B 序列划分</a></h3>
+<p>题意：划分 <span class="math inline">\(A\)</span> 成若干段，每种划分方案的权值为每段的 <span class="math inline">\(\mathrm{mex}\)</span> 之积，求所有划分方案的权值和。 <span class="math display">\[
+f_{i} = \sum_{j=1}^i f_{j - 1}\times \mathrm{mex}_{k=j}^i\{a_k \}
+\]</span> <span class="math inline">\(O(n^2)\)</span> 的 dp 随便写。考虑优化一下。</p>
+<p>感觉到 <span class="math inline">\(\mathrm{mex}\)</span> 的值域只有 <span class="math inline">\([0, n]\)</span>，而且似乎 <span class="math inline">\(\mathrm{mex}\)</span> 会形成连续段。那不妨就在我们右移 <span class="math inline">\(i\)</span> 指针的时候维护一下后缀 <span class="math inline">\(\mathrm{mex}\)</span> 形成的连续段。</p>
+<p>具体地，使用 <code>set</code> 维护连续段，然后注意到我们每次加入 <span class="math inline">\(a_i = v\)</span> 的时候，只有 <span class="math inline">\(\mathrm{mex} = v\)</span> 的连续段会发生变化。发现定位这个连续段用 <code>set</code> 很好实现，但是拆开连续段就需要思考一下怎么拆了。</p>
+<p>考虑从后往前拆。维护一个 <span class="math inline">\(las_x\)</span> 表示 <span class="math inline">\(x\)</span> 上次出现的位置，然后相当于就是找到 <span class="math inline">\(las\)</span> 在某个位置 <span class="math inline">\(r\)</span> 前 的第一个非负整数，可以用线段树维护 <span class="math inline">\(las\)</span> 的最小值。至于 dp 值可以在维护连续段的时候一并计算，总时间复杂度 <span class="math inline">\(O(n\log n)\)</span>。</p>
+<h3 id="c-重排列"><a href="http://www.51nod.com/Contest/Problem.html#contestProblemId=4291">C 重排列</a></h3>
+<p>AGC010E，附<a href="/sol-past-agc/">题解</a>。</p>
+<p>大体思路：考虑到不互质的数的相对位置不会发生改变，所以将其建成一个 DAG，后手就是要最大化其拓扑序的字典序，先手就 dfs 贪心连成 dfs 生成树。</p>
+<h2 id="r1d2-fjsdfz-a-b">R1D2 (FJSDFZ) (A + B)</h2>
+<h3 id="a-交通"><a href="http://www.51nod.com/Contest/Problem.html#contestProblemId=4292">A 交通</a></h3>
+<p><a href="/sol-cf187d">CF187D</a>。<del>样例都他妈一样。</del></p>
+<p>我们考虑处理出在 <span class="math inline">\(0\)</span> 时刻从每个红绿灯出发，到达终点需要的时间，考虑设为 <span class="math inline">\(f_i\)</span>。那么我们思考一下怎么找 <span class="math inline">\(f_i\)</span>。显然可以通过找到下一个拦住他的红绿灯 <span class="math inline">\(k\)</span> 来实现，具体地，令 <span class="math inline">\(r + g = p\)</span>，则有如下式子 <span class="math display">\[
+g\le (s_k - s_i)\bmod p&lt; p
+\]</span> 需要找到一个最小的 <span class="math inline">\(k\)</span>。用维护最小值的线段树随便维护一下即可。</p>
+<p>具体地，化开不等式发现 <span class="math inline">\(g + s_i\le s_k\le p - 1 + s_i\)</span>。在线段树上查询对应区间即可，注意取模会循环啥的。</p>
+<p>然后你对于每个询问，考虑将时间 <span class="math inline">\(t_0\)</span> 对 <span class="math inline">\(p\)</span> 取模后用类似上面的方法，找一下第一个拦住他的红绿灯然后用 <span class="math inline">\(f\)</span> 值回答即可。具体地，<span class="math inline">\(g\le s_k + t&lt;p\)</span>，化一下发现 <span class="math inline">\(g - t\le s_k\le p - t - 1\)</span>。一样的道理。</p>
+<h3 id="b-选拔"><a href="http://www.51nod.com/Contest/Problem.html#contestProblemId=4293">B 选拔</a></h3>
+<p>BZOJ4713。还没看题解。</p>
+<p>题意：给定一棵边带小写字母的树。发现链 <span class="math inline">\((u, v)\)</span> 可以确定一个字符串。给定 <span class="math inline">\(m\)</span> 个串，分别问他们是否在树上出现过。</p>
+<p><del><strong>暴力可过，我？？？</strong>。</del></p>
+<p>考虑单串 <span class="math inline">\(T\)</span> 的情况。注意到肯定是一条自下而上的路径和一条自上而下的路径拼接而成，在 LCA 处被统计答案。所以我们考虑设 <span class="math inline">\(f_{u,i}\)</span> 表示从下往上走到 <span class="math inline">\(u\)</span>，能否匹配 <span class="math inline">\([1, i]\)</span>，<span class="math inline">\(g_{u,i}\)</span> 表示从 <span class="math inline">\(u\)</span> 往下走，能否匹配 <span class="math inline">\([i, |T|]\)</span>。转移则为 <span class="math inline">\(f_{u,i}:=f_{u,i}\lor (f_{v, i - 1}\land c(u,v) = T_i)\)</span>，<span class="math inline">\(g_{u,i}:=g_{u,i}\lor(g_{v,i+1}\land c(u,v) = T_i)\)</span>。时间复杂度 <span class="math inline">\(O(n|T|)\)</span>。</p>
+<p>注意到其可以使用 bitset 优化，时间复杂度降为 <span class="math inline">\(O(n|T|/w)\)</span>。</p>
+<p>然后对于多个串，我们同时进行 dp 即可，故时间复杂度为 <span class="math inline">\(O(ns/w)\)</span>。</p>
+<h3 id="c-等待弃"><a href="http://www.51nod.com/Contest/Problem.html#contestProblemId=4294">C 等待</a>（弃）</h3>
+<p>LOJ2850。还没看题解。</p>
+<p>下面全部假定 <span class="math inline">\(a_1\ge a_2\ge \cdots \ge a_n\)</span>。</p>
+<p>先考虑一个暴力做法：考虑从高位到低位，贪心地确定 <span class="math inline">\(\sum b_i\)</span> 每一位的值。假设到了第 <span class="math inline">\(p\)</span> 位，且更高的位已经确定，则我们先假设其为 <span class="math inline">\(0\)</span> 而更低位全部填 <span class="math inline">\(1\)</span>，然后判断这个 <span class="math inline">\(\sum b_i\)</span> 是否合法。</p>
+<p>对于判断，考虑其的最高位（第 <span class="math inline">\(m\)</span> 位）由哪个 <span class="math inline">\(a_i\)</span> 贡献而来。</p>
+<blockquote>
+<p>结论 <span class="math inline">\(1\)</span>：存在最优解满足 <span class="math inline">\(b_1\ge b_2\ge\cdots\ge b_n\)</span>。</p>
+</blockquote>
+<p>所以假设 <span class="math inline">\(\sum b\)</span> 的第 <span class="math inline">\(m\)</span> 位由 <span class="math inline">\(a_{mx}\)</span> 贡献而来。</p>
+<ol type="1">
+<li>若 <span class="math inline">\(a_{mx}\)</span> 的最高位小于 <span class="math inline">\(m\)</span>，说明 <span class="math inline">\(b_{mx} = 2^{m}\)</span> 就可以满足其比 <span class="math inline">\(a_{mx}\)</span> 大的性质。删掉就可以了。</li>
+<li>若 <span class="math inline">\(a_{mx}\)</span> 的最高位大于 <span class="math inline">\(m\)</span>，显然不可行。</li>
+<li>若 <span class="math inline">\(a_{mx}\)</span> 的最高位为 <span class="math inline">\(m\)</span>，则还需要考虑后面的位，将 <span class="math inline">\(a_{mx}\)</span> 的最高位删掉然后扔回去，继续考虑下一位。</li>
+</ol>
+<p>如果 <span class="math inline">\(a_i\)</span> 能被删干净，说明 <span class="math inline">\(\sum b_i\)</span> 可行。于是判断 <span class="math inline">\(\sum b_i\)</span> 是否合法得到了解决。</p>
+<p>用堆来实现这个过程，可以做到 <span class="math inline">\(O(\mathrm{sort}(\sum L) + (n + \max L)^2\log(n + \max L))\)</span>。</p>
+<hr/>
+<blockquote>
+<p>结论 <span class="math inline">\(2\)</span>：当 <span class="math inline">\(a_i = 2^{k_i}\)</span> 时，<span class="math inline">\(\sum b_i\)</span> 的最高位 <span class="math inline">\(m = \max\{k_i + i - 1\}\)</span>。</p>
+</blockquote>
+<p>这个应该是一个比较显然的下界。</p>
+<hr/>
+<p>下面令 <span class="math inline">\(a_i\)</span> 的最高位为 <span class="math inline">\(l_i\)</span>。则显然有 <span class="math inline">\(2^{l_i} \le a_i&lt; 2^{l_i + 1}\)</span>，所以我们可以知道 <span class="math inline">\(a_1,a_2,\cdots,a_n\)</span> 的答案最高位不小于 <span class="math inline">\(\max\{l_i + i - 1\}\)</span>，不大于 <span class="math inline">\(\max\{l_i + i\}\)</span>。</p>
+<p>太阴间了，暂时不继续了。</p>
+<h2 id="r1d3-hnfms-done">R1D3 (HNFMS) (Done)</h2>
+<h3 id="a-速通"><a href="https://www.51nod.com/Contest/Problem.html#contestProblemId=4295">A 速通</a></h3>
+<p>题意：要求从根节点走到叶子节点，节点 <span class="math inline">\(u\)</span> 上花费的时间是 <span class="math inline">\([l_u, r_u]\)</span> 中间均匀随机的一个整数，花费完这个时间后有两种选择</p>
+<ul>
+<li>直接返回根节点。</li>
+<li>以 <span class="math inline">\(p_v\)</span> 的概率前往儿子 <span class="math inline">\(v\)</span>。</li>
+</ul>
+<p>现要求其最后一次从根往叶子走的时间花费不超过 <span class="math inline">\(lim\)</span>，问总的期望花费时间。<span class="math inline">\(n\le 100,0\le l_i\le r_i\le 10,lim\le 1000\)</span>。</p>
+<p>概率期望做的好少。。我是傻逼。</p>
+<p>注意到“回到根”这个过程是暗含了对后面的影响的，而暴力高斯消元的话似乎是不太行的，因为 dp 数组至少要有 <span class="math inline">\(n\)</span> 和 <span class="math inline">\(lim\)</span> 两个维度。（所以我第一发看似正确的代码只有 <span class="math inline">\(35\)</span> 分）</p>
+<p>那么我们不妨二分这个答案。令 <span class="math inline">\(f_{u,i}\)</span> 为当前在 <span class="math inline">\(u\)</span> 节点，还剩 <span class="math inline">\(i\)</span> 的时间余量，到达叶子节点的期望时间。那么转移的过程中会涉及到与 <span class="math inline">\(f_{1,lim}\)</span> 取 <span class="math inline">\(\min\)</span>（因为如果重开更优肯定会重开）。如果算出来的 <span class="math inline">\(f'_{1,lim}\le f_{1,lim}\)</span>，说明答案还可以更小，反之亦然。</p>
+<p>所以本题就在 <span class="math inline">\(O(n\times r\times lim\times\log{10^9})\)</span> 的复杂度内得以解决。</p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode cpp"><code class="sourceCode cpp"><span id="cb1-1"><a aria-hidden="true" href="#cb1-1"></a><span class="kw">using</span> db = <span class="dt">long</span> <span class="dt">double</span>;</span>
+<span id="cb1-2"><a aria-hidden="true" href="#cb1-2"></a><span class="at">const</span> db EPS = <span class="fl">1e-8</span>;</span>
+<span id="cb1-3"><a aria-hidden="true" href="#cb1-3"></a><span class="at">const</span> <span class="dt">int</span> maxn = <span class="dv">105</span>, maxlim = <span class="fl">1e3</span> + <span class="dv">5</span>;</span>
+<span id="cb1-4"><a aria-hidden="true" href="#cb1-4"></a>db f[maxn][maxlim], p[maxn];</span>
+<span id="cb1-5"><a aria-hidden="true" href="#cb1-5"></a><span class="dt">int</span> n, lim, l[maxn], r[maxn];</span>
+<span id="cb1-6"><a aria-hidden="true" href="#cb1-6"></a></span>
+<span id="cb1-7"><a aria-hidden="true" href="#cb1-7"></a>vector&lt;<span class="dt">int</span>&gt; G[maxn];</span>
+<span id="cb1-8"><a aria-hidden="true" href="#cb1-8"></a></span>
+<span id="cb1-9"><a aria-hidden="true" href="#cb1-9"></a><span class="dt">void</span> dfs(<span class="dt">int</span> u, db mid) {</span>
+<span id="cb1-10"><a aria-hidden="true" href="#cb1-10"></a>    FOR(i, <span class="dv">0</span>, lim) f[u][i] = <span class="dv">0</span>;</span>
+<span id="cb1-11"><a aria-hidden="true" href="#cb1-11"></a>    <span class="cf">for</span> (<span class="kw">auto</span> &amp;v : G[u]) {</span>
+<span id="cb1-12"><a aria-hidden="true" href="#cb1-12"></a>        dfs(v, mid);</span>
+<span id="cb1-13"><a aria-hidden="true" href="#cb1-13"></a>        FOR(i, <span class="dv">0</span>, lim) f[u][i] += p[v] * f[v][i];</span>
+<span id="cb1-14"><a aria-hidden="true" href="#cb1-14"></a>    }</span>
+<span id="cb1-15"><a aria-hidden="true" href="#cb1-15"></a>    FOR(i, <span class="dv">0</span>, lim) chkmin(f[u][i], mid);</span>
+<span id="cb1-16"><a aria-hidden="true" href="#cb1-16"></a>    db pp = <span class="fl">1.0</span> / (r[u] - l[u] + <span class="fl">1.0</span>);</span>
+<span id="cb1-17"><a aria-hidden="true" href="#cb1-17"></a>    DEC(i, lim, <span class="dv">0</span>) {</span>
+<span id="cb1-18"><a aria-hidden="true" href="#cb1-18"></a>        <span class="cf">if</span> (!l[u]) f[u][i] *= pp;</span>
+<span id="cb1-19"><a aria-hidden="true" href="#cb1-19"></a>        <span class="cf">else</span> f[u][i] = <span class="dv">0</span>;</span>
+<span id="cb1-20"><a aria-hidden="true" href="#cb1-20"></a>        FOR(j, max(l[u], <span class="dv">1</span>), r[u]) {</span>
+<span id="cb1-21"><a aria-hidden="true" href="#cb1-21"></a>            <span class="cf">if</span> (i - j &gt;= <span class="dv">0</span>) f[u][i] += pp * (f[u][i - j] + j);</span>
+<span id="cb1-22"><a aria-hidden="true" href="#cb1-22"></a>            <span class="cf">else</span> f[u][i] += pp * (mid + j);</span>
+<span id="cb1-23"><a aria-hidden="true" href="#cb1-23"></a>        }</span>
+<span id="cb1-24"><a aria-hidden="true" href="#cb1-24"></a>    }</span>
+<span id="cb1-25"><a aria-hidden="true" href="#cb1-25"></a>    <span class="cf">return</span>;</span>
+<span id="cb1-26"><a aria-hidden="true" href="#cb1-26"></a>}</span>
+<span id="cb1-27"><a aria-hidden="true" href="#cb1-27"></a></span>
+<span id="cb1-28"><a aria-hidden="true" href="#cb1-28"></a><span class="dt">int</span> main() {</span>
+<span id="cb1-29"><a aria-hidden="true" href="#cb1-29"></a>    cin &gt;&gt; n &gt;&gt; lim;</span>
+<span id="cb1-30"><a aria-hidden="true" href="#cb1-30"></a>    FOR(i, <span class="dv">1</span>, n) cin &gt;&gt; l[i] &gt;&gt; r[i];</span>
+<span id="cb1-31"><a aria-hidden="true" href="#cb1-31"></a>    FOR(i, <span class="dv">2</span>, n) {</span>
+<span id="cb1-32"><a aria-hidden="true" href="#cb1-32"></a>        <span class="dt">int</span> fa;</span>
+<span id="cb1-33"><a aria-hidden="true" href="#cb1-33"></a>        cin &gt;&gt; fa &gt;&gt; p[i];</span>
+<span id="cb1-34"><a aria-hidden="true" href="#cb1-34"></a>        G[fa].push_back(i);</span>
+<span id="cb1-35"><a aria-hidden="true" href="#cb1-35"></a>    }</span>
+<span id="cb1-36"><a aria-hidden="true" href="#cb1-36"></a>    db L = <span class="dv">0</span>, R = <span class="fl">1e9</span>;</span>
+<span id="cb1-37"><a aria-hidden="true" href="#cb1-37"></a>    <span class="cf">while</span> (R - L &gt; EPS) {</span>
+<span id="cb1-38"><a aria-hidden="true" href="#cb1-38"></a>        db mid = (L + R) / <span class="fl">2.0</span>;</span>
+<span id="cb1-39"><a aria-hidden="true" href="#cb1-39"></a>        dfs(<span class="dv">1</span>, mid);</span>
+<span id="cb1-40"><a aria-hidden="true" href="#cb1-40"></a>        <span class="cf">if</span> (f[<span class="dv">1</span>][lim] &gt; mid) L = mid;</span>
+<span id="cb1-41"><a aria-hidden="true" href="#cb1-41"></a>        <span class="cf">else</span> R = mid;</span>
+<span id="cb1-42"><a aria-hidden="true" href="#cb1-42"></a>    }</span>
+<span id="cb1-43"><a aria-hidden="true" href="#cb1-43"></a>    <span class="cf">if</span> (L &lt; <span class="fl">1e9</span> - EPS) cout &lt;&lt; fixed &lt;&lt; setprecision(<span class="dv">7</span>) &lt;&lt; L &lt;&lt; endl;</span>
+<span id="cb1-44"><a aria-hidden="true" href="#cb1-44"></a>    <span class="cf">else</span> cout &lt;&lt; -<span class="dv">1</span> &lt;&lt; endl;</span>
+<span id="cb1-45"><a aria-hidden="true" href="#cb1-45"></a>    <span class="cf">return</span> <span class="dv">0</span>;</span>
+<span id="cb1-46"><a aria-hidden="true" href="#cb1-46"></a>}</span></code></pre></div>
+<h3 id="b-虚数之树"><a href="https://www.51nod.com/Contest/Problem.html#contestProblemId=4296">B 虚数之树</a></h3>
+<p>题意：给定一棵树，维护一个初始为空的点集 <span class="math inline">\(S\)</span>，支持加点，删点，以及给定 <span class="math inline">\(x,l,r\)</span>，查询 <span class="math inline">\(\min\{\operatorname{dis}(x, y) : y\in S\land y\in[l,r]\}\)</span>。</p>
+<p>要查询的是距离，这个东西与树形态无关，可以考虑用点分树维护。具体地，点分树每个节点上挂一个维护区间最小值的动态开点线段树即可。时间复杂度 <span class="math inline">\(O(n\log^2n)\)</span>。</p>
+<h3 id="c-叮叮车"><a href="https://www.51nod.com/Contest/Problem.html#contestProblemId=4297">C 叮叮车</a></h3>
+<p>题意：<span class="math inline">\(\mathrm{Cat}(n)\)</span> 表示卡特兰数。定义 <span class="math inline">\(v_p[x]\)</span> 表示将 <span class="math inline">\(x\)</span> 分解质因数后 <span class="math inline">\(p\)</span> 的次数。给定 <span class="math inline">\(1\le l\le r\le 10^{10000}\)</span>，求 <span class="math inline">\(\max_{i=l}^r\{v_7[(i + 1)\mathrm{Cat}(i) ]\}\)</span>，答案对 <span class="math inline">\(10^{9} + 7\)</span> 取模。</p>
+<p>考虑 <span class="math inline">\((i+1)\mathrm{Cat}(i) = \dbinom{2i}{i}\)</span>，所以我们要求的就是 <span class="math inline">\(v_7\left[\dbinom{2i}i\right]\)</span> 的最大值。<strong>根据 Kummer 定理</strong>（没想到输麻了）其就为 <span class="math inline">\(i + i\)</span> 在 <span class="math inline">\(7\)</span> 进制下的进位次数。</p>
+<p>所以将 <span class="math inline">\(l\)</span> 和 <span class="math inline">\(r\)</span> 转成 <span class="math inline">\(7\)</span> 进制之后，枚举第一个不一样的位，然后后面全部放 <span class="math inline">\(6\)</span>。转进制就直接取余再倒序（没素质）。</p>
+<p>时间复杂度瓶颈为进制转化，<span class="math inline">\(O(\log_{10}r\times \log_7r)\)</span>，但实际上跑的不慢。</p>
+<h2 id="r1d4-hnfms-semi-done">R1D4 (HNFMS) (semi-Done)</h2>
+<h3 id="a-星际广播"><a href="http://www.51nod.com/Contest/Problem.html#contestProblemId=4298">A 星际广播</a></h3>
+<p>长度为 <span class="math inline">\(n\le 10^6\)</span> 的序列，初始每个元素为 <code>R</code>，<code>B</code> 或 <code>Y</code>。可以进行 <span class="math inline">\(m\le 10^6\)</span> 次操作，每次操作选择一个长度为 <span class="math inline">\(l\)</span> 的区间，然后将区间内的颜色变统一。问最少剩下多少个颜色不统一的星球。</p>
+<p>显然考虑枚举最后变成的颜色。然后令 <span class="math inline">\(f_{i, j}\)</span> 表示对 <span class="math inline">\([1, i]\)</span> 做了 <span class="math inline">\(j\)</span> 次操作后的最小答案，可以 <span class="math inline">\(O(n^2)\)</span> dp。发现复杂度和“选择物品的个数”有关，故考虑 wqs 二分。而 <span class="math inline">\(f_{n, x}\)</span> 关于 <span class="math inline">\(x\)</span> 的函数确实有凸性，因为一次操作能统一掉的元素数量肯定越来越少。</p>
+<p>那就在 <span class="math inline">\([0, l]\)</span> 里面二分一下斜率，然后简单 dp 一下即可： <span class="math display">\[
+f_i = \min\{f_{i - 1} + [s_i \ne x], f_{\max\{i - l, 0\}} + k\}
+\]</span> 时间复杂度 <span class="math inline">\(O(n\log n)\)</span>。</p>
+<div class="sourceCode" id="cb2"><pre class="sourceCode cpp"><code class="sourceCode cpp"><span id="cb2-1"><a aria-hidden="true" href="#cb2-1"></a><span class="kw">using</span> fastIO::is;</span>
+<span id="cb2-2"><a aria-hidden="true" href="#cb2-2"></a><span class="kw">using</span> fastIO::os;</span>
+<span id="cb2-3"><a aria-hidden="true" href="#cb2-3"></a><span class="kw">using</span> DP = pair&lt;<span class="dt">int</span>, <span class="dt">int</span>&gt;;</span>
+<span id="cb2-4"><a aria-hidden="true" href="#cb2-4"></a><span class="at">const</span> <span class="dt">int</span> maxn = <span class="fl">1e6</span> + <span class="dv">5</span>;</span>
+<span id="cb2-5"><a aria-hidden="true" href="#cb2-5"></a><span class="dt">char</span> s[maxn];</span>
+<span id="cb2-6"><a aria-hidden="true" href="#cb2-6"></a><span class="dt">int</span> n, m, L, ans = <span class="fl">1e9</span>;</span>
+<span id="cb2-7"><a aria-hidden="true" href="#cb2-7"></a>DP f[maxn];</span>
+<span id="cb2-8"><a aria-hidden="true" href="#cb2-8"></a></span>
+<span id="cb2-9"><a aria-hidden="true" href="#cb2-9"></a>il <span class="at">const</span> DP <span class="kw">operator</span>+(<span class="at">const</span> DP &amp;lhs, <span class="at">const</span> DP &amp;rhs) {</span>
+<span id="cb2-10"><a aria-hidden="true" href="#cb2-10"></a>    <span class="cf">return</span> DP(lhs.first + rhs.first, lhs.second + rhs.second);</span>
+<span id="cb2-11"><a aria-hidden="true" href="#cb2-11"></a>}</span>
+<span id="cb2-12"><a aria-hidden="true" href="#cb2-12"></a></span>
+<span id="cb2-13"><a aria-hidden="true" href="#cb2-13"></a><span class="dt">void</span> solve(<span class="dt">int</span> x) {</span>
+<span id="cb2-14"><a aria-hidden="true" href="#cb2-14"></a>    <span class="dt">int</span> l = <span class="dv">0</span>, r = L + <span class="dv">1</span>, curans = <span class="fl">1e9</span>;</span>
+<span id="cb2-15"><a aria-hidden="true" href="#cb2-15"></a>    <span class="cf">while</span> (l + <span class="dv">1</span> &lt; r) {</span>
+<span id="cb2-16"><a aria-hidden="true" href="#cb2-16"></a>        <span class="dt">int</span> mid = (l + r) &gt;&gt; <span class="dv">1</span>;</span>
+<span id="cb2-17"><a aria-hidden="true" href="#cb2-17"></a>        f[<span class="dv">0</span>] = {<span class="dv">0</span>, <span class="dv">0</span>};</span>
+<span id="cb2-18"><a aria-hidden="true" href="#cb2-18"></a>        FOR(i, <span class="dv">1</span>, n) f[i] = min(f[i - <span class="dv">1</span>] + DP(s[i] != x, <span class="dv">0</span>), f[max(i - L, <span class="dv">0</span>)] + DP(mid, <span class="dv">1</span>));</span>
+<span id="cb2-19"><a aria-hidden="true" href="#cb2-19"></a>        <span class="cf">if</span> (f[n].second &lt;= m) curans = f[n].first - mid * m, r = mid;</span>
+<span id="cb2-20"><a aria-hidden="true" href="#cb2-20"></a>        <span class="cf">else</span> l = mid;</span>
+<span id="cb2-21"><a aria-hidden="true" href="#cb2-21"></a>    }</span>
+<span id="cb2-22"><a aria-hidden="true" href="#cb2-22"></a>    chkmin(ans, curans);</span>
+<span id="cb2-23"><a aria-hidden="true" href="#cb2-23"></a>    <span class="cf">return</span>;</span>
+<span id="cb2-24"><a aria-hidden="true" href="#cb2-24"></a>}</span>
+<span id="cb2-25"><a aria-hidden="true" href="#cb2-25"></a></span>
+<span id="cb2-26"><a aria-hidden="true" href="#cb2-26"></a><span class="dt">int</span> main() {</span>
+<span id="cb2-27"><a aria-hidden="true" href="#cb2-27"></a>    is &gt;&gt; n &gt;&gt; m &gt;&gt; L &gt;&gt; (s + <span class="dv">1</span>);</span>
+<span id="cb2-28"><a aria-hidden="true" href="#cb2-28"></a>    FOR(i, <span class="dv">1</span>, n) {</span>
+<span id="cb2-29"><a aria-hidden="true" href="#cb2-29"></a>        <span class="cf">if</span> (s[i] == <span class="ch">'R'</span>) s[i] = <span class="dv">1</span>;</span>
+<span id="cb2-30"><a aria-hidden="true" href="#cb2-30"></a>        <span class="cf">else</span> <span class="cf">if</span> (s[i] == <span class="ch">'B'</span>) s[i] = <span class="dv">2</span>;</span>
+<span id="cb2-31"><a aria-hidden="true" href="#cb2-31"></a>        <span class="cf">else</span> s[i] = <span class="dv">3</span>;</span>
+<span id="cb2-32"><a aria-hidden="true" href="#cb2-32"></a>    }</span>
+<span id="cb2-33"><a aria-hidden="true" href="#cb2-33"></a>    FOR(x, <span class="dv">1</span>, <span class="dv">3</span>) solve(x);</span>
+<span id="cb2-34"><a aria-hidden="true" href="#cb2-34"></a>    os &lt;&lt; ans;</span>
+<span id="cb2-35"><a aria-hidden="true" href="#cb2-35"></a>    <span class="cf">return</span> <span class="dv">0</span>;</span>
+<span id="cb2-36"><a aria-hidden="true" href="#cb2-36"></a>}</span></code></pre></div>
+<h3 id="b-星际航道未写代码"><a href="http://www.51nod.com/Contest/Problem.html#contestProblemId=4299">B 星际航道</a>（未写代码）</h3>
+<p><span class="math inline">\(r\times c\)</span> 的网格图，初始所有边权为 <span class="math inline">\(0\)</span>。会要求每次修改一条边的边权，然后求出 MST 的边权和。<span class="math inline">\(2\le r, c\)</span>，<span class="math inline">\(r\times c\le 10^5\)</span>，<span class="math inline">\(\le 2\times 10^5\)</span> 次询问。<strong>强制在线</strong>。</p>
+<p>我们知道，如果修改的边权是递减的，那么可以使用 LCT 维护（每次链查最大值/删加边）。<del>对于离线的一般情况可以使用线段树分治之类的</del>。</p>
+<p>由于网格图是平面图，所以考虑其对偶图。若设 <span class="math inline">\(T\)</span> 为原图的 MinST，<span class="math inline">\(T'\)</span> 为对偶图的 MaxST，则所有的边要么在 <span class="math inline">\(T\)</span> 中要么在 <span class="math inline">\(T'\)</span> 中（只有两条边不在），所以就可以根据边权加减来做了。</p>
+<h3 id="c-星际联邦"><a href="http://www.51nod.com/Contest/Problem.html#contestProblemId=4300">C 星际联邦</a></h3>
+<p>牛逼逼数学题。给定 <span class="math inline">\(n\le 2^{20}\)</span> 个节点，问形成的所有有根生成森林的权值总和。设 <span class="math inline">\(u\)</span> 的父亲为 <span class="math inline">\(p_u\)</span>，则一个有根森林的权值定义为 <span class="math inline">\(\displaystyle\prod_{u\text{ is not root}} w_{(u - p_u)\bmod n}\)</span>。</p>
+<p>首先建虚点 <span class="math inline">\(n + 1\)</span> 将森林转为有根树。令 <span class="math inline">\(S = \sum w_i\)</span>，可以得到现在的 Laplace 矩阵为 <span class="math display">\[
+\begin{bmatrix}
+S + 1 &amp; -w_1 &amp; \cdots &amp;-w_{n - 1}\\
+-w_{n - 1} &amp; S + 1 &amp; \cdots &amp; -w_{n - 2}\\
+\vdots &amp; \vdots &amp; \ddots &amp;\vdots\\
+-w_1 &amp; -w_2 &amp; \cdots &amp; S + 1
+\end{bmatrix}
+\]</span> 然后直接高消求行列式就有 <span class="math inline">\(40\)</span> 分了。</p>
+<p>发现这是一个循环矩阵，循环矩阵有如下性质： <span class="math display">\[
+A = \begin{bmatrix}
+a_0 &amp; a_1 &amp; \cdots &amp; a_{n - 1}\\
+a_{n - 1} &amp; a_0 &amp; \cdots &amp; a_{n - 2}\\
+\vdots &amp; \vdots &amp; \ddots &amp; \vdots\\
+a_1 &amp; a_2 &amp; \cdots &amp; a_{0}
+\end{bmatrix}
+\]</span> 则： <span class="math display">\[
+\begin{aligned}
+\det A &amp;= \prod_{i=0}^{n-1}f(\omega^i)\\
+f(x) &amp;= \sum_{i=0}^{n-1}a_ix^i
+\end{aligned}
+\]</span> 所以对于本题，对序列 <span class="math inline">\(S + 1, -w_1,-w_2,\cdots, -w_{n-1}\)</span> 做一遍 DFT 后求点值序列的积即可。下面给出上述性质的证明：</p>
+<p>考虑一个单位根 <span class="math inline">\(i\)</span> 次幂的范德蒙德矩阵（省略 <span class="math inline">\(\omega\)</span> 的角标）： <span class="math display">\[
+W= \begin{bmatrix}
+\omega^0&amp;\omega^0&amp;\cdots&amp;\omega^0\\
+\omega^0&amp;\omega^1&amp;\cdots&amp;\omega^{n-1}\\
+\vdots&amp;\vdots&amp;\ddots&amp;\vdots\\
+\omega^0&amp;\omega^{n-1}&amp;\cdots&amp;\omega^{(n-1)(n-1)}
+\end{bmatrix}
+\]</span> 已知 <span class="math inline">\(\omega^{i} = \omega^{i\bmod n}\)</span>，将 <span class="math inline">\(A\)</span> 和 <span class="math inline">\(W\)</span> 相乘可以得到 <span class="math display">\[
+\begin{aligned}
+(AW)_{i,j} &amp;= \sum_{k=0}^{n - 1} A_{i,k}W_{k,j}\\
+&amp;= \sum_{k=0}^{n-1}a_{(k-i)\bmod n}\omega^{jk\bmod n}\\
+&amp;= \sum_{k=0}^{n-1}a_k\omega^{j(k+i)\bmod n}\\
+&amp;= \omega^{ji}\sum_{k=0}^{n-1}a_k(\omega^j)^k\\
+&amp;= \omega^{ji} f(\omega^j)
+\end{aligned}
+\]</span> 于是 <span class="math display">\[
+\begin{aligned}
+\det AW &amp;= \det\begin{bmatrix}
+\omega^{0}f(\omega^0)&amp;\omega^{0}f(\omega^1)&amp;\cdots&amp;\omega^0f(\omega^{n-1})\\
+\omega^{0}f(\omega^0)&amp;\omega^{1}f(\omega^1)&amp;\cdots&amp;\omega^{n-1}f(\omega^{n-1})\\
+\vdots&amp;\vdots&amp;\ddots&amp;\vdots\\
+\omega^0f(\omega^0)&amp;\omega^{n-1}f(\omega^1)&amp;\cdots&amp;\omega^{(n-1)(n-1)}f(\omega^{n-1})
+\end{bmatrix}\\
+&amp;=\prod_{i=0}^{n-1}f(w^{i})\det\begin{bmatrix}\omega^0&amp;\omega^0&amp;\cdots&amp;\omega^0\\
+\omega^0&amp;\omega^1&amp;\cdots&amp;\omega^{n-1}\\
+\vdots&amp;\vdots&amp;\ddots&amp;\vdots\\
+\omega^0&amp;\omega^{n-1}&amp;\cdots&amp;\omega^{(n-1)(n-1)}\end{bmatrix}\\
+&amp;=\prod_{i=0}^{n-1}f(w^{i})\det W
+\end{aligned}
+\]</span> 由于 <span class="math inline">\(\displaystyle \det A\det W = \det AW =\prod_{i=0}^{n-1}f(w^{i})\det W\)</span>，所以可以得到 <span class="math inline">\(\displaystyle\det A = \prod_{i=0}^{n-1}f(w^{i})\)</span>。</p>
+<h2 id="r2d1-bs-a-b">R2D1 (BS) (A + B )</h2>
+<h3 id="a-小-f-与游戏"><a href="http://www.51nod.com/Contest/Problem.html#contestProblemId=4308">A 小 F 与游戏</a></h3>
+<p>ARC068D。首先双端队列一定单谷，不妨钦定取完 <span class="math inline">\(1\)</span> 后剩下的部分是单调减地取出来，则产生的删除序列一定可以被划分为两个递减子序列。我们对这种删除序列计数，然后答案乘上 <span class="math inline">\(2^{n - m - 1}\)</span>。</p>
+<p>考虑 <span class="math inline">\(p_m = 1\)</span> 不好处理，将其转为逆排列，即 <span class="math inline">\(q_1 = m\)</span>，然后 dp。设 <span class="math inline">\(f_{i,j}\)</span> 表示长度为 <span class="math inline">\(i\)</span>，首项为 <span class="math inline">\(j\)</span> 的合法序列的数量。由 Dilworth，其合法等价于不存在长度为 <span class="math inline">\(3\)</span> 的上升子序列。所以推出 dp 式子为： <span class="math display">\[
+f_{i,j} = \begin{cases}
+\begin{cases}
+f_{i - 1, 1}&amp;j = 1\\
+f_{i, i - 1}&amp;j = i\\
+f_{i - 1, j} + f_{i, j - 1}&amp;\text{otherwise}\\
+\end{cases} &amp; i &gt; 1\\
+1&amp;i = 1
+\end{cases}
+\]</span> 看出来是个棋盘上的路径计数，推导组合意义得到最终答案为 <span class="math display">\[
+\begin{cases}
+\displaystyle 2^{n - m - 1}\times\left(\binom{n + m - 3}{n - 2} - \dbinom{n + m - 3}{n} \right ) &amp; n &gt; 1\\
+1&amp;n = 1
+\end{cases}
+\]</span></p>
+<h3 id="b-小-z-与函数"><a href="http://www.51nod.com/Contest/Problem.html#contestProblemId=4309">B 小 Z 与函数</a></h3>
+<p>题意，给定长度为 <span class="math inline">\(n\)</span> 的序列，对其每一个前缀求一个下面函数的值，多测 <span class="math inline">\(T\le 5\)</span>，<span class="math inline">\(1\le a_i\le n\le 2\times 10^5\)</span>。</p>
+<div class="sourceCode" id="cb3"><pre class="sourceCode cpp"><code class="sourceCode cpp"><span id="cb3-1"><a aria-hidden="true" href="#cb3-1"></a><span class="dt">int</span> get(<span class="dt">int</span> n) {</span>
+<span id="cb3-2"><a aria-hidden="true" href="#cb3-2"></a>    <span class="dt">int</span> res = <span class="dv">0</span>;</span>
+<span id="cb3-3"><a aria-hidden="true" href="#cb3-3"></a>    <span class="cf">for</span> (<span class="dt">int</span> i = <span class="dv">1</span>; i &lt;= n; i++) {</span>
+<span id="cb3-4"><a aria-hidden="true" href="#cb3-4"></a>        <span class="dt">int</span> vs = <span class="dv">0</span>;</span>
+<span id="cb3-5"><a aria-hidden="true" href="#cb3-5"></a>        <span class="cf">for</span> (<span class="dt">int</span> j = i; j &lt;= n; j++)</span>
+<span id="cb3-6"><a aria-hidden="true" href="#cb3-6"></a>            <span class="cf">if</span> (a[i] &lt; a[j])</span>
+<span id="cb3-7"><a aria-hidden="true" href="#cb3-7"></a>                swap(a[i], a[j]), res++, vs = <span class="dv">1</span>;</span>
+<span id="cb3-8"><a aria-hidden="true" href="#cb3-8"></a>        res += vs;</span>
+<span id="cb3-9"><a aria-hidden="true" href="#cb3-9"></a>    }</span>
+<span id="cb3-10"><a aria-hidden="true" href="#cb3-10"></a>    <span class="cf">return</span> res;</span>
+<span id="cb3-11"><a aria-hidden="true" href="#cb3-11"></a>}</span></code></pre></div>
+<p>发现一次内层循环其实就是在 <span class="math inline">\(i\)</span> 位置处找到一个单调栈，然后将里面的元素循环右移。贡献为栈的大小（若栈大小为 <span class="math inline">\(1\)</span> 不产生贡献）。</p>
+<p>但是好像每个数对 <code>res++</code> 的贡献和 <code>vs</code> 的贡献不太好一起处理。那么就先忽略掉 <code>vs</code> 的影响，<strong>分开处理</strong>。</p>
+<p>只考虑每个数对 <code>res++</code> 的贡献的话，对于排列的情况，会发现其就是在他之后比他大的数的个数。但若是有重复元素就会比较麻烦，手玩一下可以发现比 <span class="math inline">\(x\)</span> 大的元素只会被一个 <span class="math inline">\(x\)</span> 统计一次，故只需要记录同种数最前面的贡献。这个贡献比较好推广到前缀的情况。</p>
+<p>而对于 <code>vs</code>，可以看作单次有超过 <span class="math inline">\(1\)</span> 个数被贡献的情况，即 <span class="math inline">\(n - \text{大小为 1 的栈的数量}\)</span>。那么下面就考虑哪个元素开头时，栈的大小会为 <span class="math inline">\(1\)</span>，对于排列的情况，手玩发现一个元素 <span class="math inline">\(a_i\)</span> 能产生贡献的充分条件是<strong>初始时前面和后面都不存在 <span class="math inline">\(&lt; a_i\)</span> 的元素</strong>。考虑如下序列： <span class="math display">\[
+2,2,2,2,3,1,2,3,4
+\]</span> 发现在循环到 <span class="math inline">\(1\)</span> 前，<span class="math inline">\(1\)</span> 前面的 <span class="math inline">\(2\)</span> 会占据之后比 <span class="math inline">\(2\)</span> 大的数，且优先占据 <span class="math inline">\(1\)</span> 之后的位置。 <span class="math display">\[
+-, -, -, 2, 2,1,2,2,2
+\]</span> 只有 <span class="math inline">\(1\)</span> 前面的 <span class="math inline">\(2\)</span> 会产生贡献。所以对于一个数 <span class="math inline">\(x\)</span>，需要维护在其后面出现的第一个 <span class="math inline">\(&lt; x\)</span> 的数 <span class="math inline">\(y\)</span> 之后 <span class="math inline">\(\ge x\)</span> 的数的个数，则前缀下 <span class="math inline">\(x\)</span> 的贡献就是 <span class="math inline">\(x\text{ 的个数} - y\text{ 之后}\ge x\text{的个数}\)</span>。这个东西就可以使用 <code>set</code> 维护。</p>
+<p>感觉这题真的很抽象。。。看代码吧。</p>
+<div class="sourceCode" id="cb4"><pre class="sourceCode cpp"><code class="sourceCode cpp"><span id="cb4-1"><a aria-hidden="true" href="#cb4-1"></a><span class="kw">using</span> fastIO::is;</span>
+<span id="cb4-2"><a aria-hidden="true" href="#cb4-2"></a><span class="kw">using</span> fastIO::os;</span>
+<span id="cb4-3"><a aria-hidden="true" href="#cb4-3"></a><span class="kw">using</span> ll = <span class="dt">long</span> <span class="dt">long</span>;</span>
+<span id="cb4-4"><a aria-hidden="true" href="#cb4-4"></a><span class="at">const</span> <span class="dt">int</span> maxn = <span class="fl">2e5</span> + <span class="dv">5</span>;</span>
+<span id="cb4-5"><a aria-hidden="true" href="#cb4-5"></a><span class="dt">int</span> a[maxn], n;</span>
+<span id="cb4-6"><a aria-hidden="true" href="#cb4-6"></a>ll ans[maxn];</span>
+<span id="cb4-7"><a aria-hidden="true" href="#cb4-7"></a></span>
+<span id="cb4-8"><a aria-hidden="true" href="#cb4-8"></a><span class="dt">int</span> vis[maxn], t[maxn];</span>
+<span id="cb4-9"><a aria-hidden="true" href="#cb4-9"></a></span>
+<span id="cb4-10"><a aria-hidden="true" href="#cb4-10"></a><span class="dt">void</span> solve1() {</span>
+<span id="cb4-11"><a aria-hidden="true" href="#cb4-11"></a>    memset(vis, <span class="dv">0</span>, <span class="kw">sizeof</span> vis);</span>
+<span id="cb4-12"><a aria-hidden="true" href="#cb4-12"></a>    memset(t, <span class="dv">0</span>, <span class="kw">sizeof</span> t);</span>
+<span id="cb4-13"><a aria-hidden="true" href="#cb4-13"></a>    FOR(i, <span class="dv">1</span>, n) {</span>
+<span id="cb4-14"><a aria-hidden="true" href="#cb4-14"></a>        ans[i] = ans[i - <span class="dv">1</span>];</span>
+<span id="cb4-15"><a aria-hidden="true" href="#cb4-15"></a>        <span class="cf">for</span> (<span class="dt">int</span> x = a[i] - <span class="dv">1</span>; x; x -= lowbit(x)) ans[i] += t[x];</span>
+<span id="cb4-16"><a aria-hidden="true" href="#cb4-16"></a>        <span class="cf">if</span> (!vis[a[i]]) {</span>
+<span id="cb4-17"><a aria-hidden="true" href="#cb4-17"></a>            vis[a[i]] = <span class="dv">1</span>;</span>
+<span id="cb4-18"><a aria-hidden="true" href="#cb4-18"></a>            <span class="cf">for</span> (<span class="dt">int</span> x = a[i]; x &lt;= n; x += lowbit(x)) ++t[x];</span>
+<span id="cb4-19"><a aria-hidden="true" href="#cb4-19"></a>        }</span>
+<span id="cb4-20"><a aria-hidden="true" href="#cb4-20"></a>    }</span>
+<span id="cb4-21"><a aria-hidden="true" href="#cb4-21"></a>    <span class="cf">return</span>;</span>
+<span id="cb4-22"><a aria-hidden="true" href="#cb4-22"></a>}</span>
+<span id="cb4-23"><a aria-hidden="true" href="#cb4-23"></a></span>
+<span id="cb4-24"><a aria-hidden="true" href="#cb4-24"></a></span>
+<span id="cb4-25"><a aria-hidden="true" href="#cb4-25"></a>set&lt;<span class="dt">int</span>&gt; st, pre;</span>
+<span id="cb4-26"><a aria-hidden="true" href="#cb4-26"></a><span class="dt">int</span> val[maxn];</span>
+<span id="cb4-27"><a aria-hidden="true" href="#cb4-27"></a></span>
+<span id="cb4-28"><a aria-hidden="true" href="#cb4-28"></a><span class="dt">void</span> solve2() {</span>
+<span id="cb4-29"><a aria-hidden="true" href="#cb4-29"></a>    set&lt;<span class="dt">int</span>&gt;().swap(st), set&lt;<span class="dt">int</span>&gt;().swap(pre);</span>
+<span id="cb4-30"><a aria-hidden="true" href="#cb4-30"></a>    <span class="dt">int</span> vs = <span class="dv">0</span>, mn = <span class="fl">1e9</span>;</span>
+<span id="cb4-31"><a aria-hidden="true" href="#cb4-31"></a>    memset(val, <span class="dv">0</span>, <span class="kw">sizeof</span> val);</span>
+<span id="cb4-32"><a aria-hidden="true" href="#cb4-32"></a>    FOR(i, <span class="dv">1</span>, n) pre.insert(a[i]);</span>
+<span id="cb4-33"><a aria-hidden="true" href="#cb4-33"></a>    FOR(i, <span class="dv">1</span>, n) {</span>
+<span id="cb4-34"><a aria-hidden="true" href="#cb4-34"></a>        <span class="dt">int</span> x;</span>
+<span id="cb4-35"><a aria-hidden="true" href="#cb4-35"></a>        <span class="cf">while</span> (!pre.empty() &amp;&amp; (x = *pre.rbegin()) &gt; a[i]) {</span>
+<span id="cb4-36"><a aria-hidden="true" href="#cb4-36"></a>            <span class="cf">if</span> (val[x]) st.insert(x);</span>
+<span id="cb4-37"><a aria-hidden="true" href="#cb4-37"></a>            pre.erase(x);</span>
+<span id="cb4-38"><a aria-hidden="true" href="#cb4-38"></a>        }</span>
+<span id="cb4-39"><a aria-hidden="true" href="#cb4-39"></a>        vector&lt;<span class="dt">int</span>&gt; vec;</span>
+<span id="cb4-40"><a aria-hidden="true" href="#cb4-40"></a>        <span class="cf">while</span> (!st.empty() &amp;&amp; (x = *st.begin()) &lt; a[i]) {</span>
+<span id="cb4-41"><a aria-hidden="true" href="#cb4-41"></a>            st.erase(x);</span>
+<span id="cb4-42"><a aria-hidden="true" href="#cb4-42"></a>            --val[x], ++vs;</span>
+<span id="cb4-43"><a aria-hidden="true" href="#cb4-43"></a>            <span class="cf">if</span> (val[x]) vec.push_back(x);</span>
+<span id="cb4-44"><a aria-hidden="true" href="#cb4-44"></a>        }</span>
+<span id="cb4-45"><a aria-hidden="true" href="#cb4-45"></a>        <span class="cf">for</span> (<span class="dt">int</span> x : vec) st.insert(x);</span>
+<span id="cb4-46"><a aria-hidden="true" href="#cb4-46"></a>        <span class="cf">if</span> (a[i] &lt;= mn) mn = a[i], val[a[i]]++;</span>
+<span id="cb4-47"><a aria-hidden="true" href="#cb4-47"></a>        <span class="cf">else</span> ++vs;</span>
+<span id="cb4-48"><a aria-hidden="true" href="#cb4-48"></a>        ans[i] += vs;</span>
+<span id="cb4-49"><a aria-hidden="true" href="#cb4-49"></a>    }</span>
+<span id="cb4-50"><a aria-hidden="true" href="#cb4-50"></a>    <span class="cf">return</span>;</span>
+<span id="cb4-51"><a aria-hidden="true" href="#cb4-51"></a>}</span>
+<span id="cb4-52"><a aria-hidden="true" href="#cb4-52"></a></span>
+<span id="cb4-53"><a aria-hidden="true" href="#cb4-53"></a><span class="dt">void</span> solve() {</span>
+<span id="cb4-54"><a aria-hidden="true" href="#cb4-54"></a>    memset(ans, <span class="dv">0</span>, <span class="kw">sizeof</span> ans);</span>
+<span id="cb4-55"><a aria-hidden="true" href="#cb4-55"></a>    is &gt;&gt; n;</span>
+<span id="cb4-56"><a aria-hidden="true" href="#cb4-56"></a>    FOR(i, <span class="dv">1</span>, n) is &gt;&gt; a[i];</span>
+<span id="cb4-57"><a aria-hidden="true" href="#cb4-57"></a>    solve1(), solve2();</span>
+<span id="cb4-58"><a aria-hidden="true" href="#cb4-58"></a>    FOR(i, <span class="dv">1</span>, n) os &lt;&lt; ans[i] &lt;&lt; <span class="ch">' '</span>;</span>
+<span id="cb4-59"><a aria-hidden="true" href="#cb4-59"></a>    os &lt;&lt; <span class="ch">'</span><span class="sc">\n</span><span class="ch">'</span>;</span>
+<span id="cb4-60"><a aria-hidden="true" href="#cb4-60"></a>    <span class="cf">return</span>;</span>
+<span id="cb4-61"><a aria-hidden="true" href="#cb4-61"></a>}</span>
+<span id="cb4-62"><a aria-hidden="true" href="#cb4-62"></a></span>
+<span id="cb4-63"><a aria-hidden="true" href="#cb4-63"></a><span class="dt">int</span> main() {</span>
+<span id="cb4-64"><a aria-hidden="true" href="#cb4-64"></a>    <span class="dt">int</span> T; is &gt;&gt; T;</span>
+<span id="cb4-65"><a aria-hidden="true" href="#cb4-65"></a>    <span class="cf">while</span> (T--) solve();</span>
+<span id="cb4-66"><a aria-hidden="true" href="#cb4-66"></a>    <span class="cf">return</span> <span class="dv">0</span>;</span>
+<span id="cb4-67"><a aria-hidden="true" href="#cb4-67"></a>}</span></code></pre></div>
+<h3 id="c-小-w-与骑士未写代码"><a href="http://www.51nod.com/Contest/Problem.html#contestProblemId=4310">C 小 W 与骑士</a>（未写代码）</h3>
+<p>BZOJ4767 加强。从 <span class="math inline">\((0, 0)\)</span> 要走到 <span class="math inline">\((E_x, E_y)\)</span>，每次能从 <span class="math inline">\((x, y)\)</span> 走到 <span class="math inline">\((x + A_x, y + A_y)\)</span> 或 <span class="math inline">\((x + B_x, y + B_y)\)</span>。中间有 <span class="math inline">\(k\)</span> 个不能走的点，问方案数。原题保证 <span class="math inline">\(A_xB_y - A_yB_x\ne 0\)</span>，加强版不保证并有多测，<span class="math inline">\(0\le n,m,k, |A_x|,|A_y|,|B_x|,|B_y|\le 500\)</span>。</p>
+<hr/>
+<p>先考虑 <span class="math inline">\(A_xB_y-A_yB_x\ne 0\)</span> 的情况，注意到这两个向量构成平面内的一组基，所以任意的点 <span class="math inline">\((x, y)\)</span> 都可以被表示为 <span class="math inline">\(cA + dB\)</span>，将所有点 <span class="math inline">\((x,y)\)</span> 转为 <span class="math inline">\((c, d)\)</span>。问题于是转化为带障碍的网格路径计数。</p>
+<p>设换了坐标系后终点为 <span class="math inline">\((n, m)\)</span>，则若没有障碍，答案显然为 <span class="math inline">\(\dbinom{n + m}{m}\)</span>。</p>
+<p>有障碍则需要考虑容斥。</p>
+<p>将所有的障碍点以及 <span class="math inline">\((n, m)\)</span> 视为关键点，排个序，然后便令 <span class="math inline">\(f_i\)</span> 为从 <span class="math inline">\((0, 0)\)</span> 出发，不经过障碍点，走到第 <span class="math inline">\(i\)</span> 个关键点的方案数，则 <span class="math display">\[
+f_i = \binom{x_i + y_i}{x_i}- \sum_{x_j\le x_i\land y_j\le y_i}f_j\times\binom{(x_i - x_j) + (y_i - y_j)}{x_i - x_j}
+\]</span> 于是时间复杂度为 <span class="math inline">\(O(k^2)\)</span>。</p>
+<hr/>
+<p>对于 <span class="math inline">\(A_xB_y - A_yB_x = 0\)</span> 的情况，<span class="math inline">\(A\)</span> 和 <span class="math inline">\(B\)</span> 共线，情况会比较麻烦。但是只需要将其转化为一维 dp 即可。</p>
+<h2 id="r2d2-bs-a-b">R2D2 (BS) (A + B)</h2>
+<h3 id="a-异或矩阵"><a href="http://www.51nod.com/Contest/Problem.html#contestProblemId=4312">A 异或矩阵</a></h3>
+<p>给定长为 <span class="math inline">\(n\)</span> 的序列 <span class="math inline">\(a\)</span>，令 <span class="math inline">\(f_{1, j} = a_j\)</span>，对于 <span class="math inline">\(i &gt; 1\)</span>，有 <span class="math inline">\(f_{i,j} = f_{i-1,j}\oplus f_{i - 1, j + 1}\)</span>。给定 <span class="math inline">\(K\)</span>，求 <span class="math inline">\(f_{K,1},\cdots, f_{K,n-K+1}\)</span>。</p>
+<p>首先考虑到 <span class="math inline">\(a_i\)</span> 对 <span class="math inline">\(f_{K, j}\)</span> 的贡献次数为 <span class="math inline">\(\dbinom{K}{i - j}\)</span>，类似 ARC137D 的思路考虑卢卡斯定理，所以 <span class="math inline">\(a_i\)</span> 会对 <span class="math inline">\(f_{K, j}\)</span> 贡献的条件是 <span class="math inline">\(K\)</span> 为 <span class="math inline">\(i - j\)</span> 的超集。但是 <span class="math inline">\(i - j\)</span> 这个操作似乎不是很好处理，考虑另辟蹊径。<del>先入为主真的会害死人</del></p>
+<p>广义的来看，<span class="math inline">\(f_{i, j}\)</span> 对 <span class="math inline">\(f_{i + k, j - \Delta}\)</span> 的贡献次数是 <span class="math inline">\(\dbinom{k}{\Delta}\)</span>。而将杨辉三角写成模 <span class="math inline">\(2\)</span> 的形式后发现对于第 <span class="math inline">\(2^k\)</span> 行，其只有 <span class="math inline">\(\dbinom{2^k}{1}\)</span> 和 <span class="math inline">\(\dbinom{2^k}{2^k}\)</span> 为 <span class="math inline">\(1\)</span>。所以 <span class="math inline">\(f_{i,j}\)</span> 能对第 <span class="math inline">\(i + 2^{k}\)</span> 行的贡献只能到达 <span class="math inline">\(f_{i+2^k,j}\)</span> 和 <span class="math inline">\(f_{i + 2^k, j - 2^k}\)</span>。</p>
+<p>那么我们不妨就将 <span class="math inline">\(K - 1\)</span> 分解为若干二进制位，然后这样类似“倍增”地跳行，时间复杂度 <span class="math inline">\(O(n\log K)\)</span>。</p>
+<h3 id="b-树"><a href="http://www.51nod.com/Contest/Problem.html#contestProblemId=4313">B 树</a></h3>
+<p>一棵树，对每个节点 <span class="math inline">\(u\)</span> 求出 <span class="math inline">\(|\{S : \operatorname{LCA}(S) = u\}|\)</span>，对 <span class="math inline">\(998244353\)</span> 取模，<span class="math inline">\(n\le 10^5\)</span>。</p>
+<p>很傻逼的容斥。令 <span class="math inline">\(f_u\)</span> 为节点 <span class="math inline">\(u\)</span> 的答案，<span class="math inline">\(g_u\)</span> 为节点在 <span class="math inline">\(u\)</span> 子树内的答案。则有 <span class="math inline">\(g_u = 2^{\mathrm{size}_u}\)</span>，<span class="math inline">\(f_u = g_u - \sum_vg_v\)</span>。</p>
+<h3 id="c-黑白树"><a href="http://www.51nod.com/Contest/Problem.html#contestProblemId=4314">C 黑白树</a></h3>
+<p>维护一棵有根树，每个节点有颜色 <span class="math inline">\(0/1\)</span> 和点权。<span class="math inline">\(5\)</span> 种操作：</p>
+<ol type="1">
+<li>单点修改颜色；</li>
+<li>使与 <span class="math inline">\(x\)</span> 相连的同色连通块的点权加 <span class="math inline">\(v\)</span>；</li>
+<li>查询与 <span class="math inline">\(x\)</span> 相连的同色连通块的最大点权；</li>
+<li>链加点权；</li>
+<li>子树加点权。</li>
+</ol>
+</section>
+<footer class="article-footer">
+<section class="article-tags">
+<a href="/tags/OI/">OI</a>
+<a href="/tags/editorial/">题解</a>
+<a href="/tags/greedy/">贪心</a>
+<a href="/tags/segtree/">线段树</a>
+<a href="/tags/dp/">动态规划</a>
+<a href="/tags/expection/">期望</a>
+<a href="/tags/centroid-decomposition/">点分治</a>
+<a href="/tags/lucas/">Lucas定理</a>
+<a href="/tags/matrix-tree/">矩阵树定理</a>
+<a href="/tags/vector/">向量</a>
+<a href="/tags/det/">行列式</a>
+<a href="/tags/binary-lifting/">倍增</a>
+<a href="/tags/inclusion-exclusion-principle/">容斥原理</a>
+</section>
+<section class="article-copyright">
+<svg class="icon icon-tabler icon-tabler-copyright" fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+<path d="M0 0h24v24H0z" stroke="none"></path>
+<circle cx="12" cy="12" r="9"></circle>
+<path d="M14.5 9a3.5 4 0 1 0 0 6"></path>
+</svg>
+<span>Licensed under CC BY-NC-SA 4.0</span>
+</section>
+</footer>
+<link crossorigin="anonymous" href="https://cdn.jsdelivr.net/npm/katex@0.13.13/dist/katex.min.css" integrity="sha384-RZU/ijkSsFbcmivfdRBQDtwuwVqK7GMOw6IMvKyeWL2K5UAlyp6WonmB8m7Jd0Hn" rel="stylesheet"/><script crossorigin="anonymous" defer="" integrity="sha384-pK1WpvzWVBQiP0/GjnvRxV4mOb0oxFuyRxJlk6vVw146n3egcN5C925NCP7a7BY8" src="https://cdn.jsdelivr.net/npm/katex@0.13.13/dist/katex.min.js">
+</script><script crossorigin="anonymous" defer="" integrity="sha384-vZTG03m+2yp6N6BNi5iM4rW4oIwk5DfcNdFfxkk9ZWpDriOkXX8voJBFrAO7MpVl" src="https://cdn.jsdelivr.net/npm/katex@0.13.13/dist/contrib/auto-render.min.js">
+</script><script>
+    window.addEventListener("DOMContentLoaded", () => {
+        renderMathInElement(document.querySelector(`.article-content`), {
+            delimiters: [
+                { left: "$$", right: "$$", display: true },
+                { left: "$", right: "$", display: false },
+                { left: "\\(", right: "\\)", display: false },
+                { left: "\\[", right: "\\]", display: true }
+            ]
+        });})
+</script>
+</article>
+<aside class="related-contents--wrapper">
+<h2 class="section-title">相关文章</h2>
+<div class="related-contents">
+<div class="flex article-list--tile">
+<article class="has-image">
+<a href="/summary-atcoder/">
+<div class="article-image">
+<img data-hash="https://yangty-pic.oss-cn-beijing.aliyuncs.com/bg70.webp" data-key="" loading="lazy" src="https://yangty-pic.oss-cn-beijing.aliyuncs.com/bg70.webp"/>
+</div>
+<div class="article-details">
+<h2 class="article-title">AtCoder 比赛日记</h2>
+</div>
+</a>
+</article>
+<article class="has-image">
+<a href="/sol-lhsx2022/">
+<div class="article-image">
+<img data-hash="https://yangty-pic.oss-cn-beijing.aliyuncs.com/bg1.webp" data-key="" loading="lazy" src="https://yangty-pic.oss-cn-beijing.aliyuncs.com/bg1.webp"/>
+</div>
+<div class="article-details">
+<h2 class="article-title">联合省选 2022 题解</h2>
+</div>
+</a>
+</article>
+<article class="has-image">
+<a href="/sol-lhsx2021/">
+<div class="article-image">
+<img data-hash="https://yangty-pic.oss-cn-beijing.aliyuncs.com/bg22.webp" data-key="" loading="lazy" src="https://yangty-pic.oss-cn-beijing.aliyuncs.com/bg22.webp"/>
+</div>
+<div class="article-details">
+<h2 class="article-title">联合省选 2021 题解</h2>
+</div>
+</a>
+</article>
+<article class="has-image">
+<a href="/sol-lhsx2020/">
+<div class="article-image">
+<img data-hash="https://yangty-pic.oss-cn-beijing.aliyuncs.com/bg21.webp" data-key="" loading="lazy" src="https://yangty-pic.oss-cn-beijing.aliyuncs.com/bg21.webp"/>
+</div>
+<div class="article-details">
+<h2 class="article-title">联合省选 2020 题解</h2>
+</div>
+</a>
+</article>
+<article class="has-image">
+<a href="/sol-past-noip/">
+<div class="article-image">
+<img data-hash="https://yangty-pic.oss-cn-beijing.aliyuncs.com/bg35.webp" data-key="" loading="lazy" src="https://yangty-pic.oss-cn-beijing.aliyuncs.com/bg35.webp"/>
+</div>
+<div class="article-details">
+<h2 class="article-title">历年联赛真题选做</h2>
+</div>
+</a>
+</article>
+</div>
+</div>
+</aside>
+<footer class="site-footer">
+<section class="copyright">
+        © 
+        
+            2019 - 
+        
+        2024 清烛的博客
+    </section>
+<section class="powerby">
+        Built with <a href="https://gohugo.io/" rel="noopener" target="_blank">Hugo</a> <br/>
+        主题 <b><a data-version="3.11.0" href="https://github.com/CaiJimmy/hugo-theme-stack" rel="noopener" target="_blank">Stack</a></b> 由 <a href="https://jimmycai.com" rel="noopener" target="_blank">Jimmy</a> 设计
+    </section>
+</footer>
+<div aria-hidden="true" class="pswp" role="dialog" tabindex="-1">
+<div class="pswp__bg"></div>
+<div class="pswp__scroll-wrap">
+<div class="pswp__container">
+<div class="pswp__item"></div>
+<div class="pswp__item"></div>
+<div class="pswp__item"></div>
+</div>
+<div class="pswp__ui pswp__ui--hidden">
+<div class="pswp__top-bar">
+<div class="pswp__counter"></div>
+<button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+<button class="pswp__button pswp__button--share" title="Share"></button>
+<button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+<button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+<div class="pswp__preloader">
+<div class="pswp__preloader__icn">
+<div class="pswp__preloader__cut">
+<div class="pswp__preloader__donut"></div>
+</div>
+</div>
+</div>
+</div>
+<div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+<div class="pswp__share-tooltip"></div>
+</div>
+<button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+</button>
+<button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+</button>
+<div class="pswp__caption">
+<div class="pswp__caption__center"></div>
+</div>
+</div>
+</div>
+</div><script crossorigin="anonymous" defer="" integrity="sha256-ePwmChbbvXbsO02lbM3HoHbSHTHFAeChekF1xKJdleo=" src="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe.min.js">
+</script><script crossorigin="anonymous" defer="" integrity="sha256-UKkzOn/w1mBxRmLLGrSeyB4e1xbrp4xylgAWb3M42pU=" src="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe-ui-default.min.js">
+</script><link crossorigin="anonymous" href="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/default-skin/default-skin.css" integrity="sha256-c0uckgykQ9v5k+IqViZOZKc47Jn7KQil4/MP3ySA3F8=" rel="stylesheet"/><link crossorigin="anonymous" href="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe.css" integrity="sha256-SBLU4vv6CA6lHsZ1XyTdhyjJxCjPif/TRkjnsyGAGnE=" rel="stylesheet"/>
+</main>
+</div>
+<script crossorigin="anonymous" integrity="sha256-5NovOZc4iwiAWTYIFiIM7DxKUXKWvpVEuMEPLzcm5/g=" src="https://cdn.jsdelivr.net/npm/node-vibrant@3.1.5/dist/vibrant.min.js">
+</script><script defer="" src="/ts/main.js" type="text/javascript"></script>
+<script>
+    (function () {
+        const customFont = document.createElement('link');
+        customFont.href = "https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&display=swap";
+
+        customFont.type = "text/css";
+        customFont.rel = "stylesheet";
+
+        document.head.appendChild(customFont);
+    }());
+</script>
+</body>
+</html>

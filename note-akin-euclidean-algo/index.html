@@ -1,0 +1,615 @@
+<!DOCTYPE html>
+<html dir="ltr" lang="zh-CN">
+<head><meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1" name="viewport"/><meta content="前言 洪华敦（SkyDec）于 WC2016 员交提出。
+递归过程类似于辗转相除，故称为”类“欧几里得。
+一般可以求直线下整点之类的问题。
+引入 最常见的形式，即为直线下整点个数： \[ f(a, b, c, n) = \sum_{i = 0}^n\left\lfloor\frac{ai + b}{c} \right\rfloor \] 需要复杂度为 \(O(\log n)\) 的算法。
+推导 Part. 1 首先，如果 \(a\ge c\lor b \ge c\)，则可以将 \(a\) 和 \(b\) 对 \(c\) 取模来化简问题： \[ \begin{aligned} f(a, b, c, n) &amp;amp;= \sum_{i = 0}^n\left\lfloor\frac{ai + b}{c}\right\rfloor\\ &amp;amp;= \sum_{i = 0}^n\left\lfloor\frac{(\left\lfloor\frac a c\right\rfloor c + a\bmod c)i + \left\lfloor\frac b c\right\rfloor c + b\bmod c}{c}\right\rfloor\\ &amp;amp;= \frac{n(n + 1)}{2}\left\lfloor\frac ac\right\rfloor + (n + 1)\left\lfloor\frac bc\right\rfloor + f(a\bmod c, b\bmod c, c, n) \end{aligned} \] 于是问题就转化为了 \(a, b&amp;lt; c\) 的形式。" name="description"/><title>类欧几里得算法学习笔记</title>
+<link href="https://oi.imyangty.com/note-akin-euclidean-algo/" rel="canonical"/>
+<link href="/scss/style.min.a5821f3d3ab84ce5a0ac21477e347a2e0ca00292e398d16c5e8e36ded6e35a23.css" rel="stylesheet"/><meta content="类欧几里得算法学习笔记" property="og:title"/>
+<meta content="前言 洪华敦（SkyDec）于 WC2016 员交提出。
+递归过程类似于辗转相除，故称为”类“欧几里得。
+一般可以求直线下整点之类的问题。
+引入 最常见的形式，即为直线下整点个数： \[ f(a, b, c, n) = \sum_{i = 0}^n\left\lfloor\frac{ai + b}{c} \right\rfloor \] 需要复杂度为 \(O(\log n)\) 的算法。
+推导 Part. 1 首先，如果 \(a\ge c\lor b \ge c\)，则可以将 \(a\) 和 \(b\) 对 \(c\) 取模来化简问题： \[ \begin{aligned} f(a, b, c, n) &amp;amp;= \sum_{i = 0}^n\left\lfloor\frac{ai + b}{c}\right\rfloor\\ &amp;amp;= \sum_{i = 0}^n\left\lfloor\frac{(\left\lfloor\frac a c\right\rfloor c + a\bmod c)i + \left\lfloor\frac b c\right\rfloor c + b\bmod c}{c}\right\rfloor\\ &amp;amp;= \frac{n(n + 1)}{2}\left\lfloor\frac ac\right\rfloor + (n + 1)\left\lfloor\frac bc\right\rfloor + f(a\bmod c, b\bmod c, c, n) \end{aligned} \] 于是问题就转化为了 \(a, b&amp;lt; c\) 的形式。" property="og:description"/>
+<meta content="https://oi.imyangty.com/note-akin-euclidean-algo/" property="og:url"/>
+<meta content="清烛的博客" property="og:site_name"/>
+<meta content="article" property="og:type"/><meta content="Post" property="article:section"/><meta content="OI" property="article:tag"/><meta content="笔记" property="article:tag"/><meta content="类欧几里得算法" property="article:tag"/><meta content="2021-09-04T15:38:25+08:00" property="article:published_time"/><meta content="2021-09-04T15:38:25+08:00" property="article:modified_time"/><meta content="https://yangty-pic.oss-cn-beijing.aliyuncs.com/bg6.webp" property="og:image"/>
+<meta content="类欧几里得算法学习笔记" name="twitter:title"/>
+<meta content="前言 洪华敦（SkyDec）于 WC2016 员交提出。
+递归过程类似于辗转相除，故称为”类“欧几里得。
+一般可以求直线下整点之类的问题。
+引入 最常见的形式，即为直线下整点个数： \[ f(a, b, c, n) = \sum_{i = 0}^n\left\lfloor\frac{ai + b}{c} \right\rfloor \] 需要复杂度为 \(O(\log n)\) 的算法。
+推导 Part. 1 首先，如果 \(a\ge c\lor b \ge c\)，则可以将 \(a\) 和 \(b\) 对 \(c\) 取模来化简问题： \[ \begin{aligned} f(a, b, c, n) &amp;amp;= \sum_{i = 0}^n\left\lfloor\frac{ai + b}{c}\right\rfloor\\ &amp;amp;= \sum_{i = 0}^n\left\lfloor\frac{(\left\lfloor\frac a c\right\rfloor c + a\bmod c)i + \left\lfloor\frac b c\right\rfloor c + b\bmod c}{c}\right\rfloor\\ &amp;amp;= \frac{n(n + 1)}{2}\left\lfloor\frac ac\right\rfloor + (n + 1)\left\lfloor\frac bc\right\rfloor + f(a\bmod c, b\bmod c, c, n) \end{aligned} \] 于是问题就转化为了 \(a, b&amp;lt; c\) 的形式。" name="twitter:description"/><meta content="summary_large_image" name="twitter:card"/>
+<meta content="https://yangty-pic.oss-cn-beijing.aliyuncs.com/bg6.webp" name="twitter:image"/>
+<link href="https://q1.qlogo.cn/g?b=qq&amp;nk=375836877&amp;s=5" rel="shortcut icon"/>
+<link href="https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.5.1/build/styles/github-dark-dimmed.min.css" rel="stylesheet"/>
+<script src="https://cdn.jsdelivr.net/gh/highlightjs/cdn-release/build/highlight.min.js"></script>
+<script>hljs.highlightAll();</script>
+</head>
+<body class="article-page">
+<script>
+        (function() {
+            const colorSchemeKey = 'StackColorScheme';
+            if(!localStorage.getItem(colorSchemeKey)){
+                localStorage.setItem(colorSchemeKey, "auto");
+            }
+        })();
+    </script><script>
+    (function() {
+        const colorSchemeKey = 'StackColorScheme';
+        const colorSchemeItem = localStorage.getItem(colorSchemeKey);
+        const supportDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches === true;
+
+        if (colorSchemeItem == 'dark' || colorSchemeItem === 'auto' && supportDarkMode) {
+            
+
+            document.documentElement.dataset.scheme = 'dark';
+        } else {
+            document.documentElement.dataset.scheme = 'light';
+        }
+    })();
+</script>
+<div class="container main-container flex on-phone--column extended"><aside class="sidebar left-sidebar sticky">
+<button aria-label="切换菜单" class="hamburger hamburger--spin" id="toggle-menu" type="button">
+<span class="hamburger-box">
+<span class="hamburger-inner"></span>
+</span>
+</button>
+<header>
+<figure class="site-avatar">
+<a href="/">
+<img alt="Avatar" class="site-logo" height="300" loading="lazy" src="/img/avatar_huea3ce2119467b51fdd2a81393644a76d_51594_300x0_resize_q75_box.jpg" width="300"/>
+</a>
+<span class="emoji">😅</span>
+</figure>
+<div class="site-meta">
+<h1 class="site-name"><a href="/">清烛的博客</a></h1>
+<h2 class="site-description">烟火已谢，笙歌未停</h2>
+</div>
+</header><ol class="social-menu">
+<li>
+<a href="mailto:i@imyangty.com" target="_blank" title="email">
+<svg class="icon icon-tabler icon-tabler-mail" fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" viewbox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+<path d="M0 0h24v24H0z" fill="none" stroke="none"></path>
+<rect height="14" rx="2" width="18" x="3" y="5"></rect>
+<polyline points="3 7 12 13 21 7"></polyline>
+</svg>
+</a>
+</li>
+<li>
+<a href="https://github.com/Cgfyufsygsm" target="_blank" title="GitHub">
+<svg class="icon icon-tabler icon-tabler-brand-github" fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+<path d="M0 0h24v24H0z" fill="none" stroke="none"></path>
+<path d="M9 19c-4.3 1.4 -4.3 -2.5 -6 -3m12 5v-3.5c0 -1 .1 -1.4 -.5 -2c2.8 -.3 5.5 -1.4 5.5 -6a4.6 4.6 0 0 0 -1.3 -3.2a4.2 4.2 0 0 0 -.1 -3.2s-1.1 -.3 -3.5 1.3a12.3 12.3 0 0 0 -6.2 0c-2.4 -1.6 -3.5 -1.3 -3.5 -1.3a4.2 4.2 0 0 0 -.1 3.2a4.6 4.6 0 0 0 -1.3 3.2c0 4.6 2.7 5.7 5.5 6c-.6 .6 -.6 1.2 -.5 2v3.5"></path>
+</svg>
+</a>
+</li>
+<li>
+<a href="https://t.me/Cgfyufsygsm" target="_blank" title="Telegram">
+<svg class="icon icon-tabler icon-tabler-brand-telegram" fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" viewbox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+<path d="M0 0h24v24H0z" fill="none" stroke="none"></path>
+<path d="M15 10l-4 4l6 6l4 -16l-18 7l4 2l2 6l3 -4"></path>
+</svg>
+</a>
+</li>
+<li>
+<a href="https://twitter.com/Cgfyufsygsm" target="_blank" title="Twitter">
+<svg class="icon icon-tabler icon-tabler-brand-twitter" fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+<path d="M0 0h24v24H0z" fill="none" stroke="none"></path>
+<path d="M22 4.01c-1 .49 -1.98 .689 -3 .99c-1.121 -1.265 -2.783 -1.335 -4.38 -.737s-2.643 2.06 -2.62 3.737v1c-3.245 .083 -6.135 -1.395 -8 -4c0 0 -4.182 7.433 4 11c-1.872 1.247 -3.739 2.088 -6 2c3.308 1.803 6.913 2.423 10.034 1.517c3.58 -1.04 6.522 -3.723 7.651 -7.742a13.84 13.84 0 0 0 .497 -3.753c-.002 -.249 1.51 -2.772 1.818 -4.013z"></path>
+</svg>
+</a>
+</li>
+</ol><ol class="menu" id="main-menu">
+<li>
+<a href="/">
+<svg class="icon icon-tabler icon-tabler-home" fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+<path d="M0 0h24v24H0z" stroke="none"></path>
+<polyline points="5 12 3 12 12 3 21 12 19 12"></polyline>
+<path d="M5 12v7a2 2 0 0 0 2 2h10a2 2 0 0 0 2 -2v-7"></path>
+<path d="M9 21v-6a2 2 0 0 1 2 -2h2a2 2 0 0 1 2 2v6"></path>
+</svg>
+<span>主页</span>
+</a>
+</li>
+<li>
+<a href="/about/">
+<svg class="icon icon-tabler icon-tabler-user" fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+<path d="M0 0h24v24H0z" stroke="none"></path>
+<circle cx="12" cy="7" r="4"></circle>
+<path d="M6 21v-2a4 4 0 0 1 4 -4h4a4 4 0 0 1 4 4v2"></path>
+</svg>
+<span>关于</span>
+</a>
+</li>
+<li>
+<a href="/idx/">
+<svg class="icon icon-tabler icon-tabler-hash" fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+<path d="M0 0h24v24H0z" stroke="none"></path>
+<line x1="5" x2="19" y1="9" y2="9"></line>
+<line x1="5" x2="19" y1="15" y2="15"></line>
+<line x1="11" x2="7" y1="4" y2="20"></line>
+<line x1="17" x2="13" y1="4" y2="20"></line>
+</svg>
+<span>导航</span>
+</a>
+</li>
+<li>
+<a href="/archives/">
+<svg class="icon icon-tabler icon-tabler-archive" fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+<path d="M0 0h24v24H0z" stroke="none"></path>
+<rect height="4" rx="2" width="18" x="3" y="4"></rect>
+<path d="M5 8v10a2 2 0 0 0 2 2h10a2 2 0 0 0 2 -2v-10"></path>
+<line x1="10" x2="14" y1="12" y2="12"></line>
+</svg>
+<span>归档</span>
+</a>
+</li>
+<li>
+<a href="/search/">
+<svg class="icon icon-tabler icon-tabler-search" fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+<path d="M0 0h24v24H0z" stroke="none"></path>
+<circle cx="10" cy="10" r="7"></circle>
+<line x1="21" x2="15" y1="21" y2="15"></line>
+</svg>
+<span>搜索</span>
+</a>
+</li>
+<li>
+<a href="/friends/">
+<svg class="icon icon-tabler icon-tabler-link" fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+<path d="M0 0h24v24H0z" stroke="none"></path>
+<path d="M10 14a3.5 3.5 0 0 0 5 0l4 -4a3.5 3.5 0 0 0 -5 -5l-.5 .5"></path>
+<path d="M14 10a3.5 3.5 0 0 0 -5 0l-4 4a3.5 3.5 0 0 0 5 5l.5 -.5"></path>
+</svg>
+<span>友链</span>
+</a>
+</li>
+<li>
+<a href="https://blog.imyangty.com" target="_blank">
+<svg class="icon icon-tabler icon-tabler-home" fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+<path d="M0 0h24v24H0z" stroke="none"></path>
+<polyline points="5 12 3 12 12 3 21 12 19 12"></polyline>
+<path d="M5 12v7a2 2 0 0 0 2 2h10a2 2 0 0 0 2 -2v-7"></path>
+<path d="M9 21v-6a2 2 0 0 1 2 -2h2a2 2 0 0 1 2 2v6"></path>
+</svg>
+<span>主博客</span>
+</a>
+</li>
+<div class="menu-bottom-section">
+<li id="dark-mode-toggle">
+<svg class="icon icon-tabler icon-tabler-toggle-left" fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+<path d="M0 0h24v24H0z" stroke="none"></path>
+<circle cx="8" cy="12" r="2"></circle>
+<rect height="12" rx="6" width="20" x="2" y="6"></rect>
+</svg>
+<svg class="icon icon-tabler icon-tabler-toggle-right" fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+<path d="M0 0h24v24H0z" stroke="none"></path>
+<circle cx="16" cy="12" r="2"></circle>
+<rect height="12" rx="6" width="20" x="2" y="6"></rect>
+</svg>
+<span>暗色模式</span>
+</li>
+</div>
+</ol>
+</aside>
+<main class="main full-width">
+<article class="has-image main-article">
+<header class="article-header">
+<div class="article-image">
+<a href="/note-akin-euclidean-algo/">
+<img alt="Featured image of post 类欧几里得算法学习笔记" loading="lazy" src="https://yangty-pic.oss-cn-beijing.aliyuncs.com/bg6.webp"/>
+</a>
+</div>
+<div class="article-details">
+<header class="article-category">
+<a href="/categories/oi/">
+                OI
+            </a>
+<a href="/categories/note/">
+                笔记
+            </a>
+</header>
+<div class="article-title-wrapper">
+<h2 class="article-title">
+<a href="/note-akin-euclidean-algo/">类欧几里得算法学习笔记</a>
+</h2>
+</div>
+<footer class="article-time">
+<div>
+<svg class="icon icon-tabler icon-tabler-calendar-time" fill="none" height="56" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="56" xmlns="http://www.w3.org/2000/svg">
+<path d="M0 0h24v24H0z" stroke="none"></path>
+<path d="M11.795 21h-6.795a2 2 0 0 1 -2 -2v-12a2 2 0 0 1 2 -2h12a2 2 0 0 1 2 2v4"></path>
+<circle cx="18" cy="18" r="4"></circle>
+<path d="M15 3v4"></path>
+<path d="M7 3v4"></path>
+<path d="M3 11h16"></path>
+<path d="M18 16.496v1.504l1 1"></path>
+</svg>
+<time class="article-time--published">Sep 04, 2021</time>
+</div>
+<div>
+<svg class="icon icon-tabler icon-tabler-clock" fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+<path d="M0 0h24v24H0z" stroke="none"></path>
+<circle cx="12" cy="12" r="9"></circle>
+<polyline points="12 7 12 12 15 15"></polyline>
+</svg>
+<time class="article-time--reading">
+                    阅读时长: 8 分钟
+                </time>
+</div>
+</footer>
+</div>
+</header>
+<section class="article-content">
+<h2 id="前言">前言</h2>
+<p>洪华敦（SkyDec）于 WC2016 员交提出。</p>
+<p>递归过程类似于辗转相除，故称为”类“欧几里得。</p>
+<p>一般可以求直线下整点之类的问题。</p>
+<h2 id="引入">引入</h2>
+<p>最常见的形式，即为直线下整点个数： <span class="math display">\[
+f(a, b, c, n) = \sum_{i = 0}^n\left\lfloor\frac{ai + b}{c} \right\rfloor
+\]</span> 需要复杂度为 <span class="math inline">\(O(\log n)\)</span> 的算法。</p>
+<h2 id="推导">推导</h2>
+<h3 id="part.-1">Part. 1</h3>
+<p>首先，如果 <span class="math inline">\(a\ge c\lor b \ge c\)</span>，则可以将 <span class="math inline">\(a\)</span> 和 <span class="math inline">\(b\)</span> 对 <span class="math inline">\(c\)</span> 取模来化简问题： <span class="math display">\[
+\begin{aligned}
+f(a, b, c, n) &amp;= \sum_{i = 0}^n\left\lfloor\frac{ai + b}{c}\right\rfloor\\
+&amp;= \sum_{i = 0}^n\left\lfloor\frac{(\left\lfloor\frac a c\right\rfloor c + a\bmod c)i + \left\lfloor\frac b c\right\rfloor c + b\bmod c}{c}\right\rfloor\\
+&amp;= \frac{n(n + 1)}{2}\left\lfloor\frac ac\right\rfloor + (n + 1)\left\lfloor\frac bc\right\rfloor + f(a\bmod c, b\bmod c, c, n)
+\end{aligned}
+\]</span> 于是问题就转化为了 <span class="math inline">\(a, b&lt; c\)</span> 的形式。</p>
+<h3 id="part.-2">Part. 2</h3>
+<p>这个和式看上去不是特别好化简的样子。那么就先拆分一下贡献：</p>
+<p>首先考虑把那一坨东西拆成如下形式： <span class="math display">\[
+\left\lfloor\frac{ai + b}{c} \right\rfloor = \sum_{j = 0}^{\left\lfloor\frac{ai + b}{c} \right\rfloor - 1}1
+\]</span> 减一是因为计数变量从 <span class="math inline">\(0\)</span> 开始。</p>
+<p>然后 <span class="math display">\[
+f(a, b, c, n) = \sum_{i = 0}^n\sum_{j = 0}^{\left\lfloor\frac{ai + b}{c} \right\rfloor - 1}1
+\]</span> 调换求和顺序，使得 <span class="math inline">\(j\)</span> 不再被 <span class="math inline">\(i\)</span> 限制， <span class="math display">\[
+f(a, b, c, n) = \sum_{j = 0}^{\left\lfloor\frac{an + b}{c} \right\rfloor}\sum_{i = 0}^n\left[j &lt; \left\lfloor\frac{ai + b}{c} \right\rfloor\right]
+\]</span> 把不等式进行化简： <span class="math display">\[
+\begin{aligned}
+&amp;j &lt; \left\lfloor\frac{ai + b}{c} \right\rfloor\\
+\iff &amp; j + 1\le\left\lfloor\frac{ai + b}{c} \right\rfloor\\
+\iff &amp; j + 1\le \frac{ai + b}{c}\\
+\iff &amp; j c + c\le ai + b\\
+\iff &amp; jc + c - b\le ai\\
+\iff &amp; jc + c - b - 1 &lt; ai\\
+\iff &amp; \left\lfloor\frac{jc + c - b - 1}{a}\right\rfloor &lt; i
+\end{aligned}
+\]</span> 这一步的关键在于 <span class="math inline">\(i\)</span> 可以被消掉了。因为我们注意到 <span class="math display">\[
+\sum_{i = 0}^n\left[\left\lfloor\frac{jc + c - b - 1}{a}\right\rfloor &lt; i\right]
+\]</span> 的意义为：只有大于等于那一坨式子的 <span class="math inline">\(i\)</span> 能产生贡献，即这一坨的结果实际上就是： <span class="math display">\[
+n - \left\lfloor\frac{jc + c - b - 1}{a}\right\rfloor
+\]</span> 所以，为了方便令 <span class="math display">\[
+m = \left\lfloor\frac{an + b}{c}\right\rfloor
+\]</span> 则有 <span class="math display">\[
+f(a, b, c, n) = \sum_{j = 0}^{m - 1}\left(n - \left\lfloor\frac{jc + c - b - 1}{a}\right\rfloor\right)
+\]</span> 拆开来就是 <span class="math display">\[
+f(a, b, c, n) = nm - \sum_{j = 0}^{m - 1}\left\lfloor\frac{jc + c - b - 1}{a}\right\rfloor
+\]</span> 右边这个形式不就是一个子问题吗，所以 <span class="math display">\[
+f(a, b, c, n) = nm - f(c, c - b - 1, a, m - 1)
+\]</span></p>
+<h2 id="实现">实现</h2>
+<div class="sourceCode" id="cb1"><pre class="sourceCode cpp"><code class="sourceCode cpp"><span id="cb1-1"><a aria-hidden="true" href="#cb1-1"></a><span class="dt">int</span> f(<span class="dt">int</span> a, <span class="dt">int</span> b, <span class="dt">int</span> c, <span class="dt">int</span> n) {</span>
+<span id="cb1-2"><a aria-hidden="true" href="#cb1-2"></a>    <span class="cf">if</span> (!a) <span class="cf">return</span> b / c * (n + <span class="dv">1</span>);</span>
+<span id="cb1-3"><a aria-hidden="true" href="#cb1-3"></a>    <span class="cf">if</span> (a &gt;= c || b &gt;= c) <span class="cf">return</span> n * (n + <span class="dv">1</span>) / <span class="dv">2</span> * (a / c) + (n + <span class="dv">1</span>) * (b / c) + f(a % c, b % c, c, n);</span>
+<span id="cb1-4"><a aria-hidden="true" href="#cb1-4"></a>    <span class="dt">int</span> m = (a * n + b) / c;</span>
+<span id="cb1-5"><a aria-hidden="true" href="#cb1-5"></a>    <span class="cf">return</span> n * m - f(c, c - b - <span class="dv">1</span>, a, m - <span class="dv">1</span>);</span>
+<span id="cb1-6"><a aria-hidden="true" href="#cb1-6"></a>}</span></code></pre></div>
+<p>大概是上面的形式，边界是 <span class="math inline">\(a = 0\)</span>。</p>
+<h2 id="g-和-h-函数的求法"><span class="math inline">\(g\)</span> 和 <span class="math inline">\(h\)</span> 函数的求法</h2>
+<p><span class="math display">\[
+\begin{aligned}
+g(a, b, c, n) &amp;= \sum_{i = 0}^ni\left\lfloor\frac{ai + b}{c}\right\rfloor\\
+h(a, b, c, n) &amp;= \sum_{i = 0}^n\left\lfloor\frac{ai + b}{c}\right\rfloor^2\\
+\end{aligned}
+\]</span></p>
+<h3 id="g-函数"><span class="math inline">\(g\)</span> 函数</h3>
+<p>首先，<span class="math inline">\(a\le c\lor b\le c\)</span> 的情况依旧是可以取模化简的： <span class="math display">\[
+\begin{aligned}
+g(a, b, c, n) &amp;= \sum_{i = 0}^ni\left\lfloor\frac{(\left\lfloor\frac a c\right\rfloor c + a\bmod c)i + \left\lfloor\frac b c\right\rfloor c + b\bmod c}{c}\right\rfloor\\
+&amp;= \sum_{i = 0}^ni^2\left\lfloor\frac ac\right\rfloor + \sum_{i = 0}^ni\left\lfloor\frac bc\right\rfloor + g(a\bmod c, b\bmod c, c, n)\\
+&amp;= \left\lfloor\frac ac\right\rfloor\frac{n(n + 1)(2n + 1)}{6} + \left\lfloor\frac bc\right\rfloor\frac{n(n + 1)}{2} + g(a\bmod c, b\bmod c, c, n)
+\end{aligned}
+\]</span> 取模化简的部分写完之后，来看看 <span class="math inline">\(a, b&lt; c\)</span> 的情况。</p>
+<p><span class="math inline">\(m\)</span> 的意义与上文相同，像上文那样化简。 <span class="math display">\[
+\begin{aligned}
+g(a, b, c, n) &amp;= \sum_{i = 0}^ni\sum_{j = 0}^{\left\lfloor\frac{ai + b}{c}\right\rfloor - 1}1\\
+&amp;= \sum_{j = 0}^{m - 1}\sum_{i = 0}^ni\left[j &lt; \left\lfloor\frac{ai + b}{c}\right\rfloor\right]
+\end{aligned}
+\]</span> 令 <span class="math inline">\(t = \displaystyle\left\lfloor\frac{jc + c - b - 1}{a}\right\rfloor\)</span>，有 <span class="math display">\[
+\begin{aligned}
+g(a, b, c, n) &amp;= \sum_{j = 0}^{m - 1}\sum_{i = 0}^n[i &gt; t]i\\
+&amp;= \sum_{j = 0}^{m - 1}\frac{(t + n + 1)(n - t)}{2}\\
+&amp;= \frac 12\sum_{j = 0}^{m - 1}\left(-t^2 + (n + 1)n - (n + 1)t  + nt\right)\\
+&amp;= \frac 12\left(mn(n + 1) - h(c, c - b - 1, a, m - 1) - f(c, c - b - 1, a, m - 1) \right)
+\end{aligned}
+\]</span></p>
+<h3 id="h-函数"><span class="math inline">\(h\)</span> 函数</h3>
+<p>取模化简真心很烦，过程就是憨算，不放了。但建议第一次学的时候自己化一遍。 <span class="math display">\[
+\begin{aligned}
+h(a, b, c, n) &amp;=\left\lfloor\frac ac\right\rfloor^2\frac{n(n + 1)(2n + 1)}{6} + n(n + 1)\left\lfloor\frac ac\right\rfloor\left\lfloor\frac bc\right\rfloor + (n + 1)\left\lfloor\frac bc\right\rfloor^2 + \\&amp;+2\left\lfloor\frac ac\right\rfloor g(a\bmod c, b\bmod c, c, n) + 2\left\lfloor\frac bc\right\rfloor f(a\bmod c, b\bmod c, c, n) \\
+&amp;+ h(a\bmod c, b\bmod c, c, n)
+\end{aligned}
+\]</span> 然后是 <span class="math inline">\(a, b&lt; c\)</span> 的情况。但是如果我们直接套上面的形式的话，会发现很难搞，因为会出现 <span class="math inline">\(\sum\times\sum\)</span> 这种不好化简的东西。所以考虑把平方拆开，注意到： <span class="math display">\[
+n^2 = 2\frac{n(n + 1)}{2} - n = 2\sum_{i = 1}^ni - n
+\]</span> 依据这个引理进行化简： <span class="math display">\[
+\begin{aligned}
+h(a, b, c, n) &amp;= \sum_{i = 0}^n\left(2\sum_{j = 1}^{\left\lfloor\frac{ai + b}{c}\right\rfloor}j - \left\lfloor\frac{ai + b}{c}\right\rfloor\right)\\
+&amp;= 2\sum_{i = 0}^n\sum_{j = 0}^{\left\lfloor\frac{ai + b}{c}\right\rfloor - 1}(j + 1) - f(a, b, c, n)
+\end{aligned}
+\]</span> 现在考虑 <span class="math display">\[
+\sum_{i = 0}^n\sum_{j = 0}^{\left\lfloor\frac{ai + b}{c}\right\rfloor - 1}(j + 1)
+\]</span> 的计算。</p>
+<p>继续调换求和顺序： <span class="math display">\[
+\begin{aligned}
+&amp;\sum_{i = 0}^n\sum_{j = 0}^{\left\lfloor\frac{ai + b}{c}\right\rfloor}(j + 1)\\
+=&amp;\sum_{j = 0}^{m - 1}(j + 1)\sum_{i = 0}^n[i &gt; t]\\
+=&amp;\sum_{j = 0}^{m - 1}(j + 1)(n - t)\\
+=&amp;\sum_{j = 0}^{m - 1}(jn - t + n -jt)\\
+=&amp;\frac{1}{2}nm(m + 1) - \sum_{j = 0}^{m - 1}(j + 1)t\\
+=&amp;\frac12nm(m + 1)-g(c, c - b - 1, a, m - 1) - f(c, c - b - 1, a, m - 1)
+\end{aligned}
+\]</span> 因此， <span class="math display">\[
+\begin{aligned}
+h(a, b, c, n) &amp;= nm(m + 1) - 2g(c, c - b - 1, a, m - 1)\\
+&amp;- 2f(c, c - b - 1, m - 1) - f(a, b, c, n)
+\end{aligned}
+\]</span></p>
+<h3 id="实现-1">实现</h3>
+<p>发现 <span class="math inline">\(g\)</span> 和 <span class="math inline">\(h\)</span> 都要互相使用下一层递归的东西，所以考虑把三个函数绑在一起递归实现。</p>
+<p>只能说很难不抄错式子。</p>
+<p><a href="https://www.luogu.com.cn/problem/P5170">洛谷模板</a>代码：</p>
+<div class="sourceCode" id="cb2"><pre class="sourceCode cpp"><code class="sourceCode cpp"><span id="cb2-1"><a aria-hidden="true" href="#cb2-1"></a><span class="pp">#include </span><span class="im">&lt;cstdio&gt;</span></span>
+<span id="cb2-2"><a aria-hidden="true" href="#cb2-2"></a><span class="pp">#include </span><span class="im">&lt;cctype&gt;</span></span>
+<span id="cb2-3"><a aria-hidden="true" href="#cb2-3"></a><span class="pp">#define il </span><span class="kw">inline</span></span>
+<span id="cb2-4"><a aria-hidden="true" href="#cb2-4"></a><span class="pp">#define FOR</span>(i,<span class="pp"> </span>a,<span class="pp"> </span>b)<span class="pp"> </span><span class="cf">for</span><span class="pp"> </span>(<span class="dt">int</span><span class="pp"> </span>i<span class="pp"> </span>=<span class="pp"> </span>(a);<span class="pp"> </span>i<span class="pp"> </span>&lt;=<span class="pp"> </span>(b);<span class="pp"> </span>++i)</span>
+<span id="cb2-5"><a aria-hidden="true" href="#cb2-5"></a><span class="pp">#define DEC</span>(i,<span class="pp"> </span>a,<span class="pp"> </span>b)<span class="pp"> </span><span class="cf">for</span><span class="pp"> </span>(<span class="dt">int</span><span class="pp"> </span>i<span class="pp"> </span>=<span class="pp"> </span>(a);<span class="pp"> </span>i<span class="pp"> </span>&gt;=<span class="pp"> </span>(b);<span class="pp"> </span>--i)</span>
+<span id="cb2-6"><a aria-hidden="true" href="#cb2-6"></a></span>
+<span id="cb2-7"><a aria-hidden="true" href="#cb2-7"></a><span class="kw">namespace</span> fastIO {</span>
+<span id="cb2-8"><a aria-hidden="true" href="#cb2-8"></a><span class="at">const</span> <span class="dt">int</span> maxc = <span class="dv">1</span> &lt;&lt; <span class="dv">23</span>;</span>
+<span id="cb2-9"><a aria-hidden="true" href="#cb2-9"></a><span class="dt">char</span> ibuf[maxc], *__p1 = ibuf, *__p2 = ibuf;</span>
+<span id="cb2-10"><a aria-hidden="true" href="#cb2-10"></a>il <span class="dt">char</span> getchar() {<span class="cf">return</span> __p1 == __p2 &amp;&amp; (__p2 = (__p1 = ibuf) + fread(ibuf, <span class="dv">1</span>, maxc, stdin), __p1 == __p2) ? EOF : *__p1++;}</span>
+<span id="cb2-11"><a aria-hidden="true" href="#cb2-11"></a><span class="kw">template</span>&lt;<span class="kw">typename</span> T&gt; <span class="dt">void</span> read(T &amp;n) {</span>
+<span id="cb2-12"><a aria-hidden="true" href="#cb2-12"></a>    <span class="dt">int</span> x = <span class="dv">0</span>; n = <span class="dv">0</span>;</span>
+<span id="cb2-13"><a aria-hidden="true" href="#cb2-13"></a>    <span class="dt">char</span> c = getchar();</span>
+<span id="cb2-14"><a aria-hidden="true" href="#cb2-14"></a>    <span class="cf">while</span> (!isdigit(c))</span>
+<span id="cb2-15"><a aria-hidden="true" href="#cb2-15"></a>        x |= (c == <span class="ch">'-'</span>), c = getchar();</span>
+<span id="cb2-16"><a aria-hidden="true" href="#cb2-16"></a>    <span class="cf">while</span> (isdigit(c))</span>
+<span id="cb2-17"><a aria-hidden="true" href="#cb2-17"></a>        n = n * <span class="dv">10</span> + c - <span class="ch">'0'</span>, c = getchar();</span>
+<span id="cb2-18"><a aria-hidden="true" href="#cb2-18"></a>    n = x ? -n : n;</span>
+<span id="cb2-19"><a aria-hidden="true" href="#cb2-19"></a>}</span>
+<span id="cb2-20"><a aria-hidden="true" href="#cb2-20"></a><span class="dt">char</span> obuf[maxc], *__pO = obuf;</span>
+<span id="cb2-21"><a aria-hidden="true" href="#cb2-21"></a>il <span class="dt">void</span> putchar(<span class="dt">char</span> c) {*__pO++ = c;}</span>
+<span id="cb2-22"><a aria-hidden="true" href="#cb2-22"></a><span class="kw">template</span>&lt;<span class="kw">typename</span> T&gt; <span class="dt">void</span> print(T x) {</span>
+<span id="cb2-23"><a aria-hidden="true" href="#cb2-23"></a>    <span class="cf">if</span> (x &lt; <span class="dv">0</span>) putchar(<span class="ch">'-'</span>), print(-x);</span>
+<span id="cb2-24"><a aria-hidden="true" href="#cb2-24"></a>    <span class="cf">else</span> {</span>
+<span id="cb2-25"><a aria-hidden="true" href="#cb2-25"></a>        <span class="cf">if</span> (x &gt; <span class="dv">9</span>) print(x / <span class="dv">10</span>);</span>
+<span id="cb2-26"><a aria-hidden="true" href="#cb2-26"></a>        putchar(x % <span class="dv">10</span> + <span class="ch">'0'</span>);</span>
+<span id="cb2-27"><a aria-hidden="true" href="#cb2-27"></a>    }</span>
+<span id="cb2-28"><a aria-hidden="true" href="#cb2-28"></a>    <span class="cf">return</span>;</span>
+<span id="cb2-29"><a aria-hidden="true" href="#cb2-29"></a>}</span>
+<span id="cb2-30"><a aria-hidden="true" href="#cb2-30"></a><span class="dt">void</span> output() {fwrite(obuf, __pO - obuf, <span class="dv">1</span>, stdout);}</span>
+<span id="cb2-31"><a aria-hidden="true" href="#cb2-31"></a>}</span>
+<span id="cb2-32"><a aria-hidden="true" href="#cb2-32"></a></span>
+<span id="cb2-33"><a aria-hidden="true" href="#cb2-33"></a><span class="kw">using</span> <span class="kw">namespace</span> fastIO;</span>
+<span id="cb2-34"><a aria-hidden="true" href="#cb2-34"></a></span>
+<span id="cb2-35"><a aria-hidden="true" href="#cb2-35"></a><span class="kw">typedef</span> <span class="dt">long</span> <span class="dt">long</span> ll;</span>
+<span id="cb2-36"><a aria-hidden="true" href="#cb2-36"></a><span class="at">const</span> ll mod = <span class="dv">998244353</span>, inv2 = <span class="dv">499122177</span>, inv6 = <span class="dv">166374059</span>;</span>
+<span id="cb2-37"><a aria-hidden="true" href="#cb2-37"></a></span>
+<span id="cb2-38"><a aria-hidden="true" href="#cb2-38"></a><span class="kw">struct</span> query {</span>
+<span id="cb2-39"><a aria-hidden="true" href="#cb2-39"></a>    ll f, g, h;</span>
+<span id="cb2-40"><a aria-hidden="true" href="#cb2-40"></a>};</span>
+<span id="cb2-41"><a aria-hidden="true" href="#cb2-41"></a></span>
+<span id="cb2-42"><a aria-hidden="true" href="#cb2-42"></a>il ll S1(ll n) {<span class="cf">return</span> n * (n + <span class="dv">1</span>) / <span class="dv">2</span> % mod;}</span>
+<span id="cb2-43"><a aria-hidden="true" href="#cb2-43"></a>il ll S2(ll n) {<span class="cf">return</span> n * (n + <span class="dv">1</span>) % mod * (<span class="dv">2</span> * n + <span class="dv">1</span>) % mod * inv6 % mod;}</span>
+<span id="cb2-44"><a aria-hidden="true" href="#cb2-44"></a></span>
+<span id="cb2-45"><a aria-hidden="true" href="#cb2-45"></a>query calc(ll a, ll b, ll c, ll n) {</span>
+<span id="cb2-46"><a aria-hidden="true" href="#cb2-46"></a>    query ret;</span>
+<span id="cb2-47"><a aria-hidden="true" href="#cb2-47"></a>    ll s1, s2, ac, bc;</span>
+<span id="cb2-48"><a aria-hidden="true" href="#cb2-48"></a>    ll m;</span>
+<span id="cb2-49"><a aria-hidden="true" href="#cb2-49"></a>    ac = a / c, bc = b / c, s1 = S1(n), s2 = S2(n), m = (a * n + b) / c;</span>
+<span id="cb2-50"><a aria-hidden="true" href="#cb2-50"></a>    <span class="cf">if</span> (a == <span class="dv">0</span>) {</span>
+<span id="cb2-51"><a aria-hidden="true" href="#cb2-51"></a>        ret.f = bc * (n + <span class="dv">1</span>) % mod;</span>
+<span id="cb2-52"><a aria-hidden="true" href="#cb2-52"></a>        ret.g = bc * s1 % mod;</span>
+<span id="cb2-53"><a aria-hidden="true" href="#cb2-53"></a>        ret.h = bc * bc % mod * (n + <span class="dv">1</span>) % mod;</span>
+<span id="cb2-54"><a aria-hidden="true" href="#cb2-54"></a>    } <span class="cf">else</span> <span class="cf">if</span> (a &gt;= c || b &gt;= c) {</span>
+<span id="cb2-55"><a aria-hidden="true" href="#cb2-55"></a>        <span class="kw">auto</span> pre = calc(a % c, b % c, c, n);</span>
+<span id="cb2-56"><a aria-hidden="true" href="#cb2-56"></a>        ret.f = (s1 * ac % mod + (n + <span class="dv">1</span>) * bc % mod + pre.f) % mod;</span>
+<span id="cb2-57"><a aria-hidden="true" href="#cb2-57"></a>        ret.g = (ac * s2 % mod + bc * s1 % mod + pre.g) % mod;</span>
+<span id="cb2-58"><a aria-hidden="true" href="#cb2-58"></a>        ret.h = (ac * ac % mod * s2 + <span class="dv">2</span> * s1 * ac % mod * bc % mod + (n + <span class="dv">1</span>) * bc % mod * bc % mod + <span class="dv">2</span> * ac * pre.g % mod + <span class="dv">2</span> * bc * pre.f % mod + pre.h) % mod;</span>
+<span id="cb2-59"><a aria-hidden="true" href="#cb2-59"></a>    } <span class="cf">else</span> {</span>
+<span id="cb2-60"><a aria-hidden="true" href="#cb2-60"></a>        <span class="kw">auto</span> pre = calc(c, c - b - <span class="dv">1</span>, a, m - <span class="dv">1</span>);</span>
+<span id="cb2-61"><a aria-hidden="true" href="#cb2-61"></a>        ret.f = (n * m % mod + mod - pre.f) % mod;</span>
+<span id="cb2-62"><a aria-hidden="true" href="#cb2-62"></a>        ret.g = (m * n % mod * (n + <span class="dv">1</span>) % mod + mod - pre.h + mod - pre.f) % mod * inv2 % mod;</span>
+<span id="cb2-63"><a aria-hidden="true" href="#cb2-63"></a>        ret.h = (n * m % mod * (m + <span class="dv">1</span>) % mod + mod - <span class="dv">2</span> * pre.g % mod + mod - <span class="dv">2</span> * pre.f % mod + mod - ret.f) % mod;</span>
+<span id="cb2-64"><a aria-hidden="true" href="#cb2-64"></a>    }</span>
+<span id="cb2-65"><a aria-hidden="true" href="#cb2-65"></a>    <span class="cf">return</span> ret;</span>
+<span id="cb2-66"><a aria-hidden="true" href="#cb2-66"></a>}</span>
+<span id="cb2-67"><a aria-hidden="true" href="#cb2-67"></a></span>
+<span id="cb2-68"><a aria-hidden="true" href="#cb2-68"></a><span class="dt">int</span> main() {</span>
+<span id="cb2-69"><a aria-hidden="true" href="#cb2-69"></a>    <span class="dt">int</span> T; read(T);</span>
+<span id="cb2-70"><a aria-hidden="true" href="#cb2-70"></a>    <span class="cf">while</span> (T--) {</span>
+<span id="cb2-71"><a aria-hidden="true" href="#cb2-71"></a>        <span class="dt">int</span> a, b, c, n; read(n), read(a), read(b), read(c);</span>
+<span id="cb2-72"><a aria-hidden="true" href="#cb2-72"></a>        query ans = calc(a, b, c, n);</span>
+<span id="cb2-73"><a aria-hidden="true" href="#cb2-73"></a>        print(ans.f), putchar(<span class="ch">' '</span>), print(ans.h), putchar(<span class="ch">' '</span>), print(ans.g), putchar(<span class="ch">'</span><span class="sc">\n</span><span class="ch">'</span>);</span>
+<span id="cb2-74"><a aria-hidden="true" href="#cb2-74"></a>    }</span>
+<span id="cb2-75"><a aria-hidden="true" href="#cb2-75"></a>    <span class="cf">return</span> output(), <span class="dv">0</span>;</span>
+<span id="cb2-76"><a aria-hidden="true" href="#cb2-76"></a>}</span></code></pre></div>
+<h2 id="应用">应用</h2>
+<h3 id="p5171-earthquake">P5171 Earthquake</h3>
+<p><a href="https://www.luogu.com.cn/problem/P5171">题面</a>：求 <span class="math display">\[
+ax + by\le c
+\]</span> 的非负整数解个数。<span class="math inline">\(1\le a, b\le10^9\)</span>，<span class="math inline">\(0\le c\le 10^{18}\)</span>。</p>
+<p>转换一下就是： <span class="math display">\[
+y\le \frac{-ax + c}{b}
+\]</span> 即为直线下整点个数。对于一个 <span class="math inline">\(x\)</span> 来说易得答案为 <span class="math display">\[
+\left\lfloor\frac{-ax + c}{b}\right\rfloor + 1
+\]</span> 加 <span class="math inline">\(1\)</span> 是因为有 <span class="math inline">\(y = 0\)</span>。</p>
+<p>所以答案为 <span class="math display">\[
+\left\lfloor\frac ac\right\rfloor + 1 + \sum_{x = 0}^{\lfloor\frac ac\rfloor}\left\lfloor\frac{-ax + c}{b}\right\rfloor
+\]</span> 但是那个 <span class="math inline">\(-a\)</span> 就很迷惑，假设 <span class="math inline">\(b\ge a\)</span>（如果 <span class="math inline">\(b &lt; a\)</span> 可以 <code>swap(a, b)</code>），然后给 <span class="math inline">\(x\)</span> 的系数加上 <span class="math inline">\(b\)</span>，则 <span class="math display">\[
+\begin{aligned}
+\sum_{x = 0}^{\lfloor\frac ca\rfloor}\left\lfloor\frac{-ax + c}{b}\right\rfloor&amp;= \sum_{x = 0}^{\lfloor\frac ca\rfloor}\left\lfloor\frac{(b - a)x + c}{b} - x\right\rfloor\\
+&amp;= \sum_{x = 0}^{\lfloor\frac ca\rfloor}\left\lfloor\frac{(b - a)x + c}{b}\right\rfloor - \frac12\left\lfloor\frac ca\right\rfloor\left(\left\lfloor\frac ca\right\rfloor + 1\right)
+\end{aligned}
+\]</span></p>
+</section>
+<footer class="article-footer">
+<section class="article-tags">
+<a href="/tags/OI/">OI</a>
+<a href="/tags/note/">笔记</a>
+<a href="/tags/akin-euclidean-algo/">类欧几里得算法</a>
+</section>
+<section class="article-copyright">
+<svg class="icon icon-tabler icon-tabler-copyright" fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+<path d="M0 0h24v24H0z" stroke="none"></path>
+<circle cx="12" cy="12" r="9"></circle>
+<path d="M14.5 9a3.5 4 0 1 0 0 6"></path>
+</svg>
+<span>Licensed under CC BY-NC-SA 4.0</span>
+</section>
+</footer>
+<link crossorigin="anonymous" href="https://cdn.jsdelivr.net/npm/katex@0.13.13/dist/katex.min.css" integrity="sha384-RZU/ijkSsFbcmivfdRBQDtwuwVqK7GMOw6IMvKyeWL2K5UAlyp6WonmB8m7Jd0Hn" rel="stylesheet"/><script crossorigin="anonymous" defer="" integrity="sha384-pK1WpvzWVBQiP0/GjnvRxV4mOb0oxFuyRxJlk6vVw146n3egcN5C925NCP7a7BY8" src="https://cdn.jsdelivr.net/npm/katex@0.13.13/dist/katex.min.js">
+</script><script crossorigin="anonymous" defer="" integrity="sha384-vZTG03m+2yp6N6BNi5iM4rW4oIwk5DfcNdFfxkk9ZWpDriOkXX8voJBFrAO7MpVl" src="https://cdn.jsdelivr.net/npm/katex@0.13.13/dist/contrib/auto-render.min.js">
+</script><script>
+    window.addEventListener("DOMContentLoaded", () => {
+        renderMathInElement(document.querySelector(`.article-content`), {
+            delimiters: [
+                { left: "$$", right: "$$", display: true },
+                { left: "$", right: "$", display: false },
+                { left: "\\(", right: "\\)", display: false },
+                { left: "\\[", right: "\\]", display: true }
+            ]
+        });})
+</script>
+</article>
+<aside class="related-contents--wrapper">
+<h2 class="section-title">相关文章</h2>
+<div class="related-contents">
+<div class="flex article-list--tile">
+<article class="has-image">
+<a href="/note-gf/">
+<div class="article-image">
+<img data-hash="https://yangty-pic.oss-cn-beijing.aliyuncs.com/bg28.webp" data-key="" loading="lazy" src="https://yangty-pic.oss-cn-beijing.aliyuncs.com/bg28.webp"/>
+</div>
+<div class="article-details">
+<h2 class="article-title">生成函数胡扯</h2>
+</div>
+</a>
+</article>
+<article class="has-image">
+<a href="/note-set-power-series/">
+<div class="article-image">
+<img data-hash="https://yangty-pic.oss-cn-beijing.aliyuncs.com/bg39.webp" data-key="" loading="lazy" src="https://yangty-pic.oss-cn-beijing.aliyuncs.com/bg39.webp"/>
+</div>
+<div class="article-details">
+<h2 class="article-title">集合幂级数胡扯</h2>
+</div>
+</a>
+</article>
+<article class="has-image">
+<a href="/note-linear-basis/">
+<div class="article-image">
+<img data-hash="https://yangty-pic.oss-cn-beijing.aliyuncs.com/bg19.webp" data-key="" loading="lazy" src="https://yangty-pic.oss-cn-beijing.aliyuncs.com/bg19.webp"/>
+</div>
+<div class="article-details">
+<h2 class="article-title">线性基学习笔记</h2>
+</div>
+</a>
+</article>
+<article class="has-image">
+<a href="/note-wqs/">
+<div class="article-image">
+<img data-hash="https://yangty-pic.oss-cn-beijing.aliyuncs.com/bg28.webp" data-key="" loading="lazy" src="https://yangty-pic.oss-cn-beijing.aliyuncs.com/bg28.webp"/>
+</div>
+<div class="article-details">
+<h2 class="article-title">wqs 二分学习笔记</h2>
+</div>
+</a>
+</article>
+<article class="has-image">
+<a href="/note-builtin/">
+<div class="article-image">
+<img data-hash="https://yangty-pic.oss-cn-beijing.aliyuncs.com/bg9.webp" data-key="" loading="lazy" src="https://yangty-pic.oss-cn-beijing.aliyuncs.com/bg9.webp"/>
+</div>
+<div class="article-details">
+<h2 class="article-title">__builtin 系列函数总结</h2>
+</div>
+</a>
+</article>
+</div>
+</div>
+</aside>
+<footer class="site-footer">
+<section class="copyright">
+        © 
+        
+            2019 - 
+        
+        2024 清烛的博客
+    </section>
+<section class="powerby">
+        Built with <a href="https://gohugo.io/" rel="noopener" target="_blank">Hugo</a> <br/>
+        主题 <b><a data-version="3.11.0" href="https://github.com/CaiJimmy/hugo-theme-stack" rel="noopener" target="_blank">Stack</a></b> 由 <a href="https://jimmycai.com" rel="noopener" target="_blank">Jimmy</a> 设计
+    </section>
+</footer>
+<div aria-hidden="true" class="pswp" role="dialog" tabindex="-1">
+<div class="pswp__bg"></div>
+<div class="pswp__scroll-wrap">
+<div class="pswp__container">
+<div class="pswp__item"></div>
+<div class="pswp__item"></div>
+<div class="pswp__item"></div>
+</div>
+<div class="pswp__ui pswp__ui--hidden">
+<div class="pswp__top-bar">
+<div class="pswp__counter"></div>
+<button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+<button class="pswp__button pswp__button--share" title="Share"></button>
+<button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+<button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+<div class="pswp__preloader">
+<div class="pswp__preloader__icn">
+<div class="pswp__preloader__cut">
+<div class="pswp__preloader__donut"></div>
+</div>
+</div>
+</div>
+</div>
+<div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+<div class="pswp__share-tooltip"></div>
+</div>
+<button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+</button>
+<button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+</button>
+<div class="pswp__caption">
+<div class="pswp__caption__center"></div>
+</div>
+</div>
+</div>
+</div><script crossorigin="anonymous" defer="" integrity="sha256-ePwmChbbvXbsO02lbM3HoHbSHTHFAeChekF1xKJdleo=" src="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe.min.js">
+</script><script crossorigin="anonymous" defer="" integrity="sha256-UKkzOn/w1mBxRmLLGrSeyB4e1xbrp4xylgAWb3M42pU=" src="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe-ui-default.min.js">
+</script><link crossorigin="anonymous" href="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/default-skin/default-skin.css" integrity="sha256-c0uckgykQ9v5k+IqViZOZKc47Jn7KQil4/MP3ySA3F8=" rel="stylesheet"/><link crossorigin="anonymous" href="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe.css" integrity="sha256-SBLU4vv6CA6lHsZ1XyTdhyjJxCjPif/TRkjnsyGAGnE=" rel="stylesheet"/>
+</main>
+</div>
+<script crossorigin="anonymous" integrity="sha256-5NovOZc4iwiAWTYIFiIM7DxKUXKWvpVEuMEPLzcm5/g=" src="https://cdn.jsdelivr.net/npm/node-vibrant@3.1.5/dist/vibrant.min.js">
+</script><script defer="" src="/ts/main.js" type="text/javascript"></script>
+<script>
+    (function () {
+        const customFont = document.createElement('link');
+        customFont.href = "https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&display=swap";
+
+        customFont.type = "text/css";
+        customFont.rel = "stylesheet";
+
+        document.head.appendChild(customFont);
+    }());
+</script>
+</body>
+</html>

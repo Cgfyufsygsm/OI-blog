@@ -1,0 +1,553 @@
+<!DOCTYPE html>
+<html dir="ltr" lang="zh-CN">
+<head><meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1" name="viewport"/><meta content="[TOC]
+决策单调性的定义 对于任意四个转移点 \(a &amp;lt; b &amp;lt; c &amp;lt; d\)。若以下条件满足：\(f_c\) 从 \(b\) 转移比从 \(a\) 转移优可以推出 \(f_d\) 从 \(b\) 转移比从 \(a\) 转移优，则说明满足决策单调性。
+即：dp 的转移点是单调的。
+四边形不等式在 2D/1D 动态规划中的应用 前言 在区间 dp 中，经常会遇到以下形式的状态转移方程： \[ f(l, r) = \min_{l\le k &amp;lt; r}\left\{f(l, k) + f(k + 1, r)\right\} + w(l, r) \] 直接暴力的做，复杂度为 \(O(n^3)\)，但如果 \(w(l, r)\) 满足一些特殊性质时，可以考虑四边形不等式优化成 \(O(n^2)\)。
+基本概念 首先，令 \(w(l, r)\) 为定义在 \(\mathbb Z\) 上的二元函数。
+区间包含的单调性：若 \(\forall a \le b &amp;lt; c \le d\)，有 \(w(b, c) \le w(a, d)\)，则 \(w\) 具有区间包含的单调性。（即里面不超过外面）" name="description"/><title>决策单调性优化动态规划</title>
+<link href="https://oi.imyangty.com/note-mono-opti-dp/" rel="canonical"/>
+<link href="/scss/style.min.a5821f3d3ab84ce5a0ac21477e347a2e0ca00292e398d16c5e8e36ded6e35a23.css" rel="stylesheet"/><meta content="决策单调性优化动态规划" property="og:title"/>
+<meta content="[TOC]
+决策单调性的定义 对于任意四个转移点 \(a &amp;lt; b &amp;lt; c &amp;lt; d\)。若以下条件满足：\(f_c\) 从 \(b\) 转移比从 \(a\) 转移优可以推出 \(f_d\) 从 \(b\) 转移比从 \(a\) 转移优，则说明满足决策单调性。
+即：dp 的转移点是单调的。
+四边形不等式在 2D/1D 动态规划中的应用 前言 在区间 dp 中，经常会遇到以下形式的状态转移方程： \[ f(l, r) = \min_{l\le k &amp;lt; r}\left\{f(l, k) + f(k + 1, r)\right\} + w(l, r) \] 直接暴力的做，复杂度为 \(O(n^3)\)，但如果 \(w(l, r)\) 满足一些特殊性质时，可以考虑四边形不等式优化成 \(O(n^2)\)。
+基本概念 首先，令 \(w(l, r)\) 为定义在 \(\mathbb Z\) 上的二元函数。
+区间包含的单调性：若 \(\forall a \le b &amp;lt; c \le d\)，有 \(w(b, c) \le w(a, d)\)，则 \(w\) 具有区间包含的单调性。（即里面不超过外面）" property="og:description"/>
+<meta content="https://oi.imyangty.com/note-mono-opti-dp/" property="og:url"/>
+<meta content="清烛的博客" property="og:site_name"/>
+<meta content="article" property="og:type"/><meta content="Post" property="article:section"/><meta content="OI" property="article:tag"/><meta content="笔记" property="article:tag"/><meta content="决策单调性优化" property="article:tag"/><meta content="四边形不等式" property="article:tag"/><meta content="动态规划" property="article:tag"/><meta content="2021-07-26T17:06:49+08:00" property="article:published_time"/><meta content="2021-07-26T17:06:49+08:00" property="article:modified_time"/><meta content="https://yangty-pic.oss-cn-beijing.aliyuncs.com/bg21.webp" property="og:image"/>
+<meta content="决策单调性优化动态规划" name="twitter:title"/>
+<meta content="[TOC]
+决策单调性的定义 对于任意四个转移点 \(a &amp;lt; b &amp;lt; c &amp;lt; d\)。若以下条件满足：\(f_c\) 从 \(b\) 转移比从 \(a\) 转移优可以推出 \(f_d\) 从 \(b\) 转移比从 \(a\) 转移优，则说明满足决策单调性。
+即：dp 的转移点是单调的。
+四边形不等式在 2D/1D 动态规划中的应用 前言 在区间 dp 中，经常会遇到以下形式的状态转移方程： \[ f(l, r) = \min_{l\le k &amp;lt; r}\left\{f(l, k) + f(k + 1, r)\right\} + w(l, r) \] 直接暴力的做，复杂度为 \(O(n^3)\)，但如果 \(w(l, r)\) 满足一些特殊性质时，可以考虑四边形不等式优化成 \(O(n^2)\)。
+基本概念 首先，令 \(w(l, r)\) 为定义在 \(\mathbb Z\) 上的二元函数。
+区间包含的单调性：若 \(\forall a \le b &amp;lt; c \le d\)，有 \(w(b, c) \le w(a, d)\)，则 \(w\) 具有区间包含的单调性。（即里面不超过外面）" name="twitter:description"/><meta content="summary_large_image" name="twitter:card"/>
+<meta content="https://yangty-pic.oss-cn-beijing.aliyuncs.com/bg21.webp" name="twitter:image"/>
+<link href="https://q1.qlogo.cn/g?b=qq&amp;nk=375836877&amp;s=5" rel="shortcut icon"/>
+<link href="https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.5.1/build/styles/github-dark-dimmed.min.css" rel="stylesheet"/>
+<script src="https://cdn.jsdelivr.net/gh/highlightjs/cdn-release/build/highlight.min.js"></script>
+<script>hljs.highlightAll();</script>
+</head>
+<body class="article-page">
+<script>
+        (function() {
+            const colorSchemeKey = 'StackColorScheme';
+            if(!localStorage.getItem(colorSchemeKey)){
+                localStorage.setItem(colorSchemeKey, "auto");
+            }
+        })();
+    </script><script>
+    (function() {
+        const colorSchemeKey = 'StackColorScheme';
+        const colorSchemeItem = localStorage.getItem(colorSchemeKey);
+        const supportDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches === true;
+
+        if (colorSchemeItem == 'dark' || colorSchemeItem === 'auto' && supportDarkMode) {
+            
+
+            document.documentElement.dataset.scheme = 'dark';
+        } else {
+            document.documentElement.dataset.scheme = 'light';
+        }
+    })();
+</script>
+<div class="container main-container flex on-phone--column extended"><aside class="sidebar left-sidebar sticky">
+<button aria-label="切换菜单" class="hamburger hamburger--spin" id="toggle-menu" type="button">
+<span class="hamburger-box">
+<span class="hamburger-inner"></span>
+</span>
+</button>
+<header>
+<figure class="site-avatar">
+<a href="/">
+<img alt="Avatar" class="site-logo" height="300" loading="lazy" src="/img/avatar_huea3ce2119467b51fdd2a81393644a76d_51594_300x0_resize_q75_box.jpg" width="300"/>
+</a>
+<span class="emoji">😅</span>
+</figure>
+<div class="site-meta">
+<h1 class="site-name"><a href="/">清烛的博客</a></h1>
+<h2 class="site-description">烟火已谢，笙歌未停</h2>
+</div>
+</header><ol class="social-menu">
+<li>
+<a href="mailto:i@imyangty.com" target="_blank" title="email">
+<svg class="icon icon-tabler icon-tabler-mail" fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" viewbox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+<path d="M0 0h24v24H0z" fill="none" stroke="none"></path>
+<rect height="14" rx="2" width="18" x="3" y="5"></rect>
+<polyline points="3 7 12 13 21 7"></polyline>
+</svg>
+</a>
+</li>
+<li>
+<a href="https://github.com/Cgfyufsygsm" target="_blank" title="GitHub">
+<svg class="icon icon-tabler icon-tabler-brand-github" fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+<path d="M0 0h24v24H0z" fill="none" stroke="none"></path>
+<path d="M9 19c-4.3 1.4 -4.3 -2.5 -6 -3m12 5v-3.5c0 -1 .1 -1.4 -.5 -2c2.8 -.3 5.5 -1.4 5.5 -6a4.6 4.6 0 0 0 -1.3 -3.2a4.2 4.2 0 0 0 -.1 -3.2s-1.1 -.3 -3.5 1.3a12.3 12.3 0 0 0 -6.2 0c-2.4 -1.6 -3.5 -1.3 -3.5 -1.3a4.2 4.2 0 0 0 -.1 3.2a4.6 4.6 0 0 0 -1.3 3.2c0 4.6 2.7 5.7 5.5 6c-.6 .6 -.6 1.2 -.5 2v3.5"></path>
+</svg>
+</a>
+</li>
+<li>
+<a href="https://t.me/Cgfyufsygsm" target="_blank" title="Telegram">
+<svg class="icon icon-tabler icon-tabler-brand-telegram" fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" viewbox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+<path d="M0 0h24v24H0z" fill="none" stroke="none"></path>
+<path d="M15 10l-4 4l6 6l4 -16l-18 7l4 2l2 6l3 -4"></path>
+</svg>
+</a>
+</li>
+<li>
+<a href="https://twitter.com/Cgfyufsygsm" target="_blank" title="Twitter">
+<svg class="icon icon-tabler icon-tabler-brand-twitter" fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+<path d="M0 0h24v24H0z" fill="none" stroke="none"></path>
+<path d="M22 4.01c-1 .49 -1.98 .689 -3 .99c-1.121 -1.265 -2.783 -1.335 -4.38 -.737s-2.643 2.06 -2.62 3.737v1c-3.245 .083 -6.135 -1.395 -8 -4c0 0 -4.182 7.433 4 11c-1.872 1.247 -3.739 2.088 -6 2c3.308 1.803 6.913 2.423 10.034 1.517c3.58 -1.04 6.522 -3.723 7.651 -7.742a13.84 13.84 0 0 0 .497 -3.753c-.002 -.249 1.51 -2.772 1.818 -4.013z"></path>
+</svg>
+</a>
+</li>
+</ol><ol class="menu" id="main-menu">
+<li>
+<a href="/">
+<svg class="icon icon-tabler icon-tabler-home" fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+<path d="M0 0h24v24H0z" stroke="none"></path>
+<polyline points="5 12 3 12 12 3 21 12 19 12"></polyline>
+<path d="M5 12v7a2 2 0 0 0 2 2h10a2 2 0 0 0 2 -2v-7"></path>
+<path d="M9 21v-6a2 2 0 0 1 2 -2h2a2 2 0 0 1 2 2v6"></path>
+</svg>
+<span>主页</span>
+</a>
+</li>
+<li>
+<a href="/about/">
+<svg class="icon icon-tabler icon-tabler-user" fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+<path d="M0 0h24v24H0z" stroke="none"></path>
+<circle cx="12" cy="7" r="4"></circle>
+<path d="M6 21v-2a4 4 0 0 1 4 -4h4a4 4 0 0 1 4 4v2"></path>
+</svg>
+<span>关于</span>
+</a>
+</li>
+<li>
+<a href="/idx/">
+<svg class="icon icon-tabler icon-tabler-hash" fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+<path d="M0 0h24v24H0z" stroke="none"></path>
+<line x1="5" x2="19" y1="9" y2="9"></line>
+<line x1="5" x2="19" y1="15" y2="15"></line>
+<line x1="11" x2="7" y1="4" y2="20"></line>
+<line x1="17" x2="13" y1="4" y2="20"></line>
+</svg>
+<span>导航</span>
+</a>
+</li>
+<li>
+<a href="/archives/">
+<svg class="icon icon-tabler icon-tabler-archive" fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+<path d="M0 0h24v24H0z" stroke="none"></path>
+<rect height="4" rx="2" width="18" x="3" y="4"></rect>
+<path d="M5 8v10a2 2 0 0 0 2 2h10a2 2 0 0 0 2 -2v-10"></path>
+<line x1="10" x2="14" y1="12" y2="12"></line>
+</svg>
+<span>归档</span>
+</a>
+</li>
+<li>
+<a href="/search/">
+<svg class="icon icon-tabler icon-tabler-search" fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+<path d="M0 0h24v24H0z" stroke="none"></path>
+<circle cx="10" cy="10" r="7"></circle>
+<line x1="21" x2="15" y1="21" y2="15"></line>
+</svg>
+<span>搜索</span>
+</a>
+</li>
+<li>
+<a href="/friends/">
+<svg class="icon icon-tabler icon-tabler-link" fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+<path d="M0 0h24v24H0z" stroke="none"></path>
+<path d="M10 14a3.5 3.5 0 0 0 5 0l4 -4a3.5 3.5 0 0 0 -5 -5l-.5 .5"></path>
+<path d="M14 10a3.5 3.5 0 0 0 -5 0l-4 4a3.5 3.5 0 0 0 5 5l.5 -.5"></path>
+</svg>
+<span>友链</span>
+</a>
+</li>
+<li>
+<a href="https://blog.imyangty.com" target="_blank">
+<svg class="icon icon-tabler icon-tabler-home" fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+<path d="M0 0h24v24H0z" stroke="none"></path>
+<polyline points="5 12 3 12 12 3 21 12 19 12"></polyline>
+<path d="M5 12v7a2 2 0 0 0 2 2h10a2 2 0 0 0 2 -2v-7"></path>
+<path d="M9 21v-6a2 2 0 0 1 2 -2h2a2 2 0 0 1 2 2v6"></path>
+</svg>
+<span>主博客</span>
+</a>
+</li>
+<div class="menu-bottom-section">
+<li id="dark-mode-toggle">
+<svg class="icon icon-tabler icon-tabler-toggle-left" fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+<path d="M0 0h24v24H0z" stroke="none"></path>
+<circle cx="8" cy="12" r="2"></circle>
+<rect height="12" rx="6" width="20" x="2" y="6"></rect>
+</svg>
+<svg class="icon icon-tabler icon-tabler-toggle-right" fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+<path d="M0 0h24v24H0z" stroke="none"></path>
+<circle cx="16" cy="12" r="2"></circle>
+<rect height="12" rx="6" width="20" x="2" y="6"></rect>
+</svg>
+<span>暗色模式</span>
+</li>
+</div>
+</ol>
+</aside>
+<main class="main full-width">
+<article class="has-image main-article">
+<header class="article-header">
+<div class="article-image">
+<a href="/note-mono-opti-dp/">
+<img alt="Featured image of post 决策单调性优化动态规划" loading="lazy" src="https://yangty-pic.oss-cn-beijing.aliyuncs.com/bg21.webp"/>
+</a>
+</div>
+<div class="article-details">
+<header class="article-category">
+<a href="/categories/oi/">
+                OI
+            </a>
+<a href="/categories/note/">
+                笔记
+            </a>
+</header>
+<div class="article-title-wrapper">
+<h2 class="article-title">
+<a href="/note-mono-opti-dp/">决策单调性优化动态规划</a>
+</h2>
+</div>
+<footer class="article-time">
+<div>
+<svg class="icon icon-tabler icon-tabler-calendar-time" fill="none" height="56" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="56" xmlns="http://www.w3.org/2000/svg">
+<path d="M0 0h24v24H0z" stroke="none"></path>
+<path d="M11.795 21h-6.795a2 2 0 0 1 -2 -2v-12a2 2 0 0 1 2 -2h12a2 2 0 0 1 2 2v4"></path>
+<circle cx="18" cy="18" r="4"></circle>
+<path d="M15 3v4"></path>
+<path d="M7 3v4"></path>
+<path d="M3 11h16"></path>
+<path d="M18 16.496v1.504l1 1"></path>
+</svg>
+<time class="article-time--published">Jul 26, 2021</time>
+</div>
+<div>
+<svg class="icon icon-tabler icon-tabler-clock" fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+<path d="M0 0h24v24H0z" stroke="none"></path>
+<circle cx="12" cy="12" r="9"></circle>
+<polyline points="12 7 12 12 15 15"></polyline>
+</svg>
+<time class="article-time--reading">
+                    阅读时长: 5 分钟
+                </time>
+</div>
+</footer>
+</div>
+</header>
+<section class="article-content">
+<p>[TOC]</p>
+<h2 id="决策单调性的定义">决策单调性的定义</h2>
+<p>对于任意四个转移点 <span class="math inline">\(a &lt; b &lt; c &lt; d\)</span>。若以下条件满足：<span class="math inline">\(f_c\)</span> 从 <span class="math inline">\(b\)</span> 转移比从 <span class="math inline">\(a\)</span> 转移优可以推出 <span class="math inline">\(f_d\)</span> 从 <span class="math inline">\(b\)</span> 转移比从 <span class="math inline">\(a\)</span> 转移优，则说明满足决策单调性。</p>
+<p>即：dp 的转移点是单调的。</p>
+<h2 id="四边形不等式在-2d1d-动态规划中的应用">四边形不等式在 2D/1D 动态规划中的应用</h2>
+<h3 id="前言">前言</h3>
+<p>在区间 dp 中，经常会遇到以下形式的状态转移方程： <span class="math display">\[
+f(l, r) = \min_{l\le k &lt; r}\left\{f(l, k) + f(k + 1, r)\right\} + w(l, r)
+\]</span> 直接暴力的做，复杂度为 <span class="math inline">\(O(n^3)\)</span>，但如果 <span class="math inline">\(w(l, r)\)</span> 满足一些特殊性质时，可以考虑四边形不等式优化成 <span class="math inline">\(O(n^2)\)</span>。</p>
+<h3 id="基本概念">基本概念</h3>
+<p>首先，令 <span class="math inline">\(w(l, r)\)</span> 为定义在 <span class="math inline">\(\mathbb Z\)</span> 上的二元函数。</p>
+<ul>
+<li><p>区间包含的单调性：若 <span class="math inline">\(\forall a \le b &lt; c \le d\)</span>，有 <span class="math inline">\(w(b, c) \le w(a, d)\)</span>，则 <span class="math inline">\(w\)</span> 具有区间包含的单调性。（即里面不超过外面）</p></li>
+<li><p>四边形不等式：若 <span class="math inline">\(\forall a \le b &lt; c\le d\)</span>，有 <span class="math inline">\(w(a, c) + w(b, d)\le w(b, c) + w(a, d)\)</span>，则 <span class="math inline">\(w\)</span> 满足四边形不等式。（记忆方法：<strong>交叉小于包含</strong>）</p></li>
+</ul>
+<h3 id="四边形不等式定理">四边形不等式定理</h3>
+<p>四边形不等式定理：若 <span class="math inline">\(w(i, j)\)</span> 满足四边形不等式和单调性，则 dp 计算 <span class="math inline">\(f(i, j)\)</span> 的复杂度是 <span class="math inline">\(O(n^2)\)</span> 的。</p>
+<p>为了证明这两个定理，有以下两个 Lemma：</p>
+<ul>
+<li>Lemma 1：若 <span class="math inline">\(w(i, j)\)</span> 满足四边形不等式和单调性，则 <span class="math inline">\(f(i, j)\)</span> 满足四边形不等式。</li>
+<li>Lemma 2：记 <span class="math inline">\(s(i, j)\)</span> 为 dp 的最优转移点，即 <span class="math inline">\(s(i, j) = \arg\min_{l\le k &lt; r}\{f(l, k) + f(k + 1, r)\}\)</span>。则 <span class="math inline">\(s(i, j - 1) \le s(i, j) \le s(i + 1, j)\)</span>。</li>
+</ul>
+<p>Lemma 2 直接用于 dp 优化。</p>
+<h3 id="定理证明">定理证明</h3>
+<p>懒得证了，不会也不想看。</p>
+<p>但是需要注意一下，如果题目中说的是 <span class="math inline">\(\max\)</span>，则四边形不等式将变为<strong>反四边形不等式</strong>， 即 <span class="math display">\[
+w(a,c) + w(b, d) \ge w(b, c) + w(a, d)
+\]</span> 而区间包含的单调也变为 <span class="math inline">\(w(b, c) \ge w(a, d)\)</span>。</p>
+<h3 id="应用石子合并">应用——石子合并</h3>
+<p>此时的 <span class="math inline">\(w(i, j)\)</span> 即为 <span class="math inline">\([i, j]\)</span> 的石子数量。区间包含的单调性是显然的，而四边形不等式是刚好取到等号，所以最小化的一问可以使用四边形不等式进行优化。而最大化则不可以，但是稍加分析可得最大化的转移方程如下： <span class="math inline">\(f_2(i, j) = \max(f_2(i + 1, j), f_2(i, j - 1)) + w(i, j)\)</span>。</p>
+<p>代码如下：</p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode cpp"><code class="sourceCode cpp"><span id="cb1-1"><a aria-hidden="true" href="#cb1-1"></a>FOR(len, <span class="dv">2</span>, n) {</span>
+<span id="cb1-2"><a aria-hidden="true" href="#cb1-2"></a>    <span class="cf">for</span> (<span class="dt">int</span> i = <span class="dv">1</span>, j = i + len - <span class="dv">1</span>; j &lt;= n &lt;&lt; <span class="dv">1</span>; ++i, ++j) {</span>
+<span id="cb1-3"><a aria-hidden="true" href="#cb1-3"></a>        f2[i][j] = max(f2[i + <span class="dv">1</span>][j], f2[i][j - <span class="dv">1</span>]) + a[j] - a[i - <span class="dv">1</span>];</span>
+<span id="cb1-4"><a aria-hidden="true" href="#cb1-4"></a>        f1[i][j] = <span class="dv">1</span> &lt;&lt; <span class="dv">30</span>;</span>
+<span id="cb1-5"><a aria-hidden="true" href="#cb1-5"></a>        FOR(k, s[i][j - <span class="dv">1</span>], s[i + <span class="dv">1</span>][j]) {</span>
+<span id="cb1-6"><a aria-hidden="true" href="#cb1-6"></a>            <span class="cf">if</span> (f1[i][j] &gt; f1[i][k] + f1[k + <span class="dv">1</span>][j] + a[j] - a[i - <span class="dv">1</span>])</span>
+<span id="cb1-7"><a aria-hidden="true" href="#cb1-7"></a>                f1[i][j] = f1[i][k] + f1[k + <span class="dv">1</span>][j] + a[j] - a[i - <span class="dv">1</span>], s[i][j] = k;</span>
+<span id="cb1-8"><a aria-hidden="true" href="#cb1-8"></a>        }</span>
+<span id="cb1-9"><a aria-hidden="true" href="#cb1-9"></a>    }</span>
+<span id="cb1-10"><a aria-hidden="true" href="#cb1-10"></a>}</span></code></pre></div>
+<p>这样下来均摊的复杂度就是 <span class="math inline">\(O(n^2)\)</span>。</p>
+<h3 id="应用2uva10304">应用2——UVA10304</h3>
+<p>题意：给定 <span class="math inline">\(n\)</span> 个节点，安排其成为一个二叉树使得 <span class="math inline">\(\sum d_ia_i\)</span> 最大。</p>
+<p>直接设 <span class="math inline">\(f_{i, j}\)</span> 为将 <span class="math inline">\([i, j]\)</span> 变为一棵二叉树的最小代价，则枚举根节点 <span class="math inline">\(k\)</span>，有很明显的区间 dp： <span class="math display">\[
+f_{i, j} = \min_{i\le k\le j} \{f_{i, k - 1} + f_{k + 1, j} - e_k\} + w(i, j)
+\]</span> 其中 <span class="math inline">\(w(i, j) = \sum_{k = i}^je_k\)</span>。</p>
+<p>然后，区间和这个东西满足四边形不等式，所以可以记录最优转移点来优化转移。</p>
+<div class="sourceCode" id="cb2"><pre class="sourceCode cpp"><code class="sourceCode cpp"><span id="cb2-1"><a aria-hidden="true" href="#cb2-1"></a><span class="pp">#include </span><span class="im">&lt;cstdio&gt;</span></span>
+<span id="cb2-2"><a aria-hidden="true" href="#cb2-2"></a><span class="pp">#include </span><span class="im">&lt;cstring&gt;</span></span>
+<span id="cb2-3"><a aria-hidden="true" href="#cb2-3"></a><span class="pp">#define il </span><span class="kw">inline</span></span>
+<span id="cb2-4"><a aria-hidden="true" href="#cb2-4"></a><span class="pp">#define FOR</span>(i,<span class="pp"> </span>a,<span class="pp"> </span>b)<span class="pp"> </span><span class="cf">for</span><span class="pp"> </span>(<span class="dt">int</span><span class="pp"> </span>i<span class="pp"> </span>=<span class="pp"> </span>a;<span class="pp"> </span>i<span class="pp"> </span>&lt;=<span class="pp"> </span>b;<span class="pp"> </span>++i)</span>
+<span id="cb2-5"><a aria-hidden="true" href="#cb2-5"></a><span class="pp">#define DEC</span>(i,<span class="pp"> </span>a,<span class="pp"> </span>b)<span class="pp"> </span><span class="cf">for</span><span class="pp"> </span>(<span class="dt">int</span><span class="pp"> </span>i<span class="pp"> </span>=<span class="pp"> </span>a;<span class="pp"> </span>i<span class="pp"> </span>&gt;=<span class="pp"> </span>b;<span class="pp"> </span>--i)</span>
+<span id="cb2-6"><a aria-hidden="true" href="#cb2-6"></a></span>
+<span id="cb2-7"><a aria-hidden="true" href="#cb2-7"></a><span class="at">const</span> <span class="dt">int</span> maxn = <span class="dv">255</span>;</span>
+<span id="cb2-8"><a aria-hidden="true" href="#cb2-8"></a><span class="dt">int</span> n, f[maxn][maxn], a[maxn], sum[maxn], s[maxn][maxn];</span>
+<span id="cb2-9"><a aria-hidden="true" href="#cb2-9"></a></span>
+<span id="cb2-10"><a aria-hidden="true" href="#cb2-10"></a>il <span class="dt">int</span> cost(<span class="dt">int</span> i, <span class="dt">int</span> j, <span class="dt">int</span> k) {<span class="cf">return</span> sum[j] - sum[i - <span class="dv">1</span>] - a[k];}</span>
+<span id="cb2-11"><a aria-hidden="true" href="#cb2-11"></a>il <span class="dt">bool</span> to_min(<span class="dt">int</span> &amp;a, <span class="dt">int</span> b) {<span class="cf">return</span> b &lt; a ? (a = b, <span class="dv">1</span>) : <span class="dv">0</span>;}</span>
+<span id="cb2-12"><a aria-hidden="true" href="#cb2-12"></a></span>
+<span id="cb2-13"><a aria-hidden="true" href="#cb2-13"></a><span class="dt">int</span> main() {</span>
+<span id="cb2-14"><a aria-hidden="true" href="#cb2-14"></a>    <span class="cf">while</span> (~scanf(<span class="st">"</span><span class="sc">%d</span><span class="st">"</span>, &amp;n)) {</span>
+<span id="cb2-15"><a aria-hidden="true" href="#cb2-15"></a>        FOR(i, <span class="dv">1</span>, n) scanf(<span class="st">"</span><span class="sc">%d</span><span class="st">"</span>, a + i), sum[i] = sum[i - <span class="dv">1</span>] + a[i], s[i][i] = i;</span>
+<span id="cb2-16"><a aria-hidden="true" href="#cb2-16"></a>        memset(f, <span class="bn">0x3f</span>, <span class="kw">sizeof</span> f);</span>
+<span id="cb2-17"><a aria-hidden="true" href="#cb2-17"></a>        FOR(i, <span class="dv">1</span>, n) f[i + <span class="dv">1</span>][i] = f[i][i - <span class="dv">1</span>] = <span class="dv">0</span>, f[i][i] = <span class="dv">0</span>;</span>
+<span id="cb2-18"><a aria-hidden="true" href="#cb2-18"></a>        FOR(len, <span class="dv">2</span>, n)</span>
+<span id="cb2-19"><a aria-hidden="true" href="#cb2-19"></a>            <span class="cf">for</span> (<span class="dt">int</span> i = <span class="dv">1</span>, j = i + len - <span class="dv">1</span>; j &lt;= n; ++i, ++j)</span>
+<span id="cb2-20"><a aria-hidden="true" href="#cb2-20"></a>                <span class="cf">for</span> (<span class="dt">int</span> k = s[i][j - <span class="dv">1</span>]; k &lt;= s[i + <span class="dv">1</span>][j]; ++k)</span>
+<span id="cb2-21"><a aria-hidden="true" href="#cb2-21"></a>                    <span class="cf">if</span> (to_min(f[i][j], f[i][k - <span class="dv">1</span>] + f[k + <span class="dv">1</span>][j] + cost(i, j, k)))</span>
+<span id="cb2-22"><a aria-hidden="true" href="#cb2-22"></a>                        s[i][j] = k;</span>
+<span id="cb2-23"><a aria-hidden="true" href="#cb2-23"></a>        printf(<span class="st">"</span><span class="sc">%d\n</span><span class="st">"</span>, f[<span class="dv">1</span>][n]);</span>
+<span id="cb2-24"><a aria-hidden="true" href="#cb2-24"></a>    }</span>
+<span id="cb2-25"><a aria-hidden="true" href="#cb2-25"></a>    <span class="cf">return</span> <span class="dv">0</span>;</span>
+<span id="cb2-26"><a aria-hidden="true" href="#cb2-26"></a>}</span></code></pre></div>
+<h2 id="四边形不等式在-1d1d-动态规划中的应用">四边形不等式在 1D/1D 动态规划中的应用</h2>
+<h3 id="前言-1">前言</h3>
+<p>考虑一类动态规划： <span class="math display">\[
+f_i = \min\{f_j + w(i, j)\} 
+\]</span> 朴素的做法是 <span class="math inline">\(O(n^2)\)</span> 的，如果 <span class="math inline">\(w(i, j)\)</span> 具有一些神奇的性质则可以优化为 <span class="math inline">\(O(n\log n)\)</span>。</p>
+<h3 id="定理">定理</h3>
+<p>若 <span class="math inline">\(w(i, j)\)</span> 满足四边形不等式，则 <span class="math inline">\(f_i\)</span> 的最优转移点 <span class="math inline">\(k\)</span> 是单调的。</p>
+<p>当然实际操作中一般使用打表暴力观察最优决策点找单调性。</p>
+<h3 id="证明">证明</h3>
+<p>反证法：设 <span class="math inline">\(f_i\)</span> 的最优转移点为 <span class="math inline">\(p_i\)</span>，假设有 <span class="math inline">\(y &lt; x\)</span> 且 <span class="math inline">\(p_y &gt; p_x\)</span>。</p>
+<p>根据最优决策： <span class="math display">\[
+f_{p_x} + w(p_x, x) \le f_{p_y} + w(p_y,x)\\
+\]</span> 我们知道的是：<span class="math inline">\(p_x &lt; p_y &lt; y &lt; x\)</span>，代一下四边形不等式： <span class="math display">\[
+w(p_x, y) + w(p_y, x) \le w(p_x, x) + w(p_y, y)
+\]</span> 两式相加： <span class="math display">\[
+f_{p_x} + w(p_x, y)\le f_{p_y} + w(p_y, y)
+\]</span> 说明 <span class="math inline">\(p_x\)</span> 转移到 <span class="math inline">\(y\)</span> 比从 <span class="math inline">\(p_y\)</span> 到 <span class="math inline">\(y\)</span> 更优，与假设矛盾，得证。</p>
+<h3 id="法1二分队列栈">法1——二分队列/栈</h3>
+<p><a href="https://www.luogu.com.cn/problem/P1912">P1912 [NOI2009] 诗人小G</a>。</p>
+<p>容易列出转移方程 <span class="math display">\[
+f_i = \min_{j &lt; i}\{f_j + |s_i - s_j -1 - L|^p\}
+\]</span> 打表发现对于 <span class="math inline">\(x\le y\)</span>，一定有 <span class="math inline">\(p_x\le p_y\)</span>，即决策点单调，决策点是一段一段的形如下面这样：</p>
+<pre class="plain"><code>1112222444446666666</code></pre>
+<p>而我们一开始如果只考虑 <span class="math inline">\(1\)</span> 为决策点的话，是这样的：</p>
+<pre class="plain"><code>1111111111111111111</code></pre>
+<p>加入 <span class="math inline">\(2\)</span> 之后，是这样的：</p>
+<pre class="plain"><code>1112222222222222222</code></pre>
+<p>加入 <span class="math inline">\(4\)</span> 之后，是这样的：</p>
+<pre class="plain"><code>1112222444444444444</code></pre>
+<p>所以考虑二分来维护一个决策点可以管理的区间。用单调队列来实现这个过程。</p>
+<p>加入一个决策点的时候有三种情况：</p>
+<ol type="1">
+<li>旧决策完全不如新决策，即旧决策管的左端点从新决策转移来一定更优，此时弹队列右端；</li>
+<li>旧决策吊打新决策，即旧决策管理的左端点比从新决策转移来优，此时不弹队列；</li>
+<li>旧决策中等不如新决策，即旧决策管的左端点从旧决策转移更优，右端点则从新决策转移来更优，此时将旧决策进行拆分，然后插入新决策。</li>
+</ol>
+<p>转移的时候考虑队头可不可以转移，如果可以转移则直接从队头转移，否则弹队头。</p>
+<p>所以我们的 dp 过程应该是这样的：其中 <span class="math inline">\(k\)</span> 表示该决策点能管到的区间右端点。</p>
+<div class="sourceCode" id="cb7"><pre class="sourceCode cpp"><code class="sourceCode cpp"><span id="cb7-1"><a aria-hidden="true" href="#cb7-1"></a>FOR(i, <span class="dv">1</span>, n) {</span>
+<span id="cb7-2"><a aria-hidden="true" href="#cb7-2"></a>    <span class="cf">while</span> (head &lt; tail &amp;&amp; k[head] &lt;= i) ++head;</span>
+<span id="cb7-3"><a aria-hidden="true" href="#cb7-3"></a>    f[i] = calc(q[head], i), pre[i] = q[head];</span>
+<span id="cb7-4"><a aria-hidden="true" href="#cb7-4"></a>    <span class="cf">while</span> (head &lt; tail &amp;&amp; k[tail - <span class="dv">1</span>] &gt;= bound(q[tail], i)) --tail;</span>
+<span id="cb7-5"><a aria-hidden="true" href="#cb7-5"></a>    k[tail] = bound(q[tail], i);</span>
+<span id="cb7-6"><a aria-hidden="true" href="#cb7-6"></a>    q[++tail] = i;</span>
+<span id="cb7-7"><a aria-hidden="true" href="#cb7-7"></a>}</span></code></pre></div>
+<p><code>bound(x, y)</code> 函数负责决定 <span class="math inline">\(x\)</span> 决策点和 <span class="math inline">\(y\)</span> 相比，两者的临界点，代码如下</p>
+<div class="sourceCode" id="cb8"><pre class="sourceCode cpp"><code class="sourceCode cpp"><span id="cb8-1"><a aria-hidden="true" href="#cb8-1"></a><span class="dt">int</span> bound(<span class="dt">int</span> x, <span class="dt">int</span> y) {</span>
+<span id="cb8-2"><a aria-hidden="true" href="#cb8-2"></a>    <span class="dt">int</span> l = x, r = n + <span class="dv">1</span>, mid;</span>
+<span id="cb8-3"><a aria-hidden="true" href="#cb8-3"></a>    <span class="cf">while</span> (l &lt; r) {</span>
+<span id="cb8-4"><a aria-hidden="true" href="#cb8-4"></a>        mid = (l + r) &gt;&gt; <span class="dv">1</span>;</span>
+<span id="cb8-5"><a aria-hidden="true" href="#cb8-5"></a>        <span class="cf">if</span> (calc(x, mid) &gt;= calc(y, mid))<span class="co">//x比y在mid处更l</span></span>
+<span id="cb8-6"><a aria-hidden="true" href="#cb8-6"></a>            r = mid;</span>
+<span id="cb8-7"><a aria-hidden="true" href="#cb8-7"></a>        <span class="cf">else</span> l = mid + <span class="dv">1</span>;</span>
+<span id="cb8-8"><a aria-hidden="true" href="#cb8-8"></a>    }</span>
+<span id="cb8-9"><a aria-hidden="true" href="#cb8-9"></a>    <span class="cf">return</span> l;</span>
+<span id="cb8-10"><a aria-hidden="true" href="#cb8-10"></a>}</span></code></pre></div>
+<h3 id="法2分治">法2——分治</h3>
+<p>假设已知 <span class="math inline">\(f_l, f_{l+ 1},\cdots, f_r\)</span> 的最优决策点在 <span class="math inline">\([L, R]\)</span> 上，令 <span class="math inline">\(m = (l + r) / 2\)</span>，设其最优决策点为 <span class="math inline">\(p_m\)</span>，则由决策单调性可以知道 <span class="math inline">\(f_l,\cdots, f_m\)</span> 的最优决策点在 <span class="math inline">\([L, p]\)</span> 上，<span class="math inline">\(f_{m + 1},\cdots, f_r\)</span> 的最优决策点在 <span class="math inline">\([p, R]\)</span> 上。</p>
+<p>这样子问题的归模就得到了减半，每次找 <span class="math inline">\(m\)</span> 的决策点的时候暴力扫 <span class="math inline">\([L, R]\)</span></p>
+<p>即可。但是这样做的前提是 <span class="math inline">\(w(i, j)\)</span> 能 <span class="math inline">\(O(1)\)</span> 计算，否则复杂度会萎掉，而二分队列就不存在这个问题。</p>
+<p>但是分治的代码明显很好写啊！</p>
+<p>这是 <a href="https://www.luogu.com.cn/problem/P3515">P3515 [POI2011]Lightning Conductor</a> 分治部分的代码。<a href="/sol-luogu-p3515/">题解链接</a>。</p>
+<div class="sourceCode" id="cb9"><pre class="sourceCode cpp"><code class="sourceCode cpp"><span id="cb9-1"><a aria-hidden="true" href="#cb9-1"></a><span class="dt">void</span> solve(<span class="dt">int</span> l, <span class="dt">int</span> r, <span class="dt">int</span> L, <span class="dt">int</span> R) {</span>
+<span id="cb9-2"><a aria-hidden="true" href="#cb9-2"></a>    <span class="cf">if</span> (l &gt; r) <span class="cf">return</span>;</span>
+<span id="cb9-3"><a aria-hidden="true" href="#cb9-3"></a>    <span class="dt">int</span> mid = (l + r) &gt;&gt; <span class="dv">1</span>, k;</span>
+<span id="cb9-4"><a aria-hidden="true" href="#cb9-4"></a>    db mx = <span class="dv">0</span>, tmp;</span>
+<span id="cb9-5"><a aria-hidden="true" href="#cb9-5"></a>    <span class="cf">for</span> (<span class="dt">int</span> j = L; j &lt;= mid &amp;&amp; j &lt;= R; ++j)</span>
+<span id="cb9-6"><a aria-hidden="true" href="#cb9-6"></a>        <span class="cf">if</span> ((tmp = a[j] + sq[mid - j]) &gt; mx) mx = tmp, k = j;</span>
+<span id="cb9-7"><a aria-hidden="true" href="#cb9-7"></a>    p[mid] = max(p[mid], mx);</span>
+<span id="cb9-8"><a aria-hidden="true" href="#cb9-8"></a>    solve(l, mid - <span class="dv">1</span>, L, k);</span>
+<span id="cb9-9"><a aria-hidden="true" href="#cb9-9"></a>    solve(mid + <span class="dv">1</span>, r, k, R);</span>
+<span id="cb9-10"><a aria-hidden="true" href="#cb9-10"></a>    <span class="cf">return</span>;</span>
+<span id="cb9-11"><a aria-hidden="true" href="#cb9-11"></a>}</span></code></pre></div>
+</section>
+<footer class="article-footer">
+<section class="article-tags">
+<a href="/tags/OI/">OI</a>
+<a href="/tags/note/">笔记</a>
+<a href="/tags/mono-opti-dp/">决策单调性优化</a>
+<a href="/tags/quadrangle-inequality/">四边形不等式</a>
+<a href="/tags/dp/">动态规划</a>
+</section>
+<section class="article-copyright">
+<svg class="icon icon-tabler icon-tabler-copyright" fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+<path d="M0 0h24v24H0z" stroke="none"></path>
+<circle cx="12" cy="12" r="9"></circle>
+<path d="M14.5 9a3.5 4 0 1 0 0 6"></path>
+</svg>
+<span>Licensed under CC BY-NC-SA 4.0</span>
+</section>
+</footer>
+<link crossorigin="anonymous" href="https://cdn.jsdelivr.net/npm/katex@0.13.13/dist/katex.min.css" integrity="sha384-RZU/ijkSsFbcmivfdRBQDtwuwVqK7GMOw6IMvKyeWL2K5UAlyp6WonmB8m7Jd0Hn" rel="stylesheet"/><script crossorigin="anonymous" defer="" integrity="sha384-pK1WpvzWVBQiP0/GjnvRxV4mOb0oxFuyRxJlk6vVw146n3egcN5C925NCP7a7BY8" src="https://cdn.jsdelivr.net/npm/katex@0.13.13/dist/katex.min.js">
+</script><script crossorigin="anonymous" defer="" integrity="sha384-vZTG03m+2yp6N6BNi5iM4rW4oIwk5DfcNdFfxkk9ZWpDriOkXX8voJBFrAO7MpVl" src="https://cdn.jsdelivr.net/npm/katex@0.13.13/dist/contrib/auto-render.min.js">
+</script><script>
+    window.addEventListener("DOMContentLoaded", () => {
+        renderMathInElement(document.querySelector(`.article-content`), {
+            delimiters: [
+                { left: "$$", right: "$$", display: true },
+                { left: "$", right: "$", display: false },
+                { left: "\\(", right: "\\)", display: false },
+                { left: "\\[", right: "\\]", display: true }
+            ]
+        });})
+</script>
+</article>
+<aside class="related-contents--wrapper">
+<h2 class="section-title">相关文章</h2>
+<div class="related-contents">
+<div class="flex article-list--tile">
+<article class="has-image">
+<a href="/sol-luogu-p3515/">
+<div class="article-image">
+<img data-hash="https://yangty-pic.oss-cn-beijing.aliyuncs.com/bg60.webp" data-key="" loading="lazy" src="https://yangty-pic.oss-cn-beijing.aliyuncs.com/bg60.webp"/>
+</div>
+<div class="article-details">
+<h2 class="article-title">P3515 [POI2011]Lightning Conductor</h2>
+</div>
+</a>
+</article>
+<article class="has-image">
+<a href="/note-mulbackpack/">
+<div class="article-image">
+<img data-hash="https://yangty-pic.oss-cn-beijing.aliyuncs.com/bg22.webp" data-key="" loading="lazy" src="https://yangty-pic.oss-cn-beijing.aliyuncs.com/bg22.webp"/>
+</div>
+<div class="article-details">
+<h2 class="article-title">单调队列优化多重背包</h2>
+</div>
+</a>
+</article>
+<article class="has-image">
+<a href="/note-slope-dp/">
+<div class="article-image">
+<img data-hash="https://yangty-pic.oss-cn-beijing.aliyuncs.com/bg26.webp" data-key="" loading="lazy" src="https://yangty-pic.oss-cn-beijing.aliyuncs.com/bg26.webp"/>
+</div>
+<div class="article-details">
+<h2 class="article-title">斜率优化学习笔记</h2>
+</div>
+</a>
+</article>
+<article class="has-image">
+<a href="/sol-luogu-p5468/">
+<div class="article-image">
+<img data-hash="https://yangty-pic.oss-cn-beijing.aliyuncs.com/bg01.webp" data-key="" loading="lazy" src="https://yangty-pic.oss-cn-beijing.aliyuncs.com/bg01.webp"/>
+</div>
+<div class="article-details">
+<h2 class="article-title">P5468 [NOI2019] 回家路线</h2>
+</div>
+</a>
+</article>
+<article class="has-image">
+<a href="/note-gf/">
+<div class="article-image">
+<img data-hash="https://yangty-pic.oss-cn-beijing.aliyuncs.com/bg28.webp" data-key="" loading="lazy" src="https://yangty-pic.oss-cn-beijing.aliyuncs.com/bg28.webp"/>
+</div>
+<div class="article-details">
+<h2 class="article-title">生成函数胡扯</h2>
+</div>
+</a>
+</article>
+</div>
+</div>
+</aside>
+<footer class="site-footer">
+<section class="copyright">
+        © 
+        
+            2019 - 
+        
+        2024 清烛的博客
+    </section>
+<section class="powerby">
+        Built with <a href="https://gohugo.io/" rel="noopener" target="_blank">Hugo</a> <br/>
+        主题 <b><a data-version="3.11.0" href="https://github.com/CaiJimmy/hugo-theme-stack" rel="noopener" target="_blank">Stack</a></b> 由 <a href="https://jimmycai.com" rel="noopener" target="_blank">Jimmy</a> 设计
+    </section>
+</footer>
+<div aria-hidden="true" class="pswp" role="dialog" tabindex="-1">
+<div class="pswp__bg"></div>
+<div class="pswp__scroll-wrap">
+<div class="pswp__container">
+<div class="pswp__item"></div>
+<div class="pswp__item"></div>
+<div class="pswp__item"></div>
+</div>
+<div class="pswp__ui pswp__ui--hidden">
+<div class="pswp__top-bar">
+<div class="pswp__counter"></div>
+<button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+<button class="pswp__button pswp__button--share" title="Share"></button>
+<button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+<button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+<div class="pswp__preloader">
+<div class="pswp__preloader__icn">
+<div class="pswp__preloader__cut">
+<div class="pswp__preloader__donut"></div>
+</div>
+</div>
+</div>
+</div>
+<div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+<div class="pswp__share-tooltip"></div>
+</div>
+<button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+</button>
+<button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+</button>
+<div class="pswp__caption">
+<div class="pswp__caption__center"></div>
+</div>
+</div>
+</div>
+</div><script crossorigin="anonymous" defer="" integrity="sha256-ePwmChbbvXbsO02lbM3HoHbSHTHFAeChekF1xKJdleo=" src="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe.min.js">
+</script><script crossorigin="anonymous" defer="" integrity="sha256-UKkzOn/w1mBxRmLLGrSeyB4e1xbrp4xylgAWb3M42pU=" src="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe-ui-default.min.js">
+</script><link crossorigin="anonymous" href="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/default-skin/default-skin.css" integrity="sha256-c0uckgykQ9v5k+IqViZOZKc47Jn7KQil4/MP3ySA3F8=" rel="stylesheet"/><link crossorigin="anonymous" href="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe.css" integrity="sha256-SBLU4vv6CA6lHsZ1XyTdhyjJxCjPif/TRkjnsyGAGnE=" rel="stylesheet"/>
+</main>
+</div>
+<script crossorigin="anonymous" integrity="sha256-5NovOZc4iwiAWTYIFiIM7DxKUXKWvpVEuMEPLzcm5/g=" src="https://cdn.jsdelivr.net/npm/node-vibrant@3.1.5/dist/vibrant.min.js">
+</script><script defer="" src="/ts/main.js" type="text/javascript"></script>
+<script>
+    (function () {
+        const customFont = document.createElement('link');
+        customFont.href = "https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&display=swap";
+
+        customFont.type = "text/css";
+        customFont.rel = "stylesheet";
+
+        document.head.appendChild(customFont);
+    }());
+</script>
+</body>
+</html>

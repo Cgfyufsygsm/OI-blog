@@ -1,0 +1,567 @@
+<!DOCTYPE html>
+<html dir="ltr" lang="zh-CN">
+<head><meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1" name="viewport"/><meta content="前言 有些时候，我们会碰到形如 \(f_i = \min/\max\{f_j + g(i)h(j)\}\) 的状态转移方程，此时朴素的做的时间复杂度是 \(O(n^2)\) 乃至 \(O(n^3)\) 的。而我们可以按照线性规划的思想，把其建模成 \(y = kx + b\) 的形式去截一个凸壳来使截距最大，达到 \(O(\log n)\) 甚至 \(O(1)\) 的转移从而使复杂度降低到 \(O(n\log n)\) 或 \(O(n)\)。
+这个方法就叫做斜率优化。具体的实现难度取决于题目性质。
+一般来说，只要转移方程中出现类似一次函数的东西，都可以考虑斜率优化。
+例题 先来看一道斜率优化的模板题。
+题意 P3195 [HNOI2008]玩具装箱
+将一段序列 \(c_i\) 分成若干段，每一段的代价为 \((j-i+\sum_{k=i}^jc_k-L)^2\)，求最小总代价。
+从状态转移方程说起 不难发现状态转移方程为（如果有困难建议先去补 dp 的基础知识）
+\[ f_i=\min_{j&amp;lt;i}\lbrace f_j+(s_i-s_j+i-j-1-L)^2\rbrace \]
+其中 \(s_i=\sum_{k=1}^ic_k\)。时间复杂度为 \(n^2\)，考虑进行优化。
+为了简化方程，不妨采用参变分离的思想，将只与 \(i\) 有关的 \(s_i+i\) 令为 \(a_i\)，将只与 \(j\) 有关的 \(s_j+j+L+1\) 令为 \(b_j\)，现在的方程为
+\[ f_i=\min_{j&amp;lt;i}\lbrace f_j+(a_i-b_j)^2\rbrace \]
+理一下思路：现在我们需要找到一个最优的 \(j\)，使得 \(f_i\) 达到最优，注意到此时所有关于 \(i\) 的量都是确定的。" name="description"/><title>斜率优化学习笔记</title>
+<link href="https://oi.imyangty.com/note-slope-dp/" rel="canonical"/>
+<link href="/scss/style.min.a5821f3d3ab84ce5a0ac21477e347a2e0ca00292e398d16c5e8e36ded6e35a23.css" rel="stylesheet"/><meta content="斜率优化学习笔记" property="og:title"/>
+<meta content="前言 有些时候，我们会碰到形如 \(f_i = \min/\max\{f_j + g(i)h(j)\}\) 的状态转移方程，此时朴素的做的时间复杂度是 \(O(n^2)\) 乃至 \(O(n^3)\) 的。而我们可以按照线性规划的思想，把其建模成 \(y = kx + b\) 的形式去截一个凸壳来使截距最大，达到 \(O(\log n)\) 甚至 \(O(1)\) 的转移从而使复杂度降低到 \(O(n\log n)\) 或 \(O(n)\)。
+这个方法就叫做斜率优化。具体的实现难度取决于题目性质。
+一般来说，只要转移方程中出现类似一次函数的东西，都可以考虑斜率优化。
+例题 先来看一道斜率优化的模板题。
+题意 P3195 [HNOI2008]玩具装箱
+将一段序列 \(c_i\) 分成若干段，每一段的代价为 \((j-i+\sum_{k=i}^jc_k-L)^2\)，求最小总代价。
+从状态转移方程说起 不难发现状态转移方程为（如果有困难建议先去补 dp 的基础知识）
+\[ f_i=\min_{j&amp;lt;i}\lbrace f_j+(s_i-s_j+i-j-1-L)^2\rbrace \]
+其中 \(s_i=\sum_{k=1}^ic_k\)。时间复杂度为 \(n^2\)，考虑进行优化。
+为了简化方程，不妨采用参变分离的思想，将只与 \(i\) 有关的 \(s_i+i\) 令为 \(a_i\)，将只与 \(j\) 有关的 \(s_j+j+L+1\) 令为 \(b_j\)，现在的方程为
+\[ f_i=\min_{j&amp;lt;i}\lbrace f_j+(a_i-b_j)^2\rbrace \]
+理一下思路：现在我们需要找到一个最优的 \(j\)，使得 \(f_i\) 达到最优，注意到此时所有关于 \(i\) 的量都是确定的。" property="og:description"/>
+<meta content="https://oi.imyangty.com/note-slope-dp/" property="og:url"/>
+<meta content="清烛的博客" property="og:site_name"/>
+<meta content="article" property="og:type"/><meta content="Post" property="article:section"/><meta content="OI" property="article:tag"/><meta content="笔记" property="article:tag"/><meta content="动态规划" property="article:tag"/><meta content="斜率优化" property="article:tag"/><meta content="2021-04-22T20:25:59+08:00" property="article:published_time"/><meta content="2021-04-22T20:25:59+08:00" property="article:modified_time"/><meta content="https://yangty-pic.oss-cn-beijing.aliyuncs.com/bg26.webp" property="og:image"/>
+<meta content="斜率优化学习笔记" name="twitter:title"/>
+<meta content="前言 有些时候，我们会碰到形如 \(f_i = \min/\max\{f_j + g(i)h(j)\}\) 的状态转移方程，此时朴素的做的时间复杂度是 \(O(n^2)\) 乃至 \(O(n^3)\) 的。而我们可以按照线性规划的思想，把其建模成 \(y = kx + b\) 的形式去截一个凸壳来使截距最大，达到 \(O(\log n)\) 甚至 \(O(1)\) 的转移从而使复杂度降低到 \(O(n\log n)\) 或 \(O(n)\)。
+这个方法就叫做斜率优化。具体的实现难度取决于题目性质。
+一般来说，只要转移方程中出现类似一次函数的东西，都可以考虑斜率优化。
+例题 先来看一道斜率优化的模板题。
+题意 P3195 [HNOI2008]玩具装箱
+将一段序列 \(c_i\) 分成若干段，每一段的代价为 \((j-i+\sum_{k=i}^jc_k-L)^2\)，求最小总代价。
+从状态转移方程说起 不难发现状态转移方程为（如果有困难建议先去补 dp 的基础知识）
+\[ f_i=\min_{j&amp;lt;i}\lbrace f_j+(s_i-s_j+i-j-1-L)^2\rbrace \]
+其中 \(s_i=\sum_{k=1}^ic_k\)。时间复杂度为 \(n^2\)，考虑进行优化。
+为了简化方程，不妨采用参变分离的思想，将只与 \(i\) 有关的 \(s_i+i\) 令为 \(a_i\)，将只与 \(j\) 有关的 \(s_j+j+L+1\) 令为 \(b_j\)，现在的方程为
+\[ f_i=\min_{j&amp;lt;i}\lbrace f_j+(a_i-b_j)^2\rbrace \]
+理一下思路：现在我们需要找到一个最优的 \(j\)，使得 \(f_i\) 达到最优，注意到此时所有关于 \(i\) 的量都是确定的。" name="twitter:description"/><meta content="summary_large_image" name="twitter:card"/>
+<meta content="https://yangty-pic.oss-cn-beijing.aliyuncs.com/bg26.webp" name="twitter:image"/>
+<link href="https://q1.qlogo.cn/g?b=qq&amp;nk=375836877&amp;s=5" rel="shortcut icon"/>
+<link href="https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.5.1/build/styles/github-dark-dimmed.min.css" rel="stylesheet"/>
+<script src="https://cdn.jsdelivr.net/gh/highlightjs/cdn-release/build/highlight.min.js"></script>
+<script>hljs.highlightAll();</script>
+</head>
+<body class="article-page">
+<script>
+        (function() {
+            const colorSchemeKey = 'StackColorScheme';
+            if(!localStorage.getItem(colorSchemeKey)){
+                localStorage.setItem(colorSchemeKey, "auto");
+            }
+        })();
+    </script><script>
+    (function() {
+        const colorSchemeKey = 'StackColorScheme';
+        const colorSchemeItem = localStorage.getItem(colorSchemeKey);
+        const supportDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches === true;
+
+        if (colorSchemeItem == 'dark' || colorSchemeItem === 'auto' && supportDarkMode) {
+            
+
+            document.documentElement.dataset.scheme = 'dark';
+        } else {
+            document.documentElement.dataset.scheme = 'light';
+        }
+    })();
+</script>
+<div class="container main-container flex on-phone--column extended"><aside class="sidebar left-sidebar sticky">
+<button aria-label="切换菜单" class="hamburger hamburger--spin" id="toggle-menu" type="button">
+<span class="hamburger-box">
+<span class="hamburger-inner"></span>
+</span>
+</button>
+<header>
+<figure class="site-avatar">
+<a href="/">
+<img alt="Avatar" class="site-logo" height="300" loading="lazy" src="/img/avatar_huea3ce2119467b51fdd2a81393644a76d_51594_300x0_resize_q75_box.jpg" width="300"/>
+</a>
+<span class="emoji">😅</span>
+</figure>
+<div class="site-meta">
+<h1 class="site-name"><a href="/">清烛的博客</a></h1>
+<h2 class="site-description">烟火已谢，笙歌未停</h2>
+</div>
+</header><ol class="social-menu">
+<li>
+<a href="mailto:i@imyangty.com" target="_blank" title="email">
+<svg class="icon icon-tabler icon-tabler-mail" fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" viewbox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+<path d="M0 0h24v24H0z" fill="none" stroke="none"></path>
+<rect height="14" rx="2" width="18" x="3" y="5"></rect>
+<polyline points="3 7 12 13 21 7"></polyline>
+</svg>
+</a>
+</li>
+<li>
+<a href="https://github.com/Cgfyufsygsm" target="_blank" title="GitHub">
+<svg class="icon icon-tabler icon-tabler-brand-github" fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+<path d="M0 0h24v24H0z" fill="none" stroke="none"></path>
+<path d="M9 19c-4.3 1.4 -4.3 -2.5 -6 -3m12 5v-3.5c0 -1 .1 -1.4 -.5 -2c2.8 -.3 5.5 -1.4 5.5 -6a4.6 4.6 0 0 0 -1.3 -3.2a4.2 4.2 0 0 0 -.1 -3.2s-1.1 -.3 -3.5 1.3a12.3 12.3 0 0 0 -6.2 0c-2.4 -1.6 -3.5 -1.3 -3.5 -1.3a4.2 4.2 0 0 0 -.1 3.2a4.6 4.6 0 0 0 -1.3 3.2c0 4.6 2.7 5.7 5.5 6c-.6 .6 -.6 1.2 -.5 2v3.5"></path>
+</svg>
+</a>
+</li>
+<li>
+<a href="https://t.me/Cgfyufsygsm" target="_blank" title="Telegram">
+<svg class="icon icon-tabler icon-tabler-brand-telegram" fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" viewbox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+<path d="M0 0h24v24H0z" fill="none" stroke="none"></path>
+<path d="M15 10l-4 4l6 6l4 -16l-18 7l4 2l2 6l3 -4"></path>
+</svg>
+</a>
+</li>
+<li>
+<a href="https://twitter.com/Cgfyufsygsm" target="_blank" title="Twitter">
+<svg class="icon icon-tabler icon-tabler-brand-twitter" fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+<path d="M0 0h24v24H0z" fill="none" stroke="none"></path>
+<path d="M22 4.01c-1 .49 -1.98 .689 -3 .99c-1.121 -1.265 -2.783 -1.335 -4.38 -.737s-2.643 2.06 -2.62 3.737v1c-3.245 .083 -6.135 -1.395 -8 -4c0 0 -4.182 7.433 4 11c-1.872 1.247 -3.739 2.088 -6 2c3.308 1.803 6.913 2.423 10.034 1.517c3.58 -1.04 6.522 -3.723 7.651 -7.742a13.84 13.84 0 0 0 .497 -3.753c-.002 -.249 1.51 -2.772 1.818 -4.013z"></path>
+</svg>
+</a>
+</li>
+</ol><ol class="menu" id="main-menu">
+<li>
+<a href="/">
+<svg class="icon icon-tabler icon-tabler-home" fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+<path d="M0 0h24v24H0z" stroke="none"></path>
+<polyline points="5 12 3 12 12 3 21 12 19 12"></polyline>
+<path d="M5 12v7a2 2 0 0 0 2 2h10a2 2 0 0 0 2 -2v-7"></path>
+<path d="M9 21v-6a2 2 0 0 1 2 -2h2a2 2 0 0 1 2 2v6"></path>
+</svg>
+<span>主页</span>
+</a>
+</li>
+<li>
+<a href="/about/">
+<svg class="icon icon-tabler icon-tabler-user" fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+<path d="M0 0h24v24H0z" stroke="none"></path>
+<circle cx="12" cy="7" r="4"></circle>
+<path d="M6 21v-2a4 4 0 0 1 4 -4h4a4 4 0 0 1 4 4v2"></path>
+</svg>
+<span>关于</span>
+</a>
+</li>
+<li>
+<a href="/idx/">
+<svg class="icon icon-tabler icon-tabler-hash" fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+<path d="M0 0h24v24H0z" stroke="none"></path>
+<line x1="5" x2="19" y1="9" y2="9"></line>
+<line x1="5" x2="19" y1="15" y2="15"></line>
+<line x1="11" x2="7" y1="4" y2="20"></line>
+<line x1="17" x2="13" y1="4" y2="20"></line>
+</svg>
+<span>导航</span>
+</a>
+</li>
+<li>
+<a href="/archives/">
+<svg class="icon icon-tabler icon-tabler-archive" fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+<path d="M0 0h24v24H0z" stroke="none"></path>
+<rect height="4" rx="2" width="18" x="3" y="4"></rect>
+<path d="M5 8v10a2 2 0 0 0 2 2h10a2 2 0 0 0 2 -2v-10"></path>
+<line x1="10" x2="14" y1="12" y2="12"></line>
+</svg>
+<span>归档</span>
+</a>
+</li>
+<li>
+<a href="/search/">
+<svg class="icon icon-tabler icon-tabler-search" fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+<path d="M0 0h24v24H0z" stroke="none"></path>
+<circle cx="10" cy="10" r="7"></circle>
+<line x1="21" x2="15" y1="21" y2="15"></line>
+</svg>
+<span>搜索</span>
+</a>
+</li>
+<li>
+<a href="/friends/">
+<svg class="icon icon-tabler icon-tabler-link" fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+<path d="M0 0h24v24H0z" stroke="none"></path>
+<path d="M10 14a3.5 3.5 0 0 0 5 0l4 -4a3.5 3.5 0 0 0 -5 -5l-.5 .5"></path>
+<path d="M14 10a3.5 3.5 0 0 0 -5 0l-4 4a3.5 3.5 0 0 0 5 5l.5 -.5"></path>
+</svg>
+<span>友链</span>
+</a>
+</li>
+<li>
+<a href="https://blog.imyangty.com" target="_blank">
+<svg class="icon icon-tabler icon-tabler-home" fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+<path d="M0 0h24v24H0z" stroke="none"></path>
+<polyline points="5 12 3 12 12 3 21 12 19 12"></polyline>
+<path d="M5 12v7a2 2 0 0 0 2 2h10a2 2 0 0 0 2 -2v-7"></path>
+<path d="M9 21v-6a2 2 0 0 1 2 -2h2a2 2 0 0 1 2 2v6"></path>
+</svg>
+<span>主博客</span>
+</a>
+</li>
+<div class="menu-bottom-section">
+<li id="dark-mode-toggle">
+<svg class="icon icon-tabler icon-tabler-toggle-left" fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+<path d="M0 0h24v24H0z" stroke="none"></path>
+<circle cx="8" cy="12" r="2"></circle>
+<rect height="12" rx="6" width="20" x="2" y="6"></rect>
+</svg>
+<svg class="icon icon-tabler icon-tabler-toggle-right" fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+<path d="M0 0h24v24H0z" stroke="none"></path>
+<circle cx="16" cy="12" r="2"></circle>
+<rect height="12" rx="6" width="20" x="2" y="6"></rect>
+</svg>
+<span>暗色模式</span>
+</li>
+</div>
+</ol>
+</aside>
+<main class="main full-width">
+<article class="has-image main-article">
+<header class="article-header">
+<div class="article-image">
+<a href="/note-slope-dp/">
+<img alt="Featured image of post 斜率优化学习笔记" loading="lazy" src="https://yangty-pic.oss-cn-beijing.aliyuncs.com/bg26.webp"/>
+</a>
+</div>
+<div class="article-details">
+<header class="article-category">
+<a href="/categories/oi/">
+                OI
+            </a>
+<a href="/categories/note/">
+                笔记
+            </a>
+</header>
+<div class="article-title-wrapper">
+<h2 class="article-title">
+<a href="/note-slope-dp/">斜率优化学习笔记</a>
+</h2>
+</div>
+<footer class="article-time">
+<div>
+<svg class="icon icon-tabler icon-tabler-calendar-time" fill="none" height="56" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="56" xmlns="http://www.w3.org/2000/svg">
+<path d="M0 0h24v24H0z" stroke="none"></path>
+<path d="M11.795 21h-6.795a2 2 0 0 1 -2 -2v-12a2 2 0 0 1 2 -2h12a2 2 0 0 1 2 2v4"></path>
+<circle cx="18" cy="18" r="4"></circle>
+<path d="M15 3v4"></path>
+<path d="M7 3v4"></path>
+<path d="M3 11h16"></path>
+<path d="M18 16.496v1.504l1 1"></path>
+</svg>
+<time class="article-time--published">Apr 22, 2021</time>
+</div>
+<div>
+<svg class="icon icon-tabler icon-tabler-clock" fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+<path d="M0 0h24v24H0z" stroke="none"></path>
+<circle cx="12" cy="12" r="9"></circle>
+<polyline points="12 7 12 12 15 15"></polyline>
+</svg>
+<time class="article-time--reading">
+                    阅读时长: 3 分钟
+                </time>
+</div>
+</footer>
+</div>
+</header>
+<section class="article-content">
+<h2 id="前言">前言</h2>
+<p>有些时候，我们会碰到形如 <span class="math inline">\(f_i = \min/\max\{f_j + g(i)h(j)\}\)</span> 的状态转移方程，此时朴素的做的时间复杂度是 <span class="math inline">\(O(n^2)\)</span> 乃至 <span class="math inline">\(O(n^3)\)</span> 的。而我们可以按照线性规划的思想，把其建模成 <span class="math inline">\(y = kx + b\)</span> 的形式去截一个凸壳来使截距最大，达到 <span class="math inline">\(O(\log n)\)</span> 甚至 <span class="math inline">\(O(1)\)</span> 的转移从而使复杂度降低到 <span class="math inline">\(O(n\log n)\)</span> 或 <span class="math inline">\(O(n)\)</span>。</p>
+<p>这个方法就叫做斜率优化。具体的实现难度取决于题目性质。</p>
+<p>一般来说，只要转移方程中出现类似一次函数的东西，都可以考虑斜率优化。</p>
+<h2 id="例题">例题</h2>
+<p>先来看一道斜率优化的模板题。</p>
+<h3 id="题意">题意</h3>
+<p><a href="https://www.luogu.com.cn/problem/P3195" title="P3195 [HNOI2008]玩具装箱">P3195 [HNOI2008]玩具装箱</a></p>
+<p>将一段序列 <span class="math inline">\(c_i\)</span> 分成若干段，每一段的代价为 <span class="math inline">\((j-i+\sum_{k=i}^jc_k-L)^2\)</span>，求最小总代价。</p>
+<h3 id="从状态转移方程说起">从状态转移方程说起</h3>
+<p>不难发现状态转移方程为（如果有困难建议先去补 dp 的基础知识）</p>
+<p><span class="math display">\[
+f_i=\min_{j&lt;i}\lbrace f_j+(s_i-s_j+i-j-1-L)^2\rbrace
+\]</span></p>
+<p>其中 <span class="math inline">\(s_i=\sum_{k=1}^ic_k\)</span>。时间复杂度为 <span class="math inline">\(n^2\)</span>，考虑进行优化。</p>
+<p>为了简化方程，不妨采用<strong>参变分离</strong>的思想，将只与 <span class="math inline">\(i\)</span> 有关的 <span class="math inline">\(s_i+i\)</span> 令为 <span class="math inline">\(a_i\)</span>，将只与 <span class="math inline">\(j\)</span> 有关的 <span class="math inline">\(s_j+j+L+1\)</span> 令为 <span class="math inline">\(b_j\)</span>，现在的方程为</p>
+<p><span class="math display">\[
+f_i=\min_{j&lt;i}\lbrace f_j+(a_i-b_j)^2\rbrace
+\]</span></p>
+<p>理一下思路：现在我们需要找到一个最优的 <span class="math inline">\(j\)</span>，使得 <span class="math inline">\(f_i\)</span> 达到最优，注意到此时所有关于 <span class="math inline">\(i\)</span> 的量都是确定的。</p>
+<p>去掉 min 然后化简转移方程可得：</p>
+<p><span class="math display">\[
+2a_ib_j+f_i-a_i^2=f_j+b_j^2
+\]</span></p>
+<h3 id="第一种理解数形结合">第一种理解：数形结合</h3>
+<p>斜率优化的精髓，就是要把转移方程化为直线方程 <span class="math inline">\(y=kx+b\)</span> 的形式然后使用数据结构维护一个凸壳。下面来实现这个过程。如果没有学过高一数学线性规划的话建议先去了解或者是直接看第二种更好理解的方式。</p>
+<p>一般地，<strong>我们将所有只跟 <span class="math inline">\(j\)</span> 有关的项 <span class="math inline">\(f_1(j)\)</span></strong> 看作 <span class="math inline">\(y\)</span>，<strong>将所有只跟 <span class="math inline">\(i\)</span> 有关的项<span class="math inline">\(f_2(i)\)</span></strong> 看作截距 <span class="math inline">\(b\)</span>，会剩下一项 <span class="math inline">\(f_3(i)f_4(j)\)</span>，考虑将 <span class="math inline">\(f_3(i)\)</span> 看作斜率 <span class="math inline">\(k\)</span>，<span class="math inline">\(f_4(j)\)</span> 看作 <span class="math inline">\(x\)</span>。</p>
+<p>这里就是 <span class="math inline">\(f_j+b_j^2=y\)</span>，<span class="math inline">\(b_j=x\)</span></p>
+<p>方程化作</p>
+<p><span class="math display">\[
+2a_ix+f_i-a_i^2=y
+\]</span></p>
+<p>注意到除 <span class="math inline">\(f_i\)</span> 以外的与 <span class="math inline">\(i\)</span> 有关的项都是确定的，所以现在的问题就是在坐标系中找到这个 <span class="math inline">\((x,y)\)</span> 使直线的截距最小（因为要最小化 <span class="math inline">\(f_i\)</span>）。用含 <span class="math inline">\(j\)</span> 的形式方便理解的话就是找到过<strong>确定</strong>点 <span class="math inline">\((b_j,f_j+b_j^2)\)</span> 的斜率为 <span class="math inline">\(2a_i\)</span> 的直线的最小截距。</p>
+<p>怎么找呢？看下面的图： <img alt="寻找最优的截距" src="https://yangty-pic.oss-cn-beijing.aliyuncs.com/斜率优化1.png" title="寻找最优的截距"/></p>
+<p>很显然，<span class="math inline">\(B\)</span> 点是我们的最优选择，至于 <span class="math inline">\(A\)</span> 点，因为我们的斜率 <span class="math inline">\(k=2a_i\)</span> 满足<strong>单调递增</strong>，所以可以让 <span class="math inline">\(A\)</span> 点滚蛋了，至于 <span class="math inline">\(C\)</span> 点，如果我们当前的斜率足够大：</p>
+<figure>
+<img alt="" src="https://yangty-pic.oss-cn-beijing.aliyuncs.com/斜率优化2.png" title="现在 C 点为最优决策点"/><figcaption>现在 C 点为最优决策点</figcaption>
+</figure>
+<p>则 <span class="math inline">\(B\)</span> 点这辈子以后也不可能用到了，可以让他拜拜了。</p>
+<p>定义 <span class="math inline">\(\operatorname{slope}(A,B)\)</span> 为直线 <span class="math inline">\(AB\)</span> 的斜率</p>
+<p>我们不难发现这样的性质：为了让我们使用的决策点 <span class="math inline">\((b_j,f_j+b_j^2)\)</span> 最优，我们需要让这些可供选择的决策点形成一个凸壳，即形式化地，设我们维护的这些点序列为 <span class="math inline">\(\lbrace P_i\rbrace\)</span>，且要求 <span class="math inline">\(P_1\)</span> 为需要的决策点，则一定要有 <span class="math inline">\(\operatorname{slope}(P_{i-1},P_i)&lt;\operatorname{slope}(P_i,P_{i+1})\)</span>，即相邻两点间的斜率要单调递增。</p>
+<p>同时如果 <span class="math inline">\(\operatorname{slope}(P_1,P_2)&lt;k\)</span>，则选择 <span class="math inline">\(P_1\)</span> 一定不优（在坐标系里面画图可以感受一下），需要弹掉这些点。</p>
+<p>做完决策（即求出 <span class="math inline">\(f_i\)</span> 之后），我们需要将 <span class="math inline">\((b_i,f_i+b_i^2)\)</span> 放入这个序列的末尾，但是还是要满足凸壳的性质。因此考虑用单调队列维护这些点。</p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode cpp"><code class="sourceCode cpp"><span id="cb1-1"><a aria-hidden="true" href="#cb1-1"></a><span class="cf">for</span> (<span class="dt">int</span> i = <span class="dv">1</span>; i &lt;= n; ++i) {</span>
+<span id="cb1-2"><a aria-hidden="true" href="#cb1-2"></a>    <span class="cf">while</span> (head &lt; tail &amp;&amp; slope(q[head], q[head + <span class="dv">1</span>]) &lt; <span class="dv">2</span> * a[i])<span class="co">//这里是一开始的弹点操作</span></span>
+<span id="cb1-3"><a aria-hidden="true" href="#cb1-3"></a>        ++head;</span>
+<span id="cb1-4"><a aria-hidden="true" href="#cb1-4"></a>    <span class="dt">int</span> j = q[head];</span>
+<span id="cb1-5"><a aria-hidden="true" href="#cb1-5"></a>    f[i] = f[j] + (a[i] - b[j]) * (a[i] - b[j]);<span class="co">//进行决策</span></span>
+<span id="cb1-6"><a aria-hidden="true" href="#cb1-6"></a>    <span class="cf">while</span> (head &lt; tail &amp;&amp; slope(i, q[tail - <span class="dv">1</span>]) &lt; slope(q[tail - <span class="dv">1</span>], q[tail]))<span class="co">//弹尾部的点维护凸性</span></span>
+<span id="cb1-7"><a aria-hidden="true" href="#cb1-7"></a>        --tail;</span>
+<span id="cb1-8"><a aria-hidden="true" href="#cb1-8"></a>    q[++tail] = i;<span class="co">//加入凸壳</span></span>
+<span id="cb1-9"><a aria-hidden="true" href="#cb1-9"></a>}</span></code></pre></div>
+<p>整道题的代码就是：</p>
+<div class="sourceCode" id="cb2"><pre class="sourceCode cpp"><code class="sourceCode cpp"><span id="cb2-1"><a aria-hidden="true" href="#cb2-1"></a><span class="pp">#include </span><span class="im">&lt;cstdio&gt;</span></span>
+<span id="cb2-2"><a aria-hidden="true" href="#cb2-2"></a><span class="pp">#include </span><span class="im">&lt;cctype&gt;</span></span>
+<span id="cb2-3"><a aria-hidden="true" href="#cb2-3"></a></span>
+<span id="cb2-4"><a aria-hidden="true" href="#cb2-4"></a><span class="at">const</span> <span class="dt">int</span> maxn = <span class="fl">5e4</span> + <span class="dv">5</span>;</span>
+<span id="cb2-5"><a aria-hidden="true" href="#cb2-5"></a><span class="dt">int</span> n;</span>
+<span id="cb2-6"><a aria-hidden="true" href="#cb2-6"></a><span class="dt">double</span> a[maxn], b[maxn], f[maxn], sum[maxn], L;</span>
+<span id="cb2-7"><a aria-hidden="true" href="#cb2-7"></a><span class="dt">int</span> q[maxn], head, tail;</span>
+<span id="cb2-8"><a aria-hidden="true" href="#cb2-8"></a></span>
+<span id="cb2-9"><a aria-hidden="true" href="#cb2-9"></a><span class="kw">inline</span> <span class="dt">double</span> X(<span class="dt">int</span> x) { <span class="cf">return</span> b[x]; }</span>
+<span id="cb2-10"><a aria-hidden="true" href="#cb2-10"></a><span class="kw">inline</span> <span class="dt">double</span> Y(<span class="dt">int</span> x) { <span class="cf">return</span> f[x] + b[x] * b[x]; }</span>
+<span id="cb2-11"><a aria-hidden="true" href="#cb2-11"></a><span class="kw">inline</span> <span class="dt">double</span> slope(<span class="dt">int</span> a, <span class="dt">int</span> b) { <span class="cf">return</span> (Y(a) - Y(b)) / (X(a) - X(b)); }</span>
+<span id="cb2-12"><a aria-hidden="true" href="#cb2-12"></a></span>
+<span id="cb2-13"><a aria-hidden="true" href="#cb2-13"></a><span class="kw">inline</span> <span class="dt">int</span> read() {...}</span>
+<span id="cb2-14"><a aria-hidden="true" href="#cb2-14"></a></span>
+<span id="cb2-15"><a aria-hidden="true" href="#cb2-15"></a><span class="dt">int</span> main() {</span>
+<span id="cb2-16"><a aria-hidden="true" href="#cb2-16"></a>    n = read(), L = read();</span>
+<span id="cb2-17"><a aria-hidden="true" href="#cb2-17"></a>    <span class="cf">for</span> (<span class="dt">int</span> i = <span class="dv">1</span>; i &lt;= n; ++i) {</span>
+<span id="cb2-18"><a aria-hidden="true" href="#cb2-18"></a>        sum[i] = sum[i - <span class="dv">1</span>] + read();</span>
+<span id="cb2-19"><a aria-hidden="true" href="#cb2-19"></a>        a[i] = sum[i] + i;</span>
+<span id="cb2-20"><a aria-hidden="true" href="#cb2-20"></a>        b[i] = sum[i] + i + L + <span class="dv">1</span>;</span>
+<span id="cb2-21"><a aria-hidden="true" href="#cb2-21"></a>    }</span>
+<span id="cb2-22"><a aria-hidden="true" href="#cb2-22"></a>    b[<span class="dv">0</span>] = sum[<span class="dv">0</span>] + <span class="dv">0</span> + L + <span class="dv">1</span>;<span class="co">//注意，$b_0$ 不等于 0</span></span>
+<span id="cb2-23"><a aria-hidden="true" href="#cb2-23"></a>    head = tail = <span class="dv">1</span>;</span>
+<span id="cb2-24"><a aria-hidden="true" href="#cb2-24"></a>    <span class="cf">for</span> (<span class="dt">int</span> i = <span class="dv">1</span>; i &lt;= n; ++i) {</span>
+<span id="cb2-25"><a aria-hidden="true" href="#cb2-25"></a>        <span class="cf">while</span> (head &lt; tail &amp;&amp; slope(q[head], q[head + <span class="dv">1</span>]) &lt; <span class="dv">2</span> * a[i])</span>
+<span id="cb2-26"><a aria-hidden="true" href="#cb2-26"></a>            ++head;</span>
+<span id="cb2-27"><a aria-hidden="true" href="#cb2-27"></a>        <span class="dt">int</span> j = q[head];</span>
+<span id="cb2-28"><a aria-hidden="true" href="#cb2-28"></a>        f[i] = f[j] + (a[i] - b[j]) * (a[i] - b[j]);</span>
+<span id="cb2-29"><a aria-hidden="true" href="#cb2-29"></a>        <span class="cf">while</span> (head &lt; tail &amp;&amp; slope(i, q[tail - <span class="dv">1</span>]) &lt; slope(q[tail - <span class="dv">1</span>], q[tail]))</span>
+<span id="cb2-30"><a aria-hidden="true" href="#cb2-30"></a>            --tail;</span>
+<span id="cb2-31"><a aria-hidden="true" href="#cb2-31"></a>        q[++tail] = i;</span>
+<span id="cb2-32"><a aria-hidden="true" href="#cb2-32"></a>    }</span>
+<span id="cb2-33"><a aria-hidden="true" href="#cb2-33"></a>    printf(<span class="st">"</span><span class="sc">%lld\n</span><span class="st">"</span>, (<span class="dt">long</span> <span class="dt">long</span>)f[n]);<span class="co">//观察数据范围发现这东西会爆int</span></span>
+<span id="cb2-34"><a aria-hidden="true" href="#cb2-34"></a>    <span class="cf">return</span> <span class="dv">0</span>;</span>
+<span id="cb2-35"><a aria-hidden="true" href="#cb2-35"></a>}</span></code></pre></div>
+<h3 id="第二种理解方式代数">第二种理解方式：代数</h3>
+<p>现在的方程是 <span class="math inline">\(f_i = \min\{f_j + a_i^2 - 2a_ib_j + b_j^2\}\)</span>，首先肯定是将与决策点无关的项提出来，方程化为 <span class="math display">\[
+f_i = \min\{f_j - 2a_ib_j + b_j^2\} + a_i^2
+\]</span> 现在需要最小化的，就是 <span class="math inline">\(f_j - 2a_ib_j + b_j^2\)</span>。那么我们考虑一下决策点 <span class="math inline">\(j\)</span> 何时会比决策点 <span class="math inline">\(k\)</span> 更优： <span class="math display">\[
+\begin{aligned}
+f_j - 2a_ib_j + b_j^2 &amp;&lt; f_k - 2a_ib_k + b_k^2\\
+(f_j + b_j^2) - (f_k + b_k^2) &amp;&lt; 2a_i(b_j - b_k)\\
+\frac{(f_j + b_j^2) - (f_k + b_k^2)}{b_j - b_k} &amp;&lt; 2a_i
+\end{aligned}
+\]</span> 第二行是参变分离，把带有 <span class="math inline">\(i\)</span> 的移到一边。第三行就是化为斜率的形式。</p>
+<p>不难发现这样子更加好找斜率和坐标的定义。<span class="math inline">\(f_i + b_i^2\)</span> 就是纵坐标，<span class="math inline">\(b_i\)</span> 就是横坐标，<span class="math inline">\(2a_i\)</span> 即为斜率。</p>
+<p>因此我们知道了，如果一个决策点 <span class="math inline">\(j\)</span> 优于 <span class="math inline">\(k\)</span>，那么 <span class="math inline">\(j\)</span> 所代表的点到 <span class="math inline">\(k\)</span> 所代表的点的连线的斜率一定小于 <span class="math inline">\(2a_i\)</span>。而我们就是要在 <span class="math inline">\([1, i)\)</span> 这些决策点里面找到一个最优的决策点，相当于斜率刚刚好好小于等于 <span class="math inline">\(2a_i\)</span>。由于横坐标 <span class="math inline">\(b_i\)</span> 递增，这个过程是可以在凸包上面二分实现的。</p>
+<p>然而我们注意到每次查询的斜率 <span class="math inline">\(2a_i\)</span> 是单调增的，所以我们可以把那些斜率小于 <span class="math inline">\(2a_i\)</span> 的点先删掉，因为他们肯定不会最优。而且我们要维护一个斜率递增的决策点序列（就是一个凸包），所以算完了 <span class="math inline">\(f_i\)</span> 并加点的时候要维护凸包后端的斜率单调性。这可以解释上面的一系列过程。</p>
+<h3 id="总结">总结</h3>
+<p>对于形如 <span class="math inline">\(f_i=\min_{j&lt;i}\lbrace f_j-a_id_j\rbrace\)</span>，且 <span class="math inline">\(a_i\)</span> 和 <span class="math inline">\(d_i\)</span> 满足单调递增的状态转移方程，我们可以使用斜率优化将其从朴素的 <span class="math inline">\(O(n^2)\)</span> 优化到 <span class="math inline">\(O(n)\)</span>。</p>
+<p>具体地，我们将其看作一条直线方程的形式：<span class="math inline">\(f_j=f_i+a_id_j\)</span>，将 <span class="math inline">\(f_j\)</span> 看作 <span class="math inline">\(y\)</span>，<span class="math inline">\(d_j\)</span> 看作 <span class="math inline">\(x\)</span>，<span class="math inline">\(a_i\)</span> 看作斜率 <span class="math inline">\(k\)</span>，<span class="math inline">\(f_i\)</span> 看作截距。我们就可以利用其单调性维护一个凸壳，来起到加速转移的效果。</p>
+<p>步骤一般是如下三步：</p>
+<ul>
+<li>弹出队首的点，找到最优决策点 <span class="math inline">\(j\)</span></li>
+<li>根据转移方程算出 <span class="math inline">\(f_i\)</span></li>
+<li>维护凸壳的右端</li>
+</ul>
+<h2 id="一些需要注意的点">一些需要注意的点</h2>
+<ul>
+<li>有些时候需要使用 <code>long double</code>，一部分题卡精度卡的很凶，所以建议使用乘法来判断斜率，<strong>当然一定要看清楚不等号的方向（负数乘过去要变号）</strong>。</li>
+<li>大多数时候需要 <code>long long</code>。</li>
+<li>大多数时候，队列中一开始需要有<strong>初始转移点</strong> <span class="math inline">\(0\)</span>。</li>
+<li>在删点的时候的判定一定是基于<strong>两个点</strong>的斜率的，<strong>所以队列中必须有两个或以上的元素</strong>。</li>
+<li>关于要维护的东西的单调性是增还是减：一定自己推式子看清楚，不要觉得是什么就是什么。</li>
+<li>有些毒瘤题的斜率或横坐标<strong>没有单调性</strong>，这时候需要在凸壳上二分（斜率不单调）或者<strong>李超树</strong>（都不单调）。一般推荐使用李超树，十分好理解且代码不难写。</li>
+<li>有些复杂度为 <span class="math inline">\(O(nk)\)</span> 的题（相当于做 <span class="math inline">\(k\)</span> 次 <span class="math inline">\(O(n)\)</span> 的 dp），一定要处理好滚动数组，要清楚调用的是哪个 dp 值。</li>
+</ul>
+<h2 id="其他例题">其他例题</h2>
+<p>一般比较有代表性，篇幅问题，只给出详细的题解。</p>
+<ul>
+<li><a href="/sol-luogu-p5785/">P5785 [SDOI2012]任务安排</a> 斜率不一定单调的题目，需要在凸壳上二分。</li>
+<li><a href="/sol-luogu-p4655/">P4655 [CEOI2017]Building Bridges</a> 斜率和横坐标都不单调，需要 cdq 分治或者李超树。</li>
+<li><a href="/sol-luogu-p5017/">P5017 摆渡车</a> 比较经典的斜优模型。</li>
+</ul>
+<h2 id="习题">习题</h2>
+<ul>
+<li><a href="https://www.luogu.com.cn/problem/P3648">P3648 [APIO2014]序列分割</a> 经典卡常卡精度毒瘤题。</li>
+<li><a href="https://www.luogu.com.cn/problem/CF311B">CF311B Cats Transport</a> 和摆渡车类似的经典模型。</li>
+<li><a href="https://www.luogu.com.cn/problem/P2120">P2120 [ZJOI2007]仓库建设</a> 经典套路模型。</li>
+<li><a href="https://www.luogu.com.cn/problem/P4360">P4360 [CEOI2004]锯木厂选址</a> 经典套路模型。</li>
+<li><a href="https://www.luogu.com.cn/problem/P3628">P3628 [APIO2010]特别行动队</a> 简单推推式子。</li>
+<li><a href="https://www.luogu.com.cn/problem/P4072">P4072 [SDOI2016]征途</a> 要注意 dp 值的初始化。</li>
+</ul>
+<p>上面的几道题难度递增，都是比较好想的经典斜优题。敲完了这几道就上手斜优了。</p>
+<p>然后是一些较难的题。</p>
+<ul>
+<li><a href="https://www.luogu.com.cn/problem/P4027">P4027 [NOI2007] 货币兑换</a> 其实也没多难，只是不单调。</li>
+<li><a href="https://www.luogu.com.cn/problem/P1721">P1721 [NOI2016] 国王饮水记</a> 神仙结论题。</li>
+<li><a href="https://www.luogu.com.cn/problem/P2305">P2305 [NOI2014] 购票</a> 树上转移，需要点分治。</li>
+<li><a href="https://www.luogu.com.cn/problem/CF932F">CF932F Escape Through Leaf</a> 使用李超树的线段树合并非常好写。</li>
+</ul>
+</section>
+<footer class="article-footer">
+<section class="article-tags">
+<a href="/tags/OI/">OI</a>
+<a href="/tags/note/">笔记</a>
+<a href="/tags/dp/">动态规划</a>
+<a href="/tags/slope-optimization/">斜率优化</a>
+</section>
+<section class="article-copyright">
+<svg class="icon icon-tabler icon-tabler-copyright" fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+<path d="M0 0h24v24H0z" stroke="none"></path>
+<circle cx="12" cy="12" r="9"></circle>
+<path d="M14.5 9a3.5 4 0 1 0 0 6"></path>
+</svg>
+<span>Licensed under CC BY-NC-SA 4.0</span>
+</section>
+</footer>
+<link crossorigin="anonymous" href="https://cdn.jsdelivr.net/npm/katex@0.13.13/dist/katex.min.css" integrity="sha384-RZU/ijkSsFbcmivfdRBQDtwuwVqK7GMOw6IMvKyeWL2K5UAlyp6WonmB8m7Jd0Hn" rel="stylesheet"/><script crossorigin="anonymous" defer="" integrity="sha384-pK1WpvzWVBQiP0/GjnvRxV4mOb0oxFuyRxJlk6vVw146n3egcN5C925NCP7a7BY8" src="https://cdn.jsdelivr.net/npm/katex@0.13.13/dist/katex.min.js">
+</script><script crossorigin="anonymous" defer="" integrity="sha384-vZTG03m+2yp6N6BNi5iM4rW4oIwk5DfcNdFfxkk9ZWpDriOkXX8voJBFrAO7MpVl" src="https://cdn.jsdelivr.net/npm/katex@0.13.13/dist/contrib/auto-render.min.js">
+</script><script>
+    window.addEventListener("DOMContentLoaded", () => {
+        renderMathInElement(document.querySelector(`.article-content`), {
+            delimiters: [
+                { left: "$$", right: "$$", display: true },
+                { left: "$", right: "$", display: false },
+                { left: "\\(", right: "\\)", display: false },
+                { left: "\\[", right: "\\]", display: true }
+            ]
+        });})
+</script>
+</article>
+<aside class="related-contents--wrapper">
+<h2 class="section-title">相关文章</h2>
+<div class="related-contents">
+<div class="flex article-list--tile">
+<article class="has-image">
+<a href="/sol-luogu-p5468/">
+<div class="article-image">
+<img data-hash="https://yangty-pic.oss-cn-beijing.aliyuncs.com/bg01.webp" data-key="" loading="lazy" src="https://yangty-pic.oss-cn-beijing.aliyuncs.com/bg01.webp"/>
+</div>
+<div class="article-details">
+<h2 class="article-title">P5468 [NOI2019] 回家路线</h2>
+</div>
+</a>
+</article>
+<article class="has-image">
+<a href="/sol-cf932f/">
+<div class="article-image">
+<img data-hash="https://yangty-pic.oss-cn-beijing.aliyuncs.com/bg7.webp" data-key="" loading="lazy" src="https://yangty-pic.oss-cn-beijing.aliyuncs.com/bg7.webp"/>
+</div>
+<div class="article-details">
+<h2 class="article-title">CF932F Escape Through Leaf</h2>
+</div>
+</a>
+</article>
+<article class="has-image">
+<a href="/note-mono-opti-dp/">
+<div class="article-image">
+<img data-hash="https://yangty-pic.oss-cn-beijing.aliyuncs.com/bg21.webp" data-key="" loading="lazy" src="https://yangty-pic.oss-cn-beijing.aliyuncs.com/bg21.webp"/>
+</div>
+<div class="article-details">
+<h2 class="article-title">决策单调性优化动态规划</h2>
+</div>
+</a>
+</article>
+<article class="has-image">
+<a href="/sol-luogu-p2305/">
+<div class="article-image">
+<img data-hash="https://yangty-pic.oss-cn-beijing.aliyuncs.com/bg43.webp" data-key="" loading="lazy" src="https://yangty-pic.oss-cn-beijing.aliyuncs.com/bg43.webp"/>
+</div>
+<div class="article-details">
+<h2 class="article-title">P2305 [NOI2014] 购票</h2>
+</div>
+</a>
+</article>
+<article class="has-image">
+<a href="/sol-luogu-p1721/">
+<div class="article-image">
+<img data-hash="https://yangty-pic.oss-cn-beijing.aliyuncs.com/bg35.webp" data-key="" loading="lazy" src="https://yangty-pic.oss-cn-beijing.aliyuncs.com/bg35.webp"/>
+</div>
+<div class="article-details">
+<h2 class="article-title">P1721 [NOI2016] 国王饮水记</h2>
+</div>
+</a>
+</article>
+</div>
+</div>
+</aside>
+<footer class="site-footer">
+<section class="copyright">
+        © 
+        
+            2019 - 
+        
+        2024 清烛的博客
+    </section>
+<section class="powerby">
+        Built with <a href="https://gohugo.io/" rel="noopener" target="_blank">Hugo</a> <br/>
+        主题 <b><a data-version="3.11.0" href="https://github.com/CaiJimmy/hugo-theme-stack" rel="noopener" target="_blank">Stack</a></b> 由 <a href="https://jimmycai.com" rel="noopener" target="_blank">Jimmy</a> 设计
+    </section>
+</footer>
+<div aria-hidden="true" class="pswp" role="dialog" tabindex="-1">
+<div class="pswp__bg"></div>
+<div class="pswp__scroll-wrap">
+<div class="pswp__container">
+<div class="pswp__item"></div>
+<div class="pswp__item"></div>
+<div class="pswp__item"></div>
+</div>
+<div class="pswp__ui pswp__ui--hidden">
+<div class="pswp__top-bar">
+<div class="pswp__counter"></div>
+<button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+<button class="pswp__button pswp__button--share" title="Share"></button>
+<button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+<button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+<div class="pswp__preloader">
+<div class="pswp__preloader__icn">
+<div class="pswp__preloader__cut">
+<div class="pswp__preloader__donut"></div>
+</div>
+</div>
+</div>
+</div>
+<div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+<div class="pswp__share-tooltip"></div>
+</div>
+<button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+</button>
+<button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+</button>
+<div class="pswp__caption">
+<div class="pswp__caption__center"></div>
+</div>
+</div>
+</div>
+</div><script crossorigin="anonymous" defer="" integrity="sha256-ePwmChbbvXbsO02lbM3HoHbSHTHFAeChekF1xKJdleo=" src="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe.min.js">
+</script><script crossorigin="anonymous" defer="" integrity="sha256-UKkzOn/w1mBxRmLLGrSeyB4e1xbrp4xylgAWb3M42pU=" src="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe-ui-default.min.js">
+</script><link crossorigin="anonymous" href="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/default-skin/default-skin.css" integrity="sha256-c0uckgykQ9v5k+IqViZOZKc47Jn7KQil4/MP3ySA3F8=" rel="stylesheet"/><link crossorigin="anonymous" href="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe.css" integrity="sha256-SBLU4vv6CA6lHsZ1XyTdhyjJxCjPif/TRkjnsyGAGnE=" rel="stylesheet"/>
+</main>
+</div>
+<script crossorigin="anonymous" integrity="sha256-5NovOZc4iwiAWTYIFiIM7DxKUXKWvpVEuMEPLzcm5/g=" src="https://cdn.jsdelivr.net/npm/node-vibrant@3.1.5/dist/vibrant.min.js">
+</script><script defer="" src="/ts/main.js" type="text/javascript"></script>
+<script>
+    (function () {
+        const customFont = document.createElement('link');
+        customFont.href = "https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&display=swap";
+
+        customFont.type = "text/css";
+        customFont.rel = "stylesheet";
+
+        document.head.appendChild(customFont);
+    }());
+</script>
+</body>
+</html>

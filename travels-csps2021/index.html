@@ -1,0 +1,514 @@
+<!DOCTYPE html>
+<html dir="ltr" lang="zh-CN">
+<head><meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1" name="viewport"/><meta content="前言 三年 OI，成败在此一举。
+初三时看着高二学长们的辛酸百态，“自己还年轻”的心态留到了现在，然而高二这个身份总是能给我当头一棒。
+高一的 CSP-S T2 MLE 惨丢 \(100\)pts，NOIP 什么都不会甚至挂到了两位数，省选被 D2T1 的数据背刺了 \(90\)pts 直接失去省队资格。是时我也差点 AFO，当天下午翘掉了音乐信息自习课在机房发呆的情形仍历历在目，洛谷主页上当时写的 ## AFO 现在还在最显眼的位置。
+暑假，Asd_Okuu 从余姚抱回来了块 Ag，而我还在正睿的集训教室抱怨着听不懂 SAM。暑假集训被吊锤让我对自己究竟适不适合 OI 的怀疑又平添一分。
+高二开学，时间不够用，文化课变难，睡眠质量日渐变差，题目做不动，知识学不走。
+但放眼望着跟我一样的同行者们和自己从 19 年 5 月坚持到现在的成就，突然又不想放弃。
+抓住最后的机会，放手一搏。
+为了自己的热爱和梦想。
+初赛 Day 0 中秋调休，返家。
+中午和 Dr. Chou 聊了挺多，得知物竞的一些惊天黑幕。
+希望明天的物竞复赛 Dr. Chou 能取得满意的结果吧。热爱物理的人应该要有好结局，他是我从初中钦佩到现在的一个好学长。
+地铁上随便扫了几眼复习资料。有计组原理，排列组合，甚至还有当年十分认真的手写笔记。
+依稀记得印这些复习资料是 19 年的 CSP-J 前夕。当时还花了不少心思准备初赛，组合题当时于我简直于天书。2 年过去了啊。当时的热爱还是不减。
+这些资料，以后再也不会用到了。
+睡的挺晚。
+初赛 Day 1 物竞开考的更早，说明我面基不到 Dr. Chou 了。坏啊（最后一次见居然是初三？）
+进考场，签健康承诺书。贵州师院还是熟悉的样子，只是考试的楼发生了变化罢了。走进去的时候突然又回想起两年来在这里经历的欣喜与沮丧。
+开题。
+貌似有点不简单。
+组合题不会做。
+居然手推分层图最短路。
+阅读程序看不懂。
+完形填空居然有四毛子算法。
+草草收场。
+好啊，阅读理解第一题居然是 GSS1，第二题居然是 Base64，妙啊。" name="description"/><title>CSP-S 2021 游记兼近况回忆</title>
+<link href="https://oi.imyangty.com/travels-csps2021/" rel="canonical"/>
+<link href="/scss/style.min.a5821f3d3ab84ce5a0ac21477e347a2e0ca00292e398d16c5e8e36ded6e35a23.css" rel="stylesheet"/><meta content="CSP-S 2021 游记兼近况回忆" property="og:title"/>
+<meta content="前言 三年 OI，成败在此一举。
+初三时看着高二学长们的辛酸百态，“自己还年轻”的心态留到了现在，然而高二这个身份总是能给我当头一棒。
+高一的 CSP-S T2 MLE 惨丢 \(100\)pts，NOIP 什么都不会甚至挂到了两位数，省选被 D2T1 的数据背刺了 \(90\)pts 直接失去省队资格。是时我也差点 AFO，当天下午翘掉了音乐信息自习课在机房发呆的情形仍历历在目，洛谷主页上当时写的 ## AFO 现在还在最显眼的位置。
+暑假，Asd_Okuu 从余姚抱回来了块 Ag，而我还在正睿的集训教室抱怨着听不懂 SAM。暑假集训被吊锤让我对自己究竟适不适合 OI 的怀疑又平添一分。
+高二开学，时间不够用，文化课变难，睡眠质量日渐变差，题目做不动，知识学不走。
+但放眼望着跟我一样的同行者们和自己从 19 年 5 月坚持到现在的成就，突然又不想放弃。
+抓住最后的机会，放手一搏。
+为了自己的热爱和梦想。
+初赛 Day 0 中秋调休，返家。
+中午和 Dr. Chou 聊了挺多，得知物竞的一些惊天黑幕。
+希望明天的物竞复赛 Dr. Chou 能取得满意的结果吧。热爱物理的人应该要有好结局，他是我从初中钦佩到现在的一个好学长。
+地铁上随便扫了几眼复习资料。有计组原理，排列组合，甚至还有当年十分认真的手写笔记。
+依稀记得印这些复习资料是 19 年的 CSP-J 前夕。当时还花了不少心思准备初赛，组合题当时于我简直于天书。2 年过去了啊。当时的热爱还是不减。
+这些资料，以后再也不会用到了。
+睡的挺晚。
+初赛 Day 1 物竞开考的更早，说明我面基不到 Dr. Chou 了。坏啊（最后一次见居然是初三？）
+进考场，签健康承诺书。贵州师院还是熟悉的样子，只是考试的楼发生了变化罢了。走进去的时候突然又回想起两年来在这里经历的欣喜与沮丧。
+开题。
+貌似有点不简单。
+组合题不会做。
+居然手推分层图最短路。
+阅读程序看不懂。
+完形填空居然有四毛子算法。
+草草收场。
+好啊，阅读理解第一题居然是 GSS1，第二题居然是 Base64，妙啊。" property="og:description"/>
+<meta content="https://oi.imyangty.com/travels-csps2021/" property="og:url"/>
+<meta content="清烛的博客" property="og:site_name"/>
+<meta content="article" property="og:type"/><meta content="Post" property="article:section"/><meta content="OI" property="article:tag"/><meta content="游记" property="article:tag"/><meta content="2021-09-27T21:25:54+08:00" property="article:published_time"/><meta content="2021-09-27T21:25:54+08:00" property="article:modified_time"/><meta content="https://yangty-pic.oss-cn-beijing.aliyuncs.com/bg22.webp" property="og:image"/>
+<meta content="CSP-S 2021 游记兼近况回忆" name="twitter:title"/>
+<meta content="前言 三年 OI，成败在此一举。
+初三时看着高二学长们的辛酸百态，“自己还年轻”的心态留到了现在，然而高二这个身份总是能给我当头一棒。
+高一的 CSP-S T2 MLE 惨丢 \(100\)pts，NOIP 什么都不会甚至挂到了两位数，省选被 D2T1 的数据背刺了 \(90\)pts 直接失去省队资格。是时我也差点 AFO，当天下午翘掉了音乐信息自习课在机房发呆的情形仍历历在目，洛谷主页上当时写的 ## AFO 现在还在最显眼的位置。
+暑假，Asd_Okuu 从余姚抱回来了块 Ag，而我还在正睿的集训教室抱怨着听不懂 SAM。暑假集训被吊锤让我对自己究竟适不适合 OI 的怀疑又平添一分。
+高二开学，时间不够用，文化课变难，睡眠质量日渐变差，题目做不动，知识学不走。
+但放眼望着跟我一样的同行者们和自己从 19 年 5 月坚持到现在的成就，突然又不想放弃。
+抓住最后的机会，放手一搏。
+为了自己的热爱和梦想。
+初赛 Day 0 中秋调休，返家。
+中午和 Dr. Chou 聊了挺多，得知物竞的一些惊天黑幕。
+希望明天的物竞复赛 Dr. Chou 能取得满意的结果吧。热爱物理的人应该要有好结局，他是我从初中钦佩到现在的一个好学长。
+地铁上随便扫了几眼复习资料。有计组原理，排列组合，甚至还有当年十分认真的手写笔记。
+依稀记得印这些复习资料是 19 年的 CSP-J 前夕。当时还花了不少心思准备初赛，组合题当时于我简直于天书。2 年过去了啊。当时的热爱还是不减。
+这些资料，以后再也不会用到了。
+睡的挺晚。
+初赛 Day 1 物竞开考的更早，说明我面基不到 Dr. Chou 了。坏啊（最后一次见居然是初三？）
+进考场，签健康承诺书。贵州师院还是熟悉的样子，只是考试的楼发生了变化罢了。走进去的时候突然又回想起两年来在这里经历的欣喜与沮丧。
+开题。
+貌似有点不简单。
+组合题不会做。
+居然手推分层图最短路。
+阅读程序看不懂。
+完形填空居然有四毛子算法。
+草草收场。
+好啊，阅读理解第一题居然是 GSS1，第二题居然是 Base64，妙啊。" name="twitter:description"/><meta content="summary_large_image" name="twitter:card"/>
+<meta content="https://yangty-pic.oss-cn-beijing.aliyuncs.com/bg22.webp" name="twitter:image"/>
+<link href="https://q1.qlogo.cn/g?b=qq&amp;nk=375836877&amp;s=5" rel="shortcut icon"/>
+<link href="https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.5.1/build/styles/github-dark-dimmed.min.css" rel="stylesheet"/>
+<script src="https://cdn.jsdelivr.net/gh/highlightjs/cdn-release/build/highlight.min.js"></script>
+<script>hljs.highlightAll();</script>
+</head>
+<body class="article-page">
+<script>
+        (function() {
+            const colorSchemeKey = 'StackColorScheme';
+            if(!localStorage.getItem(colorSchemeKey)){
+                localStorage.setItem(colorSchemeKey, "auto");
+            }
+        })();
+    </script><script>
+    (function() {
+        const colorSchemeKey = 'StackColorScheme';
+        const colorSchemeItem = localStorage.getItem(colorSchemeKey);
+        const supportDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches === true;
+
+        if (colorSchemeItem == 'dark' || colorSchemeItem === 'auto' && supportDarkMode) {
+            
+
+            document.documentElement.dataset.scheme = 'dark';
+        } else {
+            document.documentElement.dataset.scheme = 'light';
+        }
+    })();
+</script>
+<div class="container main-container flex on-phone--column extended"><aside class="sidebar left-sidebar sticky">
+<button aria-label="切换菜单" class="hamburger hamburger--spin" id="toggle-menu" type="button">
+<span class="hamburger-box">
+<span class="hamburger-inner"></span>
+</span>
+</button>
+<header>
+<figure class="site-avatar">
+<a href="/">
+<img alt="Avatar" class="site-logo" height="300" loading="lazy" src="/img/avatar_huea3ce2119467b51fdd2a81393644a76d_51594_300x0_resize_q75_box.jpg" width="300"/>
+</a>
+<span class="emoji">😅</span>
+</figure>
+<div class="site-meta">
+<h1 class="site-name"><a href="/">清烛的博客</a></h1>
+<h2 class="site-description">烟火已谢，笙歌未停</h2>
+</div>
+</header><ol class="social-menu">
+<li>
+<a href="mailto:i@imyangty.com" target="_blank" title="email">
+<svg class="icon icon-tabler icon-tabler-mail" fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" viewbox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+<path d="M0 0h24v24H0z" fill="none" stroke="none"></path>
+<rect height="14" rx="2" width="18" x="3" y="5"></rect>
+<polyline points="3 7 12 13 21 7"></polyline>
+</svg>
+</a>
+</li>
+<li>
+<a href="https://github.com/Cgfyufsygsm" target="_blank" title="GitHub">
+<svg class="icon icon-tabler icon-tabler-brand-github" fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+<path d="M0 0h24v24H0z" fill="none" stroke="none"></path>
+<path d="M9 19c-4.3 1.4 -4.3 -2.5 -6 -3m12 5v-3.5c0 -1 .1 -1.4 -.5 -2c2.8 -.3 5.5 -1.4 5.5 -6a4.6 4.6 0 0 0 -1.3 -3.2a4.2 4.2 0 0 0 -.1 -3.2s-1.1 -.3 -3.5 1.3a12.3 12.3 0 0 0 -6.2 0c-2.4 -1.6 -3.5 -1.3 -3.5 -1.3a4.2 4.2 0 0 0 -.1 3.2a4.6 4.6 0 0 0 -1.3 3.2c0 4.6 2.7 5.7 5.5 6c-.6 .6 -.6 1.2 -.5 2v3.5"></path>
+</svg>
+</a>
+</li>
+<li>
+<a href="https://t.me/Cgfyufsygsm" target="_blank" title="Telegram">
+<svg class="icon icon-tabler icon-tabler-brand-telegram" fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" viewbox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+<path d="M0 0h24v24H0z" fill="none" stroke="none"></path>
+<path d="M15 10l-4 4l6 6l4 -16l-18 7l4 2l2 6l3 -4"></path>
+</svg>
+</a>
+</li>
+<li>
+<a href="https://twitter.com/Cgfyufsygsm" target="_blank" title="Twitter">
+<svg class="icon icon-tabler icon-tabler-brand-twitter" fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+<path d="M0 0h24v24H0z" fill="none" stroke="none"></path>
+<path d="M22 4.01c-1 .49 -1.98 .689 -3 .99c-1.121 -1.265 -2.783 -1.335 -4.38 -.737s-2.643 2.06 -2.62 3.737v1c-3.245 .083 -6.135 -1.395 -8 -4c0 0 -4.182 7.433 4 11c-1.872 1.247 -3.739 2.088 -6 2c3.308 1.803 6.913 2.423 10.034 1.517c3.58 -1.04 6.522 -3.723 7.651 -7.742a13.84 13.84 0 0 0 .497 -3.753c-.002 -.249 1.51 -2.772 1.818 -4.013z"></path>
+</svg>
+</a>
+</li>
+</ol><ol class="menu" id="main-menu">
+<li>
+<a href="/">
+<svg class="icon icon-tabler icon-tabler-home" fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+<path d="M0 0h24v24H0z" stroke="none"></path>
+<polyline points="5 12 3 12 12 3 21 12 19 12"></polyline>
+<path d="M5 12v7a2 2 0 0 0 2 2h10a2 2 0 0 0 2 -2v-7"></path>
+<path d="M9 21v-6a2 2 0 0 1 2 -2h2a2 2 0 0 1 2 2v6"></path>
+</svg>
+<span>主页</span>
+</a>
+</li>
+<li>
+<a href="/about/">
+<svg class="icon icon-tabler icon-tabler-user" fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+<path d="M0 0h24v24H0z" stroke="none"></path>
+<circle cx="12" cy="7" r="4"></circle>
+<path d="M6 21v-2a4 4 0 0 1 4 -4h4a4 4 0 0 1 4 4v2"></path>
+</svg>
+<span>关于</span>
+</a>
+</li>
+<li>
+<a href="/idx/">
+<svg class="icon icon-tabler icon-tabler-hash" fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+<path d="M0 0h24v24H0z" stroke="none"></path>
+<line x1="5" x2="19" y1="9" y2="9"></line>
+<line x1="5" x2="19" y1="15" y2="15"></line>
+<line x1="11" x2="7" y1="4" y2="20"></line>
+<line x1="17" x2="13" y1="4" y2="20"></line>
+</svg>
+<span>导航</span>
+</a>
+</li>
+<li>
+<a href="/archives/">
+<svg class="icon icon-tabler icon-tabler-archive" fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+<path d="M0 0h24v24H0z" stroke="none"></path>
+<rect height="4" rx="2" width="18" x="3" y="4"></rect>
+<path d="M5 8v10a2 2 0 0 0 2 2h10a2 2 0 0 0 2 -2v-10"></path>
+<line x1="10" x2="14" y1="12" y2="12"></line>
+</svg>
+<span>归档</span>
+</a>
+</li>
+<li>
+<a href="/search/">
+<svg class="icon icon-tabler icon-tabler-search" fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+<path d="M0 0h24v24H0z" stroke="none"></path>
+<circle cx="10" cy="10" r="7"></circle>
+<line x1="21" x2="15" y1="21" y2="15"></line>
+</svg>
+<span>搜索</span>
+</a>
+</li>
+<li>
+<a href="/friends/">
+<svg class="icon icon-tabler icon-tabler-link" fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+<path d="M0 0h24v24H0z" stroke="none"></path>
+<path d="M10 14a3.5 3.5 0 0 0 5 0l4 -4a3.5 3.5 0 0 0 -5 -5l-.5 .5"></path>
+<path d="M14 10a3.5 3.5 0 0 0 -5 0l-4 4a3.5 3.5 0 0 0 5 5l.5 -.5"></path>
+</svg>
+<span>友链</span>
+</a>
+</li>
+<li>
+<a href="https://blog.imyangty.com" target="_blank">
+<svg class="icon icon-tabler icon-tabler-home" fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+<path d="M0 0h24v24H0z" stroke="none"></path>
+<polyline points="5 12 3 12 12 3 21 12 19 12"></polyline>
+<path d="M5 12v7a2 2 0 0 0 2 2h10a2 2 0 0 0 2 -2v-7"></path>
+<path d="M9 21v-6a2 2 0 0 1 2 -2h2a2 2 0 0 1 2 2v6"></path>
+</svg>
+<span>主博客</span>
+</a>
+</li>
+<div class="menu-bottom-section">
+<li id="dark-mode-toggle">
+<svg class="icon icon-tabler icon-tabler-toggle-left" fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+<path d="M0 0h24v24H0z" stroke="none"></path>
+<circle cx="8" cy="12" r="2"></circle>
+<rect height="12" rx="6" width="20" x="2" y="6"></rect>
+</svg>
+<svg class="icon icon-tabler icon-tabler-toggle-right" fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+<path d="M0 0h24v24H0z" stroke="none"></path>
+<circle cx="16" cy="12" r="2"></circle>
+<rect height="12" rx="6" width="20" x="2" y="6"></rect>
+</svg>
+<span>暗色模式</span>
+</li>
+</div>
+</ol>
+</aside>
+<main class="main full-width">
+<article class="has-image main-article">
+<header class="article-header">
+<div class="article-image">
+<a href="/travels-csps2021/">
+<img alt="Featured image of post CSP-S 2021 游记兼近况回忆" loading="lazy" src="https://yangty-pic.oss-cn-beijing.aliyuncs.com/bg22.webp"/>
+</a>
+</div>
+<div class="article-details">
+<header class="article-category">
+<a href="/categories/oi/">
+                OI
+            </a>
+<a href="/categories/travels/">
+                游记
+            </a>
+</header>
+<div class="article-title-wrapper">
+<h2 class="article-title">
+<a href="/travels-csps2021/">CSP-S 2021 游记兼近况回忆</a>
+</h2>
+</div>
+<footer class="article-time">
+<div>
+<svg class="icon icon-tabler icon-tabler-calendar-time" fill="none" height="56" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="56" xmlns="http://www.w3.org/2000/svg">
+<path d="M0 0h24v24H0z" stroke="none"></path>
+<path d="M11.795 21h-6.795a2 2 0 0 1 -2 -2v-12a2 2 0 0 1 2 -2h12a2 2 0 0 1 2 2v4"></path>
+<circle cx="18" cy="18" r="4"></circle>
+<path d="M15 3v4"></path>
+<path d="M7 3v4"></path>
+<path d="M3 11h16"></path>
+<path d="M18 16.496v1.504l1 1"></path>
+</svg>
+<time class="article-time--published">Sep 27, 2021</time>
+</div>
+<div>
+<svg class="icon icon-tabler icon-tabler-clock" fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+<path d="M0 0h24v24H0z" stroke="none"></path>
+<circle cx="12" cy="12" r="9"></circle>
+<polyline points="12 7 12 12 15 15"></polyline>
+</svg>
+<time class="article-time--reading">
+                    阅读时长: 1 分钟
+                </time>
+</div>
+</footer>
+</div>
+</header>
+<section class="article-content">
+<h2 id="前言">前言</h2>
+<p>三年 OI，成败在此一举。</p>
+<p>初三时看着高二学长们的辛酸百态，“自己还年轻”的心态留到了现在，然而高二这个身份总是能给我当头一棒。</p>
+<p>高一的 CSP-S T2 MLE 惨丢 <span class="math inline">\(100\)</span>pts，NOIP 什么都不会甚至挂到了两位数，省选被 D2T1 的数据背刺了 <span class="math inline">\(90\)</span>pts 直接失去省队资格。是时我也差点 AFO，当天下午翘掉了音乐信息自习课在机房发呆的情形仍历历在目，洛谷主页上当时写的 <code>## AFO</code> 现在还在最显眼的位置。</p>
+<p>暑假，Asd_Okuu 从余姚抱回来了块 Ag，而我还在正睿的集训教室抱怨着听不懂 SAM。暑假集训被吊锤让我对自己究竟适不适合 OI 的怀疑又平添一分。</p>
+<p>高二开学，时间不够用，文化课变难，睡眠质量日渐变差，题目做不动，知识学不走。</p>
+<p>但放眼望着跟我一样的同行者们和自己从 19 年 5 月坚持到现在的成就，突然又不想放弃。</p>
+<p>抓住最后的机会，放手一搏。</p>
+<p>为了自己的热爱和梦想。</p>
+<h2 id="初赛-day-0">初赛 Day 0</h2>
+<p>中秋调休，返家。</p>
+<p>中午和 Dr. Chou 聊了挺多，得知物竞的一些惊天黑幕。</p>
+<p>希望明天的物竞复赛 Dr. Chou 能取得满意的结果吧。热爱物理的人应该要有好结局，他是我从初中钦佩到现在的一个好学长。</p>
+<p>地铁上随便扫了几眼复习资料。有计组原理，排列组合，甚至还有当年十分认真的手写笔记。</p>
+<p>依稀记得印这些复习资料是 19 年的 CSP-J 前夕。当时还花了不少心思准备初赛，组合题当时于我简直于天书。2 年过去了啊。当时的热爱还是不减。</p>
+<p>这些资料，以后再也不会用到了。</p>
+<p>睡的挺晚。</p>
+<h2 id="初赛-day-1">初赛 Day 1</h2>
+<p>物竞开考的更早，说明我面基不到 Dr. Chou 了。坏啊（最后一次见居然是初三？）</p>
+<p>进考场，签健康承诺书。贵州师院还是熟悉的样子，只是考试的楼发生了变化罢了。走进去的时候突然又回想起两年来在这里经历的欣喜与沮丧。</p>
+<p>开题。</p>
+<p>貌似有点不简单。</p>
+<p>组合题不会做。</p>
+<p>居然手推分层图最短路。</p>
+<p>阅读程序看不懂。</p>
+<p>完形填空居然有四毛子算法。</p>
+<p>草草收场。</p>
+<p>好啊，阅读理解第一题居然是 GSS1，第二题居然是 Base64，妙啊。</p>
+<p>第五题错了，妙啊。</p>
+<p>估分 70 多了。</p>
+<p>下午靠打球转移注意力了。</p>
+<p>虽说贵州有分就能进复赛，但是最后一年了，还是没能留下满意的结局。</p>
+<p>哎。</p>
+<h2 id="初赛-day">初赛 Day ?</h2>
+<p>停课的事情一直没影子。本来打算国庆之后停课一个月的，教练却让我们继续权衡文化课。</p>
+<p>要回老家，十一集训的效果还是个未知数。</p>
+<p>出分了，Asd_Okuu <span class="math inline">\(83\)</span>，我 <span class="math inline">\(73.5\)</span>，分别拿下 GZ 的前两名。</p>
+<p>庆幸自己没下 <span class="math inline">\(70\)</span> 吧。</p>
+<p>机房也没了，在班上敲代码的感觉总是怪怪的。</p>
+<p>开补历年 NOIP，发现不简单啊。</p>
+<p>烦。</p>
+<h2 id="国庆假期">国庆假期</h2>
+<p>参加了 ZR 的十一峰会。但是 Day 4 和 Day 5 的杂题选讲听的效果很不好，不知道是老师的问题还是我的问题。Day 2 lk 的杂题就十分良心。</p>
+<p>也挺累的，但最爽的是打了场 CF，赛时推出了 C 题正确的结论还 1A 掉了，可惜被降智以为 D 是链分治结果就是欧拉序上二分。但还是上了分。</p>
+<p>群论看不懂。</p>
+<p>但是停课敲定了。</p>
+<p>停课的感觉好奇妙啊。当我看着一字未动的国庆作业以及 QQ 群上同学们返校的种种信息时，不由心生感慨。</p>
+<h2 id="停课生活">停课生活</h2>
+<p>模拟赛被锤爆了，颓。就这样。</p>
+<p>我是废物。</p>
+<h2 id="day-0">Day 0</h2>
+<p>取消了，本游记完结。</p>
+<p>HN GS GZ NX MO NM 六省区阵亡。</p>
+<p>疫情。哎。。</p>
+</section>
+<footer class="article-footer">
+<section class="article-tags">
+<a href="/tags/OI/">OI</a>
+<a href="/tags/travels/">游记</a>
+</section>
+<section class="article-copyright">
+<svg class="icon icon-tabler icon-tabler-copyright" fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+<path d="M0 0h24v24H0z" stroke="none"></path>
+<circle cx="12" cy="12" r="9"></circle>
+<path d="M14.5 9a3.5 4 0 1 0 0 6"></path>
+</svg>
+<span>Licensed under CC BY-NC-SA 4.0</span>
+</section>
+</footer>
+<link crossorigin="anonymous" href="https://cdn.jsdelivr.net/npm/katex@0.13.13/dist/katex.min.css" integrity="sha384-RZU/ijkSsFbcmivfdRBQDtwuwVqK7GMOw6IMvKyeWL2K5UAlyp6WonmB8m7Jd0Hn" rel="stylesheet"/><script crossorigin="anonymous" defer="" integrity="sha384-pK1WpvzWVBQiP0/GjnvRxV4mOb0oxFuyRxJlk6vVw146n3egcN5C925NCP7a7BY8" src="https://cdn.jsdelivr.net/npm/katex@0.13.13/dist/katex.min.js">
+</script><script crossorigin="anonymous" defer="" integrity="sha384-vZTG03m+2yp6N6BNi5iM4rW4oIwk5DfcNdFfxkk9ZWpDriOkXX8voJBFrAO7MpVl" src="https://cdn.jsdelivr.net/npm/katex@0.13.13/dist/contrib/auto-render.min.js">
+</script><script>
+    window.addEventListener("DOMContentLoaded", () => {
+        renderMathInElement(document.querySelector(`.article-content`), {
+            delimiters: [
+                { left: "$$", right: "$$", display: true },
+                { left: "$", right: "$", display: false },
+                { left: "\\(", right: "\\)", display: false },
+                { left: "\\[", right: "\\]", display: true }
+            ]
+        });})
+</script>
+</article>
+<aside class="related-contents--wrapper">
+<h2 class="section-title">相关文章</h2>
+<div class="related-contents">
+<div class="flex article-list--tile">
+<article class="has-image">
+<a href="/travels-noi2022/">
+<div class="article-image">
+<img data-hash="https://yangty-pic.oss-cn-beijing.aliyuncs.com/bg01.webp" data-key="" loading="lazy" src="https://yangty-pic.oss-cn-beijing.aliyuncs.com/bg01.webp"/>
+</div>
+<div class="article-details">
+<h2 class="article-title">NOI2022 游记</h2>
+</div>
+</a>
+</article>
+<article class="has-image">
+<a href="/travels-noip2021/">
+<div class="article-image">
+<img data-hash="https://yangty-pic.oss-cn-beijing.aliyuncs.com/bg27.webp" data-key="" loading="lazy" src="https://yangty-pic.oss-cn-beijing.aliyuncs.com/bg27.webp"/>
+</div>
+<div class="article-details">
+<h2 class="article-title">NOIP 2021 游记</h2>
+</div>
+</a>
+</article>
+<article class="has-image">
+<a href="/travels-gzoi2021/">
+<div class="article-image">
+<img data-hash="https://yangty-pic.oss-cn-beijing.aliyuncs.com/bg23.webp" data-key="" loading="lazy" src="https://yangty-pic.oss-cn-beijing.aliyuncs.com/bg23.webp"/>
+</div>
+<div class="article-details">
+<h2 class="article-title">CCF NOI 2021 统一省选退役记（GZOI2021）</h2>
+</div>
+</a>
+</article>
+<article class="has-image">
+<a href="/travels-wc2021/">
+<div class="article-image">
+<img data-hash="https://yangty-pic.oss-cn-beijing.aliyuncs.com/bg28.webp" data-key="" loading="lazy" src="https://yangty-pic.oss-cn-beijing.aliyuncs.com/bg28.webp"/>
+</div>
+<div class="article-details">
+<h2 class="article-title">WC2021 游记</h2>
+</div>
+</a>
+</article>
+<article class="has-image">
+<a href="/travels-noip2020/">
+<div class="article-image">
+<img data-hash="https://yangty-pic.oss-cn-beijing.aliyuncs.com/bg26.webp" data-key="" loading="lazy" src="https://yangty-pic.oss-cn-beijing.aliyuncs.com/bg26.webp"/>
+</div>
+<div class="article-details">
+<h2 class="article-title">NOIP 2020 退役记</h2>
+</div>
+</a>
+</article>
+</div>
+</div>
+</aside>
+<footer class="site-footer">
+<section class="copyright">
+        © 
+        
+            2019 - 
+        
+        2024 清烛的博客
+    </section>
+<section class="powerby">
+        Built with <a href="https://gohugo.io/" rel="noopener" target="_blank">Hugo</a> <br/>
+        主题 <b><a data-version="3.11.0" href="https://github.com/CaiJimmy/hugo-theme-stack" rel="noopener" target="_blank">Stack</a></b> 由 <a href="https://jimmycai.com" rel="noopener" target="_blank">Jimmy</a> 设计
+    </section>
+</footer>
+<div aria-hidden="true" class="pswp" role="dialog" tabindex="-1">
+<div class="pswp__bg"></div>
+<div class="pswp__scroll-wrap">
+<div class="pswp__container">
+<div class="pswp__item"></div>
+<div class="pswp__item"></div>
+<div class="pswp__item"></div>
+</div>
+<div class="pswp__ui pswp__ui--hidden">
+<div class="pswp__top-bar">
+<div class="pswp__counter"></div>
+<button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+<button class="pswp__button pswp__button--share" title="Share"></button>
+<button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+<button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+<div class="pswp__preloader">
+<div class="pswp__preloader__icn">
+<div class="pswp__preloader__cut">
+<div class="pswp__preloader__donut"></div>
+</div>
+</div>
+</div>
+</div>
+<div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+<div class="pswp__share-tooltip"></div>
+</div>
+<button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+</button>
+<button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+</button>
+<div class="pswp__caption">
+<div class="pswp__caption__center"></div>
+</div>
+</div>
+</div>
+</div><script crossorigin="anonymous" defer="" integrity="sha256-ePwmChbbvXbsO02lbM3HoHbSHTHFAeChekF1xKJdleo=" src="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe.min.js">
+</script><script crossorigin="anonymous" defer="" integrity="sha256-UKkzOn/w1mBxRmLLGrSeyB4e1xbrp4xylgAWb3M42pU=" src="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe-ui-default.min.js">
+</script><link crossorigin="anonymous" href="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/default-skin/default-skin.css" integrity="sha256-c0uckgykQ9v5k+IqViZOZKc47Jn7KQil4/MP3ySA3F8=" rel="stylesheet"/><link crossorigin="anonymous" href="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe.css" integrity="sha256-SBLU4vv6CA6lHsZ1XyTdhyjJxCjPif/TRkjnsyGAGnE=" rel="stylesheet"/>
+</main>
+</div>
+<script crossorigin="anonymous" integrity="sha256-5NovOZc4iwiAWTYIFiIM7DxKUXKWvpVEuMEPLzcm5/g=" src="https://cdn.jsdelivr.net/npm/node-vibrant@3.1.5/dist/vibrant.min.js">
+</script><script defer="" src="/ts/main.js" type="text/javascript"></script>
+<script>
+    (function () {
+        const customFont = document.createElement('link');
+        customFont.href = "https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&display=swap";
+
+        customFont.type = "text/css";
+        customFont.rel = "stylesheet";
+
+        document.head.appendChild(customFont);
+    }());
+</script>
+</body>
+</html>

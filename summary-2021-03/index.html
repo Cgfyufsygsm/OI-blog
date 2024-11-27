@@ -1,0 +1,673 @@
+<!DOCTYPE html>
+<html dir="ltr" lang="zh-CN">
+<head><meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1" name="viewport"/><meta content="前言 联合省选 rp++ 不想开学/kk
+学习内容 分数规划 整体二分 cdq 分治 Matrix-Tree 定理 Borůvka 算法 长链剖分 dsu on tree 点分治 做题记录 21/03/01 CF126B Password KMP 算法的理解问题，找到 \(\max_{1\le i\lt n}fail_i\)，然后判定哪个最长的 Border 能作为答案即可。
+21/03/02 P3435 [POI2006]OKR-Periods of Words 涉及到 KMP 的理解。需要求出每个前缀的最小 Border——直接跳 fail 跳到 fail = 0 即可，但是不能暴跳，需要记忆化递推。
+P3538 [POI2012]OKR-A Horrible Poem 字符串哈希判循环串模板。考虑枚举循环节的长度（分解质因数），然后通过哈希实现判定
+P4503 [CTSC2014]企鹅QQ 哈希，枚举每一位判定即可，通过 sort 加速判断。
+P1659 [国家集训队]拉拉队排练 manacher 求奇数长度回文串，需要前缀和一下而且还要快速幂
+21/03/03 LOJ#149. 01 分数规划 01 分数规划裸题，二分答案
+P1404 平均数 01 分数规划
+P4377 [USACO18OPEN]Talent Show G 01 分数规划套了个背包而已" name="description"/><title>2021年3月 OI学习记录</title>
+<link href="https://oi.imyangty.com/summary-2021-03/" rel="canonical"/>
+<link href="/scss/style.min.a5821f3d3ab84ce5a0ac21477e347a2e0ca00292e398d16c5e8e36ded6e35a23.css" rel="stylesheet"/><meta content="2021年3月 OI学习记录" property="og:title"/>
+<meta content="前言 联合省选 rp++ 不想开学/kk
+学习内容 分数规划 整体二分 cdq 分治 Matrix-Tree 定理 Borůvka 算法 长链剖分 dsu on tree 点分治 做题记录 21/03/01 CF126B Password KMP 算法的理解问题，找到 \(\max_{1\le i\lt n}fail_i\)，然后判定哪个最长的 Border 能作为答案即可。
+21/03/02 P3435 [POI2006]OKR-Periods of Words 涉及到 KMP 的理解。需要求出每个前缀的最小 Border——直接跳 fail 跳到 fail = 0 即可，但是不能暴跳，需要记忆化递推。
+P3538 [POI2012]OKR-A Horrible Poem 字符串哈希判循环串模板。考虑枚举循环节的长度（分解质因数），然后通过哈希实现判定
+P4503 [CTSC2014]企鹅QQ 哈希，枚举每一位判定即可，通过 sort 加速判断。
+P1659 [国家集训队]拉拉队排练 manacher 求奇数长度回文串，需要前缀和一下而且还要快速幂
+21/03/03 LOJ#149. 01 分数规划 01 分数规划裸题，二分答案
+P1404 平均数 01 分数规划
+P4377 [USACO18OPEN]Talent Show G 01 分数规划套了个背包而已" property="og:description"/>
+<meta content="https://oi.imyangty.com/summary-2021-03/" property="og:url"/>
+<meta content="清烛的博客" property="og:site_name"/>
+<meta content="article" property="og:type"/><meta content="Post" property="article:section"/><meta content="OI" property="article:tag"/><meta content="2021-03-01T22:33:25+08:00" property="article:published_time"/><meta content="2021-03-01T22:33:25+08:00" property="article:modified_time"/><meta content="https://yangty-pic.oss-cn-beijing.aliyuncs.com/bg56.webp" property="og:image"/>
+<meta content="2021年3月 OI学习记录" name="twitter:title"/>
+<meta content="前言 联合省选 rp++ 不想开学/kk
+学习内容 分数规划 整体二分 cdq 分治 Matrix-Tree 定理 Borůvka 算法 长链剖分 dsu on tree 点分治 做题记录 21/03/01 CF126B Password KMP 算法的理解问题，找到 \(\max_{1\le i\lt n}fail_i\)，然后判定哪个最长的 Border 能作为答案即可。
+21/03/02 P3435 [POI2006]OKR-Periods of Words 涉及到 KMP 的理解。需要求出每个前缀的最小 Border——直接跳 fail 跳到 fail = 0 即可，但是不能暴跳，需要记忆化递推。
+P3538 [POI2012]OKR-A Horrible Poem 字符串哈希判循环串模板。考虑枚举循环节的长度（分解质因数），然后通过哈希实现判定
+P4503 [CTSC2014]企鹅QQ 哈希，枚举每一位判定即可，通过 sort 加速判断。
+P1659 [国家集训队]拉拉队排练 manacher 求奇数长度回文串，需要前缀和一下而且还要快速幂
+21/03/03 LOJ#149. 01 分数规划 01 分数规划裸题，二分答案
+P1404 平均数 01 分数规划
+P4377 [USACO18OPEN]Talent Show G 01 分数规划套了个背包而已" name="twitter:description"/><meta content="summary_large_image" name="twitter:card"/>
+<meta content="https://yangty-pic.oss-cn-beijing.aliyuncs.com/bg56.webp" name="twitter:image"/>
+<link href="https://q1.qlogo.cn/g?b=qq&amp;nk=375836877&amp;s=5" rel="shortcut icon"/>
+<link href="https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.5.1/build/styles/github-dark-dimmed.min.css" rel="stylesheet"/>
+<script src="https://cdn.jsdelivr.net/gh/highlightjs/cdn-release/build/highlight.min.js"></script>
+<script>hljs.highlightAll();</script>
+</head>
+<body class="article-page">
+<script>
+        (function() {
+            const colorSchemeKey = 'StackColorScheme';
+            if(!localStorage.getItem(colorSchemeKey)){
+                localStorage.setItem(colorSchemeKey, "auto");
+            }
+        })();
+    </script><script>
+    (function() {
+        const colorSchemeKey = 'StackColorScheme';
+        const colorSchemeItem = localStorage.getItem(colorSchemeKey);
+        const supportDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches === true;
+
+        if (colorSchemeItem == 'dark' || colorSchemeItem === 'auto' && supportDarkMode) {
+            
+
+            document.documentElement.dataset.scheme = 'dark';
+        } else {
+            document.documentElement.dataset.scheme = 'light';
+        }
+    })();
+</script>
+<div class="container main-container flex on-phone--column extended"><aside class="sidebar left-sidebar sticky">
+<button aria-label="切换菜单" class="hamburger hamburger--spin" id="toggle-menu" type="button">
+<span class="hamburger-box">
+<span class="hamburger-inner"></span>
+</span>
+</button>
+<header>
+<figure class="site-avatar">
+<a href="/">
+<img alt="Avatar" class="site-logo" height="300" loading="lazy" src="/img/avatar_huea3ce2119467b51fdd2a81393644a76d_51594_300x0_resize_q75_box.jpg" width="300"/>
+</a>
+<span class="emoji">😅</span>
+</figure>
+<div class="site-meta">
+<h1 class="site-name"><a href="/">清烛的博客</a></h1>
+<h2 class="site-description">烟火已谢，笙歌未停</h2>
+</div>
+</header><ol class="social-menu">
+<li>
+<a href="mailto:i@imyangty.com" target="_blank" title="email">
+<svg class="icon icon-tabler icon-tabler-mail" fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" viewbox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+<path d="M0 0h24v24H0z" fill="none" stroke="none"></path>
+<rect height="14" rx="2" width="18" x="3" y="5"></rect>
+<polyline points="3 7 12 13 21 7"></polyline>
+</svg>
+</a>
+</li>
+<li>
+<a href="https://github.com/Cgfyufsygsm" target="_blank" title="GitHub">
+<svg class="icon icon-tabler icon-tabler-brand-github" fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+<path d="M0 0h24v24H0z" fill="none" stroke="none"></path>
+<path d="M9 19c-4.3 1.4 -4.3 -2.5 -6 -3m12 5v-3.5c0 -1 .1 -1.4 -.5 -2c2.8 -.3 5.5 -1.4 5.5 -6a4.6 4.6 0 0 0 -1.3 -3.2a4.2 4.2 0 0 0 -.1 -3.2s-1.1 -.3 -3.5 1.3a12.3 12.3 0 0 0 -6.2 0c-2.4 -1.6 -3.5 -1.3 -3.5 -1.3a4.2 4.2 0 0 0 -.1 3.2a4.6 4.6 0 0 0 -1.3 3.2c0 4.6 2.7 5.7 5.5 6c-.6 .6 -.6 1.2 -.5 2v3.5"></path>
+</svg>
+</a>
+</li>
+<li>
+<a href="https://t.me/Cgfyufsygsm" target="_blank" title="Telegram">
+<svg class="icon icon-tabler icon-tabler-brand-telegram" fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" viewbox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+<path d="M0 0h24v24H0z" fill="none" stroke="none"></path>
+<path d="M15 10l-4 4l6 6l4 -16l-18 7l4 2l2 6l3 -4"></path>
+</svg>
+</a>
+</li>
+<li>
+<a href="https://twitter.com/Cgfyufsygsm" target="_blank" title="Twitter">
+<svg class="icon icon-tabler icon-tabler-brand-twitter" fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+<path d="M0 0h24v24H0z" fill="none" stroke="none"></path>
+<path d="M22 4.01c-1 .49 -1.98 .689 -3 .99c-1.121 -1.265 -2.783 -1.335 -4.38 -.737s-2.643 2.06 -2.62 3.737v1c-3.245 .083 -6.135 -1.395 -8 -4c0 0 -4.182 7.433 4 11c-1.872 1.247 -3.739 2.088 -6 2c3.308 1.803 6.913 2.423 10.034 1.517c3.58 -1.04 6.522 -3.723 7.651 -7.742a13.84 13.84 0 0 0 .497 -3.753c-.002 -.249 1.51 -2.772 1.818 -4.013z"></path>
+</svg>
+</a>
+</li>
+</ol><ol class="menu" id="main-menu">
+<li>
+<a href="/">
+<svg class="icon icon-tabler icon-tabler-home" fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+<path d="M0 0h24v24H0z" stroke="none"></path>
+<polyline points="5 12 3 12 12 3 21 12 19 12"></polyline>
+<path d="M5 12v7a2 2 0 0 0 2 2h10a2 2 0 0 0 2 -2v-7"></path>
+<path d="M9 21v-6a2 2 0 0 1 2 -2h2a2 2 0 0 1 2 2v6"></path>
+</svg>
+<span>主页</span>
+</a>
+</li>
+<li>
+<a href="/about/">
+<svg class="icon icon-tabler icon-tabler-user" fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+<path d="M0 0h24v24H0z" stroke="none"></path>
+<circle cx="12" cy="7" r="4"></circle>
+<path d="M6 21v-2a4 4 0 0 1 4 -4h4a4 4 0 0 1 4 4v2"></path>
+</svg>
+<span>关于</span>
+</a>
+</li>
+<li>
+<a href="/idx/">
+<svg class="icon icon-tabler icon-tabler-hash" fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+<path d="M0 0h24v24H0z" stroke="none"></path>
+<line x1="5" x2="19" y1="9" y2="9"></line>
+<line x1="5" x2="19" y1="15" y2="15"></line>
+<line x1="11" x2="7" y1="4" y2="20"></line>
+<line x1="17" x2="13" y1="4" y2="20"></line>
+</svg>
+<span>导航</span>
+</a>
+</li>
+<li>
+<a href="/archives/">
+<svg class="icon icon-tabler icon-tabler-archive" fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+<path d="M0 0h24v24H0z" stroke="none"></path>
+<rect height="4" rx="2" width="18" x="3" y="4"></rect>
+<path d="M5 8v10a2 2 0 0 0 2 2h10a2 2 0 0 0 2 -2v-10"></path>
+<line x1="10" x2="14" y1="12" y2="12"></line>
+</svg>
+<span>归档</span>
+</a>
+</li>
+<li>
+<a href="/search/">
+<svg class="icon icon-tabler icon-tabler-search" fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+<path d="M0 0h24v24H0z" stroke="none"></path>
+<circle cx="10" cy="10" r="7"></circle>
+<line x1="21" x2="15" y1="21" y2="15"></line>
+</svg>
+<span>搜索</span>
+</a>
+</li>
+<li>
+<a href="/friends/">
+<svg class="icon icon-tabler icon-tabler-link" fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+<path d="M0 0h24v24H0z" stroke="none"></path>
+<path d="M10 14a3.5 3.5 0 0 0 5 0l4 -4a3.5 3.5 0 0 0 -5 -5l-.5 .5"></path>
+<path d="M14 10a3.5 3.5 0 0 0 -5 0l-4 4a3.5 3.5 0 0 0 5 5l.5 -.5"></path>
+</svg>
+<span>友链</span>
+</a>
+</li>
+<li>
+<a href="https://blog.imyangty.com" target="_blank">
+<svg class="icon icon-tabler icon-tabler-home" fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+<path d="M0 0h24v24H0z" stroke="none"></path>
+<polyline points="5 12 3 12 12 3 21 12 19 12"></polyline>
+<path d="M5 12v7a2 2 0 0 0 2 2h10a2 2 0 0 0 2 -2v-7"></path>
+<path d="M9 21v-6a2 2 0 0 1 2 -2h2a2 2 0 0 1 2 2v6"></path>
+</svg>
+<span>主博客</span>
+</a>
+</li>
+<div class="menu-bottom-section">
+<li id="dark-mode-toggle">
+<svg class="icon icon-tabler icon-tabler-toggle-left" fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+<path d="M0 0h24v24H0z" stroke="none"></path>
+<circle cx="8" cy="12" r="2"></circle>
+<rect height="12" rx="6" width="20" x="2" y="6"></rect>
+</svg>
+<svg class="icon icon-tabler icon-tabler-toggle-right" fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+<path d="M0 0h24v24H0z" stroke="none"></path>
+<circle cx="16" cy="12" r="2"></circle>
+<rect height="12" rx="6" width="20" x="2" y="6"></rect>
+</svg>
+<span>暗色模式</span>
+</li>
+</div>
+</ol>
+</aside>
+<main class="main full-width">
+<article class="has-image main-article">
+<header class="article-header">
+<div class="article-image">
+<a href="/summary-2021-03/">
+<img alt="Featured image of post 2021年3月 OI学习记录" loading="lazy" src="https://yangty-pic.oss-cn-beijing.aliyuncs.com/bg56.webp"/>
+</a>
+</div>
+<div class="article-details">
+<header class="article-category">
+<a href="/categories/oi/">
+                OI
+            </a>
+<a href="/categories/summary/">
+                总结
+            </a>
+</header>
+<div class="article-title-wrapper">
+<h2 class="article-title">
+<a href="/summary-2021-03/">2021年3月 OI学习记录</a>
+</h2>
+</div>
+<footer class="article-time">
+<div>
+<svg class="icon icon-tabler icon-tabler-calendar-time" fill="none" height="56" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="56" xmlns="http://www.w3.org/2000/svg">
+<path d="M0 0h24v24H0z" stroke="none"></path>
+<path d="M11.795 21h-6.795a2 2 0 0 1 -2 -2v-12a2 2 0 0 1 2 -2h12a2 2 0 0 1 2 2v4"></path>
+<circle cx="18" cy="18" r="4"></circle>
+<path d="M15 3v4"></path>
+<path d="M7 3v4"></path>
+<path d="M3 11h16"></path>
+<path d="M18 16.496v1.504l1 1"></path>
+</svg>
+<time class="article-time--published">Mar 01, 2021</time>
+</div>
+<div>
+<svg class="icon icon-tabler icon-tabler-clock" fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+<path d="M0 0h24v24H0z" stroke="none"></path>
+<circle cx="12" cy="12" r="9"></circle>
+<polyline points="12 7 12 12 15 15"></polyline>
+</svg>
+<time class="article-time--reading">
+                    阅读时长: 2 分钟
+                </time>
+</div>
+</footer>
+</div>
+</header>
+<section class="article-content">
+<h2 id="前言">前言</h2>
+<p>联合省选 rp++ 不想开学/kk</p>
+<h2 id="学习内容">学习内容</h2>
+<ul>
+<li>分数规划</li>
+<li>整体二分</li>
+<li>cdq 分治</li>
+<li>Matrix-Tree 定理</li>
+<li>Borůvka 算法</li>
+<li>长链剖分</li>
+<li>dsu on tree</li>
+<li>点分治</li>
+</ul>
+<h2 id="做题记录">做题记录</h2>
+<h3 id="section">21/03/01</h3>
+<ul>
+<li><strong>CF126B Password</strong></li>
+</ul>
+<p>KMP 算法的理解问题，找到 <span class="math inline">\(\max_{1\le i\lt n}fail_i\)</span>，然后判定哪个最长的 Border 能作为答案即可。</p>
+<h3 id="section-1">21/03/02</h3>
+<ul>
+<li><strong>P3435 [POI2006]OKR-Periods of Words</strong></li>
+</ul>
+<p>涉及到 KMP 的理解。需要求出每个前缀的最小 Border——直接跳 fail 跳到 fail = 0 即可，但是不能暴跳，需要记忆化递推。</p>
+<ul>
+<li><strong>P3538 [POI2012]OKR-A Horrible Poem</strong></li>
+</ul>
+<p>字符串哈希判循环串模板。考虑枚举循环节的长度（分解质因数），然后通过哈希实现判定</p>
+<ul>
+<li><strong>P4503 [CTSC2014]企鹅QQ</strong></li>
+</ul>
+<p>哈希，枚举每一位判定即可，通过 sort 加速判断。</p>
+<ul>
+<li><strong>P1659 [国家集训队]拉拉队排练</strong></li>
+</ul>
+<p>manacher 求奇数长度回文串，需要前缀和一下而且还要快速幂</p>
+<h3 id="section-2">21/03/03</h3>
+<ul>
+<li><strong>LOJ#149. 01 分数规划</strong></li>
+</ul>
+<p>01 分数规划裸题，二分答案</p>
+<ul>
+<li><strong>P1404 平均数</strong></li>
+</ul>
+<p>01 分数规划</p>
+<ul>
+<li><strong>P4377 [USACO18OPEN]Talent Show G</strong></li>
+</ul>
+<p>01 分数规划套了个背包而已</p>
+<ul>
+<li><strong>UVA11475 Extend to Palindrome</strong></li>
+</ul>
+<p>求一个最长回文后缀即可</p>
+<h3 id="section-3">21/03/04</h3>
+<ul>
+<li><strong>P4824 [USACO15FEB]Censoring S</strong></li>
+</ul>
+<p>KMP + 栈</p>
+<h3 id="section-4">21/03/05</h3>
+<ul>
+<li><strong>P3121 [USACO15FEB]Censoring G</strong></li>
+</ul>
+<p>上题的 AC 自动机版本</p>
+<h3 id="section-5">21/03/06</h3>
+<ul>
+<li><strong>CF526D Om Nom and Necklace</strong></li>
+</ul>
+<p>KMP 循环节</p>
+<ul>
+<li><strong>P3193 [HNOI2008]GT考试</strong></li>
+</ul>
+<p><a href="https://imyangty.com/oi/1319" title="KMP + 矩阵快速幂加速 dp">KMP + 矩阵快速幂加速 dp</a></p>
+<ul>
+<li><strong>Codeforces Round #705 (Div. 2)</strong></li>
+</ul>
+<p>A + B + D rk1057</p>
+<h3 id="section-6">21/03/07</h3>
+<ul>
+<li><strong>U155026 给给</strong></li>
+</ul>
+<p>紫书题变种</p>
+<ul>
+<li><strong>P4986 逃离</strong></li>
+</ul>
+<p>牛顿迭代法</p>
+<h3 id="section-7">21/03/09</h3>
+<ul>
+<li><strong>P7115 [NOIP2020] 移球游戏</strong></li>
+</ul>
+<p>构造</p>
+<ul>
+<li><strong>CF622F The Sum of the k-th Powers</strong></li>
+</ul>
+<p>拉格朗日插值</p>
+<h3 id="section-8">21/03/10</h3>
+<ul>
+<li><strong>P2055 [ZJOI2009]假期的宿舍</strong></li>
+</ul>
+<p>最大流</p>
+<ul>
+<li><strong>Codeforces Round #706 (Div. 2)</strong></li>
+</ul>
+<p>A + B+ C</p>
+<h3 id="section-9">21/03/11</h3>
+<ul>
+<li><strong>CF1495B Let’s Go Hiking</strong></li>
+</ul>
+<p>博弈论，补题</p>
+<h3 id="section-10">21/03/12</h3>
+<ul>
+<li><strong>CF1495C Garden of the Sun</strong></li>
+</ul>
+<p>构造，赛后补题</p>
+<ul>
+<li><strong>P5431 【模板】乘法逆元2</strong></li>
+</ul>
+<p>氵</p>
+<h3 id="section-11">21/03/13</h3>
+<ul>
+<li><strong>Codeforces Round #707 (Div. 2, based on Moscow Open Olympiad in Informatics)</strong></li>
+</ul>
+<p>A + B</p>
+<ul>
+<li><strong>P5104 红包发红包</strong></li>
+</ul>
+<p>先分析第一个人能得到多少： <span class="math inline">\(\int_0^w \frac 1w x\mathrm dx = \frac w 2\)</span>，所以这样推下去知答案为 <span class="math inline">\(\frac{w}{2^k}\)</span></p>
+<ul>
+<li><strong>CF1500A Going Home</strong></li>
+</ul>
+<p>毒瘤暴力题分析复杂度</p>
+<h3 id="section-12">21/03/15</h3>
+<ul>
+<li><strong>ARC069D Flags</strong></li>
+</ul>
+<p>二分答案 + 线段树优化建图 + <a href="https://imyangty.com/oi/1329" title="2-SAT">2-SAT</a></p>
+<h3 id="section-13">21/03/16</h3>
+<ul>
+<li><strong>POJ 3352 Road Construction</strong></li>
+</ul>
+<p>求最小添加的边数使得去掉所有桥，答案为边双连通分量缩点后叶子的数量加一除以二。</p>
+<h3 id="section-14">21/03/17</h3>
+<ul>
+<li><strong>BZOJ#4398. 福慧双修</strong></li>
+</ul>
+<p>将 1 号点拆点之后二进制分组连边跑最短路保证每对出点都被枚举到。</p>
+<h3 id="section-15">21/03/18</h3>
+<ul>
+<li><strong>P5958 [POI2017]Sabotaż</strong></li>
+</ul>
+<p><span class="math inline">\(f_u = \max\lbrace\min\lbrace \frac{size_v}{size_u - 1}, f_v \rbrace\rbrace\)</span></p>
+<ul>
+<li><strong>P3177 [HAOI2015]树上染色</strong></li>
+</ul>
+<p>毒瘤树形dp，细节繁多，只需考虑每条边产生的贡献。需要注意状态转移的合法性，可以使用 tmp 数组进行暂存</p>
+<h3 id="section-16">21/03/19</h3>
+<ul>
+<li><strong>CF708C Centroids</strong></li>
+</ul>
+<p>换根 dp，考虑找到一个大小大于 n/2 的子树然后将其接走即可</p>
+<ul>
+<li><strong>P2515 [HAOI2010]软件安装</strong></li>
+</ul>
+<p>tarjan 缩点 + 树上背包，注意图不连通的情况，需要特判</p>
+<ul>
+<li><strong>P5304 [GXOI/GZOI2019]旅行者</strong></li>
+</ul>
+<p>二进制分组跑最短路</p>
+<h3 id="section-17">21/03/23</h3>
+<ul>
+<li><strong>P4298 [CTSC2008]祭祀</strong></li>
+</ul>
+<p>构造一个 DAG 的最长反链。</p>
+<ul>
+<li><strong>UVA11419 SAM I AM</strong></li>
+</ul>
+<p>把横行和纵列作为二分图的左部和右部，中间的点连边，跑最小覆盖即可。</p>
+<h3 id="section-18">21/03/24</h3>
+<ul>
+<li><strong>P6062 [USACO05JAN]Muddy Fields G</strong></li>
+</ul>
+<p>把所有极长木板看作点，左右部分别为横和纵</p>
+<ul>
+<li><strong>P7112 【模板】行列式求值</strong></li>
+</ul>
+<p>任意模数行列式求值，考虑两行之间辗转相减</p>
+<h3 id="section-19">21/03/25</h3>
+<ul>
+<li><strong>P6178 【模板】Matrix-Tree 定理</strong></li>
+</ul>
+<p>Matrix-Tree 定理的带权版本</p>
+<ul>
+<li><strong>P4336 [SHOI2016]黑暗前的幻想乡</strong></li>
+</ul>
+<p>Matrix-Tree 加容斥</p>
+<ul>
+<li><strong>P4455 [CQOI2018]社交网络</strong></li>
+</ul>
+<p>Matrix-Tree 模板</p>
+<h3 id="section-20">21/03/27</h3>
+<ul>
+<li><strong>NOI Online #1 提高组</strong></li>
+</ul>
+<p><span class="math inline">\([0, 10] + [80,100] + 20\)</span></p>
+<h3 id="section-21">21/03/28</h3>
+<ul>
+<li><strong>P3810 【模板】三维偏序（陌上花开）</strong></li>
+</ul>
+<p>cdq 分治</p>
+<ul>
+<li><strong>P1429 平面最近点对（加强版）</strong></li>
+</ul>
+<p>平面最近点对，分治法</p>
+<h3 id="section-22">21/03/29</h3>
+<ul>
+<li><strong>HDU4343 Interval query</strong></li>
+</ul>
+<p>倍增优化贪心</p>
+<ul>
+<li><strong>HDU6031 Innumerable Ancestors</strong></li>
+</ul>
+<p>两点集 LCA 查询，树上倍增+二分答案</p>
+<ul>
+<li><strong>P3366 【模板】最小生成树</strong></li>
+</ul>
+<p>Borůvka 算法通过</p>
+<h3 id="section-23">21/03/30</h3>
+<ul>
+<li><strong>CF888G Xor-MST</strong></li>
+</ul>
+<p><a href="https://imyangty.com/oi/1335" title="最小 xor 生成树">最小 xor 生成树</a></p>
+<ul>
+<li><strong>P5903 【模板】树上 k 级祖先</strong></li>
+</ul>
+<p><a href="https://imyangty.com/oi/1336" title="长链剖分">长链剖分</a></p>
+<ul>
+<li><strong>U41492 树上数颜色</strong></li>
+</ul>
+<p>dsu on tree 模板</p>
+<h3 id="section-24">21/03/31</h3>
+<ul>
+<li><strong>CF600E Lomsat gelral</strong></li>
+</ul>
+<p>dsu on tree</p>
+<ul>
+<li><strong>CF570D Tree Requests</strong></li>
+</ul>
+<p>dsu on tree</p>
+<ul>
+<li><strong>LOJ#6669. Nauuo and Binary Tree</strong></li>
+</ul>
+<p><a href="https://imyangty.com/oi/1337" title="交互好题，树链剖分">交互好题，树链剖分</a></p>
+<ul>
+<li><strong>CF1009F Dominant Indices</strong></li>
+</ul>
+<p>长链剖分优化 dp</p>
+<ul>
+<li><strong>P3806 【模板】点分治1</strong></li>
+</ul>
+<p>点分治</p>
+<ul>
+<li><strong>NOIOL 1 0 + 80 + 20 = 100</strong></li>
+</ul>
+</section>
+<footer class="article-footer">
+<section class="article-tags">
+<a href="/tags/OI/">OI</a>
+</section>
+<section class="article-copyright">
+<svg class="icon icon-tabler icon-tabler-copyright" fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+<path d="M0 0h24v24H0z" stroke="none"></path>
+<circle cx="12" cy="12" r="9"></circle>
+<path d="M14.5 9a3.5 4 0 1 0 0 6"></path>
+</svg>
+<span>Licensed under CC BY-NC-SA 4.0</span>
+</section>
+</footer>
+<link crossorigin="anonymous" href="https://cdn.jsdelivr.net/npm/katex@0.13.13/dist/katex.min.css" integrity="sha384-RZU/ijkSsFbcmivfdRBQDtwuwVqK7GMOw6IMvKyeWL2K5UAlyp6WonmB8m7Jd0Hn" rel="stylesheet"/><script crossorigin="anonymous" defer="" integrity="sha384-pK1WpvzWVBQiP0/GjnvRxV4mOb0oxFuyRxJlk6vVw146n3egcN5C925NCP7a7BY8" src="https://cdn.jsdelivr.net/npm/katex@0.13.13/dist/katex.min.js">
+</script><script crossorigin="anonymous" defer="" integrity="sha384-vZTG03m+2yp6N6BNi5iM4rW4oIwk5DfcNdFfxkk9ZWpDriOkXX8voJBFrAO7MpVl" src="https://cdn.jsdelivr.net/npm/katex@0.13.13/dist/contrib/auto-render.min.js">
+</script><script>
+    window.addEventListener("DOMContentLoaded", () => {
+        renderMathInElement(document.querySelector(`.article-content`), {
+            delimiters: [
+                { left: "$$", right: "$$", display: true },
+                { left: "$", right: "$", display: false },
+                { left: "\\(", right: "\\)", display: false },
+                { left: "\\[", right: "\\]", display: true }
+            ]
+        });})
+</script>
+</article>
+<aside class="related-contents--wrapper">
+<h2 class="section-title">相关文章</h2>
+<div class="related-contents">
+<div class="flex article-list--tile">
+<article class="has-image">
+<a href="/sol-luogu-p5468/">
+<div class="article-image">
+<img data-hash="https://yangty-pic.oss-cn-beijing.aliyuncs.com/bg01.webp" data-key="" loading="lazy" src="https://yangty-pic.oss-cn-beijing.aliyuncs.com/bg01.webp"/>
+</div>
+<div class="article-details">
+<h2 class="article-title">P5468 [NOI2019] 回家路线</h2>
+</div>
+</a>
+</article>
+<article class="has-image">
+<a href="/travels-noi2022/">
+<div class="article-image">
+<img data-hash="https://yangty-pic.oss-cn-beijing.aliyuncs.com/bg01.webp" data-key="" loading="lazy" src="https://yangty-pic.oss-cn-beijing.aliyuncs.com/bg01.webp"/>
+</div>
+<div class="article-details">
+<h2 class="article-title">NOI2022 游记</h2>
+</div>
+</a>
+</article>
+<article class="has-image">
+<a href="/sol-cf715b/">
+<div class="article-image">
+<img data-hash="https://yangty-pic.oss-cn-beijing.aliyuncs.com/bg57.webp" data-key="" loading="lazy" src="https://yangty-pic.oss-cn-beijing.aliyuncs.com/bg57.webp"/>
+</div>
+<div class="article-details">
+<h2 class="article-title">CF715B Complete The Graph</h2>
+</div>
+</a>
+</article>
+<article class="has-image">
+<a href="/sol-agc027d/">
+<div class="article-image">
+<img data-hash="https://yangty-pic.oss-cn-beijing.aliyuncs.com/bg01.webp" data-key="" loading="lazy" src="https://yangty-pic.oss-cn-beijing.aliyuncs.com/bg01.webp"/>
+</div>
+<div class="article-details">
+<h2 class="article-title">AGC027D - Modulo Matrix</h2>
+</div>
+</a>
+</article>
+<article class="has-image">
+<a href="/sol-luogu-p5305/">
+<div class="article-image">
+<img data-hash="https://yangty-pic.oss-cn-beijing.aliyuncs.com/bg32.webp" data-key="" loading="lazy" src="https://yangty-pic.oss-cn-beijing.aliyuncs.com/bg32.webp"/>
+</div>
+<div class="article-details">
+<h2 class="article-title">P5305 [GXOI/GZOI2019]旧词</h2>
+</div>
+</a>
+</article>
+</div>
+</div>
+</aside>
+<footer class="site-footer">
+<section class="copyright">
+        © 
+        
+            2019 - 
+        
+        2024 清烛的博客
+    </section>
+<section class="powerby">
+        Built with <a href="https://gohugo.io/" rel="noopener" target="_blank">Hugo</a> <br/>
+        主题 <b><a data-version="3.11.0" href="https://github.com/CaiJimmy/hugo-theme-stack" rel="noopener" target="_blank">Stack</a></b> 由 <a href="https://jimmycai.com" rel="noopener" target="_blank">Jimmy</a> 设计
+    </section>
+</footer>
+<div aria-hidden="true" class="pswp" role="dialog" tabindex="-1">
+<div class="pswp__bg"></div>
+<div class="pswp__scroll-wrap">
+<div class="pswp__container">
+<div class="pswp__item"></div>
+<div class="pswp__item"></div>
+<div class="pswp__item"></div>
+</div>
+<div class="pswp__ui pswp__ui--hidden">
+<div class="pswp__top-bar">
+<div class="pswp__counter"></div>
+<button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+<button class="pswp__button pswp__button--share" title="Share"></button>
+<button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+<button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+<div class="pswp__preloader">
+<div class="pswp__preloader__icn">
+<div class="pswp__preloader__cut">
+<div class="pswp__preloader__donut"></div>
+</div>
+</div>
+</div>
+</div>
+<div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+<div class="pswp__share-tooltip"></div>
+</div>
+<button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+</button>
+<button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+</button>
+<div class="pswp__caption">
+<div class="pswp__caption__center"></div>
+</div>
+</div>
+</div>
+</div><script crossorigin="anonymous" defer="" integrity="sha256-ePwmChbbvXbsO02lbM3HoHbSHTHFAeChekF1xKJdleo=" src="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe.min.js">
+</script><script crossorigin="anonymous" defer="" integrity="sha256-UKkzOn/w1mBxRmLLGrSeyB4e1xbrp4xylgAWb3M42pU=" src="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe-ui-default.min.js">
+</script><link crossorigin="anonymous" href="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/default-skin/default-skin.css" integrity="sha256-c0uckgykQ9v5k+IqViZOZKc47Jn7KQil4/MP3ySA3F8=" rel="stylesheet"/><link crossorigin="anonymous" href="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe.css" integrity="sha256-SBLU4vv6CA6lHsZ1XyTdhyjJxCjPif/TRkjnsyGAGnE=" rel="stylesheet"/>
+</main>
+</div>
+<script crossorigin="anonymous" integrity="sha256-5NovOZc4iwiAWTYIFiIM7DxKUXKWvpVEuMEPLzcm5/g=" src="https://cdn.jsdelivr.net/npm/node-vibrant@3.1.5/dist/vibrant.min.js">
+</script><script defer="" src="/ts/main.js" type="text/javascript"></script>
+<script>
+    (function () {
+        const customFont = document.createElement('link');
+        customFont.href = "https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&display=swap";
+
+        customFont.type = "text/css";
+        customFont.rel = "stylesheet";
+
+        document.head.appendChild(customFont);
+    }());
+</script>
+</body>
+</html>

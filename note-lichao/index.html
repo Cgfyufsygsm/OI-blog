@@ -1,0 +1,996 @@
+<!DOCTYPE html>
+<html dir="ltr" lang="zh-CN">
+<head><meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1" name="viewport"/><meta content="前言 因为最近在学斜率优化，然后遇到了 CEOI 的那道毒瘤题，被迫来学习李超树。
+李超树是一种能维护平面内线段的最大值的数据结构。
+模板题 题意 P4097 [HEOI2013]Segment
+在平面直角坐标系中，维护两个操作（强制在线）
+在平面内插入一条线段，记第 \(i\) 条被插入的线段的编号为 \(i\)，端点为 \((x_0, y_0)\) 和 \((x_1, y_1)\)。（\(x_0\) 可能与 \(x_1\) 相等） 给定一个数 \(k\)，询问与直线 \(x = k\) 相交的线段中，交点纵坐标最大的线段的编号（若有多条线段与查询直线的交点纵坐标都是最大的，则输出编号最小的线段）。特别地，若不存在线段与给定直线相交，输出 \(0\)。 概述 李超树的精髓在于维护每个区间内有可能成为最优解的线段。
+定义一个线段在 \(x_0\) 处最优当且仅当其与 \(x = x_0\) 的交点纵坐标最大。
+我们在区间 \([l, r]\) 维护的最优线段满足如下性质：
+该线段完整覆盖 \([l, r]\) 该线段在区间中点最优 因此李超树就是一棵维护上面这样的信息的线段树。
+插入 考虑将一条新线段插入的操作。
+首先，只有这个线段完整覆盖了 \([l, r]\)，\([l, r]\) 中维护的最优线段才可能发生改变。
+我们简单分类讨论一下，设新插入的线段编号为 \(u\)，原先的最优线段的编号为 \(v\)。
+如果 \(k_u &amp;gt; k_v\)，则考虑一下 \(u\) 和 \(v\) 在 \(M = (l + r) / 2\) 的取值。" name="description"/><title>李超树学习笔记</title>
+<link href="https://oi.imyangty.com/note-lichao/" rel="canonical"/>
+<link href="/scss/style.min.a5821f3d3ab84ce5a0ac21477e347a2e0ca00292e398d16c5e8e36ded6e35a23.css" rel="stylesheet"/><meta content="李超树学习笔记" property="og:title"/>
+<meta content="前言 因为最近在学斜率优化，然后遇到了 CEOI 的那道毒瘤题，被迫来学习李超树。
+李超树是一种能维护平面内线段的最大值的数据结构。
+模板题 题意 P4097 [HEOI2013]Segment
+在平面直角坐标系中，维护两个操作（强制在线）
+在平面内插入一条线段，记第 \(i\) 条被插入的线段的编号为 \(i\)，端点为 \((x_0, y_0)\) 和 \((x_1, y_1)\)。（\(x_0\) 可能与 \(x_1\) 相等） 给定一个数 \(k\)，询问与直线 \(x = k\) 相交的线段中，交点纵坐标最大的线段的编号（若有多条线段与查询直线的交点纵坐标都是最大的，则输出编号最小的线段）。特别地，若不存在线段与给定直线相交，输出 \(0\)。 概述 李超树的精髓在于维护每个区间内有可能成为最优解的线段。
+定义一个线段在 \(x_0\) 处最优当且仅当其与 \(x = x_0\) 的交点纵坐标最大。
+我们在区间 \([l, r]\) 维护的最优线段满足如下性质：
+该线段完整覆盖 \([l, r]\) 该线段在区间中点最优 因此李超树就是一棵维护上面这样的信息的线段树。
+插入 考虑将一条新线段插入的操作。
+首先，只有这个线段完整覆盖了 \([l, r]\)，\([l, r]\) 中维护的最优线段才可能发生改变。
+我们简单分类讨论一下，设新插入的线段编号为 \(u\)，原先的最优线段的编号为 \(v\)。
+如果 \(k_u &amp;gt; k_v\)，则考虑一下 \(u\) 和 \(v\) 在 \(M = (l + r) / 2\) 的取值。" property="og:description"/>
+<meta content="https://oi.imyangty.com/note-lichao/" property="og:url"/>
+<meta content="清烛的博客" property="og:site_name"/>
+<meta content="article" property="og:type"/><meta content="Post" property="article:section"/><meta content="OI" property="article:tag"/><meta content="笔记" property="article:tag"/><meta content="线段树" property="article:tag"/><meta content="李超树" property="article:tag"/><meta content="计算几何" property="article:tag"/><meta content="2021-07-04T22:13:16+08:00" property="article:published_time"/><meta content="2021-07-04T22:13:16+08:00" property="article:modified_time"/><meta content="https://yangty-pic.oss-cn-beijing.aliyuncs.com/bg18.webp" property="og:image"/>
+<meta content="李超树学习笔记" name="twitter:title"/>
+<meta content="前言 因为最近在学斜率优化，然后遇到了 CEOI 的那道毒瘤题，被迫来学习李超树。
+李超树是一种能维护平面内线段的最大值的数据结构。
+模板题 题意 P4097 [HEOI2013]Segment
+在平面直角坐标系中，维护两个操作（强制在线）
+在平面内插入一条线段，记第 \(i\) 条被插入的线段的编号为 \(i\)，端点为 \((x_0, y_0)\) 和 \((x_1, y_1)\)。（\(x_0\) 可能与 \(x_1\) 相等） 给定一个数 \(k\)，询问与直线 \(x = k\) 相交的线段中，交点纵坐标最大的线段的编号（若有多条线段与查询直线的交点纵坐标都是最大的，则输出编号最小的线段）。特别地，若不存在线段与给定直线相交，输出 \(0\)。 概述 李超树的精髓在于维护每个区间内有可能成为最优解的线段。
+定义一个线段在 \(x_0\) 处最优当且仅当其与 \(x = x_0\) 的交点纵坐标最大。
+我们在区间 \([l, r]\) 维护的最优线段满足如下性质：
+该线段完整覆盖 \([l, r]\) 该线段在区间中点最优 因此李超树就是一棵维护上面这样的信息的线段树。
+插入 考虑将一条新线段插入的操作。
+首先，只有这个线段完整覆盖了 \([l, r]\)，\([l, r]\) 中维护的最优线段才可能发生改变。
+我们简单分类讨论一下，设新插入的线段编号为 \(u\)，原先的最优线段的编号为 \(v\)。
+如果 \(k_u &amp;gt; k_v\)，则考虑一下 \(u\) 和 \(v\) 在 \(M = (l + r) / 2\) 的取值。" name="twitter:description"/><meta content="summary_large_image" name="twitter:card"/>
+<meta content="https://yangty-pic.oss-cn-beijing.aliyuncs.com/bg18.webp" name="twitter:image"/>
+<link href="https://q1.qlogo.cn/g?b=qq&amp;nk=375836877&amp;s=5" rel="shortcut icon"/>
+<link href="https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.5.1/build/styles/github-dark-dimmed.min.css" rel="stylesheet"/>
+<script src="https://cdn.jsdelivr.net/gh/highlightjs/cdn-release/build/highlight.min.js"></script>
+<script>hljs.highlightAll();</script>
+</head>
+<body class="article-page">
+<script>
+        (function() {
+            const colorSchemeKey = 'StackColorScheme';
+            if(!localStorage.getItem(colorSchemeKey)){
+                localStorage.setItem(colorSchemeKey, "auto");
+            }
+        })();
+    </script><script>
+    (function() {
+        const colorSchemeKey = 'StackColorScheme';
+        const colorSchemeItem = localStorage.getItem(colorSchemeKey);
+        const supportDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches === true;
+
+        if (colorSchemeItem == 'dark' || colorSchemeItem === 'auto' && supportDarkMode) {
+            
+
+            document.documentElement.dataset.scheme = 'dark';
+        } else {
+            document.documentElement.dataset.scheme = 'light';
+        }
+    })();
+</script>
+<div class="container main-container flex on-phone--column extended"><aside class="sidebar left-sidebar sticky">
+<button aria-label="切换菜单" class="hamburger hamburger--spin" id="toggle-menu" type="button">
+<span class="hamburger-box">
+<span class="hamburger-inner"></span>
+</span>
+</button>
+<header>
+<figure class="site-avatar">
+<a href="/">
+<img alt="Avatar" class="site-logo" height="300" loading="lazy" src="/img/avatar_huea3ce2119467b51fdd2a81393644a76d_51594_300x0_resize_q75_box.jpg" width="300"/>
+</a>
+<span class="emoji">😅</span>
+</figure>
+<div class="site-meta">
+<h1 class="site-name"><a href="/">清烛的博客</a></h1>
+<h2 class="site-description">烟火已谢，笙歌未停</h2>
+</div>
+</header><ol class="social-menu">
+<li>
+<a href="mailto:i@imyangty.com" target="_blank" title="email">
+<svg class="icon icon-tabler icon-tabler-mail" fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" viewbox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+<path d="M0 0h24v24H0z" fill="none" stroke="none"></path>
+<rect height="14" rx="2" width="18" x="3" y="5"></rect>
+<polyline points="3 7 12 13 21 7"></polyline>
+</svg>
+</a>
+</li>
+<li>
+<a href="https://github.com/Cgfyufsygsm" target="_blank" title="GitHub">
+<svg class="icon icon-tabler icon-tabler-brand-github" fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+<path d="M0 0h24v24H0z" fill="none" stroke="none"></path>
+<path d="M9 19c-4.3 1.4 -4.3 -2.5 -6 -3m12 5v-3.5c0 -1 .1 -1.4 -.5 -2c2.8 -.3 5.5 -1.4 5.5 -6a4.6 4.6 0 0 0 -1.3 -3.2a4.2 4.2 0 0 0 -.1 -3.2s-1.1 -.3 -3.5 1.3a12.3 12.3 0 0 0 -6.2 0c-2.4 -1.6 -3.5 -1.3 -3.5 -1.3a4.2 4.2 0 0 0 -.1 3.2a4.6 4.6 0 0 0 -1.3 3.2c0 4.6 2.7 5.7 5.5 6c-.6 .6 -.6 1.2 -.5 2v3.5"></path>
+</svg>
+</a>
+</li>
+<li>
+<a href="https://t.me/Cgfyufsygsm" target="_blank" title="Telegram">
+<svg class="icon icon-tabler icon-tabler-brand-telegram" fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" viewbox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+<path d="M0 0h24v24H0z" fill="none" stroke="none"></path>
+<path d="M15 10l-4 4l6 6l4 -16l-18 7l4 2l2 6l3 -4"></path>
+</svg>
+</a>
+</li>
+<li>
+<a href="https://twitter.com/Cgfyufsygsm" target="_blank" title="Twitter">
+<svg class="icon icon-tabler icon-tabler-brand-twitter" fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+<path d="M0 0h24v24H0z" fill="none" stroke="none"></path>
+<path d="M22 4.01c-1 .49 -1.98 .689 -3 .99c-1.121 -1.265 -2.783 -1.335 -4.38 -.737s-2.643 2.06 -2.62 3.737v1c-3.245 .083 -6.135 -1.395 -8 -4c0 0 -4.182 7.433 4 11c-1.872 1.247 -3.739 2.088 -6 2c3.308 1.803 6.913 2.423 10.034 1.517c3.58 -1.04 6.522 -3.723 7.651 -7.742a13.84 13.84 0 0 0 .497 -3.753c-.002 -.249 1.51 -2.772 1.818 -4.013z"></path>
+</svg>
+</a>
+</li>
+</ol><ol class="menu" id="main-menu">
+<li>
+<a href="/">
+<svg class="icon icon-tabler icon-tabler-home" fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+<path d="M0 0h24v24H0z" stroke="none"></path>
+<polyline points="5 12 3 12 12 3 21 12 19 12"></polyline>
+<path d="M5 12v7a2 2 0 0 0 2 2h10a2 2 0 0 0 2 -2v-7"></path>
+<path d="M9 21v-6a2 2 0 0 1 2 -2h2a2 2 0 0 1 2 2v6"></path>
+</svg>
+<span>主页</span>
+</a>
+</li>
+<li>
+<a href="/about/">
+<svg class="icon icon-tabler icon-tabler-user" fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+<path d="M0 0h24v24H0z" stroke="none"></path>
+<circle cx="12" cy="7" r="4"></circle>
+<path d="M6 21v-2a4 4 0 0 1 4 -4h4a4 4 0 0 1 4 4v2"></path>
+</svg>
+<span>关于</span>
+</a>
+</li>
+<li>
+<a href="/idx/">
+<svg class="icon icon-tabler icon-tabler-hash" fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+<path d="M0 0h24v24H0z" stroke="none"></path>
+<line x1="5" x2="19" y1="9" y2="9"></line>
+<line x1="5" x2="19" y1="15" y2="15"></line>
+<line x1="11" x2="7" y1="4" y2="20"></line>
+<line x1="17" x2="13" y1="4" y2="20"></line>
+</svg>
+<span>导航</span>
+</a>
+</li>
+<li>
+<a href="/archives/">
+<svg class="icon icon-tabler icon-tabler-archive" fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+<path d="M0 0h24v24H0z" stroke="none"></path>
+<rect height="4" rx="2" width="18" x="3" y="4"></rect>
+<path d="M5 8v10a2 2 0 0 0 2 2h10a2 2 0 0 0 2 -2v-10"></path>
+<line x1="10" x2="14" y1="12" y2="12"></line>
+</svg>
+<span>归档</span>
+</a>
+</li>
+<li>
+<a href="/search/">
+<svg class="icon icon-tabler icon-tabler-search" fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+<path d="M0 0h24v24H0z" stroke="none"></path>
+<circle cx="10" cy="10" r="7"></circle>
+<line x1="21" x2="15" y1="21" y2="15"></line>
+</svg>
+<span>搜索</span>
+</a>
+</li>
+<li>
+<a href="/friends/">
+<svg class="icon icon-tabler icon-tabler-link" fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+<path d="M0 0h24v24H0z" stroke="none"></path>
+<path d="M10 14a3.5 3.5 0 0 0 5 0l4 -4a3.5 3.5 0 0 0 -5 -5l-.5 .5"></path>
+<path d="M14 10a3.5 3.5 0 0 0 -5 0l-4 4a3.5 3.5 0 0 0 5 5l.5 -.5"></path>
+</svg>
+<span>友链</span>
+</a>
+</li>
+<li>
+<a href="https://blog.imyangty.com" target="_blank">
+<svg class="icon icon-tabler icon-tabler-home" fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+<path d="M0 0h24v24H0z" stroke="none"></path>
+<polyline points="5 12 3 12 12 3 21 12 19 12"></polyline>
+<path d="M5 12v7a2 2 0 0 0 2 2h10a2 2 0 0 0 2 -2v-7"></path>
+<path d="M9 21v-6a2 2 0 0 1 2 -2h2a2 2 0 0 1 2 2v6"></path>
+</svg>
+<span>主博客</span>
+</a>
+</li>
+<div class="menu-bottom-section">
+<li id="dark-mode-toggle">
+<svg class="icon icon-tabler icon-tabler-toggle-left" fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+<path d="M0 0h24v24H0z" stroke="none"></path>
+<circle cx="8" cy="12" r="2"></circle>
+<rect height="12" rx="6" width="20" x="2" y="6"></rect>
+</svg>
+<svg class="icon icon-tabler icon-tabler-toggle-right" fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+<path d="M0 0h24v24H0z" stroke="none"></path>
+<circle cx="16" cy="12" r="2"></circle>
+<rect height="12" rx="6" width="20" x="2" y="6"></rect>
+</svg>
+<span>暗色模式</span>
+</li>
+</div>
+</ol>
+</aside>
+<main class="main full-width">
+<article class="has-image main-article">
+<header class="article-header">
+<div class="article-image">
+<a href="/note-lichao/">
+<img alt="Featured image of post 李超树学习笔记" loading="lazy" src="https://yangty-pic.oss-cn-beijing.aliyuncs.com/bg18.webp"/>
+</a>
+</div>
+<div class="article-details">
+<header class="article-category">
+<a href="/categories/oi/">
+                OI
+            </a>
+<a href="/categories/note/">
+                笔记
+            </a>
+</header>
+<div class="article-title-wrapper">
+<h2 class="article-title">
+<a href="/note-lichao/">李超树学习笔记</a>
+</h2>
+</div>
+<footer class="article-time">
+<div>
+<svg class="icon icon-tabler icon-tabler-calendar-time" fill="none" height="56" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="56" xmlns="http://www.w3.org/2000/svg">
+<path d="M0 0h24v24H0z" stroke="none"></path>
+<path d="M11.795 21h-6.795a2 2 0 0 1 -2 -2v-12a2 2 0 0 1 2 -2h12a2 2 0 0 1 2 2v4"></path>
+<circle cx="18" cy="18" r="4"></circle>
+<path d="M15 3v4"></path>
+<path d="M7 3v4"></path>
+<path d="M3 11h16"></path>
+<path d="M18 16.496v1.504l1 1"></path>
+</svg>
+<time class="article-time--published">Jul 04, 2021</time>
+</div>
+<div>
+<svg class="icon icon-tabler icon-tabler-clock" fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+<path d="M0 0h24v24H0z" stroke="none"></path>
+<circle cx="12" cy="12" r="9"></circle>
+<polyline points="12 7 12 12 15 15"></polyline>
+</svg>
+<time class="article-time--reading">
+                    阅读时长: 13 分钟
+                </time>
+</div>
+</footer>
+</div>
+</header>
+<section class="article-content">
+<h2 id="前言">前言</h2>
+<p>因为最近在学斜率优化，然后遇到了 CEOI 的那道毒瘤题，被迫来学习李超树。</p>
+<p>李超树是一种能维护平面内线段的最大值的数据结构。</p>
+<h2 id="模板题">模板题</h2>
+<h3 id="题意">题意</h3>
+<p><a href="https://www.luogu.com.cn/problem/P4097">P4097 [HEOI2013]Segment</a></p>
+<p>在平面直角坐标系中，维护两个操作（强制在线）</p>
+<ul>
+<li>在平面内插入一条线段，记第 <span class="math inline">\(i\)</span> 条被插入的线段的编号为 <span class="math inline">\(i\)</span>，端点为 <span class="math inline">\((x_0, y_0)\)</span> 和 <span class="math inline">\((x_1, y_1)\)</span>。（<span class="math inline">\(x_0\)</span> 可能与 <span class="math inline">\(x_1\)</span> 相等）</li>
+<li>给定一个数 <span class="math inline">\(k\)</span>，询问与直线 <span class="math inline">\(x = k\)</span> 相交的线段中，交点纵坐标最大的线段的编号（若有多条线段与查询直线的交点纵坐标都是最大的，则输出编号最小的线段）。特别地，若不存在线段与给定直线相交，输出 <span class="math inline">\(0\)</span>。</li>
+</ul>
+<h3 id="概述">概述</h3>
+<p>李超树的精髓在于维护每个区间内有可能成为最优解的线段。</p>
+<p>定义一个线段在 <span class="math inline">\(x_0\)</span> 处最优当且仅当其与 <span class="math inline">\(x = x_0\)</span> 的交点纵坐标最大。</p>
+<p>我们在区间 <span class="math inline">\([l, r]\)</span> 维护的最优线段满足如下性质：</p>
+<ul>
+<li>该线段完整覆盖 <span class="math inline">\([l, r]\)</span></li>
+<li>该线段在区间中点最优</li>
+</ul>
+<p>因此李超树就是一棵维护上面这样的信息的线段树。</p>
+<h3 id="插入">插入</h3>
+<p>考虑将一条新线段插入的操作。</p>
+<p>首先，只有这个线段完整覆盖了 <span class="math inline">\([l, r]\)</span>，<span class="math inline">\([l, r]\)</span> 中维护的最优线段才可能发生改变。</p>
+<p>我们简单分类讨论一下，设新插入的线段编号为 <span class="math inline">\(u\)</span>，原先的最优线段的编号为 <span class="math inline">\(v\)</span>。</p>
+<p>如果 <span class="math inline">\(k_u &gt; k_v\)</span>，则考虑一下 <span class="math inline">\(u\)</span> 和 <span class="math inline">\(v\)</span> 在 <span class="math inline">\(M = (l + r) / 2\)</span> 的取值。</p>
+<ul>
+<li>如果 <span class="math inline">\(u\)</span> 在 <span class="math inline">\(M\)</span> 更优，则 <span class="math inline">\(u\)</span> 在 <span class="math inline">\([M + 1, r]\)</span> <strong>一定</strong>是更优的，而 <span class="math inline">\(v\)</span> 在 <span class="math inline">\([l, M]\)</span> <strong>可能</strong>是最优的。</li>
+<li>反之，则 <span class="math inline">\(u\)</span> 在 <span class="math inline">\([M + 1, r]\)</span> <strong>可能</strong>是最优的，<span class="math inline">\(v\)</span> 在 <span class="math inline">\([l, M]\)</span> <strong>一定</strong>是最优的。</li>
+</ul>
+<p>画图可以方便理解。</p>
+<p><span class="math inline">\(k_u &lt; k_v\)</span> 的情况类似，请画图分析以加深印象。</p>
+<p>这里需要在另一半区间下传 <span class="math inline">\(v\)</span> 的原因是：李超树查询使用的是标记永久化的思想。相当于 <span class="math inline">\([l, r]\)</span> 的优势线段是 <span class="math inline">\(u\)</span> 的话是不需要继续下传的。所以为了避免 <span class="math inline">\(u\)</span> 把 <span class="math inline">\(v\)</span> 直接覆盖掉，要往另一个区间下传 <span class="math inline">\(v\)</span>。</p>
+<p>所以插入的时间复杂度是 <span class="math inline">\(O(\log^2n)\)</span> 的。</p>
+<hr/>
+<p>小补充：如果判定时一个直线已经全部高于/低于当前的最优直线，那么可以暴力直接判，常数会大大减小。</p>
+<h3 id="查询">查询</h3>
+<p>我们就从大区间依次向下，查询一下遇到的区间的 <span class="math inline">\([l, r]\)</span> 的最优线段是否能更新答案。这样的区间显而易见有 <span class="math inline">\(O(\log n)\)</span> 个，所以查询的时间复杂度是 <span class="math inline">\(O(\log n)\)</span> 的</p>
+<p>就做完了。</p>
+<h3 id="实现">实现</h3>
+<p>整体的时间复杂度为 <span class="math inline">\(O(n\log^2n)\)</span>。需要维护线段的斜截式 <span class="math inline">\(y = kx + b\)</span> 以方便计算。线段树里面就存优势线段的编号就行了。</p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode cpp"><code class="sourceCode cpp"><span id="cb1-1"><a aria-hidden="true" href="#cb1-1"></a><span class="pp">#include </span><span class="im">&lt;cstdio&gt;</span></span>
+<span id="cb1-2"><a aria-hidden="true" href="#cb1-2"></a><span class="pp">#include </span><span class="im">&lt;cctype&gt;</span></span>
+<span id="cb1-3"><a aria-hidden="true" href="#cb1-3"></a><span class="pp">#define il </span><span class="kw">inline</span></span>
+<span id="cb1-4"><a aria-hidden="true" href="#cb1-4"></a><span class="pp">#define FOR</span>(i,<span class="pp"> </span>a,<span class="pp"> </span>b)<span class="pp"> </span><span class="cf">for</span><span class="pp"> </span>(<span class="dt">int</span><span class="pp"> </span>i<span class="pp"> </span>=<span class="pp"> </span>a;<span class="pp"> </span>i<span class="pp"> </span>&lt;=<span class="pp"> </span>b;<span class="pp"> </span>++i)</span>
+<span id="cb1-5"><a aria-hidden="true" href="#cb1-5"></a><span class="pp">#define DEC</span>(i,<span class="pp"> </span>a,<span class="pp"> </span>b)<span class="pp"> </span><span class="cf">for</span><span class="pp"> </span>(<span class="dt">int</span><span class="pp"> </span>i<span class="pp"> </span>=<span class="pp"> </span>a;<span class="pp"> </span>i<span class="pp"> </span>&gt;=<span class="pp"> </span>b;<span class="pp"> </span>--i)</span>
+<span id="cb1-6"><a aria-hidden="true" href="#cb1-6"></a></span>
+<span id="cb1-7"><a aria-hidden="true" href="#cb1-7"></a><span class="kw">namespace</span> fastIO {</span>
+<span id="cb1-8"><a aria-hidden="true" href="#cb1-8"></a>    <span class="at">const</span> <span class="dt">int</span> maxc = <span class="fl">1e7</span> + <span class="dv">5</span>;</span>
+<span id="cb1-9"><a aria-hidden="true" href="#cb1-9"></a>    <span class="dt">char</span> buf[maxc], *p1 = buf, *p2 = buf;</span>
+<span id="cb1-10"><a aria-hidden="true" href="#cb1-10"></a>    il <span class="dt">char</span> getchar() {<span class="cf">return</span> p1 == p2 &amp;&amp; (p2 = (p1 = buf) + fread(buf, <span class="dv">1</span>, maxc, stdin), p1 == p2) ? EOF : *p1++;}</span>
+<span id="cb1-11"><a aria-hidden="true" href="#cb1-11"></a>    <span class="dt">int</span> read() {</span>
+<span id="cb1-12"><a aria-hidden="true" href="#cb1-12"></a>        <span class="dt">int</span> s = <span class="dv">0</span>, x = <span class="dv">0</span>;</span>
+<span id="cb1-13"><a aria-hidden="true" href="#cb1-13"></a>        <span class="dt">char</span> c = getchar();</span>
+<span id="cb1-14"><a aria-hidden="true" href="#cb1-14"></a>        <span class="cf">while</span> (!isdigit(c))</span>
+<span id="cb1-15"><a aria-hidden="true" href="#cb1-15"></a>            x |= (c == <span class="ch">'-'</span>), c = getchar();</span>
+<span id="cb1-16"><a aria-hidden="true" href="#cb1-16"></a>        <span class="cf">while</span> (isdigit(c))</span>
+<span id="cb1-17"><a aria-hidden="true" href="#cb1-17"></a>            s = s * <span class="dv">10</span> + c - <span class="ch">'0'</span>, c = getchar();</span>
+<span id="cb1-18"><a aria-hidden="true" href="#cb1-18"></a>        <span class="cf">return</span> x ? -s : s;</span>
+<span id="cb1-19"><a aria-hidden="true" href="#cb1-19"></a>    }</span>
+<span id="cb1-20"><a aria-hidden="true" href="#cb1-20"></a>}</span>
+<span id="cb1-21"><a aria-hidden="true" href="#cb1-21"></a></span>
+<span id="cb1-22"><a aria-hidden="true" href="#cb1-22"></a><span class="kw">using</span> <span class="kw">namespace</span> fastIO;</span>
+<span id="cb1-23"><a aria-hidden="true" href="#cb1-23"></a></span>
+<span id="cb1-24"><a aria-hidden="true" href="#cb1-24"></a><span class="kw">typedef</span> <span class="dt">double</span> db;</span>
+<span id="cb1-25"><a aria-hidden="true" href="#cb1-25"></a><span class="at">const</span> <span class="dt">int</span> maxn = <span class="fl">1e5</span> + <span class="dv">5</span>, mod1 = <span class="dv">39989</span>, mod2 = <span class="fl">1e9</span>;</span>
+<span id="cb1-26"><a aria-hidden="true" href="#cb1-26"></a></span>
+<span id="cb1-27"><a aria-hidden="true" href="#cb1-27"></a><span class="dt">int</span> cnt = <span class="dv">0</span>;</span>
+<span id="cb1-28"><a aria-hidden="true" href="#cb1-28"></a></span>
+<span id="cb1-29"><a aria-hidden="true" href="#cb1-29"></a><span class="kw">struct</span> segment {</span>
+<span id="cb1-30"><a aria-hidden="true" href="#cb1-30"></a>    db k, b;</span>
+<span id="cb1-31"><a aria-hidden="true" href="#cb1-31"></a>} p[maxn];</span>
+<span id="cb1-32"><a aria-hidden="true" href="#cb1-32"></a></span>
+<span id="cb1-33"><a aria-hidden="true" href="#cb1-33"></a><span class="dt">int</span> t[mod1 &lt;&lt; <span class="dv">2</span>];</span>
+<span id="cb1-34"><a aria-hidden="true" href="#cb1-34"></a></span>
+<span id="cb1-35"><a aria-hidden="true" href="#cb1-35"></a>il db calc(<span class="dt">int</span> i, <span class="dt">int</span> x) {<span class="cf">return</span> p[i].k * x + p[i].b;}</span>
+<span id="cb1-36"><a aria-hidden="true" href="#cb1-36"></a>il <span class="dt">int</span> max(<span class="dt">int</span> a, <span class="dt">int</span> b) {<span class="cf">return</span> a &gt; b ? a : b;}</span>
+<span id="cb1-37"><a aria-hidden="true" href="#cb1-37"></a><span class="kw">template</span>&lt;<span class="kw">typename</span> T&gt; il <span class="dt">void</span> swap(T &amp;a, T &amp;b) {</span>
+<span id="cb1-38"><a aria-hidden="true" href="#cb1-38"></a>    T t = a;</span>
+<span id="cb1-39"><a aria-hidden="true" href="#cb1-39"></a>    a = b, b = t;</span>
+<span id="cb1-40"><a aria-hidden="true" href="#cb1-40"></a>    <span class="cf">return</span>;</span>
+<span id="cb1-41"><a aria-hidden="true" href="#cb1-41"></a>}</span>
+<span id="cb1-42"><a aria-hidden="true" href="#cb1-42"></a></span>
+<span id="cb1-43"><a aria-hidden="true" href="#cb1-43"></a><span class="dt">void</span> add(<span class="dt">int</span> x0, <span class="dt">int</span> y0, <span class="dt">int</span> x1, <span class="dt">int</span> y1) {</span>
+<span id="cb1-44"><a aria-hidden="true" href="#cb1-44"></a>    ++cnt;</span>
+<span id="cb1-45"><a aria-hidden="true" href="#cb1-45"></a>    <span class="cf">if</span> (x0 == x1)</span>
+<span id="cb1-46"><a aria-hidden="true" href="#cb1-46"></a>        p[cnt].k = <span class="dv">0</span>, p[cnt].b = max(y0, y1);</span>
+<span id="cb1-47"><a aria-hidden="true" href="#cb1-47"></a>    <span class="cf">else</span></span>
+<span id="cb1-48"><a aria-hidden="true" href="#cb1-48"></a>        p[cnt].k = db(y0 - y1) / db(x0 - x1), p[cnt].b = y0 - p[cnt].k * x0;</span>
+<span id="cb1-49"><a aria-hidden="true" href="#cb1-49"></a>    <span class="cf">return</span>;</span>
+<span id="cb1-50"><a aria-hidden="true" href="#cb1-50"></a>}</span>
+<span id="cb1-51"><a aria-hidden="true" href="#cb1-51"></a></span>
+<span id="cb1-52"><a aria-hidden="true" href="#cb1-52"></a><span class="pp">#define L </span>(k<span class="pp"> </span>&lt;&lt;<span class="pp"> </span><span class="dv">1</span>)</span>
+<span id="cb1-53"><a aria-hidden="true" href="#cb1-53"></a><span class="pp">#define R </span>(L<span class="pp"> </span>|<span class="pp"> </span><span class="dv">1</span>)</span>
+<span id="cb1-54"><a aria-hidden="true" href="#cb1-54"></a><span class="pp">#define M </span>((i<span class="pp"> </span>+<span class="pp"> </span>j)<span class="pp"> </span>&gt;&gt;<span class="pp"> </span><span class="dv">1</span>)</span>
+<span id="cb1-55"><a aria-hidden="true" href="#cb1-55"></a></span>
+<span id="cb1-56"><a aria-hidden="true" href="#cb1-56"></a><span class="dt">void</span> update(<span class="dt">int</span> k, <span class="dt">int</span> i, <span class="dt">int</span> j, <span class="dt">int</span> x, <span class="dt">int</span> y, <span class="dt">int</span> u) {</span>
+<span id="cb1-57"><a aria-hidden="true" href="#cb1-57"></a>    <span class="cf">if</span> (x &gt; j || y &lt; i) <span class="cf">return</span>;</span>
+<span id="cb1-58"><a aria-hidden="true" href="#cb1-58"></a>    <span class="dt">int</span> v = t[k];</span>
+<span id="cb1-59"><a aria-hidden="true" href="#cb1-59"></a>    db resu = calc(u, M), resv = calc(v, M);</span>
+<span id="cb1-60"><a aria-hidden="true" href="#cb1-60"></a>    <span class="cf">if</span> (x &lt;= i &amp;&amp; y &gt;= j) {</span>
+<span id="cb1-61"><a aria-hidden="true" href="#cb1-61"></a>        <span class="cf">if</span> (calc(u, i) &gt;= calc(v, i) &amp;&amp; calc(u, j) &gt;= calc(v, j)) {</span>
+<span id="cb1-62"><a aria-hidden="true" href="#cb1-62"></a>            t[k] = u;</span>
+<span id="cb1-63"><a aria-hidden="true" href="#cb1-63"></a>            <span class="cf">return</span>;</span>
+<span id="cb1-64"><a aria-hidden="true" href="#cb1-64"></a>        }</span>
+<span id="cb1-65"><a aria-hidden="true" href="#cb1-65"></a>        <span class="cf">if</span> (calc(u, i) &lt;= calc(v, i) &amp;&amp; calc(u, j) &lt;= calc(v, j)) <span class="cf">return</span>;</span>
+<span id="cb1-66"><a aria-hidden="true" href="#cb1-66"></a>        <span class="cf">if</span> (p[u].k &gt; p[v].k) {</span>
+<span id="cb1-67"><a aria-hidden="true" href="#cb1-67"></a>            <span class="cf">if</span> (resu &gt; resv)</span>
+<span id="cb1-68"><a aria-hidden="true" href="#cb1-68"></a>                t[k] = u, update(L, i, M, x, y, v);</span>
+<span id="cb1-69"><a aria-hidden="true" href="#cb1-69"></a>            <span class="cf">else</span> update(R, M + <span class="dv">1</span>, j, x, y, u);</span>
+<span id="cb1-70"><a aria-hidden="true" href="#cb1-70"></a>        } <span class="cf">else</span> <span class="cf">if</span> (p[u].k &lt; p[v].k) {</span>
+<span id="cb1-71"><a aria-hidden="true" href="#cb1-71"></a>            <span class="cf">if</span> (resu &gt; resv)</span>
+<span id="cb1-72"><a aria-hidden="true" href="#cb1-72"></a>                t[k] = u, update(R, M + <span class="dv">1</span>, j, x, y, v);</span>
+<span id="cb1-73"><a aria-hidden="true" href="#cb1-73"></a>            <span class="cf">else</span> update(L, i, M, x, y, u);</span>
+<span id="cb1-74"><a aria-hidden="true" href="#cb1-74"></a>        }</span>
+<span id="cb1-75"><a aria-hidden="true" href="#cb1-75"></a>        <span class="cf">return</span>;</span>
+<span id="cb1-76"><a aria-hidden="true" href="#cb1-76"></a>    }</span>
+<span id="cb1-77"><a aria-hidden="true" href="#cb1-77"></a>    update(L, i, M, x, y, u);</span>
+<span id="cb1-78"><a aria-hidden="true" href="#cb1-78"></a>    update(R, M + <span class="dv">1</span>, j, x, y, u);</span>
+<span id="cb1-79"><a aria-hidden="true" href="#cb1-79"></a>    <span class="cf">return</span>;</span>
+<span id="cb1-80"><a aria-hidden="true" href="#cb1-80"></a>}</span>
+<span id="cb1-81"><a aria-hidden="true" href="#cb1-81"></a></span>
+<span id="cb1-82"><a aria-hidden="true" href="#cb1-82"></a>il <span class="dt">int</span> cmp(<span class="dt">int</span> X, <span class="dt">int</span> i, <span class="dt">int</span> j) {<span class="cf">return</span> calc(i, X) &gt; calc(j, X) ? i : j;}</span>
+<span id="cb1-83"><a aria-hidden="true" href="#cb1-83"></a></span>
+<span id="cb1-84"><a aria-hidden="true" href="#cb1-84"></a><span class="dt">int</span> query(<span class="dt">int</span> X, <span class="dt">int</span> k, <span class="dt">int</span> i, <span class="dt">int</span> j) {</span>
+<span id="cb1-85"><a aria-hidden="true" href="#cb1-85"></a>    <span class="cf">if</span> (i &gt; j) <span class="cf">return</span> <span class="dv">0</span>;</span>
+<span id="cb1-86"><a aria-hidden="true" href="#cb1-86"></a>    <span class="dt">int</span> ret = cmp(X, <span class="dv">0</span>, t[k]);</span>
+<span id="cb1-87"><a aria-hidden="true" href="#cb1-87"></a>    <span class="cf">if</span> (i == j) <span class="cf">return</span> ret;</span>
+<span id="cb1-88"><a aria-hidden="true" href="#cb1-88"></a>    <span class="cf">if</span> (X &lt;= M) ret = cmp(X, ret, query(X, L, i, M));</span>
+<span id="cb1-89"><a aria-hidden="true" href="#cb1-89"></a>    <span class="cf">else</span> ret = cmp(X, ret, query(X, R, M + <span class="dv">1</span>, j));</span>
+<span id="cb1-90"><a aria-hidden="true" href="#cb1-90"></a>    <span class="cf">return</span> ret;</span>
+<span id="cb1-91"><a aria-hidden="true" href="#cb1-91"></a>}</span>
+<span id="cb1-92"><a aria-hidden="true" href="#cb1-92"></a></span>
+<span id="cb1-93"><a aria-hidden="true" href="#cb1-93"></a><span class="dt">int</span> main() {</span>
+<span id="cb1-94"><a aria-hidden="true" href="#cb1-94"></a>    <span class="dt">int</span> n = read(), last = <span class="dv">0</span>;</span>
+<span id="cb1-95"><a aria-hidden="true" href="#cb1-95"></a>    FOR(i, <span class="dv">1</span>, n) {</span>
+<span id="cb1-96"><a aria-hidden="true" href="#cb1-96"></a>        <span class="dt">int</span> op = read();</span>
+<span id="cb1-97"><a aria-hidden="true" href="#cb1-97"></a>        <span class="cf">if</span> (!op) {</span>
+<span id="cb1-98"><a aria-hidden="true" href="#cb1-98"></a>            <span class="dt">int</span> k = (read() + last - <span class="dv">1</span>) % mod1 + <span class="dv">1</span>;</span>
+<span id="cb1-99"><a aria-hidden="true" href="#cb1-99"></a>            printf(<span class="st">"</span><span class="sc">%d\n</span><span class="st">"</span>, last = query(k, <span class="dv">1</span>, <span class="dv">1</span>, mod1));</span>
+<span id="cb1-100"><a aria-hidden="true" href="#cb1-100"></a>        } <span class="cf">else</span> {</span>
+<span id="cb1-101"><a aria-hidden="true" href="#cb1-101"></a>            <span class="dt">int</span> x0 = (read() + last - <span class="dv">1</span>) % mod1 + <span class="dv">1</span>, y0 = (read() + last - <span class="dv">1</span>) % mod2 + <span class="dv">1</span>;</span>
+<span id="cb1-102"><a aria-hidden="true" href="#cb1-102"></a>            <span class="dt">int</span> x1 = (read() + last - <span class="dv">1</span>) % mod1 + <span class="dv">1</span>, y1 = (read() + last - <span class="dv">1</span>) % mod2 + <span class="dv">1</span>;</span>
+<span id="cb1-103"><a aria-hidden="true" href="#cb1-103"></a>            <span class="cf">if</span> (x0 &gt; x1) swap(x0, x1), swap(y0, y1);</span>
+<span id="cb1-104"><a aria-hidden="true" href="#cb1-104"></a>            add(x0, y0, x1, y1);</span>
+<span id="cb1-105"><a aria-hidden="true" href="#cb1-105"></a>            update(<span class="dv">1</span>, <span class="dv">1</span>, mod1, x0, x1, cnt);</span>
+<span id="cb1-106"><a aria-hidden="true" href="#cb1-106"></a>        }</span>
+<span id="cb1-107"><a aria-hidden="true" href="#cb1-107"></a>    }</span>
+<span id="cb1-108"><a aria-hidden="true" href="#cb1-108"></a>    <span class="cf">return</span> <span class="dv">0</span>;</span>
+<span id="cb1-109"><a aria-hidden="true" href="#cb1-109"></a>}</span></code></pre></div>
+<h2 id="例题">例题</h2>
+<h3 id="p4254-jsoi2008blue-mary开公司">P4254 [JSOI2008]Blue Mary开公司</h3>
+<p>这题比较模板，直接插入直线即可，甚至都不需要维护左右端点，所以时间复杂度为 <span class="math inline">\(O(n\log n)\)</span>。</p>
+<div class="sourceCode" id="cb2"><pre class="sourceCode cpp"><code class="sourceCode cpp"><span id="cb2-1"><a aria-hidden="true" href="#cb2-1"></a><span class="pp">#include </span><span class="im">&lt;cstdio&gt;</span></span>
+<span id="cb2-2"><a aria-hidden="true" href="#cb2-2"></a><span class="pp">#include </span><span class="im">&lt;cstring&gt;</span></span>
+<span id="cb2-3"><a aria-hidden="true" href="#cb2-3"></a><span class="pp">#include </span><span class="im">&lt;cmath&gt;</span></span>
+<span id="cb2-4"><a aria-hidden="true" href="#cb2-4"></a><span class="pp">#define il </span><span class="kw">inline</span></span>
+<span id="cb2-5"><a aria-hidden="true" href="#cb2-5"></a><span class="pp">#define FOR</span>(i,<span class="pp"> </span>a,<span class="pp"> </span>b)<span class="pp"> </span><span class="cf">for</span><span class="pp"> </span>(<span class="dt">int</span><span class="pp"> </span>i<span class="pp"> </span>=<span class="pp"> </span>a;<span class="pp"> </span>i<span class="pp"> </span>&lt;=<span class="pp"> </span>b;<span class="pp"> </span>++i)</span>
+<span id="cb2-6"><a aria-hidden="true" href="#cb2-6"></a></span>
+<span id="cb2-7"><a aria-hidden="true" href="#cb2-7"></a><span class="kw">typedef</span> <span class="dt">double</span> db;</span>
+<span id="cb2-8"><a aria-hidden="true" href="#cb2-8"></a></span>
+<span id="cb2-9"><a aria-hidden="true" href="#cb2-9"></a><span class="at">const</span> <span class="dt">int</span> maxn = <span class="fl">1e5</span> + <span class="dv">5</span>, maxt = <span class="fl">5e4</span> + <span class="dv">5</span>;</span>
+<span id="cb2-10"><a aria-hidden="true" href="#cb2-10"></a></span>
+<span id="cb2-11"><a aria-hidden="true" href="#cb2-11"></a><span class="kw">struct</span> segment</span>
+<span id="cb2-12"><a aria-hidden="true" href="#cb2-12"></a>{</span>
+<span id="cb2-13"><a aria-hidden="true" href="#cb2-13"></a>    db k, b;</span>
+<span id="cb2-14"><a aria-hidden="true" href="#cb2-14"></a>} p[maxn];</span>
+<span id="cb2-15"><a aria-hidden="true" href="#cb2-15"></a></span>
+<span id="cb2-16"><a aria-hidden="true" href="#cb2-16"></a><span class="dt">int</span> cnt = <span class="dv">0</span>, t[maxt &lt;&lt; <span class="dv">2</span>];</span>
+<span id="cb2-17"><a aria-hidden="true" href="#cb2-17"></a></span>
+<span id="cb2-18"><a aria-hidden="true" href="#cb2-18"></a><span class="dt">void</span> add(db s, db k)</span>
+<span id="cb2-19"><a aria-hidden="true" href="#cb2-19"></a>{</span>
+<span id="cb2-20"><a aria-hidden="true" href="#cb2-20"></a>    ++cnt;</span>
+<span id="cb2-21"><a aria-hidden="true" href="#cb2-21"></a>    p[cnt].k = k;</span>
+<span id="cb2-22"><a aria-hidden="true" href="#cb2-22"></a>    p[cnt].b = s - k;</span>
+<span id="cb2-23"><a aria-hidden="true" href="#cb2-23"></a>    <span class="cf">return</span>;</span>
+<span id="cb2-24"><a aria-hidden="true" href="#cb2-24"></a>}</span>
+<span id="cb2-25"><a aria-hidden="true" href="#cb2-25"></a></span>
+<span id="cb2-26"><a aria-hidden="true" href="#cb2-26"></a><span class="pp">#define L </span>(k<span class="pp"> </span>&lt;&lt;<span class="pp"> </span><span class="dv">1</span>)</span>
+<span id="cb2-27"><a aria-hidden="true" href="#cb2-27"></a><span class="pp">#define R </span>(L<span class="pp"> </span>|<span class="pp"> </span><span class="dv">1</span>)</span>
+<span id="cb2-28"><a aria-hidden="true" href="#cb2-28"></a><span class="pp">#define M </span>((i<span class="pp"> </span>+<span class="pp"> </span>j)<span class="pp"> </span>&gt;&gt;<span class="pp"> </span><span class="dv">1</span>)</span>
+<span id="cb2-29"><a aria-hidden="true" href="#cb2-29"></a></span>
+<span id="cb2-30"><a aria-hidden="true" href="#cb2-30"></a>il db calc(<span class="dt">int</span> i, <span class="dt">int</span> x) {<span class="cf">return</span> p[i].k * x + p[i].b;}</span>
+<span id="cb2-31"><a aria-hidden="true" href="#cb2-31"></a>il db max(db a, db b) {<span class="cf">return</span> a &gt; b ? a : b;} </span>
+<span id="cb2-32"><a aria-hidden="true" href="#cb2-32"></a></span>
+<span id="cb2-33"><a aria-hidden="true" href="#cb2-33"></a><span class="dt">void</span> update(<span class="dt">int</span> k, <span class="dt">int</span> i, <span class="dt">int</span> j, <span class="dt">int</span> u)</span>
+<span id="cb2-34"><a aria-hidden="true" href="#cb2-34"></a>{</span>
+<span id="cb2-35"><a aria-hidden="true" href="#cb2-35"></a>    <span class="dt">int</span> v = t[k];</span>
+<span id="cb2-36"><a aria-hidden="true" href="#cb2-36"></a>    db resu = calc(u, M), resv = calc(v, M);</span>
+<span id="cb2-37"><a aria-hidden="true" href="#cb2-37"></a>    <span class="cf">if</span> (i == j)</span>
+<span id="cb2-38"><a aria-hidden="true" href="#cb2-38"></a>    {</span>
+<span id="cb2-39"><a aria-hidden="true" href="#cb2-39"></a>        <span class="cf">if</span> (resu &gt; resv) t[k] = u;</span>
+<span id="cb2-40"><a aria-hidden="true" href="#cb2-40"></a>        <span class="cf">return</span>;</span>
+<span id="cb2-41"><a aria-hidden="true" href="#cb2-41"></a>    }</span>
+<span id="cb2-42"><a aria-hidden="true" href="#cb2-42"></a>    <span class="cf">if</span> (p[u].k &gt; p[v].k)</span>
+<span id="cb2-43"><a aria-hidden="true" href="#cb2-43"></a>    {</span>
+<span id="cb2-44"><a aria-hidden="true" href="#cb2-44"></a>        <span class="cf">if</span> (resu &gt; resv)</span>
+<span id="cb2-45"><a aria-hidden="true" href="#cb2-45"></a>            t[k] = u, update(L, i, M, v);</span>
+<span id="cb2-46"><a aria-hidden="true" href="#cb2-46"></a>        <span class="cf">else</span> update(R, M + <span class="dv">1</span>, j, u);</span>
+<span id="cb2-47"><a aria-hidden="true" href="#cb2-47"></a>    }</span>
+<span id="cb2-48"><a aria-hidden="true" href="#cb2-48"></a>    <span class="cf">else</span> <span class="cf">if</span> (p[u].k &lt; p[v].k)</span>
+<span id="cb2-49"><a aria-hidden="true" href="#cb2-49"></a>    {</span>
+<span id="cb2-50"><a aria-hidden="true" href="#cb2-50"></a>        <span class="cf">if</span> (resu &gt; resv)</span>
+<span id="cb2-51"><a aria-hidden="true" href="#cb2-51"></a>            t[k] = u, update(R, M + <span class="dv">1</span>, j, v);</span>
+<span id="cb2-52"><a aria-hidden="true" href="#cb2-52"></a>        <span class="cf">else</span> update(L, i, M, u);</span>
+<span id="cb2-53"><a aria-hidden="true" href="#cb2-53"></a>    }</span>
+<span id="cb2-54"><a aria-hidden="true" href="#cb2-54"></a>    <span class="cf">else</span> <span class="cf">if</span> (resu &gt; resv) t[k] = u;</span>
+<span id="cb2-55"><a aria-hidden="true" href="#cb2-55"></a>    <span class="cf">return</span>;</span>
+<span id="cb2-56"><a aria-hidden="true" href="#cb2-56"></a>}</span>
+<span id="cb2-57"><a aria-hidden="true" href="#cb2-57"></a></span>
+<span id="cb2-58"><a aria-hidden="true" href="#cb2-58"></a>db query(<span class="dt">int</span> X, <span class="dt">int</span> k, <span class="dt">int</span> i, <span class="dt">int</span> j)</span>
+<span id="cb2-59"><a aria-hidden="true" href="#cb2-59"></a>{</span>
+<span id="cb2-60"><a aria-hidden="true" href="#cb2-60"></a>    db res = <span class="dv">0</span>;</span>
+<span id="cb2-61"><a aria-hidden="true" href="#cb2-61"></a>    res = max(res, calc(t[k], X));</span>
+<span id="cb2-62"><a aria-hidden="true" href="#cb2-62"></a>    <span class="cf">if</span> (i &gt;= j) <span class="cf">return</span> res;</span>
+<span id="cb2-63"><a aria-hidden="true" href="#cb2-63"></a>    <span class="cf">if</span> (X &lt;= M) res = max(res, query(X, L, i, M));</span>
+<span id="cb2-64"><a aria-hidden="true" href="#cb2-64"></a>    <span class="cf">else</span> res = max(res, query(X, R, M + <span class="dv">1</span>, j));</span>
+<span id="cb2-65"><a aria-hidden="true" href="#cb2-65"></a>    <span class="cf">return</span> res;</span>
+<span id="cb2-66"><a aria-hidden="true" href="#cb2-66"></a>}</span>
+<span id="cb2-67"><a aria-hidden="true" href="#cb2-67"></a></span>
+<span id="cb2-68"><a aria-hidden="true" href="#cb2-68"></a><span class="dt">int</span> main()</span>
+<span id="cb2-69"><a aria-hidden="true" href="#cb2-69"></a>{</span>
+<span id="cb2-70"><a aria-hidden="true" href="#cb2-70"></a>    <span class="dt">int</span> n;</span>
+<span id="cb2-71"><a aria-hidden="true" href="#cb2-71"></a>    scanf(<span class="st">"</span><span class="sc">%d</span><span class="st">"</span>, &amp;n);</span>
+<span id="cb2-72"><a aria-hidden="true" href="#cb2-72"></a>    <span class="dt">char</span> op[<span class="dv">10</span>];</span>
+<span id="cb2-73"><a aria-hidden="true" href="#cb2-73"></a>    <span class="cf">while</span> (n--)</span>
+<span id="cb2-74"><a aria-hidden="true" href="#cb2-74"></a>    {</span>
+<span id="cb2-75"><a aria-hidden="true" href="#cb2-75"></a>        scanf(<span class="st">"</span><span class="sc">%s</span><span class="st">"</span>, op + <span class="dv">1</span>);</span>
+<span id="cb2-76"><a aria-hidden="true" href="#cb2-76"></a>        <span class="cf">if</span> (op[<span class="dv">1</span>] == <span class="ch">'Q'</span>)</span>
+<span id="cb2-77"><a aria-hidden="true" href="#cb2-77"></a>        {</span>
+<span id="cb2-78"><a aria-hidden="true" href="#cb2-78"></a>            <span class="dt">int</span> t;</span>
+<span id="cb2-79"><a aria-hidden="true" href="#cb2-79"></a>            scanf(<span class="st">"</span><span class="sc">%d</span><span class="st">"</span>, &amp;t);</span>
+<span id="cb2-80"><a aria-hidden="true" href="#cb2-80"></a>            printf(<span class="st">"</span><span class="sc">%d\n</span><span class="st">"</span>, (<span class="dt">int</span>)floor(query(t, <span class="dv">1</span>, <span class="dv">1</span>, maxt) / <span class="dv">100</span>));</span>
+<span id="cb2-81"><a aria-hidden="true" href="#cb2-81"></a>        }</span>
+<span id="cb2-82"><a aria-hidden="true" href="#cb2-82"></a>        <span class="cf">else</span> <span class="cf">if</span> (op[<span class="dv">1</span>] == <span class="ch">'P'</span>)</span>
+<span id="cb2-83"><a aria-hidden="true" href="#cb2-83"></a>        {</span>
+<span id="cb2-84"><a aria-hidden="true" href="#cb2-84"></a>            db s, p;</span>
+<span id="cb2-85"><a aria-hidden="true" href="#cb2-85"></a>            scanf(<span class="st">"</span><span class="sc">%lf</span><span class="st"> </span><span class="sc">%lf</span><span class="st">"</span>, &amp;s, &amp;p);</span>
+<span id="cb2-86"><a aria-hidden="true" href="#cb2-86"></a>            add(s, p);</span>
+<span id="cb2-87"><a aria-hidden="true" href="#cb2-87"></a>            update(<span class="dv">1</span>, <span class="dv">1</span>, maxt, cnt);</span>
+<span id="cb2-88"><a aria-hidden="true" href="#cb2-88"></a>        }</span>
+<span id="cb2-89"><a aria-hidden="true" href="#cb2-89"></a>    }</span>
+<span id="cb2-90"><a aria-hidden="true" href="#cb2-90"></a>    <span class="cf">return</span> <span class="dv">0</span>;</span>
+<span id="cb2-91"><a aria-hidden="true" href="#cb2-91"></a>}</span></code></pre></div>
+<h3 id="bzoj3938.-robot"><a href="https://darkbzoj.tk/problem/3938">BZOJ#3938. Robot</a></h3>
+<h4 id="题意-1">题意</h4>
+<p><span class="math inline">\(n\)</span> 个机器人，一开始分别在 <span class="math inline">\(a_i\)</span> 位置。接下来进行 <span class="math inline">\(m\)</span> 次操作：</p>
+<ul>
+<li><span class="math inline">\(T_i\texttt{ command } k_i~x_i\)</span>，表示在时间 <span class="math inline">\(T_i\)</span> 时重置 <span class="math inline">\(k_i\)</span> 号机器人的速度为 <span class="math inline">\(x_i\)</span> 单位长度每秒，<span class="math inline">\(x_i\)</span> 可以为负。</li>
+<li><span class="math inline">\(T_i\texttt{ query}\)</span>，表示查询时间 <span class="math inline">\(T_i\)</span> 时距离原点最远的机器人的距离。</li>
+</ul>
+<p><span class="math inline">\(0\le T_i\le 10^9\)</span>，总操作次数不超过 <span class="math inline">\(6\times 10^5\)</span>。</p>
+<h4 id="思路">思路</h4>
+<p>分析可得，每个机器人的 <span class="math inline">\(x-t\)</span> 图像都是分段的一次函数，所以可以离线，一开始建出一棵李超树来维护这些分段的一次函数的最值，再统一进行查询。（最大值就直接做，最小值为了方便可以把所有直线的 <span class="math inline">\(k\)</span> 和 <span class="math inline">\(b\)</span> 取相反数之后再做一次）。由于时间过大，所以需要离散化。</p>
+<p>总体来说还是比较不好写的，需要注意的细节非常多。<strong>需要注意的是离散化之后计算中点的函数值时一定要取离散化后的中点，因为递归下去的时候是以离散化之后的中点为参照的，不然 WA 80</strong>。</p>
+<p>同时，如果你同时维护了两棵李超树分别维护最大和最小值，修改函数千万要写成两个，否则在更新最大值的时候会更新很多无谓的最小值，会 T 飞掉只剩 40pts。</p>
+<p>把思路理清楚就可以写代码了。</p>
+<h4 id="实现-1">实现</h4>
+<div class="sourceCode" id="cb3"><pre class="sourceCode cpp"><code class="sourceCode cpp"><span id="cb3-1"><a aria-hidden="true" href="#cb3-1"></a><span class="pp">#include </span><span class="im">&lt;cstdio&gt;</span></span>
+<span id="cb3-2"><a aria-hidden="true" href="#cb3-2"></a><span class="pp">#include </span><span class="im">&lt;cstring&gt;</span></span>
+<span id="cb3-3"><a aria-hidden="true" href="#cb3-3"></a><span class="pp">#include </span><span class="im">&lt;vector&gt;</span></span>
+<span id="cb3-4"><a aria-hidden="true" href="#cb3-4"></a><span class="pp">#include </span><span class="im">&lt;algorithm&gt;</span></span>
+<span id="cb3-5"><a aria-hidden="true" href="#cb3-5"></a><span class="pp">#define il </span><span class="kw">inline</span></span>
+<span id="cb3-6"><a aria-hidden="true" href="#cb3-6"></a><span class="pp">#define FOR</span>(i,<span class="pp"> </span>a,<span class="pp"> </span>b)<span class="pp"> </span><span class="cf">for</span><span class="pp"> </span>(<span class="dt">int</span><span class="pp"> </span>i<span class="pp"> </span>=<span class="pp"> </span>a;<span class="pp"> </span>i<span class="pp"> </span>&lt;=<span class="pp"> </span>b;<span class="pp"> </span>++i)</span>
+<span id="cb3-7"><a aria-hidden="true" href="#cb3-7"></a><span class="pp">#define DEC</span>(i,<span class="pp"> </span>a,<span class="pp"> </span>b)<span class="pp"> </span><span class="cf">for</span><span class="pp"> </span>(<span class="dt">int</span><span class="pp"> </span>i<span class="pp"> </span>=<span class="pp"> </span>a;<span class="pp"> </span>i<span class="pp"> </span>&gt;=<span class="pp"> </span>b;<span class="pp"> </span>--i)</span>
+<span id="cb3-8"><a aria-hidden="true" href="#cb3-8"></a></span>
+<span id="cb3-9"><a aria-hidden="true" href="#cb3-9"></a><span class="kw">typedef</span> <span class="dt">long</span> <span class="dt">long</span> ll;</span>
+<span id="cb3-10"><a aria-hidden="true" href="#cb3-10"></a><span class="at">const</span> <span class="dt">int</span> maxn = <span class="fl">6e5</span> + <span class="dv">5</span>;</span>
+<span id="cb3-11"><a aria-hidden="true" href="#cb3-11"></a><span class="dt">int</span> n, m, tot;</span>
+<span id="cb3-12"><a aria-hidden="true" href="#cb3-12"></a>ll a[maxn], rt[maxn], ans[maxn];</span>
+<span id="cb3-13"><a aria-hidden="true" href="#cb3-13"></a></span>
+<span id="cb3-14"><a aria-hidden="true" href="#cb3-14"></a><span class="kw">struct</span> operation {</span>
+<span id="cb3-15"><a aria-hidden="true" href="#cb3-15"></a>    <span class="dt">int</span> op;</span>
+<span id="cb3-16"><a aria-hidden="true" href="#cb3-16"></a>    ll t, i, k;</span>
+<span id="cb3-17"><a aria-hidden="true" href="#cb3-17"></a>} q[maxn];</span>
+<span id="cb3-18"><a aria-hidden="true" href="#cb3-18"></a></span>
+<span id="cb3-19"><a aria-hidden="true" href="#cb3-19"></a><span class="kw">struct</span> line {</span>
+<span id="cb3-20"><a aria-hidden="true" href="#cb3-20"></a>    ll k, b, t1, t2;<span class="co">//维护时间的编号</span></span>
+<span id="cb3-21"><a aria-hidden="true" href="#cb3-21"></a>    line() {k = b = t1 = <span class="dv">0</span>, t2 = maxn;}</span>
+<span id="cb3-22"><a aria-hidden="true" href="#cb3-22"></a>} L[maxn &lt;&lt; <span class="dv">2</span>];</span>
+<span id="cb3-23"><a aria-hidden="true" href="#cb3-23"></a></span>
+<span id="cb3-24"><a aria-hidden="true" href="#cb3-24"></a><span class="dt">int</span> head[maxn], cnt, t[maxn &lt;&lt; <span class="dv">2</span>];</span>
+<span id="cb3-25"><a aria-hidden="true" href="#cb3-25"></a></span>
+<span id="cb3-26"><a aria-hidden="true" href="#cb3-26"></a>il <span class="dt">int</span> find(ll t) {<span class="cf">return</span> <span class="bu">std::</span>lower_bound(rt + <span class="dv">1</span>, rt + tot + <span class="dv">1</span>, t) - rt;}</span>
+<span id="cb3-27"><a aria-hidden="true" href="#cb3-27"></a>il ll calc(ll X, <span class="dt">int</span> i) {<span class="cf">return</span> L[i].k * X + L[i].b;}</span>
+<span id="cb3-28"><a aria-hidden="true" href="#cb3-28"></a>il ll max(ll a, ll b) {<span class="cf">return</span> a &gt; b ? a : b;}</span>
+<span id="cb3-29"><a aria-hidden="true" href="#cb3-29"></a></span>
+<span id="cb3-30"><a aria-hidden="true" href="#cb3-30"></a><span class="pp">#define ls </span>(k<span class="pp"> </span>&lt;&lt;<span class="pp"> </span><span class="dv">1</span>)</span>
+<span id="cb3-31"><a aria-hidden="true" href="#cb3-31"></a><span class="pp">#define rs </span>(ls<span class="pp"> </span>|<span class="pp"> </span><span class="dv">1</span>)</span>
+<span id="cb3-32"><a aria-hidden="true" href="#cb3-32"></a><span class="pp">#define M </span>((i<span class="pp"> </span>+<span class="pp"> </span>j)<span class="pp"> </span>&gt;&gt;<span class="pp"> </span><span class="dv">1</span>)</span>
+<span id="cb3-33"><a aria-hidden="true" href="#cb3-33"></a></span>
+<span id="cb3-34"><a aria-hidden="true" href="#cb3-34"></a><span class="dt">void</span> update(<span class="dt">int</span> k, <span class="dt">int</span> i, <span class="dt">int</span> j, <span class="dt">int</span> x, <span class="dt">int</span> y, <span class="dt">int</span> u) {</span>
+<span id="cb3-35"><a aria-hidden="true" href="#cb3-35"></a>    <span class="cf">if</span> (x &gt; j || y &lt; i) <span class="cf">return</span>;</span>
+<span id="cb3-36"><a aria-hidden="true" href="#cb3-36"></a>    <span class="dt">int</span> v = t[k];</span>
+<span id="cb3-37"><a aria-hidden="true" href="#cb3-37"></a>    ll resu = calc(rt[M], u), resv = calc(rt[M], v);</span>
+<span id="cb3-38"><a aria-hidden="true" href="#cb3-38"></a>    <span class="cf">if</span> (x &lt;= i &amp;&amp; y &gt;= j) {</span>
+<span id="cb3-39"><a aria-hidden="true" href="#cb3-39"></a>        <span class="cf">if</span> (i == j) {</span>
+<span id="cb3-40"><a aria-hidden="true" href="#cb3-40"></a>            <span class="cf">if</span> (resu &gt; resv) t[k] = u;</span>
+<span id="cb3-41"><a aria-hidden="true" href="#cb3-41"></a>            <span class="cf">return</span>;</span>
+<span id="cb3-42"><a aria-hidden="true" href="#cb3-42"></a>        }</span>
+<span id="cb3-43"><a aria-hidden="true" href="#cb3-43"></a>        <span class="cf">if</span> (L[u].k &gt; L[v].k) {</span>
+<span id="cb3-44"><a aria-hidden="true" href="#cb3-44"></a>            <span class="cf">if</span> (resu &gt; resv)</span>
+<span id="cb3-45"><a aria-hidden="true" href="#cb3-45"></a>                t[k] = u, update(ls, i, M, x, y, v);</span>
+<span id="cb3-46"><a aria-hidden="true" href="#cb3-46"></a>            <span class="cf">else</span> update(rs, M + <span class="dv">1</span>, j, x, y, u);</span>
+<span id="cb3-47"><a aria-hidden="true" href="#cb3-47"></a>        } <span class="cf">else</span> <span class="cf">if</span> (L[u].k &lt; L[v].k) {</span>
+<span id="cb3-48"><a aria-hidden="true" href="#cb3-48"></a>            <span class="cf">if</span> (resu &gt; resv)</span>
+<span id="cb3-49"><a aria-hidden="true" href="#cb3-49"></a>                t[k] = u, update(rs, M + <span class="dv">1</span>, j, x, y, v);</span>
+<span id="cb3-50"><a aria-hidden="true" href="#cb3-50"></a>            <span class="cf">else</span> update(ls, i, M, x, y, u);</span>
+<span id="cb3-51"><a aria-hidden="true" href="#cb3-51"></a>        } <span class="cf">else</span> <span class="cf">if</span> (resu &gt; resv) t[k] = u;</span>
+<span id="cb3-52"><a aria-hidden="true" href="#cb3-52"></a>        <span class="cf">return</span>;</span>
+<span id="cb3-53"><a aria-hidden="true" href="#cb3-53"></a>    }</span>
+<span id="cb3-54"><a aria-hidden="true" href="#cb3-54"></a>    update(ls, i, M, x, y, u);</span>
+<span id="cb3-55"><a aria-hidden="true" href="#cb3-55"></a>    update(rs, M + <span class="dv">1</span>, j, x, y, u);</span>
+<span id="cb3-56"><a aria-hidden="true" href="#cb3-56"></a>    <span class="cf">return</span>;</span>
+<span id="cb3-57"><a aria-hidden="true" href="#cb3-57"></a>}</span>
+<span id="cb3-58"><a aria-hidden="true" href="#cb3-58"></a></span>
+<span id="cb3-59"><a aria-hidden="true" href="#cb3-59"></a>ll query(<span class="dt">int</span> k, <span class="dt">int</span> i, <span class="dt">int</span> j, <span class="dt">int</span> x)</span>
+<span id="cb3-60"><a aria-hidden="true" href="#cb3-60"></a>{</span>
+<span id="cb3-61"><a aria-hidden="true" href="#cb3-61"></a>    ll ret = calc(rt[x], t[k]);</span>
+<span id="cb3-62"><a aria-hidden="true" href="#cb3-62"></a>    <span class="cf">if</span> (i &gt;= j) <span class="cf">return</span> ret;</span>
+<span id="cb3-63"><a aria-hidden="true" href="#cb3-63"></a>    <span class="cf">if</span> (x &lt;= M) ret = max(ret, query(ls, i, M, x));</span>
+<span id="cb3-64"><a aria-hidden="true" href="#cb3-64"></a>    <span class="cf">else</span> ret = max(ret, query(rs, M + <span class="dv">1</span>, j, x));</span>
+<span id="cb3-65"><a aria-hidden="true" href="#cb3-65"></a>    <span class="cf">return</span> ret;</span>
+<span id="cb3-66"><a aria-hidden="true" href="#cb3-66"></a>}</span>
+<span id="cb3-67"><a aria-hidden="true" href="#cb3-67"></a></span>
+<span id="cb3-68"><a aria-hidden="true" href="#cb3-68"></a><span class="dt">int</span> main() {</span>
+<span id="cb3-69"><a aria-hidden="true" href="#cb3-69"></a>    scanf(<span class="st">"</span><span class="sc">%d</span><span class="st"> </span><span class="sc">%d</span><span class="st">"</span>, &amp;n, &amp;m);</span>
+<span id="cb3-70"><a aria-hidden="true" href="#cb3-70"></a>    FOR(i, <span class="dv">1</span>, n) scanf(<span class="st">"</span><span class="sc">%lld</span><span class="st">"</span>, a + i), head[i] = ++cnt, L[cnt].t1 = <span class="dv">1</span>, L[cnt].b = a[i];</span>
+<span id="cb3-71"><a aria-hidden="true" href="#cb3-71"></a>    <span class="dt">char</span> tmp[<span class="dv">10</span>];</span>
+<span id="cb3-72"><a aria-hidden="true" href="#cb3-72"></a>    rt[++tot] = <span class="dv">0</span>;</span>
+<span id="cb3-73"><a aria-hidden="true" href="#cb3-73"></a>    FOR(i, <span class="dv">1</span>, m) {</span>
+<span id="cb3-74"><a aria-hidden="true" href="#cb3-74"></a>        scanf(<span class="st">"</span><span class="sc">%lld</span><span class="st">"</span>, &amp;q[i].t), rt[++tot] = q[i].t;</span>
+<span id="cb3-75"><a aria-hidden="true" href="#cb3-75"></a>        scanf(<span class="st">"</span><span class="sc">%s</span><span class="st">"</span>, tmp);</span>
+<span id="cb3-76"><a aria-hidden="true" href="#cb3-76"></a>        <span class="cf">if</span> (tmp[<span class="dv">0</span>] == <span class="ch">'q'</span>) q[i].op = <span class="dv">1</span>;</span>
+<span id="cb3-77"><a aria-hidden="true" href="#cb3-77"></a>        <span class="cf">else</span> scanf(<span class="st">"</span><span class="sc">%lld</span><span class="st"> </span><span class="sc">%lld</span><span class="st">"</span>, &amp;q[i].i, &amp;q[i].k);</span>
+<span id="cb3-78"><a aria-hidden="true" href="#cb3-78"></a>    }</span>
+<span id="cb3-79"><a aria-hidden="true" href="#cb3-79"></a>    tot = <span class="bu">std::</span>unique(rt + <span class="dv">1</span>, rt + tot + <span class="dv">1</span>) - rt - <span class="dv">1</span>;</span>
+<span id="cb3-80"><a aria-hidden="true" href="#cb3-80"></a>    FOR(i, <span class="dv">1</span>, m) {</span>
+<span id="cb3-81"><a aria-hidden="true" href="#cb3-81"></a>        <span class="cf">if</span> (q[i].op == <span class="dv">0</span>) {</span>
+<span id="cb3-82"><a aria-hidden="true" href="#cb3-82"></a>            q[i].t = find(q[i].t);</span>
+<span id="cb3-83"><a aria-hidden="true" href="#cb3-83"></a>            line &amp;last = L[head[q[i].i]], now;</span>
+<span id="cb3-84"><a aria-hidden="true" href="#cb3-84"></a>            last.t2 = q[i].t;</span>
+<span id="cb3-85"><a aria-hidden="true" href="#cb3-85"></a>            ll y = last.k * rt[last.t2] + last.b;</span>
+<span id="cb3-86"><a aria-hidden="true" href="#cb3-86"></a>            now.k = q[i].k, now.t1 = q[i].t;</span>
+<span id="cb3-87"><a aria-hidden="true" href="#cb3-87"></a>            now.b = y - now.k * rt[now.t1];</span>
+<span id="cb3-88"><a aria-hidden="true" href="#cb3-88"></a>            L[++cnt] = now, head[q[i].i] = cnt;</span>
+<span id="cb3-89"><a aria-hidden="true" href="#cb3-89"></a>        }</span>
+<span id="cb3-90"><a aria-hidden="true" href="#cb3-90"></a>        <span class="cf">else</span> q[i].t = find(q[i].t);</span>
+<span id="cb3-91"><a aria-hidden="true" href="#cb3-91"></a>    }</span>
+<span id="cb3-92"><a aria-hidden="true" href="#cb3-92"></a>    FOR(i, <span class="dv">1</span>, n) L[head[i]].t2 = tot;</span>
+<span id="cb3-93"><a aria-hidden="true" href="#cb3-93"></a>    FOR(i, <span class="dv">1</span>, cnt) update(<span class="dv">1</span>, <span class="dv">1</span>, tot, L[i].t1, L[i].t2, i);</span>
+<span id="cb3-94"><a aria-hidden="true" href="#cb3-94"></a>    FOR(i, <span class="dv">1</span>, m) <span class="cf">if</span> (q[i].op == <span class="dv">1</span>) ans[i] = query(<span class="dv">1</span>, <span class="dv">1</span>, tot, q[i].t);</span>
+<span id="cb3-95"><a aria-hidden="true" href="#cb3-95"></a>    memset(t, <span class="dv">0</span>, <span class="kw">sizeof</span> t);</span>
+<span id="cb3-96"><a aria-hidden="true" href="#cb3-96"></a>    FOR(i, <span class="dv">1</span>, cnt) L[i].k *= -<span class="dv">1</span><span class="bu">ll</span>, L[i].b *= -<span class="dv">1</span><span class="bu">ll</span>, update(<span class="dv">1</span>, <span class="dv">1</span>, tot, L[i].t1, L[i].t2, i);</span>
+<span id="cb3-97"><a aria-hidden="true" href="#cb3-97"></a>    FOR(i, <span class="dv">1</span>, m) <span class="cf">if</span> (q[i].op == <span class="dv">1</span>) printf(<span class="st">"</span><span class="sc">%lld\n</span><span class="st">"</span>, max(ans[i], query(<span class="dv">1</span>, <span class="dv">1</span>, tot, q[i].t)));</span>
+<span id="cb3-98"><a aria-hidden="true" href="#cb3-98"></a>    <span class="cf">return</span> <span class="dv">0</span>;</span>
+<span id="cb3-99"><a aria-hidden="true" href="#cb3-99"></a>}</span></code></pre></div>
+<h3 id="p4069-sdoi2016游戏">P4069 [SDOI2016]游戏</h3>
+<h4 id="题意-2">题意</h4>
+<p><span class="math inline">\(n\)</span> 个点的树。最初每个点上有一个数 <span class="math inline">\(123456789123456789\)</span>。进行两种操作：</p>
+<ul>
+<li>选一条从 <span class="math inline">\(s\)</span> 到 <span class="math inline">\(t\)</span> 的路径，在这条路径上的每个点都添加一个数字。对于路径上的一个点 <span class="math inline">\(r\)</span>，若 <span class="math inline">\(r\)</span> 与 <span class="math inline">\(s\)</span> 的距离为 <span class="math inline">\(d\)</span>，则这个点上添加的数字就是 <span class="math inline">\(a\times d + b\)</span>。</li>
+<li>从一条从 <span class="math inline">\(s\)</span> 到 <span class="math inline">\(t\)</span> 的路径上的点中选出一个最小的数字。</li>
+</ul>
+<p><span class="math inline">\(n\le 10^6\)</span>。</p>
+<h4 id="思路-1">思路</h4>
+<p>维护树上路径，很自然的可以树链剖分然后使用李超树维护。设 <span class="math inline">\(u\)</span> 到根的距离为 <span class="math inline">\(d(u)\)</span>，注意到同一条重链上面的 <span class="math inline">\(d(u)\)</span> 是单调递增的，所以可以使用李超树进行维护。</p>
+<p>具体地，设 <span class="math inline">\(s\)</span> 与 <span class="math inline">\(t\)</span> 的 LCA 为 <span class="math inline">\(w\)</span>，分 <span class="math inline">\(s\)</span> 到 <span class="math inline">\(w\)</span> 和 <span class="math inline">\(w\)</span> 到 <span class="math inline">\(t\)</span> 两段讨论。</p>
+<ul>
+<li>从 <span class="math inline">\(s\)</span> 到 <span class="math inline">\(w\)</span> 上任意取一点 <span class="math inline">\(x\)</span>，则 <span class="math inline">\(x\)</span> 上加的数为 <span class="math inline">\(a\times(d(s) - d(x)) + b\)</span>，化简开有 <span class="math inline">\(-a\times d(x) + ad(s) + b\)</span>。所以这一段要加的直线为 <span class="math inline">\(y = -ax + (a\times d(s) + b)\)</span>。</li>
+<li>从 <span class="math inline">\(t\)</span> 到 <span class="math inline">\(w\)</span> 上任意取一点 <span class="math inline">\(x\)</span>，则 <span class="math inline">\(x\)</span> 上加的数为 <span class="math inline">\(a\times(d(x) - d(w) + d(s) - d(w)) + b\)</span>，化简开就可以得到这一段的直线为 <span class="math inline">\(y = ax + (a(d(s) - 2d(w)) + b)\)</span>。</li>
+</ul>
+<p>然后对于查询操作：在线段树上的每个区间维护一个该区间中线段能达到的最小值，查询的时候直接输出即可。</p>
+<h4 id="实现-2">实现</h4>
+<p>首先是插入操作需要注意的细节：</p>
+<ul>
+<li>一定要 <code>pushup</code></li>
+<li>插入直线之后要用两个端点来更新最小值</li>
+</ul>
+<p>然后是查询操作，注意此时需要同时计算一下当前区间的优势线段能产生的最小答案。</p>
+<p>总的来说比较考验代码组织能力，值得一做。</p>
+<div class="sourceCode" id="cb4"><pre class="sourceCode cpp"><code class="sourceCode cpp"><span id="cb4-1"><a aria-hidden="true" href="#cb4-1"></a><span class="pp">#include </span><span class="im">&lt;cstdio&gt;</span></span>
+<span id="cb4-2"><a aria-hidden="true" href="#cb4-2"></a><span class="pp">#include </span><span class="im">&lt;cctype&gt;</span></span>
+<span id="cb4-3"><a aria-hidden="true" href="#cb4-3"></a><span class="pp">#define il </span><span class="kw">inline</span></span>
+<span id="cb4-4"><a aria-hidden="true" href="#cb4-4"></a><span class="pp">#define FOR</span>(i,<span class="pp"> </span>a,<span class="pp"> </span>b)<span class="pp"> </span><span class="cf">for</span><span class="pp"> </span>(<span class="dt">int</span><span class="pp"> </span>i<span class="pp"> </span>=<span class="pp"> </span>a;<span class="pp"> </span>i<span class="pp"> </span>&lt;=<span class="pp"> </span>b;<span class="pp"> </span>++i)</span>
+<span id="cb4-5"><a aria-hidden="true" href="#cb4-5"></a><span class="pp">#define DEC</span>(i,<span class="pp"> </span>a,<span class="pp"> </span>b)<span class="pp"> </span><span class="cf">for</span><span class="pp"> </span>(<span class="dt">int</span><span class="pp"> </span>i<span class="pp"> </span>=<span class="pp"> </span>a;<span class="pp"> </span>i<span class="pp"> </span>&gt;=<span class="pp"> </span>b;<span class="pp"> </span>--i)</span>
+<span id="cb4-6"><a aria-hidden="true" href="#cb4-6"></a><span class="pp">#define GO</span>(u)<span class="pp"> </span><span class="cf">for</span><span class="pp"> </span>(<span class="dt">int</span><span class="pp"> </span>i<span class="pp"> </span>=<span class="pp"> </span>head[u],<span class="pp"> </span>v<span class="pp"> </span>=<span class="pp"> </span>e[i].to;<span class="pp"> </span>i;<span class="pp"> </span>i<span class="pp"> </span>=<span class="pp"> </span>e[i].nxt,<span class="pp"> </span>v<span class="pp"> </span>=<span class="pp"> </span>e[i].to)</span>
+<span id="cb4-7"><a aria-hidden="true" href="#cb4-7"></a></span>
+<span id="cb4-8"><a aria-hidden="true" href="#cb4-8"></a><span class="kw">namespace</span> fastIO {</span>
+<span id="cb4-9"><a aria-hidden="true" href="#cb4-9"></a>    <span class="at">const</span> <span class="dt">int</span> maxc = <span class="fl">1e7</span> + <span class="dv">5</span>;</span>
+<span id="cb4-10"><a aria-hidden="true" href="#cb4-10"></a>    <span class="dt">char</span> buf[maxc], *p1 = buf, *p2 = buf;</span>
+<span id="cb4-11"><a aria-hidden="true" href="#cb4-11"></a>    il <span class="dt">char</span> getchar() {<span class="cf">return</span> p1 == p2 &amp;&amp; (p2 = (p1 = buf) + fread(buf, <span class="dv">1</span>, maxc, stdin), p1 == p2) ? EOF : *p1++;}</span>
+<span id="cb4-12"><a aria-hidden="true" href="#cb4-12"></a>    <span class="dt">int</span> read() {</span>
+<span id="cb4-13"><a aria-hidden="true" href="#cb4-13"></a>        <span class="dt">int</span> s = <span class="dv">0</span>, x = <span class="dv">0</span>;</span>
+<span id="cb4-14"><a aria-hidden="true" href="#cb4-14"></a>        <span class="dt">char</span> c = getchar();</span>
+<span id="cb4-15"><a aria-hidden="true" href="#cb4-15"></a>        <span class="cf">while</span> (!isdigit(c))</span>
+<span id="cb4-16"><a aria-hidden="true" href="#cb4-16"></a>            x |= (c == <span class="ch">'-'</span>), c = getchar();</span>
+<span id="cb4-17"><a aria-hidden="true" href="#cb4-17"></a>        <span class="cf">while</span> (isdigit(c))</span>
+<span id="cb4-18"><a aria-hidden="true" href="#cb4-18"></a>            s = s * <span class="dv">10</span> + c - <span class="ch">'0'</span>, c = getchar();</span>
+<span id="cb4-19"><a aria-hidden="true" href="#cb4-19"></a>        <span class="cf">return</span> x ? -s : s;</span>
+<span id="cb4-20"><a aria-hidden="true" href="#cb4-20"></a>    }</span>
+<span id="cb4-21"><a aria-hidden="true" href="#cb4-21"></a>}</span>
+<span id="cb4-22"><a aria-hidden="true" href="#cb4-22"></a></span>
+<span id="cb4-23"><a aria-hidden="true" href="#cb4-23"></a><span class="kw">using</span> <span class="kw">namespace</span> fastIO;</span>
+<span id="cb4-24"><a aria-hidden="true" href="#cb4-24"></a></span>
+<span id="cb4-25"><a aria-hidden="true" href="#cb4-25"></a><span class="kw">template</span>&lt;<span class="kw">typename</span> T&gt; il <span class="dt">void</span> swap(T &amp;a, T &amp;b) {</span>
+<span id="cb4-26"><a aria-hidden="true" href="#cb4-26"></a>    T t = a;</span>
+<span id="cb4-27"><a aria-hidden="true" href="#cb4-27"></a>    a = b, b = t;</span>
+<span id="cb4-28"><a aria-hidden="true" href="#cb4-28"></a>    <span class="cf">return</span>;</span>
+<span id="cb4-29"><a aria-hidden="true" href="#cb4-29"></a>}</span>
+<span id="cb4-30"><a aria-hidden="true" href="#cb4-30"></a></span>
+<span id="cb4-31"><a aria-hidden="true" href="#cb4-31"></a><span class="kw">typedef</span> <span class="dt">long</span> <span class="dt">long</span> ll;</span>
+<span id="cb4-32"><a aria-hidden="true" href="#cb4-32"></a><span class="at">const</span> <span class="dt">int</span> maxn = <span class="dv">100000</span> + <span class="dv">5</span>;</span>
+<span id="cb4-33"><a aria-hidden="true" href="#cb4-33"></a><span class="at">const</span> ll INF = <span class="dv">123456789123456789</span>;</span>
+<span id="cb4-34"><a aria-hidden="true" href="#cb4-34"></a></span>
+<span id="cb4-35"><a aria-hidden="true" href="#cb4-35"></a>il ll min(ll a, ll b) {<span class="cf">return</span> a &lt; b ? a : b;}</span>
+<span id="cb4-36"><a aria-hidden="true" href="#cb4-36"></a>il ll max(ll a, ll b) {<span class="cf">return</span> a &gt; b ? a : b;}</span>
+<span id="cb4-37"><a aria-hidden="true" href="#cb4-37"></a></span>
+<span id="cb4-38"><a aria-hidden="true" href="#cb4-38"></a><span class="dt">int</span> n, m, head[maxn], cnte;</span>
+<span id="cb4-39"><a aria-hidden="true" href="#cb4-39"></a></span>
+<span id="cb4-40"><a aria-hidden="true" href="#cb4-40"></a><span class="kw">struct</span> edge {</span>
+<span id="cb4-41"><a aria-hidden="true" href="#cb4-41"></a>    <span class="dt">int</span> to, nxt;</span>
+<span id="cb4-42"><a aria-hidden="true" href="#cb4-42"></a>    ll dist;</span>
+<span id="cb4-43"><a aria-hidden="true" href="#cb4-43"></a>} e[maxn &lt;&lt; <span class="dv">1</span>];</span>
+<span id="cb4-44"><a aria-hidden="true" href="#cb4-44"></a></span>
+<span id="cb4-45"><a aria-hidden="true" href="#cb4-45"></a><span class="dt">void</span> add(<span class="dt">int</span> u, <span class="dt">int</span> v, <span class="dt">int</span> w) {</span>
+<span id="cb4-46"><a aria-hidden="true" href="#cb4-46"></a>    e[++cnte].to = v;</span>
+<span id="cb4-47"><a aria-hidden="true" href="#cb4-47"></a>    e[cnte].dist = w;</span>
+<span id="cb4-48"><a aria-hidden="true" href="#cb4-48"></a>    e[cnte].nxt = head[u];</span>
+<span id="cb4-49"><a aria-hidden="true" href="#cb4-49"></a>    head[u] = cnte;</span>
+<span id="cb4-50"><a aria-hidden="true" href="#cb4-50"></a>    <span class="cf">return</span>;</span>
+<span id="cb4-51"><a aria-hidden="true" href="#cb4-51"></a>}</span>
+<span id="cb4-52"><a aria-hidden="true" href="#cb4-52"></a></span>
+<span id="cb4-53"><a aria-hidden="true" href="#cb4-53"></a><span class="dt">int</span> fa[maxn], son[maxn], size[maxn], dep[maxn];</span>
+<span id="cb4-54"><a aria-hidden="true" href="#cb4-54"></a><span class="dt">int</span> dfn[maxn], nfd[maxn], top[maxn], cntDfn;</span>
+<span id="cb4-55"><a aria-hidden="true" href="#cb4-55"></a>ll dis[maxn];</span>
+<span id="cb4-56"><a aria-hidden="true" href="#cb4-56"></a></span>
+<span id="cb4-57"><a aria-hidden="true" href="#cb4-57"></a><span class="dt">void</span> dfs1(<span class="dt">int</span> u, <span class="dt">int</span> f) {</span>
+<span id="cb4-58"><a aria-hidden="true" href="#cb4-58"></a>    fa[u] = f, size[u] = <span class="dv">1</span>, dep[u] = dep[f] + <span class="dv">1</span>;</span>
+<span id="cb4-59"><a aria-hidden="true" href="#cb4-59"></a>    GO(u) {</span>
+<span id="cb4-60"><a aria-hidden="true" href="#cb4-60"></a>        <span class="cf">if</span> (v == f) <span class="cf">continue</span>;</span>
+<span id="cb4-61"><a aria-hidden="true" href="#cb4-61"></a>        dis[v] = dis[u] + e[i].dist;</span>
+<span id="cb4-62"><a aria-hidden="true" href="#cb4-62"></a>        dfs1(v, u);</span>
+<span id="cb4-63"><a aria-hidden="true" href="#cb4-63"></a>        size[u] += size[v];</span>
+<span id="cb4-64"><a aria-hidden="true" href="#cb4-64"></a>        <span class="cf">if</span> (size[v] &gt; size[son[u]])</span>
+<span id="cb4-65"><a aria-hidden="true" href="#cb4-65"></a>            son[u] = v;</span>
+<span id="cb4-66"><a aria-hidden="true" href="#cb4-66"></a>    }</span>
+<span id="cb4-67"><a aria-hidden="true" href="#cb4-67"></a>    <span class="cf">return</span>;</span>
+<span id="cb4-68"><a aria-hidden="true" href="#cb4-68"></a>}</span>
+<span id="cb4-69"><a aria-hidden="true" href="#cb4-69"></a></span>
+<span id="cb4-70"><a aria-hidden="true" href="#cb4-70"></a><span class="dt">void</span> dfs2(<span class="dt">int</span> u, <span class="dt">int</span> topf) {</span>
+<span id="cb4-71"><a aria-hidden="true" href="#cb4-71"></a>    dfn[u] = ++cntDfn, top[u] = topf, nfd[dfn[u]] = u;</span>
+<span id="cb4-72"><a aria-hidden="true" href="#cb4-72"></a>    <span class="cf">if</span> (son[u]) dfs2(son[u], topf);</span>
+<span id="cb4-73"><a aria-hidden="true" href="#cb4-73"></a>    GO(u) {</span>
+<span id="cb4-74"><a aria-hidden="true" href="#cb4-74"></a>        <span class="cf">if</span> (v == fa[u] || v == son[u]) <span class="cf">continue</span>;</span>
+<span id="cb4-75"><a aria-hidden="true" href="#cb4-75"></a>        dfs2(v, v);</span>
+<span id="cb4-76"><a aria-hidden="true" href="#cb4-76"></a>    }</span>
+<span id="cb4-77"><a aria-hidden="true" href="#cb4-77"></a>    <span class="cf">return</span>;</span>
+<span id="cb4-78"><a aria-hidden="true" href="#cb4-78"></a>}</span>
+<span id="cb4-79"><a aria-hidden="true" href="#cb4-79"></a></span>
+<span id="cb4-80"><a aria-hidden="true" href="#cb4-80"></a><span class="dt">int</span> LCA(<span class="dt">int</span> u, <span class="dt">int</span> v) {</span>
+<span id="cb4-81"><a aria-hidden="true" href="#cb4-81"></a>    <span class="cf">while</span> (top[u] != top[v]) {</span>
+<span id="cb4-82"><a aria-hidden="true" href="#cb4-82"></a>        <span class="cf">if</span> (dep[top[u]] &lt; dep[top[v]])</span>
+<span id="cb4-83"><a aria-hidden="true" href="#cb4-83"></a>            swap(u, v);</span>
+<span id="cb4-84"><a aria-hidden="true" href="#cb4-84"></a>        u = fa[top[u]];</span>
+<span id="cb4-85"><a aria-hidden="true" href="#cb4-85"></a>    }</span>
+<span id="cb4-86"><a aria-hidden="true" href="#cb4-86"></a>    <span class="cf">return</span> dep[u] &lt; dep[v] ? u : v;</span>
+<span id="cb4-87"><a aria-hidden="true" href="#cb4-87"></a>}</span>
+<span id="cb4-88"><a aria-hidden="true" href="#cb4-88"></a></span>
+<span id="cb4-89"><a aria-hidden="true" href="#cb4-89"></a><span class="pp">#define L </span>(k<span class="pp"> </span>&lt;&lt;<span class="pp"> </span><span class="dv">1</span>)</span>
+<span id="cb4-90"><a aria-hidden="true" href="#cb4-90"></a><span class="pp">#define R </span>(L<span class="pp"> </span>|<span class="pp"> </span><span class="dv">1</span>)</span>
+<span id="cb4-91"><a aria-hidden="true" href="#cb4-91"></a><span class="pp">#define M </span>((i<span class="pp"> </span>+<span class="pp"> </span>j)<span class="pp"> </span>&gt;&gt;<span class="pp"> </span><span class="dv">1</span>)</span>
+<span id="cb4-92"><a aria-hidden="true" href="#cb4-92"></a></span>
+<span id="cb4-93"><a aria-hidden="true" href="#cb4-93"></a>ll t[maxn &lt;&lt; <span class="dv">2</span>], minv[maxn &lt;&lt; <span class="dv">2</span>];</span>
+<span id="cb4-94"><a aria-hidden="true" href="#cb4-94"></a>ll K[maxn], B[maxn];</span>
+<span id="cb4-95"><a aria-hidden="true" href="#cb4-95"></a><span class="dt">int</span> tot;</span>
+<span id="cb4-96"><a aria-hidden="true" href="#cb4-96"></a></span>
+<span id="cb4-97"><a aria-hidden="true" href="#cb4-97"></a>il ll calc(<span class="dt">int</span> x, <span class="dt">int</span> id) {<span class="cf">return</span> K[id] * dis[nfd[x]] + B[id];}</span>
+<span id="cb4-98"><a aria-hidden="true" href="#cb4-98"></a>il <span class="dt">void</span> pushup(<span class="dt">int</span> k) {minv[k] = min(minv[k], min(minv[L], minv[R]));}</span>
+<span id="cb4-99"><a aria-hidden="true" href="#cb4-99"></a></span>
+<span id="cb4-100"><a aria-hidden="true" href="#cb4-100"></a><span class="dt">void</span> build(<span class="dt">int</span> i, <span class="dt">int</span> j, <span class="dt">int</span> k) {</span>
+<span id="cb4-101"><a aria-hidden="true" href="#cb4-101"></a>    minv[k] = INF, t[k] = <span class="dv">1</span>;</span>
+<span id="cb4-102"><a aria-hidden="true" href="#cb4-102"></a>    <span class="cf">if</span> (i == j) <span class="cf">return</span>;</span>
+<span id="cb4-103"><a aria-hidden="true" href="#cb4-103"></a>    build(i, M, L);</span>
+<span id="cb4-104"><a aria-hidden="true" href="#cb4-104"></a>    build(M + <span class="dv">1</span>, j, R);</span>
+<span id="cb4-105"><a aria-hidden="true" href="#cb4-105"></a>    <span class="cf">return</span>;</span>
+<span id="cb4-106"><a aria-hidden="true" href="#cb4-106"></a>}</span>
+<span id="cb4-107"><a aria-hidden="true" href="#cb4-107"></a></span>
+<span id="cb4-108"><a aria-hidden="true" href="#cb4-108"></a><span class="dt">void</span> modify(<span class="dt">int</span> i, <span class="dt">int</span> j, <span class="dt">int</span> k, <span class="dt">int</span> x, <span class="dt">int</span> y, <span class="dt">int</span> u) {</span>
+<span id="cb4-109"><a aria-hidden="true" href="#cb4-109"></a>    <span class="cf">if</span> (x &lt;= i &amp;&amp; y &gt;= j) {</span>
+<span id="cb4-110"><a aria-hidden="true" href="#cb4-110"></a>        <span class="cf">if</span> (calc(i, u) &lt;= calc(i, t[k]) &amp;&amp; calc(j, u) &lt;= calc(j, t[k])) {</span>
+<span id="cb4-111"><a aria-hidden="true" href="#cb4-111"></a>            t[k] = u;</span>
+<span id="cb4-112"><a aria-hidden="true" href="#cb4-112"></a>            minv[k] = min(minv[k], min(calc(i, u), calc(j, u)));</span>
+<span id="cb4-113"><a aria-hidden="true" href="#cb4-113"></a>            <span class="cf">return</span>;</span>
+<span id="cb4-114"><a aria-hidden="true" href="#cb4-114"></a>        }</span>
+<span id="cb4-115"><a aria-hidden="true" href="#cb4-115"></a>        <span class="cf">if</span> (calc(i, u) &gt;= calc(i, t[k]) &amp;&amp; calc(j, u) &gt;= calc(j, t[k])) <span class="cf">return</span>;</span>
+<span id="cb4-116"><a aria-hidden="true" href="#cb4-116"></a>        <span class="cf">if</span> (K[u] &lt; K[t[k]]) {</span>
+<span id="cb4-117"><a aria-hidden="true" href="#cb4-117"></a>            <span class="cf">if</span> (calc(M, u) &lt;= calc(M, t[k]))</span>
+<span id="cb4-118"><a aria-hidden="true" href="#cb4-118"></a>                modify(i, M, L, x, y, t[k]), t[k] = u;</span>
+<span id="cb4-119"><a aria-hidden="true" href="#cb4-119"></a>            <span class="cf">else</span> modify(M + <span class="dv">1</span>, j, R, x, y, u);</span>
+<span id="cb4-120"><a aria-hidden="true" href="#cb4-120"></a>        } <span class="cf">else</span> {</span>
+<span id="cb4-121"><a aria-hidden="true" href="#cb4-121"></a>            <span class="cf">if</span> (calc(M, u) &lt;= calc(M, t[k]))</span>
+<span id="cb4-122"><a aria-hidden="true" href="#cb4-122"></a>                modify(M + <span class="dv">1</span>, j, R, x, y, t[k]), t[k] = u;</span>
+<span id="cb4-123"><a aria-hidden="true" href="#cb4-123"></a>            <span class="cf">else</span> modify(i, M, L, x, y, u);</span>
+<span id="cb4-124"><a aria-hidden="true" href="#cb4-124"></a>        }</span>
+<span id="cb4-125"><a aria-hidden="true" href="#cb4-125"></a>        <span class="cf">return</span> minv[k] = min(minv[k], min(calc(i, u), calc(j, u))), pushup(k);</span>
+<span id="cb4-126"><a aria-hidden="true" href="#cb4-126"></a>    }</span>
+<span id="cb4-127"><a aria-hidden="true" href="#cb4-127"></a>    <span class="cf">if</span> (x &lt;= M) modify(i, M, L, x, y, u);</span>
+<span id="cb4-128"><a aria-hidden="true" href="#cb4-128"></a>    <span class="cf">if</span> (y &gt; M) modify(M + <span class="dv">1</span>, j, R, x, y, u);</span>
+<span id="cb4-129"><a aria-hidden="true" href="#cb4-129"></a>    pushup(k);</span>
+<span id="cb4-130"><a aria-hidden="true" href="#cb4-130"></a>    <span class="cf">return</span>;</span>
+<span id="cb4-131"><a aria-hidden="true" href="#cb4-131"></a>}</span>
+<span id="cb4-132"><a aria-hidden="true" href="#cb4-132"></a></span>
+<span id="cb4-133"><a aria-hidden="true" href="#cb4-133"></a>ll query(<span class="dt">int</span> i, <span class="dt">int</span> j, <span class="dt">int</span> k, <span class="dt">int</span> x, <span class="dt">int</span> y) {</span>
+<span id="cb4-134"><a aria-hidden="true" href="#cb4-134"></a>    <span class="cf">if</span> (x &lt;= i &amp;&amp; y &gt;= j) <span class="cf">return</span> minv[k];</span>
+<span id="cb4-135"><a aria-hidden="true" href="#cb4-135"></a>    ll ret = INF;</span>
+<span id="cb4-136"><a aria-hidden="true" href="#cb4-136"></a>    <span class="cf">if</span> (B[t[k]] != INF) ret = min(ret, min(calc(max(i, x), t[k]), calc(min(j, y), t[k])));</span>
+<span id="cb4-137"><a aria-hidden="true" href="#cb4-137"></a>    <span class="cf">if</span> (x &lt;= M) ret = min(ret, query(i, M, L, x, y));</span>
+<span id="cb4-138"><a aria-hidden="true" href="#cb4-138"></a>    <span class="cf">if</span> (y &gt; M) ret = min(ret, query(M + <span class="dv">1</span>, j, R, x, y));</span>
+<span id="cb4-139"><a aria-hidden="true" href="#cb4-139"></a>    <span class="cf">return</span> ret;</span>
+<span id="cb4-140"><a aria-hidden="true" href="#cb4-140"></a>}</span>
+<span id="cb4-141"><a aria-hidden="true" href="#cb4-141"></a></span>
+<span id="cb4-142"><a aria-hidden="true" href="#cb4-142"></a><span class="dt">void</span> modify(<span class="dt">int</span> u, <span class="dt">int</span> v) {</span>
+<span id="cb4-143"><a aria-hidden="true" href="#cb4-143"></a>    <span class="cf">while</span> (top[u] != top[v])</span>
+<span id="cb4-144"><a aria-hidden="true" href="#cb4-144"></a>        modify(<span class="dv">1</span>, n, <span class="dv">1</span>, dfn[top[u]], dfn[u], tot), u = fa[top[u]];</span>
+<span id="cb4-145"><a aria-hidden="true" href="#cb4-145"></a>    modify(<span class="dv">1</span>, n, <span class="dv">1</span>, dfn[v], dfn[u], tot);</span>
+<span id="cb4-146"><a aria-hidden="true" href="#cb4-146"></a>    <span class="cf">return</span>;</span>
+<span id="cb4-147"><a aria-hidden="true" href="#cb4-147"></a>}</span>
+<span id="cb4-148"><a aria-hidden="true" href="#cb4-148"></a></span>
+<span id="cb4-149"><a aria-hidden="true" href="#cb4-149"></a><span class="dt">void</span> modify(<span class="dt">int</span> s, <span class="dt">int</span> t, ll a, ll b) {</span>
+<span id="cb4-150"><a aria-hidden="true" href="#cb4-150"></a>    <span class="dt">int</span> lca = LCA(s, t);</span>
+<span id="cb4-151"><a aria-hidden="true" href="#cb4-151"></a>    K[++tot] = -a, B[tot] = a * dis[s] + b;</span>
+<span id="cb4-152"><a aria-hidden="true" href="#cb4-152"></a>    modify(s, lca);</span>
+<span id="cb4-153"><a aria-hidden="true" href="#cb4-153"></a>    K[++tot] = a, B[tot] = a * (dis[s] - <span class="dv">2</span> * dis[lca]) + b;</span>
+<span id="cb4-154"><a aria-hidden="true" href="#cb4-154"></a>    modify(t, lca);</span>
+<span id="cb4-155"><a aria-hidden="true" href="#cb4-155"></a>    <span class="cf">return</span>;</span>
+<span id="cb4-156"><a aria-hidden="true" href="#cb4-156"></a>}</span>
+<span id="cb4-157"><a aria-hidden="true" href="#cb4-157"></a></span>
+<span id="cb4-158"><a aria-hidden="true" href="#cb4-158"></a>ll query(<span class="dt">int</span> s, <span class="dt">int</span> t) {</span>
+<span id="cb4-159"><a aria-hidden="true" href="#cb4-159"></a>    ll ret = INF;</span>
+<span id="cb4-160"><a aria-hidden="true" href="#cb4-160"></a>    <span class="cf">while</span> (top[s] != top[t]) {</span>
+<span id="cb4-161"><a aria-hidden="true" href="#cb4-161"></a>        <span class="cf">if</span> (dep[top[s]] &lt; dep[top[t]]) swap(s, t);</span>
+<span id="cb4-162"><a aria-hidden="true" href="#cb4-162"></a>        ret = min(ret, query(<span class="dv">1</span>, n, <span class="dv">1</span>, dfn[top[s]], dfn[s]));</span>
+<span id="cb4-163"><a aria-hidden="true" href="#cb4-163"></a>        s = fa[top[s]];</span>
+<span id="cb4-164"><a aria-hidden="true" href="#cb4-164"></a>    }</span>
+<span id="cb4-165"><a aria-hidden="true" href="#cb4-165"></a>    <span class="cf">if</span> (dep[s] &gt; dep[t]) swap(s, t);</span>
+<span id="cb4-166"><a aria-hidden="true" href="#cb4-166"></a>    <span class="cf">return</span> min(ret, query(<span class="dv">1</span>, n, <span class="dv">1</span>, dfn[s], dfn[t]));</span>
+<span id="cb4-167"><a aria-hidden="true" href="#cb4-167"></a>}</span>
+<span id="cb4-168"><a aria-hidden="true" href="#cb4-168"></a></span>
+<span id="cb4-169"><a aria-hidden="true" href="#cb4-169"></a><span class="dt">int</span> main() {</span>
+<span id="cb4-170"><a aria-hidden="true" href="#cb4-170"></a>    n = read(), m = read();</span>
+<span id="cb4-171"><a aria-hidden="true" href="#cb4-171"></a>    FOR(i, <span class="dv">1</span>, n - <span class="dv">1</span>) {</span>
+<span id="cb4-172"><a aria-hidden="true" href="#cb4-172"></a>        <span class="dt">int</span> u = read(), v = read(), w = read();</span>
+<span id="cb4-173"><a aria-hidden="true" href="#cb4-173"></a>        add(u, v, w), add(v, u, w);</span>
+<span id="cb4-174"><a aria-hidden="true" href="#cb4-174"></a>    }</span>
+<span id="cb4-175"><a aria-hidden="true" href="#cb4-175"></a>    dfs1(<span class="dv">1</span>, <span class="dv">0</span>);</span>
+<span id="cb4-176"><a aria-hidden="true" href="#cb4-176"></a>    dfs2(<span class="dv">1</span>, <span class="dv">1</span>);</span>
+<span id="cb4-177"><a aria-hidden="true" href="#cb4-177"></a>    B[tot = <span class="dv">1</span>] = INF;</span>
+<span id="cb4-178"><a aria-hidden="true" href="#cb4-178"></a>    build(<span class="dv">1</span>, n, <span class="dv">1</span>);</span>
+<span id="cb4-179"><a aria-hidden="true" href="#cb4-179"></a>    <span class="cf">while</span> (m--) {</span>
+<span id="cb4-180"><a aria-hidden="true" href="#cb4-180"></a>        <span class="dt">int</span> op = read(), s = read(), t = read();</span>
+<span id="cb4-181"><a aria-hidden="true" href="#cb4-181"></a>        <span class="cf">if</span> (op == <span class="dv">1</span>) {</span>
+<span id="cb4-182"><a aria-hidden="true" href="#cb4-182"></a>            ll a = read(), b = read();</span>
+<span id="cb4-183"><a aria-hidden="true" href="#cb4-183"></a>            modify(s, t, a, b);</span>
+<span id="cb4-184"><a aria-hidden="true" href="#cb4-184"></a>        } <span class="cf">else</span> printf(<span class="st">"</span><span class="sc">%lld\n</span><span class="st">"</span>, query(s, t));</span>
+<span id="cb4-185"><a aria-hidden="true" href="#cb4-185"></a>    }</span>
+<span id="cb4-186"><a aria-hidden="true" href="#cb4-186"></a>    <span class="cf">return</span> <span class="dv">0</span>;</span>
+<span id="cb4-187"><a aria-hidden="true" href="#cb4-187"></a>}</span></code></pre></div>
+<h3 id="cf1303g-sum-of-prefix-sums"><a href="https://www.luogu.com.cn/problem/CF1303G">CF1303G Sum of Prefix Sums</a></h3>
+<p>点分治与李超树的结合，篇幅较长并且不太适合放在这里，<a href="/sol-cf1303g/">已移出</a>。</p>
+<h3 id="p4655-ceoi2017building-bridges">P4655 [CEOI2017]Building Bridges</h3>
+<p>李超树优化 dp，把 dp 方程化为一次函数的形式，就可以使用李超树维护了。</p>
+<p>放在<a href="/sol-luogu-p4655/">单独的博文</a>里面。</p>
+</section>
+<footer class="article-footer">
+<section class="article-tags">
+<a href="/tags/OI/">OI</a>
+<a href="/tags/note/">笔记</a>
+<a href="/tags/segtree/">线段树</a>
+<a href="/tags/lc-tree/">李超树</a>
+<a href="/tags/computational-geometry/">计算几何</a>
+</section>
+<section class="article-copyright">
+<svg class="icon icon-tabler icon-tabler-copyright" fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+<path d="M0 0h24v24H0z" stroke="none"></path>
+<circle cx="12" cy="12" r="9"></circle>
+<path d="M14.5 9a3.5 4 0 1 0 0 6"></path>
+</svg>
+<span>Licensed under CC BY-NC-SA 4.0</span>
+</section>
+</footer>
+<link crossorigin="anonymous" href="https://cdn.jsdelivr.net/npm/katex@0.13.13/dist/katex.min.css" integrity="sha384-RZU/ijkSsFbcmivfdRBQDtwuwVqK7GMOw6IMvKyeWL2K5UAlyp6WonmB8m7Jd0Hn" rel="stylesheet"/><script crossorigin="anonymous" defer="" integrity="sha384-pK1WpvzWVBQiP0/GjnvRxV4mOb0oxFuyRxJlk6vVw146n3egcN5C925NCP7a7BY8" src="https://cdn.jsdelivr.net/npm/katex@0.13.13/dist/katex.min.js">
+</script><script crossorigin="anonymous" defer="" integrity="sha384-vZTG03m+2yp6N6BNi5iM4rW4oIwk5DfcNdFfxkk9ZWpDriOkXX8voJBFrAO7MpVl" src="https://cdn.jsdelivr.net/npm/katex@0.13.13/dist/contrib/auto-render.min.js">
+</script><script>
+    window.addEventListener("DOMContentLoaded", () => {
+        renderMathInElement(document.querySelector(`.article-content`), {
+            delimiters: [
+                { left: "$$", right: "$$", display: true },
+                { left: "$", right: "$", display: false },
+                { left: "\\(", right: "\\)", display: false },
+                { left: "\\[", right: "\\]", display: true }
+            ]
+        });})
+</script>
+</article>
+<aside class="related-contents--wrapper">
+<h2 class="section-title">相关文章</h2>
+<div class="related-contents">
+<div class="flex article-list--tile">
+<article class="has-image">
+<a href="/note-geometry/">
+<div class="article-image">
+<img data-hash="https://yangty-pic.oss-cn-beijing.aliyuncs.com/bg14.webp" data-key="" loading="lazy" src="https://yangty-pic.oss-cn-beijing.aliyuncs.com/bg14.webp"/>
+</div>
+<div class="article-details">
+<h2 class="article-title">计算几何全家桶</h2>
+</div>
+</a>
+</article>
+<article class="has-image">
+<a href="/note-ddp/">
+<div class="article-image">
+<img data-hash="https://yangty-pic.oss-cn-beijing.aliyuncs.com/bg12.webp" data-key="" loading="lazy" src="https://yangty-pic.oss-cn-beijing.aliyuncs.com/bg12.webp"/>
+</div>
+<div class="article-details">
+<h2 class="article-title">动态 DP 学习笔记</h2>
+</div>
+</a>
+</article>
+<article class="has-image">
+<a href="/note-gf/">
+<div class="article-image">
+<img data-hash="https://yangty-pic.oss-cn-beijing.aliyuncs.com/bg28.webp" data-key="" loading="lazy" src="https://yangty-pic.oss-cn-beijing.aliyuncs.com/bg28.webp"/>
+</div>
+<div class="article-details">
+<h2 class="article-title">生成函数胡扯</h2>
+</div>
+</a>
+</article>
+<article class="has-image">
+<a href="/note-set-power-series/">
+<div class="article-image">
+<img data-hash="https://yangty-pic.oss-cn-beijing.aliyuncs.com/bg39.webp" data-key="" loading="lazy" src="https://yangty-pic.oss-cn-beijing.aliyuncs.com/bg39.webp"/>
+</div>
+<div class="article-details">
+<h2 class="article-title">集合幂级数胡扯</h2>
+</div>
+</a>
+</article>
+<article class="has-image">
+<a href="/note-linear-basis/">
+<div class="article-image">
+<img data-hash="https://yangty-pic.oss-cn-beijing.aliyuncs.com/bg19.webp" data-key="" loading="lazy" src="https://yangty-pic.oss-cn-beijing.aliyuncs.com/bg19.webp"/>
+</div>
+<div class="article-details">
+<h2 class="article-title">线性基学习笔记</h2>
+</div>
+</a>
+</article>
+</div>
+</div>
+</aside>
+<footer class="site-footer">
+<section class="copyright">
+        © 
+        
+            2019 - 
+        
+        2024 清烛的博客
+    </section>
+<section class="powerby">
+        Built with <a href="https://gohugo.io/" rel="noopener" target="_blank">Hugo</a> <br/>
+        主题 <b><a data-version="3.11.0" href="https://github.com/CaiJimmy/hugo-theme-stack" rel="noopener" target="_blank">Stack</a></b> 由 <a href="https://jimmycai.com" rel="noopener" target="_blank">Jimmy</a> 设计
+    </section>
+</footer>
+<div aria-hidden="true" class="pswp" role="dialog" tabindex="-1">
+<div class="pswp__bg"></div>
+<div class="pswp__scroll-wrap">
+<div class="pswp__container">
+<div class="pswp__item"></div>
+<div class="pswp__item"></div>
+<div class="pswp__item"></div>
+</div>
+<div class="pswp__ui pswp__ui--hidden">
+<div class="pswp__top-bar">
+<div class="pswp__counter"></div>
+<button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+<button class="pswp__button pswp__button--share" title="Share"></button>
+<button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+<button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+<div class="pswp__preloader">
+<div class="pswp__preloader__icn">
+<div class="pswp__preloader__cut">
+<div class="pswp__preloader__donut"></div>
+</div>
+</div>
+</div>
+</div>
+<div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+<div class="pswp__share-tooltip"></div>
+</div>
+<button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+</button>
+<button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+</button>
+<div class="pswp__caption">
+<div class="pswp__caption__center"></div>
+</div>
+</div>
+</div>
+</div><script crossorigin="anonymous" defer="" integrity="sha256-ePwmChbbvXbsO02lbM3HoHbSHTHFAeChekF1xKJdleo=" src="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe.min.js">
+</script><script crossorigin="anonymous" defer="" integrity="sha256-UKkzOn/w1mBxRmLLGrSeyB4e1xbrp4xylgAWb3M42pU=" src="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe-ui-default.min.js">
+</script><link crossorigin="anonymous" href="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/default-skin/default-skin.css" integrity="sha256-c0uckgykQ9v5k+IqViZOZKc47Jn7KQil4/MP3ySA3F8=" rel="stylesheet"/><link crossorigin="anonymous" href="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe.css" integrity="sha256-SBLU4vv6CA6lHsZ1XyTdhyjJxCjPif/TRkjnsyGAGnE=" rel="stylesheet"/>
+</main>
+</div>
+<script crossorigin="anonymous" integrity="sha256-5NovOZc4iwiAWTYIFiIM7DxKUXKWvpVEuMEPLzcm5/g=" src="https://cdn.jsdelivr.net/npm/node-vibrant@3.1.5/dist/vibrant.min.js">
+</script><script defer="" src="/ts/main.js" type="text/javascript"></script>
+<script>
+    (function () {
+        const customFont = document.createElement('link');
+        customFont.href = "https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&display=swap";
+
+        customFont.type = "text/css";
+        customFont.rel = "stylesheet";
+
+        document.head.appendChild(customFont);
+    }());
+</script>
+</body>
+</html>

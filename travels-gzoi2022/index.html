@@ -1,0 +1,598 @@
+<!DOCTYPE html>
+<html dir="ltr" lang="zh-CN">
+<head><meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1" name="viewport"/><meta content="前言 我变强了！我不是一年前的那个我了！
+——每日乳卡
+但好像说的也没什么问题。
+仔细回想了去年省选的时候，洛谷 AC 仅仅 600 多，CF 甚至还是灰名，那年我已经高一了。
+现在看着各种初三红名选手，说心态不失衡是假的。看着自己 NOIP 挂的分，说心里不慌也是假的。
+只能加油弥补自己的差距，希望能和大家 NOI 2022 上海见。
+寒假（Day -10x） 年前 从 GZ 回 GX 的时候，WC 出了分，压线 Cu。心情只能说很沉重。该挂的分都挂了，该拿到的分都没拿，这是要重演去年省选的悲剧了吗？
+并没有思来想去那么多而是坚持在年三十前一直写题写总结。
+除夕夜前一天的晚上，坚持着打了过年前的最后一场 ABC。然而一直狂 WA D 题让我的心态输的彻彻底底。
+似乎这也是我的一个通病，打顺风局的时候就春风得意，打逆风局的时候就疯狂自我怀疑埋怨。
+好在事情没有往特别坏的情况发展，用以前写的板子过掉了 well-known 的 G，勉强上了分。
+心态有亿点崩的离谱，在床上躺下后辗转反侧睡不着，感到压力实在是大。
+年中 放空了 \(7\) 天，偶尔搓一下 arc 发现底力大增，是好事。
+有一天半夜去吃螺蛳粉的路上跟 ZCPB 聊了十多分钟，感受到大家都不容易。
+我尚且处在竞争不大的环境——GZ，可是那些 SD、ZJ、HN 等的选手呢？而我的心态随随便便就能爆炸。大家都在负重前行（原谅我用了这个膈应人的词汇）。
+就从 GX 回 GZ 了。
+年后 和恐龙约定每天有 tasklist，然而实际完成效果似乎不太好。
+正逐步将训练重心从 CF/ATC 的补题转向 OI 知识点的巩固和学习。
+发现自己还有好多科技不会，这可怎么办。
+最后一周疯狂抄文化课作业 + 推 arc，然而开学当天还是卡在 10.99（恼）。" name="description"/><title>2022 统一省选游记（GZOI2022）</title>
+<link href="https://oi.imyangty.com/travels-gzoi2022/" rel="canonical"/>
+<link href="/scss/style.min.a5821f3d3ab84ce5a0ac21477e347a2e0ca00292e398d16c5e8e36ded6e35a23.css" rel="stylesheet"/><meta content="2022 统一省选游记（GZOI2022）" property="og:title"/>
+<meta content="前言 我变强了！我不是一年前的那个我了！
+——每日乳卡
+但好像说的也没什么问题。
+仔细回想了去年省选的时候，洛谷 AC 仅仅 600 多，CF 甚至还是灰名，那年我已经高一了。
+现在看着各种初三红名选手，说心态不失衡是假的。看着自己 NOIP 挂的分，说心里不慌也是假的。
+只能加油弥补自己的差距，希望能和大家 NOI 2022 上海见。
+寒假（Day -10x） 年前 从 GZ 回 GX 的时候，WC 出了分，压线 Cu。心情只能说很沉重。该挂的分都挂了，该拿到的分都没拿，这是要重演去年省选的悲剧了吗？
+并没有思来想去那么多而是坚持在年三十前一直写题写总结。
+除夕夜前一天的晚上，坚持着打了过年前的最后一场 ABC。然而一直狂 WA D 题让我的心态输的彻彻底底。
+似乎这也是我的一个通病，打顺风局的时候就春风得意，打逆风局的时候就疯狂自我怀疑埋怨。
+好在事情没有往特别坏的情况发展，用以前写的板子过掉了 well-known 的 G，勉强上了分。
+心态有亿点崩的离谱，在床上躺下后辗转反侧睡不着，感到压力实在是大。
+年中 放空了 \(7\) 天，偶尔搓一下 arc 发现底力大增，是好事。
+有一天半夜去吃螺蛳粉的路上跟 ZCPB 聊了十多分钟，感受到大家都不容易。
+我尚且处在竞争不大的环境——GZ，可是那些 SD、ZJ、HN 等的选手呢？而我的心态随随便便就能爆炸。大家都在负重前行（原谅我用了这个膈应人的词汇）。
+就从 GX 回 GZ 了。
+年后 和恐龙约定每天有 tasklist，然而实际完成效果似乎不太好。
+正逐步将训练重心从 CF/ATC 的补题转向 OI 知识点的巩固和学习。
+发现自己还有好多科技不会，这可怎么办。
+最后一周疯狂抄文化课作业 + 推 arc，然而开学当天还是卡在 10.99（恼）。" property="og:description"/>
+<meta content="https://oi.imyangty.com/travels-gzoi2022/" property="og:url"/>
+<meta content="清烛的博客" property="og:site_name"/>
+<meta content="article" property="og:type"/><meta content="Post" property="article:section"/><meta content="OI" property="article:tag"/><meta content="游记" property="article:tag"/><meta content="2022-03-22T19:47:18+08:00" property="article:published_time"/><meta content="2022-03-22T19:47:18+08:00" property="article:modified_time"/><meta content="https://yangty-pic.oss-cn-beijing.aliyuncs.com/bg24.webp" property="og:image"/>
+<meta content="2022 统一省选游记（GZOI2022）" name="twitter:title"/>
+<meta content="前言 我变强了！我不是一年前的那个我了！
+——每日乳卡
+但好像说的也没什么问题。
+仔细回想了去年省选的时候，洛谷 AC 仅仅 600 多，CF 甚至还是灰名，那年我已经高一了。
+现在看着各种初三红名选手，说心态不失衡是假的。看着自己 NOIP 挂的分，说心里不慌也是假的。
+只能加油弥补自己的差距，希望能和大家 NOI 2022 上海见。
+寒假（Day -10x） 年前 从 GZ 回 GX 的时候，WC 出了分，压线 Cu。心情只能说很沉重。该挂的分都挂了，该拿到的分都没拿，这是要重演去年省选的悲剧了吗？
+并没有思来想去那么多而是坚持在年三十前一直写题写总结。
+除夕夜前一天的晚上，坚持着打了过年前的最后一场 ABC。然而一直狂 WA D 题让我的心态输的彻彻底底。
+似乎这也是我的一个通病，打顺风局的时候就春风得意，打逆风局的时候就疯狂自我怀疑埋怨。
+好在事情没有往特别坏的情况发展，用以前写的板子过掉了 well-known 的 G，勉强上了分。
+心态有亿点崩的离谱，在床上躺下后辗转反侧睡不着，感到压力实在是大。
+年中 放空了 \(7\) 天，偶尔搓一下 arc 发现底力大增，是好事。
+有一天半夜去吃螺蛳粉的路上跟 ZCPB 聊了十多分钟，感受到大家都不容易。
+我尚且处在竞争不大的环境——GZ，可是那些 SD、ZJ、HN 等的选手呢？而我的心态随随便便就能爆炸。大家都在负重前行（原谅我用了这个膈应人的词汇）。
+就从 GX 回 GZ 了。
+年后 和恐龙约定每天有 tasklist，然而实际完成效果似乎不太好。
+正逐步将训练重心从 CF/ATC 的补题转向 OI 知识点的巩固和学习。
+发现自己还有好多科技不会，这可怎么办。
+最后一周疯狂抄文化课作业 + 推 arc，然而开学当天还是卡在 10.99（恼）。" name="twitter:description"/><meta content="summary_large_image" name="twitter:card"/>
+<meta content="https://yangty-pic.oss-cn-beijing.aliyuncs.com/bg24.webp" name="twitter:image"/>
+<link href="https://q1.qlogo.cn/g?b=qq&amp;nk=375836877&amp;s=5" rel="shortcut icon"/>
+<link href="https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.5.1/build/styles/github-dark-dimmed.min.css" rel="stylesheet"/>
+<script src="https://cdn.jsdelivr.net/gh/highlightjs/cdn-release/build/highlight.min.js"></script>
+<script>hljs.highlightAll();</script>
+</head>
+<body class="article-page">
+<script>
+        (function() {
+            const colorSchemeKey = 'StackColorScheme';
+            if(!localStorage.getItem(colorSchemeKey)){
+                localStorage.setItem(colorSchemeKey, "auto");
+            }
+        })();
+    </script><script>
+    (function() {
+        const colorSchemeKey = 'StackColorScheme';
+        const colorSchemeItem = localStorage.getItem(colorSchemeKey);
+        const supportDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches === true;
+
+        if (colorSchemeItem == 'dark' || colorSchemeItem === 'auto' && supportDarkMode) {
+            
+
+            document.documentElement.dataset.scheme = 'dark';
+        } else {
+            document.documentElement.dataset.scheme = 'light';
+        }
+    })();
+</script>
+<div class="container main-container flex on-phone--column extended"><aside class="sidebar left-sidebar sticky">
+<button aria-label="切换菜单" class="hamburger hamburger--spin" id="toggle-menu" type="button">
+<span class="hamburger-box">
+<span class="hamburger-inner"></span>
+</span>
+</button>
+<header>
+<figure class="site-avatar">
+<a href="/">
+<img alt="Avatar" class="site-logo" height="300" loading="lazy" src="/img/avatar_huea3ce2119467b51fdd2a81393644a76d_51594_300x0_resize_q75_box.jpg" width="300"/>
+</a>
+<span class="emoji">😅</span>
+</figure>
+<div class="site-meta">
+<h1 class="site-name"><a href="/">清烛的博客</a></h1>
+<h2 class="site-description">烟火已谢，笙歌未停</h2>
+</div>
+</header><ol class="social-menu">
+<li>
+<a href="mailto:i@imyangty.com" target="_blank" title="email">
+<svg class="icon icon-tabler icon-tabler-mail" fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" viewbox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+<path d="M0 0h24v24H0z" fill="none" stroke="none"></path>
+<rect height="14" rx="2" width="18" x="3" y="5"></rect>
+<polyline points="3 7 12 13 21 7"></polyline>
+</svg>
+</a>
+</li>
+<li>
+<a href="https://github.com/Cgfyufsygsm" target="_blank" title="GitHub">
+<svg class="icon icon-tabler icon-tabler-brand-github" fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+<path d="M0 0h24v24H0z" fill="none" stroke="none"></path>
+<path d="M9 19c-4.3 1.4 -4.3 -2.5 -6 -3m12 5v-3.5c0 -1 .1 -1.4 -.5 -2c2.8 -.3 5.5 -1.4 5.5 -6a4.6 4.6 0 0 0 -1.3 -3.2a4.2 4.2 0 0 0 -.1 -3.2s-1.1 -.3 -3.5 1.3a12.3 12.3 0 0 0 -6.2 0c-2.4 -1.6 -3.5 -1.3 -3.5 -1.3a4.2 4.2 0 0 0 -.1 3.2a4.6 4.6 0 0 0 -1.3 3.2c0 4.6 2.7 5.7 5.5 6c-.6 .6 -.6 1.2 -.5 2v3.5"></path>
+</svg>
+</a>
+</li>
+<li>
+<a href="https://t.me/Cgfyufsygsm" target="_blank" title="Telegram">
+<svg class="icon icon-tabler icon-tabler-brand-telegram" fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" viewbox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+<path d="M0 0h24v24H0z" fill="none" stroke="none"></path>
+<path d="M15 10l-4 4l6 6l4 -16l-18 7l4 2l2 6l3 -4"></path>
+</svg>
+</a>
+</li>
+<li>
+<a href="https://twitter.com/Cgfyufsygsm" target="_blank" title="Twitter">
+<svg class="icon icon-tabler icon-tabler-brand-twitter" fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+<path d="M0 0h24v24H0z" fill="none" stroke="none"></path>
+<path d="M22 4.01c-1 .49 -1.98 .689 -3 .99c-1.121 -1.265 -2.783 -1.335 -4.38 -.737s-2.643 2.06 -2.62 3.737v1c-3.245 .083 -6.135 -1.395 -8 -4c0 0 -4.182 7.433 4 11c-1.872 1.247 -3.739 2.088 -6 2c3.308 1.803 6.913 2.423 10.034 1.517c3.58 -1.04 6.522 -3.723 7.651 -7.742a13.84 13.84 0 0 0 .497 -3.753c-.002 -.249 1.51 -2.772 1.818 -4.013z"></path>
+</svg>
+</a>
+</li>
+</ol><ol class="menu" id="main-menu">
+<li>
+<a href="/">
+<svg class="icon icon-tabler icon-tabler-home" fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+<path d="M0 0h24v24H0z" stroke="none"></path>
+<polyline points="5 12 3 12 12 3 21 12 19 12"></polyline>
+<path d="M5 12v7a2 2 0 0 0 2 2h10a2 2 0 0 0 2 -2v-7"></path>
+<path d="M9 21v-6a2 2 0 0 1 2 -2h2a2 2 0 0 1 2 2v6"></path>
+</svg>
+<span>主页</span>
+</a>
+</li>
+<li>
+<a href="/about/">
+<svg class="icon icon-tabler icon-tabler-user" fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+<path d="M0 0h24v24H0z" stroke="none"></path>
+<circle cx="12" cy="7" r="4"></circle>
+<path d="M6 21v-2a4 4 0 0 1 4 -4h4a4 4 0 0 1 4 4v2"></path>
+</svg>
+<span>关于</span>
+</a>
+</li>
+<li>
+<a href="/idx/">
+<svg class="icon icon-tabler icon-tabler-hash" fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+<path d="M0 0h24v24H0z" stroke="none"></path>
+<line x1="5" x2="19" y1="9" y2="9"></line>
+<line x1="5" x2="19" y1="15" y2="15"></line>
+<line x1="11" x2="7" y1="4" y2="20"></line>
+<line x1="17" x2="13" y1="4" y2="20"></line>
+</svg>
+<span>导航</span>
+</a>
+</li>
+<li>
+<a href="/archives/">
+<svg class="icon icon-tabler icon-tabler-archive" fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+<path d="M0 0h24v24H0z" stroke="none"></path>
+<rect height="4" rx="2" width="18" x="3" y="4"></rect>
+<path d="M5 8v10a2 2 0 0 0 2 2h10a2 2 0 0 0 2 -2v-10"></path>
+<line x1="10" x2="14" y1="12" y2="12"></line>
+</svg>
+<span>归档</span>
+</a>
+</li>
+<li>
+<a href="/search/">
+<svg class="icon icon-tabler icon-tabler-search" fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+<path d="M0 0h24v24H0z" stroke="none"></path>
+<circle cx="10" cy="10" r="7"></circle>
+<line x1="21" x2="15" y1="21" y2="15"></line>
+</svg>
+<span>搜索</span>
+</a>
+</li>
+<li>
+<a href="/friends/">
+<svg class="icon icon-tabler icon-tabler-link" fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+<path d="M0 0h24v24H0z" stroke="none"></path>
+<path d="M10 14a3.5 3.5 0 0 0 5 0l4 -4a3.5 3.5 0 0 0 -5 -5l-.5 .5"></path>
+<path d="M14 10a3.5 3.5 0 0 0 -5 0l-4 4a3.5 3.5 0 0 0 5 5l.5 -.5"></path>
+</svg>
+<span>友链</span>
+</a>
+</li>
+<li>
+<a href="https://blog.imyangty.com" target="_blank">
+<svg class="icon icon-tabler icon-tabler-home" fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+<path d="M0 0h24v24H0z" stroke="none"></path>
+<polyline points="5 12 3 12 12 3 21 12 19 12"></polyline>
+<path d="M5 12v7a2 2 0 0 0 2 2h10a2 2 0 0 0 2 -2v-7"></path>
+<path d="M9 21v-6a2 2 0 0 1 2 -2h2a2 2 0 0 1 2 2v6"></path>
+</svg>
+<span>主博客</span>
+</a>
+</li>
+<div class="menu-bottom-section">
+<li id="dark-mode-toggle">
+<svg class="icon icon-tabler icon-tabler-toggle-left" fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+<path d="M0 0h24v24H0z" stroke="none"></path>
+<circle cx="8" cy="12" r="2"></circle>
+<rect height="12" rx="6" width="20" x="2" y="6"></rect>
+</svg>
+<svg class="icon icon-tabler icon-tabler-toggle-right" fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+<path d="M0 0h24v24H0z" stroke="none"></path>
+<circle cx="16" cy="12" r="2"></circle>
+<rect height="12" rx="6" width="20" x="2" y="6"></rect>
+</svg>
+<span>暗色模式</span>
+</li>
+</div>
+</ol>
+</aside>
+<main class="main full-width">
+<article class="has-image main-article">
+<header class="article-header">
+<div class="article-image">
+<a href="/travels-gzoi2022/">
+<img alt="Featured image of post 2022 统一省选游记（GZOI2022）" loading="lazy" src="https://yangty-pic.oss-cn-beijing.aliyuncs.com/bg24.webp"/>
+</a>
+</div>
+<div class="article-details">
+<header class="article-category">
+<a href="/categories/oi/">
+                OI
+            </a>
+<a href="/categories/travels/">
+                游记
+            </a>
+</header>
+<div class="article-title-wrapper">
+<h2 class="article-title">
+<a href="/travels-gzoi2022/">2022 统一省选游记（GZOI2022）</a>
+</h2>
+</div>
+<footer class="article-time">
+<div>
+<svg class="icon icon-tabler icon-tabler-calendar-time" fill="none" height="56" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="56" xmlns="http://www.w3.org/2000/svg">
+<path d="M0 0h24v24H0z" stroke="none"></path>
+<path d="M11.795 21h-6.795a2 2 0 0 1 -2 -2v-12a2 2 0 0 1 2 -2h12a2 2 0 0 1 2 2v4"></path>
+<circle cx="18" cy="18" r="4"></circle>
+<path d="M15 3v4"></path>
+<path d="M7 3v4"></path>
+<path d="M3 11h16"></path>
+<path d="M18 16.496v1.504l1 1"></path>
+</svg>
+<time class="article-time--published">Mar 22, 2022</time>
+</div>
+<div>
+<svg class="icon icon-tabler icon-tabler-clock" fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+<path d="M0 0h24v24H0z" stroke="none"></path>
+<circle cx="12" cy="12" r="9"></circle>
+<polyline points="12 7 12 12 15 15"></polyline>
+</svg>
+<time class="article-time--reading">
+                    阅读时长: 3 分钟
+                </time>
+</div>
+</footer>
+</div>
+</header>
+<section class="article-content">
+<h2 id="前言">前言</h2>
+<blockquote>
+<p>我变强了！我不是一年前的那个我了！</p>
+<p>——每日乳卡</p>
+</blockquote>
+<p>但好像说的也没什么问题。</p>
+<p>仔细回想了去年省选的时候，洛谷 AC 仅仅 600 多，CF 甚至还是灰名，那年我已经高一了。</p>
+<p>现在看着各种初三红名选手，说心态不失衡是假的。看着自己 NOIP 挂的分，说心里不慌也是假的。</p>
+<p>只能加油弥补自己的差距，希望能和大家 NOI 2022 上海见。</p>
+<h2 id="寒假day--10x">寒假（Day -10x）</h2>
+<h3 id="年前">年前</h3>
+<p>从 GZ 回 GX 的时候，WC 出了分，压线 Cu。心情只能说很沉重。该挂的分都挂了，该拿到的分都没拿，这是要重演去年省选的悲剧了吗？</p>
+<p>并没有思来想去那么多而是坚持在年三十前一直写题写总结。</p>
+<p>除夕夜前一天的晚上，坚持着打了过年前的最后一场 ABC。然而一直狂 WA D 题让我的心态输的彻彻底底。</p>
+<p>似乎这也是我的一个通病，打顺风局的时候就春风得意，打逆风局的时候就疯狂自我怀疑埋怨。</p>
+<p>好在事情没有往特别坏的情况发展，用以前写的板子过掉了 well-known 的 G，勉强上了分。</p>
+<p>心态有亿点崩的离谱，在床上躺下后辗转反侧睡不着，感到压力实在是大。</p>
+<h3 id="年中">年中</h3>
+<p>放空了 <span class="math inline">\(7\)</span> 天，偶尔搓一下 arc 发现底力大增，是好事。</p>
+<p>有一天半夜去吃螺蛳粉的路上跟 ZCPB 聊了十多分钟，感受到大家都不容易。</p>
+<p>我尚且处在竞争不大的环境——GZ，可是那些 SD、ZJ、HN 等的选手呢？而我的心态随随便便就能爆炸。大家都在负重前行（原谅我用了这个膈应人的词汇）。</p>
+<p>就从 GX 回 GZ 了。</p>
+<h3 id="年后">年后</h3>
+<p>和恐龙约定每天有 tasklist，然而实际完成效果似乎不太好。</p>
+<p>正逐步将训练重心从 CF/ATC 的补题转向 OI 知识点的巩固和学习。</p>
+<p>发现自己还有好多科技不会，这可怎么办。</p>
+<p>最后一周疯狂抄文化课作业 + 推 arc，然而开学当天还是卡在 10.99（恼）。</p>
+<h2 id="开学">开学</h2>
+<p>第一天 arc 红框了，这很不错，终于算是个 arc 萌新了。</p>
+<p>心态还是没有特别好，心理课上因为某些原因还是被击穿了防线，出现了呼吸困难的症状。</p>
+<p>学完第一周的文化课就想退学了，都是些什么 jb 弔毛玩意儿。物理不会做动量题，化学听不懂有机，语文跟不上，只有数学算是开端，还比较简单。</p>
+<p>第二周开始停课，和 Asd 两个人在机房，跟了某校的集训，然而这些题目似乎更加弔毛。经常出现一个晚自习想一道题，中间要问四五次 Asd 的情况。好在 OI 状态是在稳步慢慢回来的。</p>
+<p>发现自己的计数力，dp 力，数据结构力都不行了。有些 Asd 能很快理解的东西我需要花上动辄半个小时。</p>
+<p>被虐着被虐着也就到三月了，停课生活总体来说除了被虐的太惨，还是很惬意的，可以提前五分钟去吃饭避免人山人海，也可以中午累了搓一把 arc（半个月 <span class="math inline">\(0.2\)</span> 的推分神话？），心理问题随着天气变暖日照增多也得到了极大的缓解。</p>
+<p>基本日子就是 <span class="math inline">\(1, 2, 3, 4\)</span> vp，<span class="math inline">\(5,6,7\)</span> 补题的状态。然后遇到不会的知识点就去过过，知识点总结也持续慢慢更新。</p>
+<p>三月中旬省里突然通知要去打 51nod 的一个集训，本着<del>白嫖的比赛肯定要打</del>增加训练量的原则报了名。然后现在的日常就变成了 <span class="math inline">\(2,4,6,7\)</span> 打 51nod，剩下一天 vp 一套。讲真，挺累的，感到非常的疲倦。</p>
+<p>全国疫情也在蔓延，但不知道你省教育厅在为何在全省病例至今未破两位数的情况下令全部中小学封校，也不知道为什么 gyyz 要连着周末上课（虽然和我没什么关系）。封校的那个周末也爆出了一些不愉快的事，对 gyyz 逐渐失去信心。</p>
+<h2 id="day------7">Day -? - (-7)</h2>
+<p>每天打着不会做的模拟赛。</p>
+<p>每天都有不会做的题，哈哈。</p>
+<p>Asd 带我入了 AtCoder 杂题的坑，<del>虽然我不会做就是了哈哈</del>，也有了每日一推题<del>但我队列已经堆的长的不行了</del>。</p>
+<p>省选最周还是从 4/4-4/5 延期到 4/16-4/17 了，战线被迫继续拉长，文化课那边已经寄了差不多的。</p>
+<p>Fun fact：省选前一周省内无学校愿意办省选（？）但<del>应该迫于 CCF 压力</del>师院还是办了。</p>
+<p>博客系统从 Hexo 转移到了 Hugo，配置环境真麻烦，yue。</p>
+<p>慢慢的，复习着 Miller-Rabin，Pollard-Rho，(ex)BSGS 等一票不常见数论，还有 SAM，PAM 等被遗忘的算法，顺便速通了一下<a href="/note-linear-basis/">线性基</a>。</p>
+<p>可是还留下了根号数据结构，整体二分啥的。哎。</p>
+<p>前一个星期要五天三检核酸，还要天天传健康码，看来师院顶着压力确实大。</p>
+<h2 id="day-0">Day 0</h2>
+<p>简单打了几个 SAM 就从学校回家了，看着被改造的机房小黑屋多少心生感慨。</p>
+<p>曾经不亮的灯，喝了一提又一提的水，吹的门老是响的风。</p>
+<p>早上吃了一半的包饼油条，模拟赛老是想不出来的题，晚上一不小心晚留到的 10:40。</p>
+<p>中午一点才吃完的午饭，路上讨论的题目，吃了拉肚子的冰棍。</p>
+<p>这一个月其实还是挺美好的。</p>
+<p>总之加油便是。自认为在省里的水平还是有 top 3 了，希望能进队圆个 NOI 梦吧，哪个 OIer 没有个 NOI 梦呢（叹）。</p>
+<h2 id="day-1">Day 1</h2>
+<p>早上七点起床，随便穿了点衣服简单洗漱就出门了。</p>
+<p>到了师院便和 Asd 汇合了，然后意识到可以进去签到（，就一般通过签了个到。<del>可是 gyyz 选手准考证上的照片是 smg</del>拿到准考证就在一旁等着做核酸了。</p>
+<p>看到个遵四壬长的好像班上同学，我（？）然后便是在 QQ 群里面催 ArrogHie，结果人家还在吃早餐（悲）。</p>
+<p>约莫七点五十就被拉过去做核酸了，<del>没能第一时间见到 ArrogHie 真的可恶</del>。</p>
+<p>做完核酸<del>28 块单检好贵啊</del>的时候看到 ArrogHie 那批人来了，第一眼被 AlbrecRoon 的头发惊讶到了（好 TM 帅啊），然后就看到了<del>头发烫翻车的</del> ArrogHie（可是他没看到我们，可恶）。</p>
+<p>在 qq 群里继续 dd 他，核酸队伍里面的他回了个头，我打了个招呼，他挥挥手回应。然后他又在群里说没看见 Asd，<del>可是 Asd 明明就站在我旁边啊？</del>再度问号。</p>
+<p>不管怎么说又是被拉到了那个老考场。应该是最后一次在这里打比赛了（高二人感慨 ++），希望不要寄吧。</p>
+<p>进考场之前一般通过上厕所。</p>
+<p>看题（为什么可以提前看题啊我真想不通了），发现题面都长的诡异，而且 T1 居然是<strong><em>大模拟</em></strong>（出题人是不是？？？）。T2 一眼是个不会的计数，T3 是什么鬼啊（？？？？洛谷魔怔？？？）然后简单打了个板子。</p>
+<p>发现小熊猫 devc++ 意外的比较符合我胃口（UI 不算巨丑，还有类 IntelliSense），但还是打开了 Linux 虚拟机（我该不会又是全场唯一 Linux 壬吧）。</p>
+<p>写着写着发现 T1 要注意的细节有点巨大多，写一个地方发现可能寄一个地方。1h30min 的时候写完了，然后去看 T2，然后把指数级暴力打了。</p>
+<p>剩下基本崩掉了，不太想描述了。</p>
+<p>T2 没想到枚举最值然后观察答案性质而是冲了个貌似 TLE 的 dp，T3 想了个不知道假不假的拆点二分图匹配然后连第一个样例都过不去。11:40 调费用流半天无果的我应该是破防了，后面发生了什么也不记得了。</p>
+<p>你省收卷速度是真 TM 慢的离谱啊。。。。</p>
+<p>Asd 的表情似乎也挺凝重的，但下来交流了一下发现大家会的和不会的好像都差球不多。也许有机会。</p>
+<p>回家的路上水群（虽然很晕车），发现我这个纯纯 nt 没看到 T3 白送的 20pts（哈哈），然后还有各种 T1 的挂点和 corner case，发现我好像都没有特别处理的时候心凉了半截，做好了 day 2 随缘被区分然后滚回去 whk 的准备。</p>
+<p>ArrogHie 先发了他 20pts 的惨 T1，我交了一发发现 40pts，交了 Asd 的发现也是 40pts。</p>
+<p>心瞬间凉，跌入谷底。</p>
+<p>但是好像是虎哥哥造错数据了，交了一发发现过了（？）Asd 的也过了（？）</p>
+<p>但是 ArrogHie 还是 20pts，世事难料。</p>
+<p>下午测了一下全省代码，发现好像都挺惨的，就仨人没挂 T1。但是 snj 好像赢麻了（？）</p>
+<p>记不清晚上跟谁聊天了，随缘看了点 PAM，睡觉。</p>
+<h2 id="day-2">Day 2</h2>
+<p>ArrogHie 真惨。。。</p>
+<p>进入考场的时候心情比较简单，看了下题目名称还是没想到有最大权独立集问题这种申必东西（虽然确实和 MIS 没有什么关系）。发现 T1 是个数论集合计数，T2 是个括号序列，T3 是个神奇二叉树题。</p>
+<p>觉得 T1 最可做就先开始打了 <span class="math inline">\(2^n\)</span> 级别的暴力。</p>
+<p>然后想了一小时，发现不是特别会，哈哈，根号分治啥的都有思路，但就是想不到具体怎么处理。</p>
+<p>10:00 无果于是申请上厕所，开想 T2。发现 T2 一个部分分我都不会打。</p>
+<p>10:30 突然想到可以上树，每次相当于可以挂一个兄弟节点下来然后最后要化成链。然后就画了很多草稿，但是没有屁用。</p>
+<p>11:00 还是啥想法都没，去打了 T3 的指数级暴力。</p>
+<p>期间心态多次有点崩盘，身体也开始不适，开始当作 OI 生涯的最后一个半小时来打，决定能再打多少就打多少。并且做好了省选退役回去 whk 的心理准备。想起了一些学长的 NOI20 游记，不知他们 day 2 的时候是不是和我的心境差不多。中间因为不太舒服上了好几次厕所。</p>
+<p>大概 12:00 突然暴风猜测合并次数肯定一样，于是冲了个所有权值相等的 8pts 部分分。</p>
+<p>然后想了个也许可以从上往下贪心合并之类的奇怪做法，但是觉得太奇怪了就没写，事实证明这又是一个大失误。</p>
+<p>12:45 开始就慢慢认命了，把三道题的代码都随机检查了一遍。交卷依旧漫长。</p>
+<p>Asd 和 ArrogHie 的表情都很凝重，看来也都没打多少分，哎。</p>
+<p>期间还是处于一个人麻了的状态，回家简单吃了顿饭然后就去做核酸了（好久啊）然后收拾东西去学校，今晚要开始 whk 了，不论结果如何，接受。</p>
+<blockquote>
+<p>路上发了点负能说说，白鲟马上打电话过来了，好感动。也祝他 whk 加油吧。</p>
+</blockquote>
+<p>晚自习和 Asd 聊天，感慨甚多。</p>
+<p>Asd day 1 心态崩，我是 day 2 心态崩。</p>
+<blockquote>
+<p>记得初三打 NOI day 2 的时候吃着面包喝着水，想着旁边那些高二的是不是特别紧张。</p>
+<p>—— Asd_Okuu</p>
+</blockquote>
+<p>于是现在我们都高二了。</p>
+<p>确实这两天压力瞬间就上来了。高一因为 D2T1 没进队还能安慰自己说高二再来。高二的 NOIP 240 -&gt; 127 的时候也只是怨自己发挥太不稳定，但是这次终局之战确实给人的感觉，太不一样。</p>
+<p>回忆了今天上午在考场内的心态，完完全全就是渡劫，记得在 3h 过后还是一无所获的时候眼泪差点夺眶而出。也当作自己的最后一次 OI 比赛在全力以赴。</p>
+<p>最后似乎还是做好了 AFO 的准备，在代码开头写下了 <code>R.I.P</code> 和一些英文写就的宽慰话语，毕竟没有算法竞赛的世界一样很精彩，我们大家都不应该只被限制在这里面。</p>
+<p>文化课的晚自习，好不习惯。导数题好难。旁边为什么坐了一车年级前五十，peer pressure 瞬间就上来了。</p>
+<p>化学物理生物怎么办啊，啥都不会。</p>
+<p>突然发现有了 D2T1 和 D2T2 的民间数据，给省内测了一下发现 ArrogHie 似乎起死回生了（？），希望这样吧，真的不忍心看到这几个月的同行者被傻逼 D1T1 送走。</p>
+<p>大抵是省 rk2，但标准分还是被 Asd 橄榄成了 60 多。不知道官方数据的表现了。（Asd 似乎不来打 day 2 也是队长）</p>
+<blockquote>
+<p>有些时候，我们不过就是政策和时代的牺牲品罢了。</p>
+<p>一个人的命运，不仅是他的努力，还要考虑到历史的进程。</p>
+</blockquote>
+<p>希望大家都尽量顺风顺水吧，虽说人生大多该以寄为常态。</p>
+<p>文化课加油了，也希望能进队圆个 NOI 梦吧。</p>
+<h2 id="day-4-后记">Day 4 &amp;&amp; 后记</h2>
+<p>周二下午。</p>
+<p>最近在弄班上爱心义卖的事情。</p>
+<p>印了点自己拍的明信片来卖，<del>本来只印了 40 套但迫于班长压力还是继续加印</del>。</p>
+<p>太阳好晒。</p>
+<p>人好多。</p>
+<p>嗓子哑了，尽管我是佛系卖家（不叫卖，不推销）。</p>
+<p>突然看到 wxy 发了消息给我，whatever，没空看，义卖这边应付不过来。</p>
+<p>突然看到省大群有消息，一看发现成绩出了，Asd 200+，我 155，好，zhj 把我翻了（不知道哪题数据水还是怎么）。100 + 10 + 0 + 25 + 8 + 12 = 155，一分不多，一分不少。只是说能拿到的分确实远远不止这么多，还是要加油。</p>
+<blockquote>
+<p>一年来的心魔算是解了。</p>
+<p>从现在开始我也是省队选手了。</p>
+<p>可喜可贺。</p>
+</blockquote>
+<p>ArrogHie 整了个算上标准分的榜，他 rk4，万幸，万幸。大起大落也确实是奇怪的人生经验了。</p>
+<p>AlbrecRoon 被奇怪的乱搞选手橄榄了，标准分就差了零点几，默哀同时祝他加油。同时 B 队是某不认识选手，snj 靠着稳健的 NOIP T1，省选 D1T1 和 D1T3 的不眼瞎进了 E 队。</p>
+<p>感慨良多，现在也是准退役选手了，在看到了大家经历了各种浮浮沉沉后心态也确实发生了很大改变，正式比赛就剩下 NOI 了（APIO 忘记报名了，笑），希望能捞块 Ag 回来吧（幼稚的期望）。</p>
+<p>祝今年进队的 OIer 们 NOI rp++，退役的高二壬们文化课加油，没进队的选手明年继续加油。</p>
+<p>另外，希望能与认识的 OIer 们在 SH 激情面基（不是）。</p>
+<p>回去写文化课作业了，祝好。</p>
+<h2 id="附录">附录</h2>
+<p>4 月 20 日空间全文内容。</p>
+<blockquote>
+<p>随便写了点逻辑稀烂的东西。后面补写了点乱七八糟的。</p>
+<p>甚是突然，在我在爱心义卖的摊位上忙得不可开交的时候，省选成绩戏剧性的公布了。</p>
+<p>虽然进了省队怎么说也是一个好的结果，至少在这几个月的焦虑与烦躁之后我得到了一丝丝慰藉，蒙蔽在心口的心魔也成功退散，但是心情仍然是十分沉重。</p>
+<p>时不时会想，要是 D1T1 翻车的人是我，那我考得稀烂的联赛成绩也不会让我留在省队里面。</p>
+<p>而若是我真的因为各种原因在这 last chance 没进省队，那去年留下来的心魔是不是还会继续持续伴随，心理问题会不会往坏的方向不可控的发展。</p>
+<p>这一个月的高强度训练和八天省集的结果也仿佛让我觉得“进省队总应该是必然的吧”，但让我背后冒冷汗的是，我确实没有留有失败的退路。</p>
+<p>自我高一选择了 stick to 竞赛这条路以来，我放弃了每一个多多少少可以让我及时止损的道路而逐渐变成了一条彻头彻尾的赌狗。我先放弃了一整年的晚自习，同时逐渐放弃了一开始年级前十的文化课成绩，到现在放弃以月计的跟班课程。可贺的是这条赌狗在倒数第二步赌赢了，获得了去参加 NOI 的机会。</p>
+<p>总结下来，我失去的终归是太多了：正常的心态，不值钱的自信，丰富的爱好，缤纷的高中生活，文化课的成绩。它们在我逐渐走火入魔的路上，逐渐瓦解崩塌飘零。这些也是省选前一星期我情绪崩溃的一大根源。</p>
+<p>我讨厌竞技，准确的来说我讨厌失败。所以算法竞赛终归不适合我。以后我也大概率不会参加 xCPC 一类的大学生竞赛。</p>
+<p>但我同时也很感激我得到的：一难得的上网机会，算法的精妙和瑰丽，代码的严谨和工整，更强的数学能力，还有附加的若干点歪了的技术栈。</p>
+<p>所以这也是我在省选 day 2 赛场上于心态彻底瓦解后写下“感谢遇见”的文字的根源。毕竟总的来说我还是热爱着数学，热爱着算法。</p>
+<p>如是一轮轮的赌下来，我盈亏与否，实不可知。但可以确定的是，如果可以重开，我不会选择当一个赌徒。</p>
+<p>此外，一位位同行者们的退役也让我甚是低落。其中不乏为此努力了五六年，但最后离省队差了仅仅一两个身位的强者。赌局是残酷的，遥想我去年也是落魄的败者，而在今年尘埃未定之时，我亦是对前路感到迷茫。在这里祝他们文化课加油，未来一定能遇上成功之时。算法竞赛不是人生的一切。</p>
+<p>那么回到现在，我该怎么办？也许是先把信息技术的学考应付掉，在此之间尽力速通一下落下的一个月的文化课吧。身体和心理还未从枯竭的状态恢复过来，希望不会被击垮吧。</p>
+<p>最后的最后，祝各位（曾经的）同行者们，在各自的赛道上（不论是文化课还是 OI）加油吧。也祝各地进队的朋友们（还有我自己）NOI 2022 rp++。</p>
+</blockquote>
+</section>
+<footer class="article-footer">
+<section class="article-tags">
+<a href="/tags/OI/">OI</a>
+<a href="/tags/travels/">游记</a>
+</section>
+<section class="article-copyright">
+<svg class="icon icon-tabler icon-tabler-copyright" fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+<path d="M0 0h24v24H0z" stroke="none"></path>
+<circle cx="12" cy="12" r="9"></circle>
+<path d="M14.5 9a3.5 4 0 1 0 0 6"></path>
+</svg>
+<span>Licensed under CC BY-NC-SA 4.0</span>
+</section>
+</footer>
+<link crossorigin="anonymous" href="https://cdn.jsdelivr.net/npm/katex@0.13.13/dist/katex.min.css" integrity="sha384-RZU/ijkSsFbcmivfdRBQDtwuwVqK7GMOw6IMvKyeWL2K5UAlyp6WonmB8m7Jd0Hn" rel="stylesheet"/><script crossorigin="anonymous" defer="" integrity="sha384-pK1WpvzWVBQiP0/GjnvRxV4mOb0oxFuyRxJlk6vVw146n3egcN5C925NCP7a7BY8" src="https://cdn.jsdelivr.net/npm/katex@0.13.13/dist/katex.min.js">
+</script><script crossorigin="anonymous" defer="" integrity="sha384-vZTG03m+2yp6N6BNi5iM4rW4oIwk5DfcNdFfxkk9ZWpDriOkXX8voJBFrAO7MpVl" src="https://cdn.jsdelivr.net/npm/katex@0.13.13/dist/contrib/auto-render.min.js">
+</script><script>
+    window.addEventListener("DOMContentLoaded", () => {
+        renderMathInElement(document.querySelector(`.article-content`), {
+            delimiters: [
+                { left: "$$", right: "$$", display: true },
+                { left: "$", right: "$", display: false },
+                { left: "\\(", right: "\\)", display: false },
+                { left: "\\[", right: "\\]", display: true }
+            ]
+        });})
+</script>
+</article>
+<aside class="related-contents--wrapper">
+<h2 class="section-title">相关文章</h2>
+<div class="related-contents">
+<div class="flex article-list--tile">
+<article class="has-image">
+<a href="/travels-noi2022/">
+<div class="article-image">
+<img data-hash="https://yangty-pic.oss-cn-beijing.aliyuncs.com/bg01.webp" data-key="" loading="lazy" src="https://yangty-pic.oss-cn-beijing.aliyuncs.com/bg01.webp"/>
+</div>
+<div class="article-details">
+<h2 class="article-title">NOI2022 游记</h2>
+</div>
+</a>
+</article>
+<article class="has-image">
+<a href="/travels-noip2021/">
+<div class="article-image">
+<img data-hash="https://yangty-pic.oss-cn-beijing.aliyuncs.com/bg27.webp" data-key="" loading="lazy" src="https://yangty-pic.oss-cn-beijing.aliyuncs.com/bg27.webp"/>
+</div>
+<div class="article-details">
+<h2 class="article-title">NOIP 2021 游记</h2>
+</div>
+</a>
+</article>
+<article class="has-image">
+<a href="/travels-gzoi2021/">
+<div class="article-image">
+<img data-hash="https://yangty-pic.oss-cn-beijing.aliyuncs.com/bg23.webp" data-key="" loading="lazy" src="https://yangty-pic.oss-cn-beijing.aliyuncs.com/bg23.webp"/>
+</div>
+<div class="article-details">
+<h2 class="article-title">CCF NOI 2021 统一省选退役记（GZOI2021）</h2>
+</div>
+</a>
+</article>
+<article class="has-image">
+<a href="/travels-wc2021/">
+<div class="article-image">
+<img data-hash="https://yangty-pic.oss-cn-beijing.aliyuncs.com/bg28.webp" data-key="" loading="lazy" src="https://yangty-pic.oss-cn-beijing.aliyuncs.com/bg28.webp"/>
+</div>
+<div class="article-details">
+<h2 class="article-title">WC2021 游记</h2>
+</div>
+</a>
+</article>
+<article class="has-image">
+<a href="/travels-noip2020/">
+<div class="article-image">
+<img data-hash="https://yangty-pic.oss-cn-beijing.aliyuncs.com/bg26.webp" data-key="" loading="lazy" src="https://yangty-pic.oss-cn-beijing.aliyuncs.com/bg26.webp"/>
+</div>
+<div class="article-details">
+<h2 class="article-title">NOIP 2020 退役记</h2>
+</div>
+</a>
+</article>
+</div>
+</div>
+</aside>
+<footer class="site-footer">
+<section class="copyright">
+        © 
+        
+            2019 - 
+        
+        2024 清烛的博客
+    </section>
+<section class="powerby">
+        Built with <a href="https://gohugo.io/" rel="noopener" target="_blank">Hugo</a> <br/>
+        主题 <b><a data-version="3.11.0" href="https://github.com/CaiJimmy/hugo-theme-stack" rel="noopener" target="_blank">Stack</a></b> 由 <a href="https://jimmycai.com" rel="noopener" target="_blank">Jimmy</a> 设计
+    </section>
+</footer>
+<div aria-hidden="true" class="pswp" role="dialog" tabindex="-1">
+<div class="pswp__bg"></div>
+<div class="pswp__scroll-wrap">
+<div class="pswp__container">
+<div class="pswp__item"></div>
+<div class="pswp__item"></div>
+<div class="pswp__item"></div>
+</div>
+<div class="pswp__ui pswp__ui--hidden">
+<div class="pswp__top-bar">
+<div class="pswp__counter"></div>
+<button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+<button class="pswp__button pswp__button--share" title="Share"></button>
+<button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+<button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+<div class="pswp__preloader">
+<div class="pswp__preloader__icn">
+<div class="pswp__preloader__cut">
+<div class="pswp__preloader__donut"></div>
+</div>
+</div>
+</div>
+</div>
+<div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+<div class="pswp__share-tooltip"></div>
+</div>
+<button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+</button>
+<button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+</button>
+<div class="pswp__caption">
+<div class="pswp__caption__center"></div>
+</div>
+</div>
+</div>
+</div><script crossorigin="anonymous" defer="" integrity="sha256-ePwmChbbvXbsO02lbM3HoHbSHTHFAeChekF1xKJdleo=" src="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe.min.js">
+</script><script crossorigin="anonymous" defer="" integrity="sha256-UKkzOn/w1mBxRmLLGrSeyB4e1xbrp4xylgAWb3M42pU=" src="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe-ui-default.min.js">
+</script><link crossorigin="anonymous" href="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/default-skin/default-skin.css" integrity="sha256-c0uckgykQ9v5k+IqViZOZKc47Jn7KQil4/MP3ySA3F8=" rel="stylesheet"/><link crossorigin="anonymous" href="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe.css" integrity="sha256-SBLU4vv6CA6lHsZ1XyTdhyjJxCjPif/TRkjnsyGAGnE=" rel="stylesheet"/>
+</main>
+</div>
+<script crossorigin="anonymous" integrity="sha256-5NovOZc4iwiAWTYIFiIM7DxKUXKWvpVEuMEPLzcm5/g=" src="https://cdn.jsdelivr.net/npm/node-vibrant@3.1.5/dist/vibrant.min.js">
+</script><script defer="" src="/ts/main.js" type="text/javascript"></script>
+<script>
+    (function () {
+        const customFont = document.createElement('link');
+        customFont.href = "https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&display=swap";
+
+        customFont.type = "text/css";
+        customFont.rel = "stylesheet";
+
+        document.head.appendChild(customFont);
+    }());
+</script>
+</body>
+</html>

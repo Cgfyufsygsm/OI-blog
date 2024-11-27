@@ -1,0 +1,1006 @@
+<!DOCTYPE html>
+<html dir="ltr" lang="zh-CN">
+<head><meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1" name="viewport"/><meta content="线性同余方程 一般线性同余方程 一般的线性同余方程是形如 \[ ax\equiv b\pmod m \] 求解可以考虑使用 exgcd，将方程转化为 \(ax + my = b\)，便可以求出 \(x\) 的一个解。
+P1082 [NOIP2012 提高组] 同余方程。对于这种 \(ax\equiv 1\pmod m\) 的，根据逆元的定义可以直接求逆，这里不展开。
+中国剩余定理 简介 又称孙子定理。用于求解线性同余方程组。 \[ \begin{cases} x\equiv &amp;amp;a_1\pmod{m_1} \\ x\equiv&amp;amp; a_2\pmod{m_2} \\ &amp;amp;\vdots \\ x\equiv &amp;amp;a_n\pmod{m_n} \end{cases} \] 要求 \(\forall i\ne j\)，有 \(m_i\perp m_j\)。即，模数要两两互质。
+结论 构造解：
+计算 \(M = \displaystyle\prod_{i = 1}^n m_i\)，\(M_i = \dfrac M {m_i}\)。 对于每个 \(M_i\) 计算其在模 \(m_i\) 意义下的逆元 \(t_i = M_i^{-1}\)。 方程组的一个特解为 \(x_0 = \displaystyle\sum_{i = 1}^na_iM_it_i\)。 最小正整数解即为 \(x_0\bmod M\)，方程组的解集为 \(\left\lbrace x|x=\displaystyle\sum_{i=1}^na_iM_it_i+kM,k\in\mathbb{Z}\right\rbrace\) 证明 首先，我们易知 \(\forall j\in[1,n]\)，当 \(i\neq j\) 时有" name="description"/><title>数论复习 2（进阶数论）</title>
+<link href="https://oi.imyangty.com/summary-number-theory2/" rel="canonical"/>
+<link href="/scss/style.min.a5821f3d3ab84ce5a0ac21477e347a2e0ca00292e398d16c5e8e36ded6e35a23.css" rel="stylesheet"/><meta content="数论复习 2（进阶数论）" property="og:title"/>
+<meta content="线性同余方程 一般线性同余方程 一般的线性同余方程是形如 \[ ax\equiv b\pmod m \] 求解可以考虑使用 exgcd，将方程转化为 \(ax + my = b\)，便可以求出 \(x\) 的一个解。
+P1082 [NOIP2012 提高组] 同余方程。对于这种 \(ax\equiv 1\pmod m\) 的，根据逆元的定义可以直接求逆，这里不展开。
+中国剩余定理 简介 又称孙子定理。用于求解线性同余方程组。 \[ \begin{cases} x\equiv &amp;amp;a_1\pmod{m_1} \\ x\equiv&amp;amp; a_2\pmod{m_2} \\ &amp;amp;\vdots \\ x\equiv &amp;amp;a_n\pmod{m_n} \end{cases} \] 要求 \(\forall i\ne j\)，有 \(m_i\perp m_j\)。即，模数要两两互质。
+结论 构造解：
+计算 \(M = \displaystyle\prod_{i = 1}^n m_i\)，\(M_i = \dfrac M {m_i}\)。 对于每个 \(M_i\) 计算其在模 \(m_i\) 意义下的逆元 \(t_i = M_i^{-1}\)。 方程组的一个特解为 \(x_0 = \displaystyle\sum_{i = 1}^na_iM_it_i\)。 最小正整数解即为 \(x_0\bmod M\)，方程组的解集为 \(\left\lbrace x|x=\displaystyle\sum_{i=1}^na_iM_it_i+kM,k\in\mathbb{Z}\right\rbrace\) 证明 首先，我们易知 \(\forall j\in[1,n]\)，当 \(i\neq j\) 时有" property="og:description"/>
+<meta content="https://oi.imyangty.com/summary-number-theory2/" property="og:url"/>
+<meta content="清烛的博客" property="og:site_name"/>
+<meta content="article" property="og:type"/><meta content="Post" property="article:section"/><meta content="OI" property="article:tag"/><meta content="笔记" property="article:tag"/><meta content="2021-08-12T14:49:34+08:00" property="article:published_time"/><meta content="2021-08-12T14:49:34+08:00" property="article:modified_time"/><meta content="https://yangty-pic.oss-cn-beijing.aliyuncs.com/bg16.webp" property="og:image"/>
+<meta content="数论复习 2（进阶数论）" name="twitter:title"/>
+<meta content="线性同余方程 一般线性同余方程 一般的线性同余方程是形如 \[ ax\equiv b\pmod m \] 求解可以考虑使用 exgcd，将方程转化为 \(ax + my = b\)，便可以求出 \(x\) 的一个解。
+P1082 [NOIP2012 提高组] 同余方程。对于这种 \(ax\equiv 1\pmod m\) 的，根据逆元的定义可以直接求逆，这里不展开。
+中国剩余定理 简介 又称孙子定理。用于求解线性同余方程组。 \[ \begin{cases} x\equiv &amp;amp;a_1\pmod{m_1} \\ x\equiv&amp;amp; a_2\pmod{m_2} \\ &amp;amp;\vdots \\ x\equiv &amp;amp;a_n\pmod{m_n} \end{cases} \] 要求 \(\forall i\ne j\)，有 \(m_i\perp m_j\)。即，模数要两两互质。
+结论 构造解：
+计算 \(M = \displaystyle\prod_{i = 1}^n m_i\)，\(M_i = \dfrac M {m_i}\)。 对于每个 \(M_i\) 计算其在模 \(m_i\) 意义下的逆元 \(t_i = M_i^{-1}\)。 方程组的一个特解为 \(x_0 = \displaystyle\sum_{i = 1}^na_iM_it_i\)。 最小正整数解即为 \(x_0\bmod M\)，方程组的解集为 \(\left\lbrace x|x=\displaystyle\sum_{i=1}^na_iM_it_i+kM,k\in\mathbb{Z}\right\rbrace\) 证明 首先，我们易知 \(\forall j\in[1,n]\)，当 \(i\neq j\) 时有" name="twitter:description"/><meta content="summary_large_image" name="twitter:card"/>
+<meta content="https://yangty-pic.oss-cn-beijing.aliyuncs.com/bg16.webp" name="twitter:image"/>
+<link href="https://q1.qlogo.cn/g?b=qq&amp;nk=375836877&amp;s=5" rel="shortcut icon"/>
+<link href="https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.5.1/build/styles/github-dark-dimmed.min.css" rel="stylesheet"/>
+<script src="https://cdn.jsdelivr.net/gh/highlightjs/cdn-release/build/highlight.min.js"></script>
+<script>hljs.highlightAll();</script>
+</head>
+<body class="article-page">
+<script>
+        (function() {
+            const colorSchemeKey = 'StackColorScheme';
+            if(!localStorage.getItem(colorSchemeKey)){
+                localStorage.setItem(colorSchemeKey, "auto");
+            }
+        })();
+    </script><script>
+    (function() {
+        const colorSchemeKey = 'StackColorScheme';
+        const colorSchemeItem = localStorage.getItem(colorSchemeKey);
+        const supportDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches === true;
+
+        if (colorSchemeItem == 'dark' || colorSchemeItem === 'auto' && supportDarkMode) {
+            
+
+            document.documentElement.dataset.scheme = 'dark';
+        } else {
+            document.documentElement.dataset.scheme = 'light';
+        }
+    })();
+</script>
+<div class="container main-container flex on-phone--column extended"><aside class="sidebar left-sidebar sticky">
+<button aria-label="切换菜单" class="hamburger hamburger--spin" id="toggle-menu" type="button">
+<span class="hamburger-box">
+<span class="hamburger-inner"></span>
+</span>
+</button>
+<header>
+<figure class="site-avatar">
+<a href="/">
+<img alt="Avatar" class="site-logo" height="300" loading="lazy" src="/img/avatar_huea3ce2119467b51fdd2a81393644a76d_51594_300x0_resize_q75_box.jpg" width="300"/>
+</a>
+<span class="emoji">😅</span>
+</figure>
+<div class="site-meta">
+<h1 class="site-name"><a href="/">清烛的博客</a></h1>
+<h2 class="site-description">烟火已谢，笙歌未停</h2>
+</div>
+</header><ol class="social-menu">
+<li>
+<a href="mailto:i@imyangty.com" target="_blank" title="email">
+<svg class="icon icon-tabler icon-tabler-mail" fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" viewbox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+<path d="M0 0h24v24H0z" fill="none" stroke="none"></path>
+<rect height="14" rx="2" width="18" x="3" y="5"></rect>
+<polyline points="3 7 12 13 21 7"></polyline>
+</svg>
+</a>
+</li>
+<li>
+<a href="https://github.com/Cgfyufsygsm" target="_blank" title="GitHub">
+<svg class="icon icon-tabler icon-tabler-brand-github" fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+<path d="M0 0h24v24H0z" fill="none" stroke="none"></path>
+<path d="M9 19c-4.3 1.4 -4.3 -2.5 -6 -3m12 5v-3.5c0 -1 .1 -1.4 -.5 -2c2.8 -.3 5.5 -1.4 5.5 -6a4.6 4.6 0 0 0 -1.3 -3.2a4.2 4.2 0 0 0 -.1 -3.2s-1.1 -.3 -3.5 1.3a12.3 12.3 0 0 0 -6.2 0c-2.4 -1.6 -3.5 -1.3 -3.5 -1.3a4.2 4.2 0 0 0 -.1 3.2a4.6 4.6 0 0 0 -1.3 3.2c0 4.6 2.7 5.7 5.5 6c-.6 .6 -.6 1.2 -.5 2v3.5"></path>
+</svg>
+</a>
+</li>
+<li>
+<a href="https://t.me/Cgfyufsygsm" target="_blank" title="Telegram">
+<svg class="icon icon-tabler icon-tabler-brand-telegram" fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" viewbox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+<path d="M0 0h24v24H0z" fill="none" stroke="none"></path>
+<path d="M15 10l-4 4l6 6l4 -16l-18 7l4 2l2 6l3 -4"></path>
+</svg>
+</a>
+</li>
+<li>
+<a href="https://twitter.com/Cgfyufsygsm" target="_blank" title="Twitter">
+<svg class="icon icon-tabler icon-tabler-brand-twitter" fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+<path d="M0 0h24v24H0z" fill="none" stroke="none"></path>
+<path d="M22 4.01c-1 .49 -1.98 .689 -3 .99c-1.121 -1.265 -2.783 -1.335 -4.38 -.737s-2.643 2.06 -2.62 3.737v1c-3.245 .083 -6.135 -1.395 -8 -4c0 0 -4.182 7.433 4 11c-1.872 1.247 -3.739 2.088 -6 2c3.308 1.803 6.913 2.423 10.034 1.517c3.58 -1.04 6.522 -3.723 7.651 -7.742a13.84 13.84 0 0 0 .497 -3.753c-.002 -.249 1.51 -2.772 1.818 -4.013z"></path>
+</svg>
+</a>
+</li>
+</ol><ol class="menu" id="main-menu">
+<li>
+<a href="/">
+<svg class="icon icon-tabler icon-tabler-home" fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+<path d="M0 0h24v24H0z" stroke="none"></path>
+<polyline points="5 12 3 12 12 3 21 12 19 12"></polyline>
+<path d="M5 12v7a2 2 0 0 0 2 2h10a2 2 0 0 0 2 -2v-7"></path>
+<path d="M9 21v-6a2 2 0 0 1 2 -2h2a2 2 0 0 1 2 2v6"></path>
+</svg>
+<span>主页</span>
+</a>
+</li>
+<li>
+<a href="/about/">
+<svg class="icon icon-tabler icon-tabler-user" fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+<path d="M0 0h24v24H0z" stroke="none"></path>
+<circle cx="12" cy="7" r="4"></circle>
+<path d="M6 21v-2a4 4 0 0 1 4 -4h4a4 4 0 0 1 4 4v2"></path>
+</svg>
+<span>关于</span>
+</a>
+</li>
+<li>
+<a href="/idx/">
+<svg class="icon icon-tabler icon-tabler-hash" fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+<path d="M0 0h24v24H0z" stroke="none"></path>
+<line x1="5" x2="19" y1="9" y2="9"></line>
+<line x1="5" x2="19" y1="15" y2="15"></line>
+<line x1="11" x2="7" y1="4" y2="20"></line>
+<line x1="17" x2="13" y1="4" y2="20"></line>
+</svg>
+<span>导航</span>
+</a>
+</li>
+<li>
+<a href="/archives/">
+<svg class="icon icon-tabler icon-tabler-archive" fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+<path d="M0 0h24v24H0z" stroke="none"></path>
+<rect height="4" rx="2" width="18" x="3" y="4"></rect>
+<path d="M5 8v10a2 2 0 0 0 2 2h10a2 2 0 0 0 2 -2v-10"></path>
+<line x1="10" x2="14" y1="12" y2="12"></line>
+</svg>
+<span>归档</span>
+</a>
+</li>
+<li>
+<a href="/search/">
+<svg class="icon icon-tabler icon-tabler-search" fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+<path d="M0 0h24v24H0z" stroke="none"></path>
+<circle cx="10" cy="10" r="7"></circle>
+<line x1="21" x2="15" y1="21" y2="15"></line>
+</svg>
+<span>搜索</span>
+</a>
+</li>
+<li>
+<a href="/friends/">
+<svg class="icon icon-tabler icon-tabler-link" fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+<path d="M0 0h24v24H0z" stroke="none"></path>
+<path d="M10 14a3.5 3.5 0 0 0 5 0l4 -4a3.5 3.5 0 0 0 -5 -5l-.5 .5"></path>
+<path d="M14 10a3.5 3.5 0 0 0 -5 0l-4 4a3.5 3.5 0 0 0 5 5l.5 -.5"></path>
+</svg>
+<span>友链</span>
+</a>
+</li>
+<li>
+<a href="https://blog.imyangty.com" target="_blank">
+<svg class="icon icon-tabler icon-tabler-home" fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+<path d="M0 0h24v24H0z" stroke="none"></path>
+<polyline points="5 12 3 12 12 3 21 12 19 12"></polyline>
+<path d="M5 12v7a2 2 0 0 0 2 2h10a2 2 0 0 0 2 -2v-7"></path>
+<path d="M9 21v-6a2 2 0 0 1 2 -2h2a2 2 0 0 1 2 2v6"></path>
+</svg>
+<span>主博客</span>
+</a>
+</li>
+<div class="menu-bottom-section">
+<li id="dark-mode-toggle">
+<svg class="icon icon-tabler icon-tabler-toggle-left" fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+<path d="M0 0h24v24H0z" stroke="none"></path>
+<circle cx="8" cy="12" r="2"></circle>
+<rect height="12" rx="6" width="20" x="2" y="6"></rect>
+</svg>
+<svg class="icon icon-tabler icon-tabler-toggle-right" fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+<path d="M0 0h24v24H0z" stroke="none"></path>
+<circle cx="16" cy="12" r="2"></circle>
+<rect height="12" rx="6" width="20" x="2" y="6"></rect>
+</svg>
+<span>暗色模式</span>
+</li>
+</div>
+</ol>
+</aside>
+<main class="main full-width">
+<article class="has-image main-article">
+<header class="article-header">
+<div class="article-image">
+<a href="/summary-number-theory2/">
+<img alt="Featured image of post 数论复习 2（进阶数论）" loading="lazy" src="https://yangty-pic.oss-cn-beijing.aliyuncs.com/bg16.webp"/>
+</a>
+</div>
+<div class="article-details">
+<header class="article-category">
+<a href="/categories/oi/">
+                OI
+            </a>
+<a href="/categories/summary/">
+                总结
+            </a>
+</header>
+<div class="article-title-wrapper">
+<h2 class="article-title">
+<a href="/summary-number-theory2/">数论复习 2（进阶数论）</a>
+</h2>
+</div>
+<footer class="article-time">
+<div>
+<svg class="icon icon-tabler icon-tabler-calendar-time" fill="none" height="56" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="56" xmlns="http://www.w3.org/2000/svg">
+<path d="M0 0h24v24H0z" stroke="none"></path>
+<path d="M11.795 21h-6.795a2 2 0 0 1 -2 -2v-12a2 2 0 0 1 2 -2h12a2 2 0 0 1 2 2v4"></path>
+<circle cx="18" cy="18" r="4"></circle>
+<path d="M15 3v4"></path>
+<path d="M7 3v4"></path>
+<path d="M3 11h16"></path>
+<path d="M18 16.496v1.504l1 1"></path>
+</svg>
+<time class="article-time--published">Aug 12, 2021</time>
+</div>
+<div>
+<svg class="icon icon-tabler icon-tabler-clock" fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+<path d="M0 0h24v24H0z" stroke="none"></path>
+<circle cx="12" cy="12" r="9"></circle>
+<polyline points="12 7 12 12 15 15"></polyline>
+</svg>
+<time class="article-time--reading">
+                    阅读时长: 14 分钟
+                </time>
+</div>
+</footer>
+</div>
+</header>
+<section class="article-content">
+<h2 id="线性同余方程">线性同余方程</h2>
+<h3 id="一般线性同余方程">一般线性同余方程</h3>
+<p>一般的线性同余方程是形如 <span class="math display">\[
+ax\equiv b\pmod m
+\]</span> 求解可以考虑使用 exgcd，将方程转化为 <span class="math inline">\(ax + my = b\)</span>，便可以求出 <span class="math inline">\(x\)</span> 的一个解。</p>
+<p><a href="https://www.luogu.com.cn/problem/P1082"><strong>P1082</strong> [NOIP2012 提高组] 同余方程</a>。对于这种 <span class="math inline">\(ax\equiv 1\pmod m\)</span> 的，根据逆元的定义可以直接求逆，这里不展开。</p>
+<h3 id="中国剩余定理">中国剩余定理</h3>
+<h4 id="简介">简介</h4>
+<p>又称孙子定理。用于求解线性同余方程组。 <span class="math display">\[
+\begin{cases}
+x\equiv &amp;a_1\pmod{m_1} \\
+x\equiv&amp; a_2\pmod{m_2} \\
+&amp;\vdots \\
+x\equiv &amp;a_n\pmod{m_n}
+\end{cases}
+\]</span> 要求 <span class="math inline">\(\forall i\ne j\)</span>，有 <span class="math inline">\(m_i\perp m_j\)</span>。即，模数要两两互质。</p>
+<h4 id="结论">结论</h4>
+<p>构造解：</p>
+<ol type="1">
+<li>计算 <span class="math inline">\(M = \displaystyle\prod_{i = 1}^n m_i\)</span>，<span class="math inline">\(M_i = \dfrac M {m_i}\)</span>。</li>
+<li>对于每个 <span class="math inline">\(M_i\)</span> 计算其在模 <span class="math inline">\(m_i\)</span> 意义下的逆元 <span class="math inline">\(t_i = M_i^{-1}\)</span>。</li>
+<li>方程组的一个特解为 <span class="math inline">\(x_0 = \displaystyle\sum_{i = 1}^na_iM_it_i\)</span>。</li>
+<li>最小正整数解即为 <span class="math inline">\(x_0\bmod M\)</span>，方程组的解集为 <span class="math inline">\(\left\lbrace x|x=\displaystyle\sum_{i=1}^na_iM_it_i+kM,k\in\mathbb{Z}\right\rbrace\)</span></li>
+</ol>
+<h4 id="证明">证明</h4>
+<p>首先，我们易知 <span class="math inline">\(\forall j\in[1,n]\)</span>，当 <span class="math inline">\(i\neq j\)</span> 时有</p>
+<p><span class="math display">\[
+a_jM_jt_j\equiv 0\pmod{m_i}
+\]</span></p>
+<p>当 <span class="math inline">\(i=j\)</span> 时有</p>
+<p><span class="math display">\[
+a_iM_it_i\equiv a_iM_iM_i^{-1}\equiv a_i\pmod{m_i}
+\]</span></p>
+<p>所以对于我们得到的解 <span class="math inline">\(x=\displaystyle\sum_{i=1}^na_iM_it_i\)</span>，对于任意的 <span class="math inline">\(m_i\)</span> 都有 <span class="math inline">\(x\equiv a_i\pmod{m_i}\)</span>，定理得证。</p>
+<p>类比拉格朗日插值。</p>
+<h4 id="应用">应用</h4>
+<p>模板题 <a href="https://www.luogu.com.cn/problem/P1495">https://www.luogu.com.cn/problem/P1495</a>。</p>
+<p>代码实现如下：</p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode cpp"><code class="sourceCode cpp"><span id="cb1-1"><a aria-hidden="true" href="#cb1-1"></a><span class="pp">#include </span><span class="im">&lt;cstdio&gt;</span></span>
+<span id="cb1-2"><a aria-hidden="true" href="#cb1-2"></a></span>
+<span id="cb1-3"><a aria-hidden="true" href="#cb1-3"></a><span class="kw">typedef</span> <span class="dt">long</span> <span class="dt">long</span> ll;</span>
+<span id="cb1-4"><a aria-hidden="true" href="#cb1-4"></a>ll n, a[<span class="dv">15</span>], m[<span class="dv">15</span>], Mul, M[<span class="dv">16</span>], inv[<span class="dv">16</span>], x, y;</span>
+<span id="cb1-5"><a aria-hidden="true" href="#cb1-5"></a></span>
+<span id="cb1-6"><a aria-hidden="true" href="#cb1-6"></a><span class="dt">void</span> exgcd(ll a, ll b, ll&amp; x, ll&amp; y) {</span>
+<span id="cb1-7"><a aria-hidden="true" href="#cb1-7"></a>    <span class="cf">if</span> (b == <span class="dv">0</span>) {</span>
+<span id="cb1-8"><a aria-hidden="true" href="#cb1-8"></a>        x = <span class="dv">1</span>; y = <span class="dv">0</span>;</span>
+<span id="cb1-9"><a aria-hidden="true" href="#cb1-9"></a>        <span class="cf">return</span>;</span>
+<span id="cb1-10"><a aria-hidden="true" href="#cb1-10"></a>    }</span>
+<span id="cb1-11"><a aria-hidden="true" href="#cb1-11"></a>    exgcd(b, a % b, y, x);</span>
+<span id="cb1-12"><a aria-hidden="true" href="#cb1-12"></a>    y -= a / b * x;</span>
+<span id="cb1-13"><a aria-hidden="true" href="#cb1-13"></a>}</span>
+<span id="cb1-14"><a aria-hidden="true" href="#cb1-14"></a></span>
+<span id="cb1-15"><a aria-hidden="true" href="#cb1-15"></a><span class="dt">int</span> main() {</span>
+<span id="cb1-16"><a aria-hidden="true" href="#cb1-16"></a>    Mul = <span class="dv">1</span>;</span>
+<span id="cb1-17"><a aria-hidden="true" href="#cb1-17"></a>    scanf(<span class="st">"</span><span class="sc">%lld</span><span class="st">"</span>, &amp;n);</span>
+<span id="cb1-18"><a aria-hidden="true" href="#cb1-18"></a>    <span class="cf">for</span> (<span class="dt">int</span> i = <span class="dv">1</span>; i &lt;= n; i++) {</span>
+<span id="cb1-19"><a aria-hidden="true" href="#cb1-19"></a>        scanf(<span class="st">"</span><span class="sc">%lld</span><span class="st"> </span><span class="sc">%lld</span><span class="st">"</span>, m + i, a + i);</span>
+<span id="cb1-20"><a aria-hidden="true" href="#cb1-20"></a>        Mul *= m[i];</span>
+<span id="cb1-21"><a aria-hidden="true" href="#cb1-21"></a>    }</span>
+<span id="cb1-22"><a aria-hidden="true" href="#cb1-22"></a>    ll ans = <span class="dv">0</span>;</span>
+<span id="cb1-23"><a aria-hidden="true" href="#cb1-23"></a>    <span class="cf">for</span> (<span class="dt">int</span> i = <span class="dv">1</span>; i &lt;= n; i++) {</span>
+<span id="cb1-24"><a aria-hidden="true" href="#cb1-24"></a>        M[i] = Mul / m[i];</span>
+<span id="cb1-25"><a aria-hidden="true" href="#cb1-25"></a>        x = <span class="dv">0</span>, y = <span class="dv">0</span>;</span>
+<span id="cb1-26"><a aria-hidden="true" href="#cb1-26"></a>        exgcd(M[i], m[i], x, y);</span>
+<span id="cb1-27"><a aria-hidden="true" href="#cb1-27"></a>        inv[i] = x &lt; <span class="dv">0</span> ? x + m[i] : x;</span>
+<span id="cb1-28"><a aria-hidden="true" href="#cb1-28"></a>        ans += a[i] * M[i] * inv[i];</span>
+<span id="cb1-29"><a aria-hidden="true" href="#cb1-29"></a>    }</span>
+<span id="cb1-30"><a aria-hidden="true" href="#cb1-30"></a>    printf(<span class="st">"</span><span class="sc">%lld\n</span><span class="st">"</span>, ans % Mul);</span>
+<span id="cb1-31"><a aria-hidden="true" href="#cb1-31"></a>    <span class="cf">return</span> <span class="dv">0</span>;</span>
+<span id="cb1-32"><a aria-hidden="true" href="#cb1-32"></a>}</span></code></pre></div>
+<p>一般来说可以在其他算法里面被使用，裸题很少。</p>
+<ul>
+<li><a href="https://www.luogu.com.cn/problem/P3868">P3868 [TJOI2009] 猜数字</a></li>
+</ul>
+<h3 id="线性同余方程的合并excrt">线性同余方程的合并（exCRT）</h3>
+<p>当 <span class="math display">\[
+\begin{cases}
+x\equiv r_1\pmod{m_1}\\
+x\equiv r_2\pmod{m_2}\\
+\cdots\\
+x\equiv r_n\pmod{m_n}
+\end{cases}
+\]</span> 中的模数不两两互质时，CRT 需要的 <span class="math inline">\(M_i\)</span> 模 <span class="math inline">\(m_i\)</span> 的逆元就不一定存在。所以我们的方法是：两两合并这些方程，最后用 exgcd 求解。</p>
+<p>先考虑两个未知数的情况： <span class="math display">\[
+\begin{cases}
+x\equiv r_1\pmod{m_1} \\
+x\equiv r_2\pmod{m_2} \\
+\end{cases}
+\]</span> 这个方程可以改写为：</p>
+<p><span class="math display">\[
+x=k_1m_1+r_1=k_2m_2+r_2
+\]</span></p>
+<p>其中 <span class="math inline">\(k_1,k_2\)</span> 为未知量，然后方程可以进一步改写为关于 <span class="math inline">\(k_1,k_2\)</span> 的形式：</p>
+<p><span class="math display">\[
+k_1m_1 - k_2m_2=r_2-r_1
+\]</span></p>
+<p>由裴蜀定理得这个方程有解的条件是 <span class="math inline">\(\gcd(m_1,m_2)\mid r_2-r_1\)</span>，若有解， 则令 <span class="math inline">\(\displaystyle d = \gcd(m_1,m_2),p_1 = \frac{m_1}{d},p_2=\frac{m_2}{d}\)</span>，方程化为</p>
+<p><span class="math display">\[
+k_1p_1-k_2p_2 = \frac{r_2-r_1}{d}
+\]</span></p>
+<p>使用 exgcd 求出方程 <span class="math inline">\(p_1\lambda_1 + p_2\lambda_2 = 1\)</span> 的解 <span class="math inline">\(\lambda_1,\lambda_2\)</span>，则</p>
+<p><span class="math display">\[
+\begin{cases}
+k_1=\lambda_1\cdot\dfrac{r_2-r_1}{d} \\
+k_2=\lambda_2\cdot\dfrac{r_2-r_1}{d}
+\end{cases}
+\]</span></p>
+<p>把 <span class="math inline">\(k_1\)</span> 还原回去，得到满足原方程的一个特解</p>
+<p><span class="math display">\[
+x^* = m_1\lambda_1\cdot\dfrac{r_2-r_1}{d} + r_1
+\]</span></p>
+<p>则这个方程所有的通解为 $x = x^* + k(m_1,m_2),k $。</p>
+<p>所以两个方程就合并为一个：</p>
+<p><span class="math display">\[
+x\equiv x^*\pmod{\operatorname{lcm}(m_1,m_2)}
+\]</span></p>
+<p>这样子两两合并下去就可以将所有的方程合为一个，得解。</p>
+<p>应用较为广泛，可以在 exLucas 中发挥其作用。</p>
+<ul>
+<li><a href="https://www.luogu.com.cn/problem/P4777">P4777 【模板】扩展中国剩余定理（EXCRT）</a></li>
+<li><a href="https://www.luogu.com.cn/problem/P4774">P4774 [NOI2018] 屠龙勇士</a></li>
+</ul>
+<h2 id="组合数取模">组合数取模</h2>
+<h3 id="lucas-定理">Lucas 定理</h3>
+<p>原来主要是为了解决组合数取模的问题，在 <span class="math inline">\(p\)</span> 进制上的表示可以进行数位 dp。</p>
+<p>常见应用：</p>
+<ul>
+<li>直接求 <span class="math inline">\(\dbinom n m \bmod p\)</span>，其中 <span class="math inline">\(p\)</span> 为较小质数：这可以直接使用 Lucas 定理。</li>
+<li>使用 <span class="math inline">\(\displaystyle \binom n m \equiv \binom{\lfloor\frac n p\rfloor}{\lfloor\frac m p\rfloor}\cdot \binom{n\bmod p}{m\bmod p}\pmod p\)</span> 化简式子，见超能粒子炮。</li>
+<li>利用其在 <span class="math inline">\(p\)</span> 进制表示下的性质进行数位 dp，见清华集训组合数问题。</li>
+</ul>
+<h4 id="定理内容">定理内容</h4>
+<p><span class="math display">\[
+\binom n m \equiv \binom{\lfloor\frac n p\rfloor}{\lfloor\frac m p\rfloor}\cdot \binom{n\bmod p}{m\bmod p}\pmod p
+\]</span></p>
+<p>其中 <span class="math inline">\(p\)</span> 为质数。一般拿来求 <span class="math inline">\(\binom nm\)</span>，当 <span class="math inline">\(p\)</span> 范围较小时。</p>
+<div class="sourceCode" id="cb2"><pre class="sourceCode cpp"><code class="sourceCode cpp"><span id="cb2-1"><a aria-hidden="true" href="#cb2-1"></a><span class="dt">int</span> lucas(<span class="dt">int</span> n, <span class="dt">int</span> m)</span>
+<span id="cb2-2"><a aria-hidden="true" href="#cb2-2"></a>{</span>
+<span id="cb2-3"><a aria-hidden="true" href="#cb2-3"></a>    <span class="cf">if</span> (!m) <span class="cf">return</span> <span class="dv">1</span>;</span>
+<span id="cb2-4"><a aria-hidden="true" href="#cb2-4"></a>    <span class="cf">return</span> <span class="dv">1</span><span class="bu">ll</span> * lucas(n / p, m / p) * C(n % p, m % p) % p;</span>
+<span id="cb2-5"><a aria-hidden="true" href="#cb2-5"></a>}</span></code></pre></div>
+<p><span class="math inline">\(\dbinom{\lfloor\frac n p\rfloor}{\lfloor\frac m p\rfloor}\)</span> 是可以递归算的，而 <span class="math inline">\(\dbinom{n\bmod p}{m\bmod p}\)</span> 可以直接算。</p>
+<p>另一种形式：对于整数 <span class="math inline">\(a\)</span>，<span class="math inline">\(b\)</span> 和素数 <span class="math inline">\(p\)</span>，若 <span class="math display">\[
+\begin{aligned}
+a &amp;= \sum_{i = 0}^k a_ip^i\\
+b &amp;= \sum_{i = 0}^k b_ip^i
+\end{aligned}
+\]</span> （相当于把 <span class="math inline">\(a\)</span> 和 <span class="math inline">\(b\)</span> 在 <span class="math inline">\(p\)</span> 进制下表示）则 <span class="math display">\[
+\binom ab\equiv\prod_{i = 0}^k\binom{a_i}{b_i}\pmod p
+\]</span> 反复套用第一个形式会发现两个是等价的。</p>
+<h4 id="证明-1">证明</h4>
+<p>需要一定的组合数学基础。</p>
+<h5 id="引理">引理</h5>
+<p>首先考虑 <span class="math display">\[
+\binom p n \bmod p
+\]</span> 的取值，注意到展开组合数之后其为如下形式： <span class="math display">\[
+\frac{p!}{n!(p-n)!}\bmod p
+\]</span> 而显然，由于分子中 <span class="math inline">\(p!\)</span> 是一定有质因子 <span class="math inline">\(p\)</span> 的，所以只有当 <span class="math inline">\(n = 0\lor n = p\)</span> 的时候（即 <span class="math inline">\(p!\)</span> 能被消干净）整体的结果为 <span class="math inline">\(1\)</span>，否则为 <span class="math inline">\(0\)</span>。即 <span class="math display">\[
+\binom p n\bmod p = [n = 0\lor n = p]
+\]</span> 进而我们可以得到 <span class="math display">\[
+\begin{aligned}
+(a + b)^p&amp;=\sum_{n = 0}^p\binom p na^nb^{p - n}\\
+&amp;\equiv \sum_{n= 0}^p[n = 0\lor n = p]a^nb^{p - n}\\
+&amp;\equiv a^p + b^p\pmod p
+\end{aligned}
+\]</span> 然后将其推广到二项式的情况， <span class="math display">\[
+\begin{aligned}
+(ax^n + bx^m)^p&amp;\equiv a^px^{np} + b^px^{mp}\\
+&amp;\equiv ax^{np} + bx^{mp}
+\end{aligned}
+\]</span> 即我们可以直接把指数 <span class="math inline">\(p\)</span> 给提进来。</p>
+<h5 id="证明-2">证明</h5>
+<p>考虑二项式 <span class="math inline">\((1+x)^n\)</span> 在 <span class="math inline">\(x^m\)</span> 处的系数模 <span class="math inline">\(p\)</span> 的结果，不难发现其即为 <span class="math inline">\(\displaystyle\binom n m\bmod p\)</span>。利用上述引理，我们可以做出如下推导： <span class="math display">\[
+\begin{aligned}
+(1+x)^n&amp;\equiv(1+x)^{p\lfloor n/p\rfloor}(1+x)^{n\bmod p}\\
+&amp;\equiv(1+x^p)^{\lfloor n/p\rfloor}(1+x)^{n\bmod p}
+\end{aligned}
+\]</span> 我们将其看作两个多项式 <span class="math inline">\((1+x^p)^{\lfloor n/p\rfloor}\)</span> 与 <span class="math inline">\((1+x)^{n\bmod p}\)</span> 的卷积，考虑这两个式子对 <span class="math inline">\((1 + x)^n\)</span> 产生的贡献：</p>
+<ul>
+<li><span class="math inline">\((1+x^p)^{\lfloor n/p\rfloor}\)</span> 展开后得到的项的次数均为 <span class="math inline">\(p\)</span> 的倍数。</li>
+<li><span class="math inline">\((1+x)^{n\bmod p}\)</span> 展开后得到的项的次数最多为 <span class="math inline">\(p - 1\)</span>。</li>
+</ul>
+<p>所以对 <span class="math inline">\(x^m\)</span> 的系数仅有一种产生贡献的方案，考虑一下这个贡献怎么来的：就是 <span class="math inline">\((1+x^p)^{\lfloor n/p\rfloor}\)</span> 中取 <span class="math inline">\(p\)</span> 的倍数次项，这部分的系数即 <span class="math inline">\(\displaystyle\binom{\lfloor\frac n p\rfloor}{\lfloor\frac m p\rfloor}\)</span>，然后在 <span class="math inline">\((1+x)^{n\bmod p}\)</span> 中取剩余的部分，这部分的系数即 <span class="math inline">\(\displaystyle\binom{n\bmod p}{m\bmod p}\)</span>。</p>
+<p>所以我们得出结论 <span class="math display">\[
+\binom n m \equiv \binom{\lfloor\frac n p\rfloor}{\lfloor\frac m p\rfloor}\cdot \binom{n\bmod p}{m\bmod p}\pmod p
+\]</span></p>
+<h4 id="应用-1">应用</h4>
+<p>一般拿来做组合数取模，是很基础的内容，可以辅助推式子。</p>
+<p>在 <span class="math inline">\(p\)</span> 进制下的展开形式可以做数位 dp。</p>
+<ul>
+<li><a href="https://www.luogu.com.cn/problem/P3807">P3807 【模板】卢卡斯定理/Lucas 定理</a></li>
+<li><a href="https://www.luogu.com.cn/problem/P2480">P2480 [SDOI2010]古代猪文</a></li>
+<li><a href="https://www.luogu.com.cn/problem/P4345">P4345 [SHOI2015]超能粒子炮·改</a></li>
+<li><a href="http://www.51nod.com/Challenge/Problem.html#problemId=1778">51nod1778 小Q的集合</a></li>
+</ul>
+<h3 id="kummer-定理">Kummer 定理</h3>
+<p>是一个小番外。</p>
+<h4 id="质数在阶乘中的幂次">质数在阶乘中的幂次</h4>
+<p>勒让德在 1808 年提出 <span class="math inline">\(n!\)</span> 中含有的质数 <span class="math inline">\(p\)</span> 的幂次为 <span class="math inline">\(\sum_{i\ge 1}\lfloor n / p^i\rfloor\)</span>。</p>
+<p>证明：<span class="math inline">\(n! = 1\times 2\times\cdots \times p\times \cdots\times 2p\times \cdots\times \lfloor n / p\rfloor p\times \cdots\times n\)</span>，将 <span class="math inline">\(p\)</span> 的倍数提出来，为 <span class="math inline">\(p^{\lfloor n / p\rfloor}\lfloor n / p\rfloor!\)</span>，这里面显然有 <span class="math inline">\(\lfloor n/p\rfloor\)</span> 个 <span class="math inline">\(p\)</span>。然后递归寻找 <span class="math inline">\(\lfloor n /p\rfloor!\)</span> 即可。</p>
+<p>下面我们记 <span class="math inline">\(\nu(n!) = \sum_{i \ge 1}\lfloor n /p^i\rfloor\)</span>。</p>
+<p>当然还有一种公式是 <span class="math inline">\(v_p(n!) = \dfrac{n - S_p(n)}{1 - p}\)</span>，其中 <span class="math inline">\(S_p(n)\)</span> 表示 <span class="math inline">\(p\)</span> 进制下 <span class="math inline">\(n\)</span> 的各位数字和。证明在这里先不写了。</p>
+<h4 id="质数在组合数中的幂次">质数在组合数中的幂次</h4>
+<p>我们可以发现： <span class="math display">\[
+\nu\left(\binom{n+m}m\right) = \sum_{i = 1}(\lfloor(n + m)/  p^i\rfloor - \lfloor n / p^i\rfloor- \lfloor m / p^i\rfloor)
+\]</span> 我们可以注意到，对于某个 <span class="math inline">\(p^i\)</span>，<span class="math inline">\(\lfloor n / p^i\rfloor\)</span> 相当于在 <span class="math inline">\(p\)</span> 进制下去掉后面的 <span class="math inline">\(i\)</span> 位，<span class="math inline">\(m + n\)</span> 在第 <span class="math inline">\(i + 1\)</span> 位产生进位的条件显然就为 <span class="math inline">\(\lfloor(n + m)/ p^i\rfloor - \lfloor n / p^i\rfloor- \lfloor m / p^i\rfloor\)</span>，这就是 Kummer 定理。</p>
+<blockquote>
+<p><span class="math inline">\(\dbinom{n + m}{m}\)</span> 中质因子 <span class="math inline">\(p\)</span> 的个数为 <span class="math inline">\(n,m\)</span> 在 <span class="math inline">\(p\)</span> 进制下做加法的进位次数。</p>
+</blockquote>
+<ul>
+<li><a href="https://www.luogu.com.cn/problem/CF582D">CF582D Number of Binominal Coefficients</a>：利用上面的定理进行数位 dp。</li>
+</ul>
+<h3 id="扩展卢卡斯">扩展卢卡斯</h3>
+<p>求 <span class="math display">\[
+\binom nm\bmod M
+\]</span> 的值。其中 <span class="math inline">\(M\)</span> 不一定为质数。和卢卡斯定理关系不大。</p>
+<p>考虑使用唯一分解定理分解模数 <span class="math inline">\(M\)</span> 得到 <span class="math inline">\(M = \prod p_i^{k_i}\)</span> 的形式，然后对于每个 <span class="math inline">\(p_i^{k_i}\)</span> 单独求解，最后用 CRT 合并。拆开组合数的式子，我们发现：</p>
+<p><span class="math display">\[
+\binom n m \equiv \frac{n!}{m!(n - m)!}\pmod{p^k}
+\]</span> 然而下面那个东西不一定能算模 <span class="math inline">\(p^k\)</span> 意义下的乘法逆元，那么我们就把所有的 <span class="math inline">\(p\)</span> 提出来，设 <span class="math inline">\(f(n) = \frac{n!}{p^{\nu(n!)}}\)</span>，<span class="math inline">\(\nu(n)\)</span> 上面已经说明。提出来之后就可以得到 <span class="math inline">\(f(n)\not\equiv 0\pmod{p^k}\)</span>，可以求逆。现在就需要计算 <span class="math display">\[
+\frac{f(n)}{f(m)f(n - m)}p^{\nu(n!) - \nu(m!) - \nu((n - m)!)}
+\]</span> 上文说过了 <span class="math inline">\(\nu(n!) = \sum_{i\ge 1}\lfloor n /p^i\rfloor\)</span>，下面考虑如何求 <span class="math inline">\(f(n)\)</span>。</p>
+<p><span class="math inline">\(p^{\nu(n!)}\)</span> 是可以求逆的，这里就不再赘述。主要来看 <span class="math inline">\(n!\)</span> 怎么求。我们把 <span class="math inline">\(n!\)</span> 的式子展开来，提出 <span class="math inline">\(p\)</span> 的倍数： <span class="math display">\[
+n! = 1\times2\times\cdots\times(p-1)\times p\times [(p+1)\times\cdots\times(2p - 1)]\times 2p\times\cdots
+\]</span> 中间是存在循环节的： <span class="math inline">\(\displaystyle\prod_{i,i\perp q}^{q^k}i\equiv\prod_{i,i\perp q}^{q^k}(i + tq^k)\pmod{q^k}\)</span>，这个循环节循环了 <span class="math inline">\(\displaystyle\left\lfloor\frac{n}{p^k}\right\rfloor\)</span> 次，所以考虑暴力把 <span class="math inline">\(\displaystyle\prod_{i,i\perp p}^{p^k}i\)</span> 求出来然后快速幂求一波 <span class="math inline">\(\displaystyle\left\lfloor\frac{n}{p^k}\right\rfloor\)</span> 次幂。当然最后是需要乘上余项 <span class="math inline">\(\displaystyle\prod_{i,i\perp p}^{n\bmod p^k}i\)</span>，暴力就可以了。剩下的项是 <span class="math inline">\(\displaystyle p^{\lfloor n/p\rfloor}\cdot\left(\left\lfloor\frac n p\right\rfloor\right)!\)</span>。前者可以快速幂，后面的可以递归求，即为 <span class="math inline">\(f(\lfloor\frac np\rfloor)\)</span>。</p>
+<p>于是我们就做完了。来看下代码：<a href="https://www.luogu.com.cn/problem/P4720">洛谷 P4720 【模板】扩展卢卡斯</a>，细节巨大多。下面的写法，一次询问的复杂度为 <span class="math inline">\(O(M\log M)\)</span>。</p>
+<div class="sourceCode" id="cb3"><pre class="sourceCode cpp"><code class="sourceCode cpp"><span id="cb3-1"><a aria-hidden="true" href="#cb3-1"></a><span class="kw">using</span> ll = <span class="dt">long</span> <span class="dt">long</span>;</span>
+<span id="cb3-2"><a aria-hidden="true" href="#cb3-2"></a>ll n, m, mod;</span>
+<span id="cb3-3"><a aria-hidden="true" href="#cb3-3"></a></span>
+<span id="cb3-4"><a aria-hidden="true" href="#cb3-4"></a><span class="dt">void</span> exgcd(ll a, ll b, ll &amp;x, ll &amp;y) {</span>
+<span id="cb3-5"><a aria-hidden="true" href="#cb3-5"></a>    <span class="cf">if</span> (!b) <span class="cf">return</span> x = <span class="dv">1</span>, y = <span class="dv">0</span>, <span class="dt">void</span>();</span>
+<span id="cb3-6"><a aria-hidden="true" href="#cb3-6"></a>    exgcd(b, a % b, y, x), y -= a / b * x;</span>
+<span id="cb3-7"><a aria-hidden="true" href="#cb3-7"></a>    <span class="cf">return</span>;</span>
+<span id="cb3-8"><a aria-hidden="true" href="#cb3-8"></a>}</span>
+<span id="cb3-9"><a aria-hidden="true" href="#cb3-9"></a></span>
+<span id="cb3-10"><a aria-hidden="true" href="#cb3-10"></a>il ll inv(ll n, ll mod) {</span>
+<span id="cb3-11"><a aria-hidden="true" href="#cb3-11"></a>    ll x, y;</span>
+<span id="cb3-12"><a aria-hidden="true" href="#cb3-12"></a>    exgcd(n, mod, x, y);</span>
+<span id="cb3-13"><a aria-hidden="true" href="#cb3-13"></a>    <span class="cf">return</span> (x + mod) % mod;</span>
+<span id="cb3-14"><a aria-hidden="true" href="#cb3-14"></a>}</span>
+<span id="cb3-15"><a aria-hidden="true" href="#cb3-15"></a></span>
+<span id="cb3-16"><a aria-hidden="true" href="#cb3-16"></a>ll qPow(ll base, ll exp, ll mod) {</span>
+<span id="cb3-17"><a aria-hidden="true" href="#cb3-17"></a>    ll ret = <span class="dv">1</span>;</span>
+<span id="cb3-18"><a aria-hidden="true" href="#cb3-18"></a>    <span class="cf">for</span> (; exp; exp &gt;&gt;= <span class="dv">1</span>, base = base * base % mod)</span>
+<span id="cb3-19"><a aria-hidden="true" href="#cb3-19"></a>        <span class="cf">if</span> (exp &amp; <span class="dv">1</span>) ret = ret * base % mod;</span>
+<span id="cb3-20"><a aria-hidden="true" href="#cb3-20"></a>    <span class="cf">return</span> ret;</span>
+<span id="cb3-21"><a aria-hidden="true" href="#cb3-21"></a>}</span>
+<span id="cb3-22"><a aria-hidden="true" href="#cb3-22"></a></span>
+<span id="cb3-23"><a aria-hidden="true" href="#cb3-23"></a>ll CRT(<span class="dt">int</span> n, ll *a, ll *m) {</span>
+<span id="cb3-24"><a aria-hidden="true" href="#cb3-24"></a>    ll M = <span class="dv">1</span>, ret = <span class="dv">0</span>;</span>
+<span id="cb3-25"><a aria-hidden="true" href="#cb3-25"></a>    FOR(i, <span class="dv">1</span>, n) M *= m[i];</span>
+<span id="cb3-26"><a aria-hidden="true" href="#cb3-26"></a>    FOR(i, <span class="dv">1</span>, n) {</span>
+<span id="cb3-27"><a aria-hidden="true" href="#cb3-27"></a>        ll w = M / m[i];</span>
+<span id="cb3-28"><a aria-hidden="true" href="#cb3-28"></a>        ret = (ret + a[i] * w % mod * inv(w, m[i]) % mod) % mod;</span>
+<span id="cb3-29"><a aria-hidden="true" href="#cb3-29"></a>    }</span>
+<span id="cb3-30"><a aria-hidden="true" href="#cb3-30"></a>    <span class="cf">return</span> (ret + mod) % mod;</span>
+<span id="cb3-31"><a aria-hidden="true" href="#cb3-31"></a>}</span>
+<span id="cb3-32"><a aria-hidden="true" href="#cb3-32"></a></span>
+<span id="cb3-33"><a aria-hidden="true" href="#cb3-33"></a>ll f(ll n, ll p, ll pk) {</span>
+<span id="cb3-34"><a aria-hidden="true" href="#cb3-34"></a>    <span class="cf">if</span> (!n) <span class="cf">return</span> <span class="dv">1</span>;</span>
+<span id="cb3-35"><a aria-hidden="true" href="#cb3-35"></a>    ll ret = <span class="dv">1</span>;</span>
+<span id="cb3-36"><a aria-hidden="true" href="#cb3-36"></a>    FOR(i, <span class="dv">1</span>, pk) <span class="cf">if</span> (i % p) ret = ret * i % pk;</span>
+<span id="cb3-37"><a aria-hidden="true" href="#cb3-37"></a>    ret = qPow(ret, n / pk, pk);</span>
+<span id="cb3-38"><a aria-hidden="true" href="#cb3-38"></a>    <span class="cf">for</span> (ll i = n / pk * pk + <span class="dv">1</span>; i &lt;= n; ++i)</span>
+<span id="cb3-39"><a aria-hidden="true" href="#cb3-39"></a>        <span class="cf">if</span> (i % p) ret = ret * (i % pk) % pk;</span>
+<span id="cb3-40"><a aria-hidden="true" href="#cb3-40"></a>    <span class="cf">return</span> ret * f(n / p, p, pk) % pk;</span>
+<span id="cb3-41"><a aria-hidden="true" href="#cb3-41"></a>}</span>
+<span id="cb3-42"><a aria-hidden="true" href="#cb3-42"></a></span>
+<span id="cb3-43"><a aria-hidden="true" href="#cb3-43"></a>ll multiLucas(ll n, ll m, ll p, ll pk) {</span>
+<span id="cb3-44"><a aria-hidden="true" href="#cb3-44"></a>    <span class="dt">int</span> cnt = <span class="dv">0</span>;</span>
+<span id="cb3-45"><a aria-hidden="true" href="#cb3-45"></a>    <span class="cf">for</span> (ll i = n; i; i /= p) cnt += i / p;</span>
+<span id="cb3-46"><a aria-hidden="true" href="#cb3-46"></a>    <span class="cf">for</span> (ll i = m; i; i /= p) cnt -= i / p;</span>
+<span id="cb3-47"><a aria-hidden="true" href="#cb3-47"></a>    <span class="cf">for</span> (ll i = n - m; i; i /= p) cnt -= i / p;</span>
+<span id="cb3-48"><a aria-hidden="true" href="#cb3-48"></a>    <span class="cf">return</span> qPow(p, cnt, pk) * f(n, p, pk) % pk * inv(f(m, p, pk), pk) % pk * inv(f(n - m, p, pk), pk) % pk;</span>
+<span id="cb3-49"><a aria-hidden="true" href="#cb3-49"></a>}</span>
+<span id="cb3-50"><a aria-hidden="true" href="#cb3-50"></a></span>
+<span id="cb3-51"><a aria-hidden="true" href="#cb3-51"></a></span>
+<span id="cb3-52"><a aria-hidden="true" href="#cb3-52"></a>ll exLucas(ll n, ll m, ll p) {</span>
+<span id="cb3-53"><a aria-hidden="true" href="#cb3-53"></a>    <span class="dt">int</span> cnt = <span class="dv">0</span>;</span>
+<span id="cb3-54"><a aria-hidden="true" href="#cb3-54"></a>    ll pk[<span class="dv">20</span>], a[<span class="dv">20</span>];</span>
+<span id="cb3-55"><a aria-hidden="true" href="#cb3-55"></a>    <span class="cf">for</span> (ll i = <span class="dv">2</span>; i * i &lt;= p; ++i) {</span>
+<span id="cb3-56"><a aria-hidden="true" href="#cb3-56"></a>        <span class="cf">if</span> (p % i == <span class="dv">0</span>) {</span>
+<span id="cb3-57"><a aria-hidden="true" href="#cb3-57"></a>            pk[++cnt] = <span class="dv">1</span>;</span>
+<span id="cb3-58"><a aria-hidden="true" href="#cb3-58"></a>            <span class="cf">while</span> (p % i == <span class="dv">0</span>) pk[cnt] *= i, p /= i;</span>
+<span id="cb3-59"><a aria-hidden="true" href="#cb3-59"></a>            a[cnt] = multiLucas(n, m, i, pk[cnt]);</span>
+<span id="cb3-60"><a aria-hidden="true" href="#cb3-60"></a>        }</span>
+<span id="cb3-61"><a aria-hidden="true" href="#cb3-61"></a>    }</span>
+<span id="cb3-62"><a aria-hidden="true" href="#cb3-62"></a>    <span class="cf">if</span> (p &gt; <span class="dv">1</span>) pk[++cnt] = p, a[cnt] = multiLucas(n, m, p, p);</span>
+<span id="cb3-63"><a aria-hidden="true" href="#cb3-63"></a>    <span class="cf">return</span> CRT(cnt, a, pk);</span>
+<span id="cb3-64"><a aria-hidden="true" href="#cb3-64"></a>}</span>
+<span id="cb3-65"><a aria-hidden="true" href="#cb3-65"></a></span>
+<span id="cb3-66"><a aria-hidden="true" href="#cb3-66"></a><span class="dt">int</span> main() {</span>
+<span id="cb3-67"><a aria-hidden="true" href="#cb3-67"></a>    read(n, m, mod);</span>
+<span id="cb3-68"><a aria-hidden="true" href="#cb3-68"></a>    print(exLucas(n, m, mod));</span>
+<span id="cb3-69"><a aria-hidden="true" href="#cb3-69"></a>    <span class="cf">return</span> output(), <span class="dv">0</span>;</span>
+<span id="cb3-70"><a aria-hidden="true" href="#cb3-70"></a>}</span></code></pre></div>
+<p>当然，上面这种做法不是最快的。按理来说，如果模数 <span class="math inline">\(M\)</span> 固定，可以预处理 + 光速幂，可以做到更更优，但是由于没有什么用所以不写了。</p>
+<h2 id="阶与原根二次剩余离散对数">阶与原根/二次剩余/离散对数</h2>
+<h3 id="阶指数">阶/指数</h3>
+<h4 id="定义">定义</h4>
+<p>对于 <span class="math inline">\(a\in \mathbb Z\)</span>，<span class="math inline">\(m\in\mathbb N^*\)</span>，且 <span class="math inline">\(a\perp m\)</span>，最小的满足 <span class="math inline">\(a^x\equiv 1\pmod m\)</span> 的正整数 <span class="math inline">\(x\)</span> 被称为 <span class="math inline">\(a\)</span> 模 <span class="math inline">\(m\)</span> 的阶（或者指数），记作 <span class="math inline">\(\delta_m(a)\)</span>。</p>
+<blockquote>
+<p>抽代中这里的阶就是模 <span class="math inline">\(m\)</span> 缩系关于乘法形成的群中，元素 <span class="math inline">\(a\)</span> 的阶。而 <span class="math inline">\(\delta\)</span> 表示阶也仅限这个特殊群。</p>
+</blockquote>
+<h4 id="性质">性质</h4>
+<blockquote>
+<p>性质 <span class="math inline">\(1\)</span>：<span class="math inline">\(a^0,a^1, \cdots, a^{\delta_m(a) - 1}\)</span> 构成一个模 <span class="math inline">\(m\)</span> 的剩余系（即两两不同余），并且剩余系内所有元与 <span class="math inline">\(m\)</span> 互质。</p>
+</blockquote>
+<p>证明：考虑反证法，设存在 <span class="math inline">\(0\le i&lt;j&lt; \delta_m(a)\)</span> 且 <span class="math inline">\(a^i\equiv a^j\pmod m\)</span>，那么一定有 <span class="math inline">\(a^{|i - j|}\equiv 1\pmod m\)</span>，与阶的最小性矛盾，证毕。</p>
+<blockquote>
+<p>性质 <span class="math inline">\(2\)</span>：若 <span class="math inline">\(a^n\equiv 1\pmod m\)</span>，则 <span class="math inline">\(\delta_m(a)\mid n\)</span>。</p>
+</blockquote>
+<p>证明：做带余除法，设 <span class="math inline">\(n = q\delta_m(a) + r\)</span>，若 <span class="math inline">\(r &gt; 0\)</span> 则有 <span class="math display">\[
+a^r\equiv a^r(a^{\delta_m(a)})^q\equiv a^n\equiv 1\pmod m
+\]</span> 和阶的最小性矛盾，故 <span class="math inline">\(r = 0\)</span>。</p>
+<blockquote>
+<p>可以推导出几个推论：</p>
+<ul>
+<li><p><span class="math inline">\(a^p\equiv a^q\pmod m\iff p\equiv q\pmod{\delta_a(m)}\)</span>。</p></li>
+<li><p><span class="math inline">\(\delta_a(m)\mid \varphi(m)\)</span>（考虑欧拉定理）。</p></li>
+<li><p>设 <span class="math inline">\(k\in \mathbb N\)</span>： <span class="math display">\[
+\delta_m(a^k) = \frac{\delta_m(a)}{\gcd(\delta_m(a), k)}
+\]</span> 证明： <span class="math display">\[
+\begin{aligned}
+a^{k\delta_m(a^k)}=(a^k)^{\delta_m(a^k)}&amp;\equiv 1\pmod m\\
+\delta_m(a)&amp;\mid k\delta_m(a^k)\\
+\frac{\delta_m(a)}{\gcd(\delta_m(a), k)}&amp;\mid \delta_m(a^k)
+\end{aligned}
+\]</span> 而且 <span class="math inline">\(a^{\delta_m(a)}\equiv 1\pmod m\)</span>： <span class="math display">\[
+(a^k)^{\frac{\delta_m(a)}{\gcd(\delta_m(a), k)}} = (a^{\delta_m(a)})^{\frac{k}{\gcd(\delta_m(a), k)}}\equiv 1\pmod m
+\]</span> 所以 <span class="math display">\[
+\delta_m(a^k)\mid \frac{\delta_m(a)}{\gcd(\delta_m(a), k)}
+\]</span> 综合一下，证毕。</p></li>
+</ul>
+</blockquote>
+<p><del>（虽然看不出 <span class="math inline">\(\gcd\)</span> 那个有什么卵用）</del></p>
+<blockquote>
+<p>性质 <span class="math inline">\(3\)</span>：设 <span class="math inline">\(m\in\mathbb N^*\)</span>，<span class="math inline">\(a,b\in \mathbb Z\)</span> 且 <span class="math inline">\(a\perp m, b\perp m\)</span>，则 <span class="math display">\[
+\delta_m(ab) = \delta_m(a)\delta_m(b)\iff \delta_m(a)\perp \delta_m(b)
+\]</span> <del>可以理解为 <span class="math inline">\(\delta_m(x)\)</span> 有“积性”。</del></p>
+</blockquote>
+<p>证明先略去，赶时间。</p>
+<h4 id="求法">求法</h4>
+<ul>
+<li>枚举 <span class="math inline">\(\varphi(m)\)</span> 的因子。</li>
+</ul>
+<p>好像没有什么卵用，略过。</p>
+<h3 id="原根">原根</h3>
+<h4 id="定义-1">定义</h4>
+<p>继承上文阶的定义，若 <span class="math inline">\(\delta_m(a) = \varphi(m)\)</span>，则称 <span class="math inline">\(a\)</span> 为模 <span class="math inline">\(m\)</span> 的原根。</p>
+<blockquote>
+<p>抽代中，“原根”是循环群的生成元。并非每个模 <span class="math inline">\(m\)</span> 缩系关于乘法的群都是循环群，不是的话说明其不存在原根。</p>
+</blockquote>
+<h4 id="性质-1">性质</h4>
+<p>证明暂时不写了（笑）</p>
+<blockquote>
+<p>原根判定定理：设 <span class="math inline">\(m\ge 3\)</span>，<span class="math inline">\(a\perp m\)</span>，则 <span class="math inline">\(a\)</span> 为模 <span class="math inline">\(m\)</span> 的原根的充要条件是，对于 <span class="math inline">\(\varphi(m)\)</span> 的每个质因数 <span class="math inline">\(p\)</span>，都有 <span class="math inline">\(a^{\frac{\varphi(m)}{p}}\not\equiv 1\pmod m\)</span>。</p>
+</blockquote>
+<p>。</p>
+<blockquote>
+<p>原根存在定理：<span class="math inline">\(m\)</span> 存在原根当且仅当 <span class="math inline">\(m = 2,4,p^{\alpha}, 2p^{\alpha}\)</span>，其中 <span class="math inline">\(p\)</span> 为奇素数。</p>
+</blockquote>
+<p>不写证明。</p>
+<blockquote>
+<p>原根个数：若 <span class="math inline">\(m\)</span> 的原根存在，则个数为 <span class="math inline">\(\varphi(\varphi(m))\)</span>。</p>
+</blockquote>
+<p>不写证明。</p>
+<blockquote>
+<p>最小原根的数量级：<span class="math inline">\(O(m^{0.25 + \varepsilon})\)</span>。</p>
+</blockquote>
+<p>这个告诉我们，暴力求原根是对的。</p>
+<h4 id="求法-1">求法</h4>
+<p>求单个原根就直接暴力从 <span class="math inline">\(1\)</span> 开始枚举并依次判定即可，利用原根判定定理。</p>
+<h4 id="应用-2">应用</h4>
+<p>NTT。</p>
+<blockquote>
+<p>例题：ABC212G - Power Pair</p>
+<p>给定质数 <span class="math inline">\(p\)</span>，问数对 <span class="math inline">\((x, y)\)</span> 的个数模 <span class="math inline">\(998244353\)</span>：</p>
+<ul>
+<li><span class="math inline">\(0\le x, y\le p - 1\)</span></li>
+<li><span class="math inline">\(\exists n, x^n\equiv y\pmod p\)</span></li>
+</ul>
+<p><span class="math inline">\(2\le p\le 10^{12}\)</span>。</p>
+</blockquote>
+<p><span class="math inline">\(r\)</span> 为模 <span class="math inline">\(p\)</span> 的原根当且仅当最小的使得 <span class="math inline">\(r^e\equiv 1\pmod p\)</span> 的正整数为 <span class="math inline">\(e = p - 1\)</span>。本题需要用到的性质：<span class="math inline">\(r^i\bmod p, i\in[0, p - 1]\)</span> 的值两两不同，且对于一个质数，一定有原根存在。</p>
+<p>设 <span class="math inline">\(x\equiv r^a\pmod p\)</span>，<span class="math inline">\(y\equiv r^b\pmod p\)</span>，不难发现 <span class="math inline">\((x, y)\)</span> 总能有一个 <span class="math inline">\((a, b)\)</span> 与之对应。于是就有 <span class="math inline">\(an\equiv b\pmod{p - 1}\)</span>。现在就是需要找满足上式的 <span class="math inline">\((a, b)\)</span> 的数量。</p>
+<p>枚举 <span class="math inline">\(a\)</span>，则上式有解的条件是 <span class="math inline">\(\gcd(a, p - 1)\mid b\)</span>（裴蜀定理）。那对于所有的 <span class="math inline">\(a\)</span> 就可以写成： <span class="math display">\[
+\sum_{a = 1}^{p - 1}\frac{p - 1}{\gcd(a, p - 1)}
+\]</span> 然后 <span class="math inline">\(O(p)\)</span> 是过不去的，要考虑优化。优化它的方法明显是寻找 <span class="math inline">\(\gcd(a, p - 1)\)</span> 相同的 <span class="math inline">\(a\)</span> 的个数。根据 <span class="math inline">\(p - 1\)</span> 的因数个数 为 <span class="math inline">\(O(\sqrt p)\)</span> 的，故这些 <span class="math inline">\(\gcd\)</span> 也只有 <span class="math inline">\(O(\sqrt p)\)</span> 个。我们枚举 <span class="math inline">\(\gcd(a, p - 1) = g\)</span>，有 <span class="math display">\[
+\sum_{g\mid p - 1}\frac{p - 1}{g}\times\phi\left(\frac{p - 1}{g}\right)
+\]</span> <span class="math inline">\(\phi(n)\)</span> 可以暴力计算。<span class="math inline">\(O(\sqrt p\log p)\)</span>，因为 $$ 的上界很松，轻松通过。</p>
+<h3 id="离散对数">离散对数</h3>
+<p>求最小的正整数 <span class="math inline">\(x\)</span> 满足 <span class="math inline">\(a^x\equiv b\pmod m\)</span>，记作 <span class="math inline">\(x = \operatorname{lnd}_a b\)</span>。</p>
+<h4 id="bsgs">BSGS</h4>
+<p>Baby-Step-Giant-Step（大步小步算法，BSGS）可以用来求解 <span class="math inline">\(a\perp m\)</span> 的离散对数。</p>
+<p>首先由费马小定理可以知道答案一定在 <span class="math inline">\([1, m - 1]\)</span> 之间。</p>
+<p>然后设 <span class="math inline">\(x = i\sqrt m - j\)</span>，则 <span class="math inline">\(a^{i\sqrt m -j}\equiv b\pmod m\)</span>，即 <span class="math inline">\(a^{i\sqrt m} \equiv ba^j\pmod m\)</span>，而 <span class="math inline">\(i\)</span> 和 <span class="math inline">\(j\)</span> 都是 <span class="math inline">\(\sqrt m\)</span> 级别的，所以考虑在哈希表中预处理每个 <span class="math inline">\(ba^j\)</span>，然后枚举 <span class="math inline">\(i\)</span> 判断 <span class="math inline">\(a^{i\sqrt m}\)</span> 是否在哈希表内出现过即可。</p>
+<div class="sourceCode" id="cb4"><pre class="sourceCode cpp"><code class="sourceCode cpp"><span id="cb4-1"><a aria-hidden="true" href="#cb4-1"></a><span class="pp">#include </span><span class="im">&lt;cstdio&gt;</span></span>
+<span id="cb4-2"><a aria-hidden="true" href="#cb4-2"></a><span class="pp">#include </span><span class="im">&lt;cmath&gt;</span></span>
+<span id="cb4-3"><a aria-hidden="true" href="#cb4-3"></a><span class="pp">#include </span><span class="im">&lt;unordered_map&gt;</span></span>
+<span id="cb4-4"><a aria-hidden="true" href="#cb4-4"></a><span class="pp">#define R </span><span class="at">register</span></span>
+<span id="cb4-5"><a aria-hidden="true" href="#cb4-5"></a><span class="pp">#define FOR</span>(i,<span class="pp"> </span>a,<span class="pp"> </span>b)<span class="pp"> </span><span class="cf">for</span>(R<span class="pp"> </span><span class="dt">int</span><span class="pp"> </span>i<span class="pp"> </span>=<span class="pp"> </span>a;<span class="pp"> </span>i<span class="pp"> </span>&lt;=<span class="pp"> </span>b;<span class="pp"> </span>++i)</span>
+<span id="cb4-6"><a aria-hidden="true" href="#cb4-6"></a><span class="pp">#define int </span><span class="dt">long</span><span class="pp"> </span><span class="dt">long</span></span>
+<span id="cb4-7"><a aria-hidden="true" href="#cb4-7"></a></span>
+<span id="cb4-8"><a aria-hidden="true" href="#cb4-8"></a><span class="bu">std::</span>unordered_map&lt;<span class="dt">int</span>, <span class="dt">int</span>&gt; hash;</span>
+<span id="cb4-9"><a aria-hidden="true" href="#cb4-9"></a></span>
+<span id="cb4-10"><a aria-hidden="true" href="#cb4-10"></a><span class="dt">int</span> ksm(<span class="dt">int</span> base, <span class="dt">int</span> p, <span class="dt">int</span> mod) {</span>
+<span id="cb4-11"><a aria-hidden="true" href="#cb4-11"></a>    <span class="dt">int</span> ans = <span class="dv">1</span>;</span>
+<span id="cb4-12"><a aria-hidden="true" href="#cb4-12"></a>    <span class="cf">for</span> (; p; p &gt;&gt;= <span class="dv">1</span>) {</span>
+<span id="cb4-13"><a aria-hidden="true" href="#cb4-13"></a>        <span class="cf">if</span> (p &amp; <span class="dv">1</span>)</span>
+<span id="cb4-14"><a aria-hidden="true" href="#cb4-14"></a>            ans = ans * base % mod;</span>
+<span id="cb4-15"><a aria-hidden="true" href="#cb4-15"></a>        base = base * base % mod;</span>
+<span id="cb4-16"><a aria-hidden="true" href="#cb4-16"></a>    }</span>
+<span id="cb4-17"><a aria-hidden="true" href="#cb4-17"></a>    <span class="cf">return</span> ans;</span>
+<span id="cb4-18"><a aria-hidden="true" href="#cb4-18"></a>}</span>
+<span id="cb4-19"><a aria-hidden="true" href="#cb4-19"></a></span>
+<span id="cb4-20"><a aria-hidden="true" href="#cb4-20"></a><span class="dt">int</span> BSGS(<span class="dt">int</span> a, <span class="dt">int</span> b, <span class="dt">int</span> p) {</span>
+<span id="cb4-21"><a aria-hidden="true" href="#cb4-21"></a>    hash.clear();</span>
+<span id="cb4-22"><a aria-hidden="true" href="#cb4-22"></a>    <span class="cf">if</span> (a % p == <span class="dv">0</span>)</span>
+<span id="cb4-23"><a aria-hidden="true" href="#cb4-23"></a>        <span class="cf">return</span> -<span class="dv">1</span>;</span>
+<span id="cb4-24"><a aria-hidden="true" href="#cb4-24"></a>    <span class="dt">int</span> t = ceil(sqrt(p)), val, tmp;</span>
+<span id="cb4-25"><a aria-hidden="true" href="#cb4-25"></a>    hash[val = b] = <span class="dv">0</span>;</span>
+<span id="cb4-26"><a aria-hidden="true" href="#cb4-26"></a>    FOR(j, <span class="dv">1</span>, t)</span>
+<span id="cb4-27"><a aria-hidden="true" href="#cb4-27"></a>        hash[val = val * a % p] = j;</span>
+<span id="cb4-28"><a aria-hidden="true" href="#cb4-28"></a>    a = ksm(a, t, p), val = <span class="dv">1</span>;</span>
+<span id="cb4-29"><a aria-hidden="true" href="#cb4-29"></a>    FOR(i, <span class="dv">1</span>, t) {</span>
+<span id="cb4-30"><a aria-hidden="true" href="#cb4-30"></a>        val = val * a % p;</span>
+<span id="cb4-31"><a aria-hidden="true" href="#cb4-31"></a>        <span class="cf">if</span> (tmp = hash[val])</span>
+<span id="cb4-32"><a aria-hidden="true" href="#cb4-32"></a>            <span class="cf">return</span> val = i * t - tmp, (val % p + p) % p;</span>
+<span id="cb4-33"><a aria-hidden="true" href="#cb4-33"></a>    }</span>
+<span id="cb4-34"><a aria-hidden="true" href="#cb4-34"></a>    <span class="cf">return</span> -<span class="dv">1</span>;</span>
+<span id="cb4-35"><a aria-hidden="true" href="#cb4-35"></a>}</span>
+<span id="cb4-36"><a aria-hidden="true" href="#cb4-36"></a></span>
+<span id="cb4-37"><a aria-hidden="true" href="#cb4-37"></a><span class="dt">signed</span> main() {</span>
+<span id="cb4-38"><a aria-hidden="true" href="#cb4-38"></a>    <span class="dt">int</span> p, a, b;</span>
+<span id="cb4-39"><a aria-hidden="true" href="#cb4-39"></a>    scanf(<span class="st">"</span><span class="sc">%lld</span><span class="st"> </span><span class="sc">%lld</span><span class="st"> </span><span class="sc">%lld</span><span class="st">"</span>, &amp;p, &amp;a, &amp;b);</span>
+<span id="cb4-40"><a aria-hidden="true" href="#cb4-40"></a>    <span class="dt">int</span> ans = BSGS(a, b, p);</span>
+<span id="cb4-41"><a aria-hidden="true" href="#cb4-41"></a>    <span class="cf">if</span> (ans &gt;= <span class="dv">0</span>)</span>
+<span id="cb4-42"><a aria-hidden="true" href="#cb4-42"></a>        <span class="cf">return</span> printf(<span class="st">"</span><span class="sc">%lld\n</span><span class="st">"</span>, ans), <span class="dv">0</span>;</span>
+<span id="cb4-43"><a aria-hidden="true" href="#cb4-43"></a>    <span class="cf">else</span> <span class="cf">return</span> printf(<span class="st">"no solution</span><span class="sc">\n</span><span class="st">"</span>), <span class="dv">0</span>;</span>
+<span id="cb4-44"><a aria-hidden="true" href="#cb4-44"></a>}</span></code></pre></div>
+<h4 id="exbsgs">exBSGS</h4>
+<p>当 <span class="math inline">\(a\)</span> 和 <span class="math inline">\(m\)</span> 不互质的时候，在模 <span class="math inline">\(m\)</span> 意义下 <span class="math inline">\(a\)</span> 的逆元不一定存在。所以考虑强行让他互质。</p>
+<p>设 <span class="math inline">\(d_1 = \gcd(a, p)\)</span>，若 <span class="math inline">\(d_1\not\mid b\)</span>，则无解。否则将方程同时除以 <span class="math inline">\(d_1\)</span>： <span class="math display">\[
+\frac{a}{d_1}\cdot a^{x-1}\equiv \frac{b}{d_1}\pmod {\frac{p}{d_1}}
+\]</span> 若 <span class="math inline">\(a\)</span> 和 <span class="math inline">\(\dfrac{p}{d_1}\)</span> 仍然不互质就接着上面的流程。直到 <span class="math inline">\(a\perp \dfrac{p}{\prod d_i}\)</span>。</p>
+<p>记所有的 <span class="math inline">\(\displaystyle\frac{b}{\prod d} = B, \frac{p}{\prod d} = P,\prod\frac a d = A\)</span>，则方程最后变为</p>
+<p><span class="math display">\[
+Aa^{x - k}\equiv B\pmod P
+\]</span></p>
+<p>此时 <span class="math inline">\(A\perp P\)</span>，所以我们就可以愉快地求出 <span class="math inline">\(A^{-1}\pmod P\)</span> 然后把他乘到右边来，方程就化为</p>
+<p><span class="math display">\[
+a^{x - k}\equiv A^{-1}B\pmod P
+\]</span></p>
+<p>用 BSGS 求出该方程的解即可，然后记得加回 <span class="math inline">\(k\)</span>。</p>
+<p>细节：如果 <span class="math inline">\(a = 1\or p = 1\)</span>，最小自然数解必然为 <span class="math inline">\(0\)</span>，然后如果在递归的过程中发现 <span class="math inline">\(A=B\)</span>，则说明 <span class="math inline">\(x = k\)</span>，可直接返回答案。</p>
+<div class="sourceCode" id="cb5"><pre class="sourceCode cpp"><code class="sourceCode cpp"><span id="cb5-1"><a aria-hidden="true" href="#cb5-1"></a><span class="pp">#include </span><span class="im">&lt;cstdio&gt;</span></span>
+<span id="cb5-2"><a aria-hidden="true" href="#cb5-2"></a><span class="pp">#include </span><span class="im">&lt;cmath&gt;</span></span>
+<span id="cb5-3"><a aria-hidden="true" href="#cb5-3"></a><span class="pp">#include </span><span class="im">&lt;unordered_map&gt;</span></span>
+<span id="cb5-4"><a aria-hidden="true" href="#cb5-4"></a><span class="pp">#define R </span><span class="at">register</span></span>
+<span id="cb5-5"><a aria-hidden="true" href="#cb5-5"></a><span class="pp">#define FOR</span>(i,<span class="pp"> </span>a,<span class="pp"> </span>b)<span class="pp"> </span><span class="cf">for</span>(R<span class="pp"> </span><span class="dt">int</span><span class="pp"> </span>i<span class="pp"> </span>=<span class="pp"> </span>a;<span class="pp"> </span>i<span class="pp"> </span>&lt;=<span class="pp"> </span>b;<span class="pp"> </span>++i)</span>
+<span id="cb5-6"><a aria-hidden="true" href="#cb5-6"></a><span class="pp">#define int </span><span class="dt">long</span><span class="pp"> </span><span class="dt">long</span></span>
+<span id="cb5-7"><a aria-hidden="true" href="#cb5-7"></a></span>
+<span id="cb5-8"><a aria-hidden="true" href="#cb5-8"></a><span class="bu">std::</span>unordered_map&lt;<span class="dt">int</span>, <span class="dt">int</span>&gt; hash;</span>
+<span id="cb5-9"><a aria-hidden="true" href="#cb5-9"></a></span>
+<span id="cb5-10"><a aria-hidden="true" href="#cb5-10"></a><span class="dt">int</span> ksm(<span class="dt">int</span> base, <span class="dt">int</span> p, <span class="dt">int</span> mod) {</span>
+<span id="cb5-11"><a aria-hidden="true" href="#cb5-11"></a>    <span class="dt">int</span> ans = <span class="dv">1</span>;</span>
+<span id="cb5-12"><a aria-hidden="true" href="#cb5-12"></a>    <span class="cf">for</span> (; p; p &gt;&gt;= <span class="dv">1</span>) {</span>
+<span id="cb5-13"><a aria-hidden="true" href="#cb5-13"></a>        <span class="cf">if</span> (p &amp; <span class="dv">1</span>)</span>
+<span id="cb5-14"><a aria-hidden="true" href="#cb5-14"></a>            ans = ans * base % mod;</span>
+<span id="cb5-15"><a aria-hidden="true" href="#cb5-15"></a>        base = base * base % mod;</span>
+<span id="cb5-16"><a aria-hidden="true" href="#cb5-16"></a>    }</span>
+<span id="cb5-17"><a aria-hidden="true" href="#cb5-17"></a>    <span class="cf">return</span> ans;</span>
+<span id="cb5-18"><a aria-hidden="true" href="#cb5-18"></a>}</span>
+<span id="cb5-19"><a aria-hidden="true" href="#cb5-19"></a></span>
+<span id="cb5-20"><a aria-hidden="true" href="#cb5-20"></a><span class="dt">int</span> exgcd(<span class="dt">int</span> a, <span class="dt">int</span> b, <span class="dt">int</span>&amp; x, <span class="dt">int</span>&amp; y) {</span>
+<span id="cb5-21"><a aria-hidden="true" href="#cb5-21"></a>    <span class="cf">if</span> (!b)</span>
+<span id="cb5-22"><a aria-hidden="true" href="#cb5-22"></a>        <span class="cf">return</span> x = <span class="dv">1</span>, y = <span class="dv">0</span>, a;</span>
+<span id="cb5-23"><a aria-hidden="true" href="#cb5-23"></a>    <span class="dt">int</span> tmp = exgcd(b, a % b, y, x);</span>
+<span id="cb5-24"><a aria-hidden="true" href="#cb5-24"></a>    <span class="cf">return</span> y -= a / b * x, tmp;</span>
+<span id="cb5-25"><a aria-hidden="true" href="#cb5-25"></a>}</span>
+<span id="cb5-26"><a aria-hidden="true" href="#cb5-26"></a></span>
+<span id="cb5-27"><a aria-hidden="true" href="#cb5-27"></a><span class="dt">int</span> inv(<span class="dt">int</span> a, <span class="dt">int</span> mod) {</span>
+<span id="cb5-28"><a aria-hidden="true" href="#cb5-28"></a>    <span class="dt">int</span> x, y;</span>
+<span id="cb5-29"><a aria-hidden="true" href="#cb5-29"></a>    exgcd(a, mod, x, y);</span>
+<span id="cb5-30"><a aria-hidden="true" href="#cb5-30"></a>    <span class="cf">return</span> (x % mod + mod) % mod;</span>
+<span id="cb5-31"><a aria-hidden="true" href="#cb5-31"></a>}</span>
+<span id="cb5-32"><a aria-hidden="true" href="#cb5-32"></a></span>
+<span id="cb5-33"><a aria-hidden="true" href="#cb5-33"></a><span class="dt">int</span> BSGS(<span class="dt">int</span> a, <span class="dt">int</span> b, <span class="dt">int</span> p) {</span>
+<span id="cb5-34"><a aria-hidden="true" href="#cb5-34"></a>    hash.clear();</span>
+<span id="cb5-35"><a aria-hidden="true" href="#cb5-35"></a>    <span class="cf">if</span> (a % p == <span class="dv">0</span>)</span>
+<span id="cb5-36"><a aria-hidden="true" href="#cb5-36"></a>        <span class="cf">return</span> -<span class="dv">1</span>;</span>
+<span id="cb5-37"><a aria-hidden="true" href="#cb5-37"></a>    <span class="dt">int</span> t = ceil(sqrt(p)), val, tmp;</span>
+<span id="cb5-38"><a aria-hidden="true" href="#cb5-38"></a>    hash[val = b] = <span class="dv">0</span>;</span>
+<span id="cb5-39"><a aria-hidden="true" href="#cb5-39"></a>    FOR(j, <span class="dv">1</span>, t)</span>
+<span id="cb5-40"><a aria-hidden="true" href="#cb5-40"></a>        hash[val = val * a % p] = j;</span>
+<span id="cb5-41"><a aria-hidden="true" href="#cb5-41"></a>    a = ksm(a, t, p), val = <span class="dv">1</span>;</span>
+<span id="cb5-42"><a aria-hidden="true" href="#cb5-42"></a>    FOR(i, <span class="dv">1</span>, t) {</span>
+<span id="cb5-43"><a aria-hidden="true" href="#cb5-43"></a>        val = val * a % p;</span>
+<span id="cb5-44"><a aria-hidden="true" href="#cb5-44"></a>        <span class="cf">if</span> (tmp = hash[val])</span>
+<span id="cb5-45"><a aria-hidden="true" href="#cb5-45"></a>            <span class="cf">return</span> val = i * t - tmp, (val % p + p) % p;</span>
+<span id="cb5-46"><a aria-hidden="true" href="#cb5-46"></a>    }</span>
+<span id="cb5-47"><a aria-hidden="true" href="#cb5-47"></a>    <span class="cf">return</span> -<span class="dv">1</span>;</span>
+<span id="cb5-48"><a aria-hidden="true" href="#cb5-48"></a>}</span>
+<span id="cb5-49"><a aria-hidden="true" href="#cb5-49"></a></span>
+<span id="cb5-50"><a aria-hidden="true" href="#cb5-50"></a><span class="dt">int</span> exBSGS(<span class="dt">int</span> a, <span class="dt">int</span> b, <span class="dt">int</span> p) {</span>
+<span id="cb5-51"><a aria-hidden="true" href="#cb5-51"></a>    <span class="cf">if</span> (a == <span class="dv">1</span> || p == <span class="dv">1</span>)</span>
+<span id="cb5-52"><a aria-hidden="true" href="#cb5-52"></a>        <span class="cf">return</span> <span class="dv">0</span>;</span>
+<span id="cb5-53"><a aria-hidden="true" href="#cb5-53"></a>    <span class="dt">int</span> x, y, k = <span class="dv">0</span>, na = <span class="dv">1</span>, g = exgcd(a, p, x, y);</span>
+<span id="cb5-54"><a aria-hidden="true" href="#cb5-54"></a>    <span class="cf">while</span> (g &gt; <span class="dv">1</span>) {</span>
+<span id="cb5-55"><a aria-hidden="true" href="#cb5-55"></a>        <span class="cf">if</span> (b % g)</span>
+<span id="cb5-56"><a aria-hidden="true" href="#cb5-56"></a>            <span class="cf">return</span> -<span class="dv">1</span>;<span class="co">//判无解</span></span>
+<span id="cb5-57"><a aria-hidden="true" href="#cb5-57"></a>        ++k, b /= g, p /= g, na = (na * (a / g)) % p;<span class="co">//递归</span></span>
+<span id="cb5-58"><a aria-hidden="true" href="#cb5-58"></a>        <span class="cf">if</span> (na == b)<span class="co">//特判可以直接返回答案的情况</span></span>
+<span id="cb5-59"><a aria-hidden="true" href="#cb5-59"></a>            <span class="cf">return</span> k;</span>
+<span id="cb5-60"><a aria-hidden="true" href="#cb5-60"></a>        g = exgcd(a, p, x, y);</span>
+<span id="cb5-61"><a aria-hidden="true" href="#cb5-61"></a>    }</span>
+<span id="cb5-62"><a aria-hidden="true" href="#cb5-62"></a>    <span class="dt">int</span> ans = BSGS(a, b * inv(na, p) % p, p);</span>
+<span id="cb5-63"><a aria-hidden="true" href="#cb5-63"></a>    <span class="cf">return</span> ans == -<span class="dv">1</span> ? -<span class="dv">1</span> : ans + k;</span>
+<span id="cb5-64"><a aria-hidden="true" href="#cb5-64"></a>}</span>
+<span id="cb5-65"><a aria-hidden="true" href="#cb5-65"></a></span>
+<span id="cb5-66"><a aria-hidden="true" href="#cb5-66"></a><span class="dt">signed</span> main() {</span>
+<span id="cb5-67"><a aria-hidden="true" href="#cb5-67"></a>    <span class="dt">int</span> a, p, b;</span>
+<span id="cb5-68"><a aria-hidden="true" href="#cb5-68"></a>    <span class="cf">for</span> (scanf(<span class="st">"</span><span class="sc">%lld</span><span class="st"> </span><span class="sc">%lld</span><span class="st"> </span><span class="sc">%lld</span><span class="st">"</span>, &amp;a, &amp;p, &amp;b); a || b || p; scanf(<span class="st">"</span><span class="sc">%lld</span><span class="st"> </span><span class="sc">%lld</span><span class="st"> </span><span class="sc">%lld</span><span class="st">"</span>, &amp;a, &amp;p, &amp;b)) {</span>
+<span id="cb5-69"><a aria-hidden="true" href="#cb5-69"></a>        <span class="dt">int</span> ans = exBSGS(a % p, b % p, p);</span>
+<span id="cb5-70"><a aria-hidden="true" href="#cb5-70"></a>        <span class="cf">if</span> (ans &gt; <span class="dv">0</span>)</span>
+<span id="cb5-71"><a aria-hidden="true" href="#cb5-71"></a>            printf(<span class="st">"</span><span class="sc">%lld\n</span><span class="st">"</span>, ans);</span>
+<span id="cb5-72"><a aria-hidden="true" href="#cb5-72"></a>        <span class="cf">else</span> printf(<span class="st">"No Solution</span><span class="sc">\n</span><span class="st">"</span>);</span>
+<span id="cb5-73"><a aria-hidden="true" href="#cb5-73"></a>    }</span>
+<span id="cb5-74"><a aria-hidden="true" href="#cb5-74"></a>    <span class="cf">return</span> <span class="dv">0</span>;</span>
+<span id="cb5-75"><a aria-hidden="true" href="#cb5-75"></a>}</span></code></pre></div>
+<h3 id="二次剩余">二次剩余</h3>
+<p>求解 <span class="math inline">\(x^2\equiv a\pmod m\)</span>，其中 <span class="math inline">\(m\)</span> 为奇素数。若 <span class="math inline">\(x\)</span> 存在则称 <span class="math inline">\(x\)</span> 为模 <span class="math inline">\(m\)</span> 的二次剩余。</p>
+<h4 id="解的数量">解的数量</h4>
+<p><span class="math inline">\(x^2\equiv m\)</span> 的解？我们肯定知道 <span class="math inline">\(x_0^2\equiv x_1^2\)</span>。移项，平方差，有 <span class="math inline">\((x_0 - x_1) (x_0 + x_1) \equiv 0\)</span>。因为 <span class="math inline">\(x_0 - x_1\not\equiv0\)</span>，所以 <span class="math inline">\(x_0\)</span> 和 <span class="math inline">\(x_1\)</span> 互为相反数。<span class="math inline">\(p\)</span> 为奇素数时模意义下的相反数就肯定不会相等，而且奇偶性不同。</p>
+<p>任意一对相反数都会对应一个二次剩余，故模 <span class="math inline">\(m\)</span> 意义下的二次剩余一共有 <span class="math inline">\(\dfrac{m - 1}{2}\)</span> 个，其余的非零数都是非二次剩余。</p>
+<h4 id="欧拉准则">欧拉准则</h4>
+<blockquote>
+<p>Euler 判别准则：<span class="math inline">\(a\)</span> 为模 <span class="math inline">\(m\)</span> 的二次剩余等价于 <span class="math inline">\(a^{\frac{m - 1}{2}}\equiv 1\pmod m\)</span>，否则 <span class="math inline">\(a^{\frac{m - 1}{2}}\equiv -1\pmod m\)</span>。</p>
+</blockquote>
+<p>考虑费马小定理：<span class="math inline">\(a^{m - 1}\equiv 1\pmod m\)</span>，由于 <span class="math inline">\(m\)</span> 为奇素数，故 <span class="math inline">\(a^{2\times\frac{m - 1}{2}}\equiv 1\pmod m\)</span>，相当于 <span class="math inline">\(a^{\frac{m - 1}{2}}\)</span> 是 <span class="math inline">\(1\)</span>“开根”后的结果，根据二次探测定理（上文 Miller-Rabin 处）其只可能为 <span class="math inline">\(\pm 1\)</span>。</p>
+<p>考虑证明充分性：若 <span class="math inline">\(a\)</span> 是二次剩余，则 <span class="math inline">\(a^{\frac{m - 1}{2}}\equiv (x^2)^{\frac{m-1}{2}}\equiv x^{m - 1}\equiv 1\pmod m\)</span>，证毕。</p>
+<p>考虑证明必要性：若 <span class="math inline">\(a^{\frac{m-1}{2}}\equiv 1\pmod m\)</span>，则将 <span class="math inline">\(a\)</span> 表示为 <span class="math inline">\(g^k\)</span>，其中 <span class="math inline">\(g\)</span> 为模 <span class="math inline">\(m\)</span> 的原根，那么有 <span class="math inline">\(g^{k\frac{m-1}{2}}\equiv 1\)</span>，由于 <span class="math inline">\(g\)</span> 是原根，所以 <span class="math inline">\(m - 1=\varphi(m)\)</span> 为其阶，故一定有 <span class="math inline">\(m - 1\mid k\dfrac{m-1}{2}\)</span>，故 <span class="math inline">\(k\)</span> 为偶数。这就是说 <span class="math inline">\((g^{k/2})^2\equiv a\)</span>，所以 <span class="math inline">\(a\)</span> 为二次剩余。</p>
+<h4 id="cipolla-算法">Cipolla 算法</h4>
+<p>由于模 <span class="math inline">\(m\)</span> 意义下的二次剩余有 <span class="math inline">\(\dfrac{m - 1}{2}\)</span> 个，所以期望两次就能找到一个 <span class="math inline">\(b\)</span> 满足 <span class="math inline">\(b^2 - a\)</span> 为非二次剩余。</p>
+<p>然后便是 Cipolla 的核心思想：<strong>扩域</strong>，人为定义 <span class="math inline">\(i^2 = b^2 - a\)</span>，所以所有的数都可以被表达为 <span class="math inline">\(A + Bi\)</span> 的形式，则 <span class="math inline">\(a \equiv (b + i)^{m + 1}\pmod m\)</span>，所以 <span class="math inline">\(x \equiv (a + i)^{\frac{m - 1}{2}}\)</span>。</p>
+<div class="sourceCode" id="cb6"><pre class="sourceCode cpp"><code class="sourceCode cpp"><span id="cb6-1"><a aria-hidden="true" href="#cb6-1"></a><span class="dt">int</span> t, n, p, w;</span>
+<span id="cb6-2"><a aria-hidden="true" href="#cb6-2"></a></span>
+<span id="cb6-3"><a aria-hidden="true" href="#cb6-3"></a><span class="kw">struct</span> cmplx {</span>
+<span id="cb6-4"><a aria-hidden="true" href="#cb6-4"></a>    <span class="dt">int</span> x, y;</span>
+<span id="cb6-5"><a aria-hidden="true" href="#cb6-5"></a>};</span>
+<span id="cb6-6"><a aria-hidden="true" href="#cb6-6"></a></span>
+<span id="cb6-7"><a aria-hidden="true" href="#cb6-7"></a>il cmplx mul(cmplx a, cmplx b, <span class="dt">int</span> p) {</span>
+<span id="cb6-8"><a aria-hidden="true" href="#cb6-8"></a>    cmplx ans = {<span class="dv">0</span>, <span class="dv">0</span>};</span>
+<span id="cb6-9"><a aria-hidden="true" href="#cb6-9"></a>    ans.x = ((<span class="dv">1</span><span class="bu">ll</span> * a.x * b.x % p + <span class="dv">1</span><span class="bu">ll</span> * a.y * b.y % p * w % p) + p) % p;</span>
+<span id="cb6-10"><a aria-hidden="true" href="#cb6-10"></a>    ans.y = ((<span class="dv">1</span><span class="bu">ll</span> * a.x * b.y % p + <span class="dv">1</span><span class="bu">ll</span> * a.y * b.x % p) + p) % p;</span>
+<span id="cb6-11"><a aria-hidden="true" href="#cb6-11"></a>    <span class="cf">return</span> ans;</span>
+<span id="cb6-12"><a aria-hidden="true" href="#cb6-12"></a>}</span>
+<span id="cb6-13"><a aria-hidden="true" href="#cb6-13"></a></span>
+<span id="cb6-14"><a aria-hidden="true" href="#cb6-14"></a><span class="dt">int</span> qPow(<span class="dt">int</span> a, <span class="dt">int</span> b, <span class="dt">int</span> p) {</span>
+<span id="cb6-15"><a aria-hidden="true" href="#cb6-15"></a>    <span class="dt">int</span> ret = <span class="dv">1</span>;</span>
+<span id="cb6-16"><a aria-hidden="true" href="#cb6-16"></a>    <span class="cf">for</span> (; b; b &gt;&gt;= <span class="dv">1</span>, a = <span class="dv">1</span><span class="bu">ll</span> * a * a % p)</span>
+<span id="cb6-17"><a aria-hidden="true" href="#cb6-17"></a>        <span class="cf">if</span> (b &amp; <span class="dv">1</span>) ret = <span class="dv">1</span><span class="bu">ll</span> * ret * a % p;</span>
+<span id="cb6-18"><a aria-hidden="true" href="#cb6-18"></a>    <span class="cf">return</span> ret;</span>
+<span id="cb6-19"><a aria-hidden="true" href="#cb6-19"></a>}</span>
+<span id="cb6-20"><a aria-hidden="true" href="#cb6-20"></a></span>
+<span id="cb6-21"><a aria-hidden="true" href="#cb6-21"></a><span class="dt">int</span> qPow(cmplx a, <span class="dt">int</span> b, <span class="dt">int</span> p) {</span>
+<span id="cb6-22"><a aria-hidden="true" href="#cb6-22"></a>    cmplx ans = {<span class="dv">1</span>, <span class="dv">0</span>};</span>
+<span id="cb6-23"><a aria-hidden="true" href="#cb6-23"></a>    <span class="cf">for</span> (; b; b &gt;&gt;= <span class="dv">1</span>, a = mul(a, a, p))</span>
+<span id="cb6-24"><a aria-hidden="true" href="#cb6-24"></a>        <span class="cf">if</span> (b &amp; <span class="dv">1</span>) ans = mul(ans, a, p);</span>
+<span id="cb6-25"><a aria-hidden="true" href="#cb6-25"></a>    <span class="cf">return</span> ans.x % p;</span>
+<span id="cb6-26"><a aria-hidden="true" href="#cb6-26"></a>}</span>
+<span id="cb6-27"><a aria-hidden="true" href="#cb6-27"></a></span>
+<span id="cb6-28"><a aria-hidden="true" href="#cb6-28"></a><span class="dt">int</span> cipolla(<span class="dt">int</span> n, <span class="dt">int</span> p) {</span>
+<span id="cb6-29"><a aria-hidden="true" href="#cb6-29"></a>    n %= p;</span>
+<span id="cb6-30"><a aria-hidden="true" href="#cb6-30"></a>    <span class="cf">if</span> (p == <span class="dv">2</span>) <span class="cf">return</span> n;</span>
+<span id="cb6-31"><a aria-hidden="true" href="#cb6-31"></a>    <span class="cf">if</span> (qPow(n, (p - <span class="dv">1</span>) / <span class="dv">2</span>, p) == p - <span class="dv">1</span>) <span class="cf">return</span> -<span class="dv">1</span>;</span>
+<span id="cb6-32"><a aria-hidden="true" href="#cb6-32"></a>    <span class="dt">int</span> a;</span>
+<span id="cb6-33"><a aria-hidden="true" href="#cb6-33"></a>    <span class="cf">while</span> (<span class="dv">1</span>) {</span>
+<span id="cb6-34"><a aria-hidden="true" href="#cb6-34"></a>        a = rand() % p;</span>
+<span id="cb6-35"><a aria-hidden="true" href="#cb6-35"></a>        w = ((<span class="dv">1</span><span class="bu">ll</span> * a * a % p - n) % p + p) % p;</span>
+<span id="cb6-36"><a aria-hidden="true" href="#cb6-36"></a>        <span class="cf">if</span> (qPow(w, (p - <span class="dv">1</span>) / <span class="dv">2</span>, p) == p - <span class="dv">1</span>) <span class="cf">break</span>;</span>
+<span id="cb6-37"><a aria-hidden="true" href="#cb6-37"></a>    }</span>
+<span id="cb6-38"><a aria-hidden="true" href="#cb6-38"></a>    cmplx x = {a, <span class="dv">1</span>};</span>
+<span id="cb6-39"><a aria-hidden="true" href="#cb6-39"></a>    <span class="cf">return</span> qPow(x, (p + <span class="dv">1</span>) / <span class="dv">2</span>, p);</span>
+<span id="cb6-40"><a aria-hidden="true" href="#cb6-40"></a>}</span>
+<span id="cb6-41"><a aria-hidden="true" href="#cb6-41"></a></span>
+<span id="cb6-42"><a aria-hidden="true" href="#cb6-42"></a><span class="dt">int</span> main() {</span>
+<span id="cb6-43"><a aria-hidden="true" href="#cb6-43"></a>    srand(time(<span class="dv">0</span>));</span>
+<span id="cb6-44"><a aria-hidden="true" href="#cb6-44"></a>    read(t);</span>
+<span id="cb6-45"><a aria-hidden="true" href="#cb6-45"></a>    <span class="cf">while</span> (t--) {</span>
+<span id="cb6-46"><a aria-hidden="true" href="#cb6-46"></a>        read(n), read(p);</span>
+<span id="cb6-47"><a aria-hidden="true" href="#cb6-47"></a>        <span class="cf">if</span> (!n) {</span>
+<span id="cb6-48"><a aria-hidden="true" href="#cb6-48"></a>            putchar(<span class="ch">'0'</span>), putchar(<span class="ch">'</span><span class="sc">\n</span><span class="ch">'</span>);</span>
+<span id="cb6-49"><a aria-hidden="true" href="#cb6-49"></a>            <span class="cf">continue</span>;</span>
+<span id="cb6-50"><a aria-hidden="true" href="#cb6-50"></a>        }</span>
+<span id="cb6-51"><a aria-hidden="true" href="#cb6-51"></a>        <span class="dt">int</span> ans1 = cipolla(n, p), ans2 = p - ans1;</span>
+<span id="cb6-52"><a aria-hidden="true" href="#cb6-52"></a>        <span class="cf">if</span> (ans1 == -<span class="dv">1</span>) {</span>
+<span id="cb6-53"><a aria-hidden="true" href="#cb6-53"></a>            puts(<span class="st">"Hola!"</span>);</span>
+<span id="cb6-54"><a aria-hidden="true" href="#cb6-54"></a>            <span class="cf">continue</span>;</span>
+<span id="cb6-55"><a aria-hidden="true" href="#cb6-55"></a>        }</span>
+<span id="cb6-56"><a aria-hidden="true" href="#cb6-56"></a>        <span class="cf">else</span> print(min(ans1, ans2)), putchar(<span class="ch">' '</span>), print(max(ans1, ans2));</span>
+<span id="cb6-57"><a aria-hidden="true" href="#cb6-57"></a>        putchar(<span class="ch">'</span><span class="sc">\n</span><span class="ch">'</span>);</span>
+<span id="cb6-58"><a aria-hidden="true" href="#cb6-58"></a>    }</span>
+<span id="cb6-59"><a aria-hidden="true" href="#cb6-59"></a>    <span class="cf">return</span> output(), <span class="dv">0</span>;</span>
+<span id="cb6-60"><a aria-hidden="true" href="#cb6-60"></a>}</span></code></pre></div>
+</section>
+<footer class="article-footer">
+<section class="article-tags">
+<a href="/tags/OI/">OI</a>
+<a href="/tags/note/">笔记</a>
+</section>
+<section class="article-copyright">
+<svg class="icon icon-tabler icon-tabler-copyright" fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+<path d="M0 0h24v24H0z" stroke="none"></path>
+<circle cx="12" cy="12" r="9"></circle>
+<path d="M14.5 9a3.5 4 0 1 0 0 6"></path>
+</svg>
+<span>Licensed under CC BY-NC-SA 4.0</span>
+</section>
+</footer>
+<link crossorigin="anonymous" href="https://cdn.jsdelivr.net/npm/katex@0.13.13/dist/katex.min.css" integrity="sha384-RZU/ijkSsFbcmivfdRBQDtwuwVqK7GMOw6IMvKyeWL2K5UAlyp6WonmB8m7Jd0Hn" rel="stylesheet"/><script crossorigin="anonymous" defer="" integrity="sha384-pK1WpvzWVBQiP0/GjnvRxV4mOb0oxFuyRxJlk6vVw146n3egcN5C925NCP7a7BY8" src="https://cdn.jsdelivr.net/npm/katex@0.13.13/dist/katex.min.js">
+</script><script crossorigin="anonymous" defer="" integrity="sha384-vZTG03m+2yp6N6BNi5iM4rW4oIwk5DfcNdFfxkk9ZWpDriOkXX8voJBFrAO7MpVl" src="https://cdn.jsdelivr.net/npm/katex@0.13.13/dist/contrib/auto-render.min.js">
+</script><script>
+    window.addEventListener("DOMContentLoaded", () => {
+        renderMathInElement(document.querySelector(`.article-content`), {
+            delimiters: [
+                { left: "$$", right: "$$", display: true },
+                { left: "$", right: "$", display: false },
+                { left: "\\(", right: "\\)", display: false },
+                { left: "\\[", right: "\\]", display: true }
+            ]
+        });})
+</script>
+</article>
+<aside class="related-contents--wrapper">
+<h2 class="section-title">相关文章</h2>
+<div class="related-contents">
+<div class="flex article-list--tile">
+<article class="has-image">
+<a href="/note-gf/">
+<div class="article-image">
+<img data-hash="https://yangty-pic.oss-cn-beijing.aliyuncs.com/bg28.webp" data-key="" loading="lazy" src="https://yangty-pic.oss-cn-beijing.aliyuncs.com/bg28.webp"/>
+</div>
+<div class="article-details">
+<h2 class="article-title">生成函数胡扯</h2>
+</div>
+</a>
+</article>
+<article class="has-image">
+<a href="/note-set-power-series/">
+<div class="article-image">
+<img data-hash="https://yangty-pic.oss-cn-beijing.aliyuncs.com/bg39.webp" data-key="" loading="lazy" src="https://yangty-pic.oss-cn-beijing.aliyuncs.com/bg39.webp"/>
+</div>
+<div class="article-details">
+<h2 class="article-title">集合幂级数胡扯</h2>
+</div>
+</a>
+</article>
+<article class="has-image">
+<a href="/note-linear-basis/">
+<div class="article-image">
+<img data-hash="https://yangty-pic.oss-cn-beijing.aliyuncs.com/bg19.webp" data-key="" loading="lazy" src="https://yangty-pic.oss-cn-beijing.aliyuncs.com/bg19.webp"/>
+</div>
+<div class="article-details">
+<h2 class="article-title">线性基学习笔记</h2>
+</div>
+</a>
+</article>
+<article class="has-image">
+<a href="/note-wqs/">
+<div class="article-image">
+<img data-hash="https://yangty-pic.oss-cn-beijing.aliyuncs.com/bg28.webp" data-key="" loading="lazy" src="https://yangty-pic.oss-cn-beijing.aliyuncs.com/bg28.webp"/>
+</div>
+<div class="article-details">
+<h2 class="article-title">wqs 二分学习笔记</h2>
+</div>
+</a>
+</article>
+<article class="has-image">
+<a href="/note-builtin/">
+<div class="article-image">
+<img data-hash="https://yangty-pic.oss-cn-beijing.aliyuncs.com/bg9.webp" data-key="" loading="lazy" src="https://yangty-pic.oss-cn-beijing.aliyuncs.com/bg9.webp"/>
+</div>
+<div class="article-details">
+<h2 class="article-title">__builtin 系列函数总结</h2>
+</div>
+</a>
+</article>
+</div>
+</div>
+</aside>
+<footer class="site-footer">
+<section class="copyright">
+        © 
+        
+            2019 - 
+        
+        2024 清烛的博客
+    </section>
+<section class="powerby">
+        Built with <a href="https://gohugo.io/" rel="noopener" target="_blank">Hugo</a> <br/>
+        主题 <b><a data-version="3.11.0" href="https://github.com/CaiJimmy/hugo-theme-stack" rel="noopener" target="_blank">Stack</a></b> 由 <a href="https://jimmycai.com" rel="noopener" target="_blank">Jimmy</a> 设计
+    </section>
+</footer>
+<div aria-hidden="true" class="pswp" role="dialog" tabindex="-1">
+<div class="pswp__bg"></div>
+<div class="pswp__scroll-wrap">
+<div class="pswp__container">
+<div class="pswp__item"></div>
+<div class="pswp__item"></div>
+<div class="pswp__item"></div>
+</div>
+<div class="pswp__ui pswp__ui--hidden">
+<div class="pswp__top-bar">
+<div class="pswp__counter"></div>
+<button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+<button class="pswp__button pswp__button--share" title="Share"></button>
+<button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+<button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+<div class="pswp__preloader">
+<div class="pswp__preloader__icn">
+<div class="pswp__preloader__cut">
+<div class="pswp__preloader__donut"></div>
+</div>
+</div>
+</div>
+</div>
+<div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+<div class="pswp__share-tooltip"></div>
+</div>
+<button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+</button>
+<button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+</button>
+<div class="pswp__caption">
+<div class="pswp__caption__center"></div>
+</div>
+</div>
+</div>
+</div><script crossorigin="anonymous" defer="" integrity="sha256-ePwmChbbvXbsO02lbM3HoHbSHTHFAeChekF1xKJdleo=" src="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe.min.js">
+</script><script crossorigin="anonymous" defer="" integrity="sha256-UKkzOn/w1mBxRmLLGrSeyB4e1xbrp4xylgAWb3M42pU=" src="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe-ui-default.min.js">
+</script><link crossorigin="anonymous" href="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/default-skin/default-skin.css" integrity="sha256-c0uckgykQ9v5k+IqViZOZKc47Jn7KQil4/MP3ySA3F8=" rel="stylesheet"/><link crossorigin="anonymous" href="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe.css" integrity="sha256-SBLU4vv6CA6lHsZ1XyTdhyjJxCjPif/TRkjnsyGAGnE=" rel="stylesheet"/>
+</main>
+</div>
+<script crossorigin="anonymous" integrity="sha256-5NovOZc4iwiAWTYIFiIM7DxKUXKWvpVEuMEPLzcm5/g=" src="https://cdn.jsdelivr.net/npm/node-vibrant@3.1.5/dist/vibrant.min.js">
+</script><script defer="" src="/ts/main.js" type="text/javascript"></script>
+<script>
+    (function () {
+        const customFont = document.createElement('link');
+        customFont.href = "https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&display=swap";
+
+        customFont.type = "text/css";
+        customFont.rel = "stylesheet";
+
+        document.head.appendChild(customFont);
+    }());
+</script>
+</body>
+</html>
